@@ -23,13 +23,13 @@
     <published>2023-03-28T07:25:00.000Z</published>
     <updated>2023-03-28T07:34:37.530Z</updated>
     
-    <content type="html"><![CDATA[<p>这是一篇测试文章</p><img src="/2023/03/28/Article/test.jpg" class="" title="图片引用方法一">]]></content>
+    <content type="html"><![CDATA[<p>这是一篇测试文章</p><img src="/blog/2023/03/28/Article/test.jpg" class="" title="图片引用方法一">]]></content>
     
     
       
       
     <summary type="html">&lt;p&gt;这是一篇测试文章&lt;/p&gt;
-&lt;img src=&quot;/2023/03/28/Article/test.jpg&quot; class=&quot;&quot; title=&quot;图片引用方法一&quot;&gt;</summary>
+&lt;img src=&quot;/blog/2023/03/28/Article/test.jpg&quot; class=&quot;&quot; title=&quot;图片引用方法一&quot;&gt;</summary>
       
     
     

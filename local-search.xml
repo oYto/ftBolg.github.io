@@ -5,10 +5,10 @@
   
   <entry>
     <title>Article</title>
-    <link href="/2023/03/28/Article/"/>
-    <url>/2023/03/28/Article/</url>
+    <link href="/blog/2023/03/28/Article/"/>
+    <url>/blog/2023/03/28/Article/</url>
     
-    <content type="html"><![CDATA[<p>这是一篇测试文章</p><img src="/2023/03/28/Article/test.jpg" class="" title="图片引用方法一">]]></content>
+    <content type="html"><![CDATA[<p>这是一篇测试文章</p><img src="/blog/2023/03/28/Article/test.jpg" class="" title="图片引用方法一">]]></content>
     
     
     <categories>
