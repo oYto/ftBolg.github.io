@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>小樱桃</title>
+  
+  <subtitle>小樱桃</subtitle>
+  <link href="http://example.com/atom.xml" rel="self"/>
+  
+  <link href="http://example.com/"/>
+  <updated>2023-03-28T07:34:37.530Z</updated>
+  <id>http://example.com/</id>
+  
+  <author>
+    <name>ft</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Article</title>
+    <link href="http://example.com/2023/03/28/Article/"/>
+    <id>http://example.com/2023/03/28/Article/</id>
+    <published>2023-03-28T07:25:00.000Z</published>
+    <updated>2023-03-28T07:34:37.530Z</updated>
+    
+    <content type="html"><![CDATA[<p>这是一篇测试文章</p><img src="/2023/03/28/Article/test.jpg" class="" title="图片引用方法一">]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;这是一篇测试文章&lt;/p&gt;
+&lt;img src=&quot;/2023/03/28/Article/test.jpg&quot; class=&quot;&quot; title=&quot;图片引用方法一&quot;&gt;</summary>
+      
+    
+    
+    
+    <category term="Java" scheme="http://example.com/categories/Java/"/>
+    
+    
+    <category term="原创" scheme="http://example.com/tags/%E5%8E%9F%E5%88%9B/"/>
+    
+  </entry>
+  
+</feed>
