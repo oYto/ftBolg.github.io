@@ -24,8 +24,9 @@
 <meta property="og:description" content="五种最短路的解决方法：">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-03-31T10:20:51.000Z">
-<meta property="article:modified_time" content="2023-03-31T10:28:02.085Z">
+<meta property="article:modified_time" content="2023-04-01T04:49:42.975Z">
 <meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="原创">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -299,7 +300,7 @@
               <div class="markdown-body">
                 
                 <h2 id="五种最短路的解决方法："><a href="#五种最短路的解决方法：" class="headerlink" title="五种最短路的解决方法："></a>五种最短路的解决方法：<span id="more"></span></h2><h3 id="1、Dijkstra算法："><a href="#1、Dijkstra算法：" class="headerlink" title="1、Dijkstra算法："></a>1、Dijkstra算法：</h3><h5 id="时间复杂度："><a href="#时间复杂度：" class="headerlink" title="时间复杂度："></a>时间复杂度：</h5><p>​	朴素版 O(n^2)，用于无负权边</p>
-<h5 id="核心思路："><a href="#核心思路：" class="headerlink" title="核心思路："></a>核心思路：</h5><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs avrasm">   每次找到集合中距离最短的边进行更新，并用这条确定的最短的边去扩展与他相连通的所有点，并更新距离，用<span class="hljs-keyword">st</span>[]数组标记已经找到了最短距离。<br>稀疏图用邻接矩阵存，反之用邻接表存。<br></code></pre></td></tr></table></figure>
+<h5 id="核心思路："><a href="#核心思路：" class="headerlink" title="核心思路："></a>核心思路：</h5><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs avrasm">   每次找到集合中距离最短的边进行更新，并用这条确定的最短的边去扩展与他相连通的所有点，<br>   并更新距离，用<span class="hljs-keyword">st</span>[]数组标记已经找到了最短距离。<br>稀疏图用邻接矩阵存，反之用邻接表存。<br></code></pre></td></tr></table></figure>
 
 <h5 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h5><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs inform7">（1）邻接矩阵存边时，可以用g<span class="hljs-comment">[a]</span><span class="hljs-comment">[b]</span> = min(g<span class="hljs-comment">[a]</span><span class="hljs-comment">[b]</span>, c)，避免重边和自环，但也要先初始化memset(g,0x3f, sizeof g);<br></code></pre></td></tr></table></figure>
 
@@ -308,7 +309,7 @@
 
 
 <h3 id="2、堆优化版Dijkstra算法："><a href="#2、堆优化版Dijkstra算法：" class="headerlink" title="2、堆优化版Dijkstra算法："></a>2、堆优化版Dijkstra算法：</h3><h5 id="时间复杂度：-1"><a href="#时间复杂度：-1" class="headerlink" title="时间复杂度："></a>时间复杂度：</h5><p>​	O(mlogn)，用于无负权边。</p>
-<h5 id="核心思路：-1"><a href="#核心思路：-1" class="headerlink" title="核心思路："></a>核心思路：</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">对朴素版 Dijkstra算法的核心进行优化，就是每次取出的是所有边中最短的边，我们可以利用小根堆去维护需要遍历的所有边，这样每次取出堆顶元素，即最短的边了。<br></code></pre></td></tr></table></figure>
+<h5 id="核心思路：-1"><a href="#核心思路：-1" class="headerlink" title="核心思路："></a>核心思路：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++">对朴素版 Dijkstra算法的核心进行优化，就是每次取出的是所有边中最短的边，<br>我们可以利用小根堆去维护需要遍历的所有边，这样每次取出堆顶元素，即最短的边了。<br></code></pre></td></tr></table></figure>
 
 <h5 id="注意：-1"><a href="#注意：-1" class="headerlink" title="注意："></a>注意：</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp">（<span class="hljs-number">1</span>）pair类型的优先队列是按照第一个关键词进行排序的，故第一位只能放距离。<br>（<span class="hljs-number">2</span>）邻接表初始化表头<span class="hljs-built_in">memset</span>(h, <span class="hljs-number">-1</span>, <span class="hljs-keyword">sizeof</span> h);<br>（<span class="hljs-number">3</span>）初始化距离数组dist为 INF，便于寻找最短路径。<br></code></pre></td></tr></table></figure>
 
@@ -336,7 +337,7 @@
 
 
 <h3 id="5、spfa算法判负环："><a href="#5、spfa算法判负环：" class="headerlink" title="5、spfa算法判负环："></a>5、spfa算法判负环：</h3><h5 id="时间复杂度：-4"><a href="#时间复杂度：-4" class="headerlink" title="时间复杂度："></a>时间复杂度：</h5><p>​	O(m)</p>
-<h5 id="核心思想："><a href="#核心思想：" class="headerlink" title="核心思想："></a>核心思想：</h5><figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs excel">若图中存在负环，那么spfa算法就会一直不断地更新最短距离，故只要我们发现更新次数 &gt;= <span class="hljs-built_in">n</span>次，就说明有负环，因为<span class="hljs-built_in">n</span>个点只需要<span class="hljs-built_in">n</span> - <span class="hljs-number">1</span>条边连接，故只需要更新<span class="hljs-built_in">n</span> - <span class="hljs-number">1</span>次。<br>	故我们只需要在每次更新最短距离时，更新cnt[j] = cnt[<span class="hljs-built_in">t</span>] + <span class="hljs-number">1</span>即可，最后若更新次数 &gt;= <span class="hljs-built_in">n</span>次，就结束循环，返回<span class="hljs-built_in">true</span>。<br>	注意：<br>	（<span class="hljs-number">1</span>）这里需要注意，可能负环与起点<span class="hljs-number">1</span>，不连通，故需要将所有点都加入到队列中，然后开始spfa算法遍历即可。<br></code></pre></td></tr></table></figure>
+<h5 id="核心思想："><a href="#核心思想：" class="headerlink" title="核心思想："></a>核心思想：</h5><figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs excel">若图中存在负环，那么spfa算法就会一直不断地更新最短距离，故只要我们发现更新次数 &gt;= <span class="hljs-built_in">n</span>次，<br>就说明有负环，因为<span class="hljs-built_in">n</span>个点只需要<span class="hljs-built_in">n</span> - <span class="hljs-number">1</span>条边连接，故只需要更新<span class="hljs-built_in">n</span> - <span class="hljs-number">1</span>次。<br>	故我们只需要在每次更新最短距离时，更新cnt[j] = cnt[<span class="hljs-built_in">t</span>] + <span class="hljs-number">1</span>即可，最后若更新次数 &gt;= <span class="hljs-built_in">n</span>次，就结束循环，返回<span class="hljs-built_in">true</span>。<br>	注意：<br>	（<span class="hljs-number">1</span>）这里需要注意，可能负环与起点<span class="hljs-number">1</span>，不连通，故需要将所有点都加入到队列中，然后开始spfa算法遍历即可。<br></code></pre></td></tr></table></figure>
 
 <h5 id="代码模板：-4"><a href="#代码模板：-4" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">spfa</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">memset</span>(dist, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span> dist);<br>    dist[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;<br>    queue&lt;<span class="hljs-type">int</span>&gt; q;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>    &#123;<br>        q.<span class="hljs-built_in">push</span>(i);<br>        st[i] = <span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">while</span> (q.<span class="hljs-built_in">size</span>())<br>    &#123;<br>        <span class="hljs-type">int</span> t = q.<span class="hljs-built_in">front</span>();<br>        q.<span class="hljs-built_in">pop</span>();<br><br>        st[t] = <span class="hljs-literal">false</span>;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = h[t]; i != <span class="hljs-number">-1</span>; i = ne[i])<br>        &#123;<br>            <span class="hljs-type">int</span> j = e[i];<br>            <span class="hljs-keyword">if</span> (dist[j] &gt; dist[t] + w[i])<br>            &#123;<br>                dist[j] = dist[t] + w[i];   <span class="hljs-comment">//更新起点到某一个点的最短距离</span><br>                cnt[j] = cnt[t] + <span class="hljs-number">1</span>;    <span class="hljs-comment">//更新起点到某一个点的最短距离的更新次数</span><br><br>                <span class="hljs-keyword">if</span> (cnt[t] &gt; n) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;    <span class="hljs-comment">//如果更新次数大于n，说明至少走过了n + 1个点，说明存在循环，即负权回路</span><br>                <span class="hljs-keyword">if</span> (!st[j])<br>                &#123;<br>                    q.<span class="hljs-built_in">push</span>(j);<br>                    st[j] = <span class="hljs-literal">true</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
@@ -382,6 +383,13 @@
 
     </div>
   
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%8E%9F%E5%88%9B/">#原创</a>
+      
+    </div>
   
 </div>
 
@@ -435,6 +443,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/04/01/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%97%AE%E9%A2%98/" title="最小生成树问题">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">最小生成树问题</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
