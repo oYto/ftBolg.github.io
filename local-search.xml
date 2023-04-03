@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>拓扑排序</title>
+    <link href="/2023/04/03/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/"/>
+    <url>/2023/04/03/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/</url>
+    
+    <content type="html"><![CDATA[<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h3 id="拓扑排序："><a href="#拓扑排序：" class="headerlink" title="拓扑排序："></a>拓扑排序<span id="more"></span>：</h3><h5 id="核心思路："><a href="#核心思路：" class="headerlink" title="核心思路："></a>核心思路：</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs">关键点就是将入度为0的点全部放入队列中，直到遍历完所有的点，如果队列中点的个数等于图中点的个数，<br>说明该图存在拓扑序列。<br></code></pre></td></tr></table></figure><h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">int</span> h[N], e[N], ne[N], idx;<br><span class="hljs-type">int</span> d[N];<br><span class="hljs-type">int</span> res[N], cnt;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">add</span> <span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span></span><br><span class="hljs-function"></span>&#123;<br>    e[idx] = b, ne[idx] = h[a], h[a] = idx ++;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">topsort</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    queue&lt;<span class="hljs-type">int</span>&gt; q;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>    &#123;<br>        <span class="hljs-keyword">if</span> (d[i] == <span class="hljs-number">0</span>) <br>        &#123;<br>            q.<span class="hljs-built_in">push</span>(i);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">while</span> (q.<span class="hljs-built_in">size</span>())<br>    &#123;<br>        <span class="hljs-keyword">auto</span> t = q.<span class="hljs-built_in">front</span>();<br>        res[ ++ cnt] = t;<br>        q.<span class="hljs-built_in">pop</span>();<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = h[t]; i != <span class="hljs-number">-1</span>; i = ne[i])<br>        &#123;<br>            <span class="hljs-type">int</span> j = e[i];<br>            d[j] --;<br>            <span class="hljs-keyword">if</span> (d[j] == <span class="hljs-number">0</span>) <br>            &#123;<br>                q.<span class="hljs-built_in">push</span>(j);<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (cnt == n) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br><br><span class="hljs-keyword">if</span> (<span class="hljs-built_in">topsort</span>())<br>    &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= cnt; i ++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, res[i]);<br>    &#125;<br>    <span class="hljs-keyword">else</span> cout &lt;&lt; <span class="hljs-string">&quot;-1&quot;</span> &lt;&lt; endl;<br></code></pre></td></tr></table></figure><h5 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs">（1）找到入度为0的点作根节点<br>（2）一定要将所有入度为0的点加入队列<br>（3）最后需要进行判断是否所有点都入队了，是则存在拓扑序，反之不存在。<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>图论</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>原创</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>质数 质因数 约数 公约数 快速幂</title>
     <link href="/2023/04/03/%E6%95%B0%E8%AE%BA/"/>
     <url>/2023/04/03/%E6%95%B0%E8%AE%BA/</url>
