@@ -79,30 +79,48 @@
   
   
   <entry>
-    <title>Hello World</title>
-    <link href="/2023/03/28/hello-world/"/>
-    <url>/2023/03/28/hello-world/</url>
+    <title>letter</title>
+    <link href="/2023/03/30/letter/"/>
+    <url>/2023/03/30/letter/</url>
     
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! <span id="more"></span>This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    <content type="html"><![CDATA[<img src="/2023/03/30/letter/letter.jpg" class=""><span id="more"></span><p>行至朝幕里，坠入暮云间<br>与星辉一同为你沉迷<br>月牙晚舸，坠入爱河<br>眷你眉目如我眼瞳<br>温柔十方春</p>]]></content>
     
     
+    <categories>
+      
+      <category>I with 小思杨</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>life</tag>
+      
+    </tags>
     
   </entry>
   
   
   
   <entry>
-    <title>测试文章</title>
-    <link href="/2021/06/10/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/"/>
-    <url>/2021/06/10/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</url>
+    <title>myBaby</title>
+    <link href="/2023/03/29/myBaby/"/>
+    <url>/2023/03/29/myBaby/</url>
     
-    <content type="html"><![CDATA[<p>陆思杨</p><span id="more"></span>]]></content>
+    <content type="html"><![CDATA[<img src="/2023/03/29/myBaby/baby1.jpg" class=""><span id="more"></span><p>亲爱的小思杨，</p><p>当我遇见你的那一刻，我心中的世界一下子变得绚烂起来。你的可爱，让我感到无限爱慕。我愿意陪你走过人生的每一个阶段，无论风雨或晴天，都在你身边守护。你是我生命中最美好的惊喜，我将用一生去珍视和呵护。</p><p>爱你的，</p><p>涛</p><p>❤</p><blockquote><p>我心中的你，</p><p>爱如潮水 爱你的心情，无法言表 </p><p>陆上的阳光，照耀着你 </p><p>思念你的心，永不停息 </p><p>杨柳依依，伴随着你</p></blockquote><p>❤</p>]]></content>
     
+    
+    <categories>
+      
+      <category>I with 小思杨</category>
+      
+    </categories>
     
     
     <tags>
       
-      <tag>原创</tag>
+      <tag>life</tag>
       
     </tags>
     
