@@ -16,16 +16,17 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="小樱桃的个人博客">
+    <meta name="description" content="推公式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="推公式">
 <meta property="og:url" content="http://example.com/2023/04/04/%E6%8E%A8%E5%85%AC%E5%BC%8F/index.html">
 <meta property="og:site_name" content="小樱桃">
-<meta property="og:description" content="小樱桃的个人博客">
+<meta property="og:description" content="推公式">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-04T13:08:30.000Z">
-<meta property="article:modified_time" content="2023-04-04T13:08:30.977Z">
+<meta property="article:modified_time" content="2023-04-04T13:54:42.078Z">
 <meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="c++">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -236,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          540 字
         
       </span>
     
@@ -247,7 +248,7 @@
         
         
         
-          1 分钟
+          5 分钟
         
       </span>
     
@@ -298,7 +299,16 @@
             
               <div class="markdown-body">
                 
-                
+                <h2 id="推公式"><a href="#推公式" class="headerlink" title="推公式"></a>推公式<span id="more"></span></h2><h3 id="1、耍杂技的牛"><a href="#1、耍杂技的牛" class="headerlink" title="1、耍杂技的牛"></a>1、耍杂技的牛</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>​	有N头牛，每头牛都有自己的 重量W 和强壮程度 S，奶牛们站在彼此的身上，形成一个高高的垂直堆叠，一头牛支撑不住的可能性取决于它头上所有牛的总重量（不包括它自己）减去它的身体强壮程度的值，现在称该数值为风险值，风险值越大，这只牛撑不住的可能性越高。</p>
+<p>​	您的任务是确定奶牛的排序，使得所有奶牛的风险值中的最大值尽可能的小。</p>
+</blockquote>
+<h5 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h5><blockquote>
+<p>​	按照wi + si从小到大排序，最大的危险系数一定是最小的。</p>
+</blockquote>
+<h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++)<br>    &#123;<br>        <span class="hljs-type">int</span> w, s;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d&quot;</span>, &amp;w, &amp;s);<br>        cow[i] = &#123;s + w, w&#125;;<br>    &#125;<br><br><span class="hljs-built_in">sort</span>(cow, cow + n);<br><br><span class="hljs-type">int</span> res = <span class="hljs-number">-2e9</span>, sum = <span class="hljs-number">0</span>;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++)<br>&#123;<br>    <span class="hljs-comment">//取出当前牛的重量和强壮值</span><br>    <span class="hljs-type">int</span> w = cow[i].second, s = cow[i].first - w;<br>    res = <span class="hljs-built_in">max</span>(res, sum - s);    <span class="hljs-comment">//更新最大的危险系数</span><br>    sum += w;   <span class="hljs-comment">//更新后一头牛所需要承担的重量</span><br>&#125;<br><br><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d&quot;</span>, res);<br></code></pre></td></tr></table></figure>
+
+
                 
               </div>
             
@@ -306,6 +316,34 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%B4%AA%E5%BF%83/" class="category-chain-item">贪心</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/c/">#c++</a>
+      
+    </div>
   
 </div>
 

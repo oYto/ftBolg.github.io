@@ -8,9 +8,21 @@
     <link href="/2023/04/04/%E6%8E%A8%E5%85%AC%E5%BC%8F/"/>
     <url>/2023/04/04/%E6%8E%A8%E5%85%AC%E5%BC%8F/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<h2 id="推公式"><a href="#推公式" class="headerlink" title="推公式"></a>推公式<span id="more"></span></h2><h3 id="1、耍杂技的牛"><a href="#1、耍杂技的牛" class="headerlink" title="1、耍杂技的牛"></a>1、耍杂技的牛</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>​有N头牛，每头牛都有自己的 重量W 和强壮程度 S，奶牛们站在彼此的身上，形成一个高高的垂直堆叠，一头牛支撑不住的可能性取决于它头上所有牛的总重量（不包括它自己）减去它的身体强壮程度的值，现在称该数值为风险值，风险值越大，这只牛撑不住的可能性越高。</p><p>​您的任务是确定奶牛的排序，使得所有奶牛的风险值中的最大值尽可能的小。</p></blockquote><h5 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>​按照wi + si从小到大排序，最大的危险系数一定是最小的。</p></blockquote><h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++)<br>    &#123;<br>        <span class="hljs-type">int</span> w, s;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d&quot;</span>, &amp;w, &amp;s);<br>        cow[i] = &#123;s + w, w&#125;;<br>    &#125;<br><br><span class="hljs-built_in">sort</span>(cow, cow + n);<br><br><span class="hljs-type">int</span> res = <span class="hljs-number">-2e9</span>, sum = <span class="hljs-number">0</span>;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++)<br>&#123;<br>    <span class="hljs-comment">//取出当前牛的重量和强壮值</span><br>    <span class="hljs-type">int</span> w = cow[i].second, s = cow[i].first - w;<br>    res = <span class="hljs-built_in">max</span>(res, sum - s);    <span class="hljs-comment">//更新最大的危险系数</span><br>    sum += w;   <span class="hljs-comment">//更新后一头牛所需要承担的重量</span><br>&#125;<br><br><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d&quot;</span>, res);<br></code></pre></td></tr></table></figure>]]></content>
     
     
+    <categories>
+      
+      <category>贪心</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>c++</tag>
+      
+    </tags>
     
   </entry>
   
@@ -21,9 +33,21 @@
     <link href="/2023/04/04/%E7%BB%9D%E5%AF%B9%E5%80%BC%E4%B8%8D%E7%AD%89%E5%BC%8F/"/>
     <url>/2023/04/04/%E7%BB%9D%E5%AF%B9%E5%80%BC%E4%B8%8D%E7%AD%89%E5%BC%8F/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<h2 id="绝对值不等式"><a href="#绝对值不等式" class="headerlink" title="绝对值不等式"></a>绝对值不等式<span id="more"></span></h2><h3 id="1、货舱选址："><a href="#1、货舱选址：" class="headerlink" title="1、货舱选址："></a>1、货舱选址：</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>​在数轴上建立一家货仓，每天清晨，从货仓到数轴上每家商店都要运送一车商品。</p><p>为了提高效率，求把货仓建在何处，可以使得货仓到每家商店的距离之和最小。</p></blockquote><h5 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>​仓库建立在所有商家的中间，即数轴的中位数。即只需要进行排序然后分别求出每个店家与所有店家中位数的距离相加即答案。</p></blockquote><h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++) cin &gt;&gt; a[i];<br><span class="hljs-built_in">sort</span>(a, a + n);<br><br><span class="hljs-type">int</span> res = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++) res += <span class="hljs-built_in">abs</span>(a[i] - a[n / <span class="hljs-number">2</span>]);<br><br>cout &lt;&lt; res;<br></code></pre></td></tr></table></figure><h5 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h5><blockquote><p>​数组下标从0或者1开始，与其对应的中位数索引不同。</p><p>​（1）下标从0开始：中位数a[n &#x2F; 2 + 1]</p><p>​（2）下标从1开始：中位数a[n &#x2F; 2]</p></blockquote>]]></content>
     
     
+    <categories>
+      
+      <category>贪心</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>c++</tag>
+      
+    </tags>
     
   </entry>
   
@@ -34,9 +58,21 @@
     <link href="/2023/04/04/%E6%8E%92%E5%BA%8F%E4%B8%8D%E7%AD%89%E5%BC%8F/"/>
     <url>/2023/04/04/%E6%8E%92%E5%BA%8F%E4%B8%8D%E7%AD%89%E5%BC%8F/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<h2 id="排序不等式"><a href="#排序不等式" class="headerlink" title="排序不等式"></a>排序不等式<span id="more"></span></h2><h3 id="1、排队打水："><a href="#1、排队打水：" class="headerlink" title="1、排队打水："></a>1、排队打水：</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>​有n个人排队到1个水龙头打水，第i个人装满水桶所需要的时间是t，如何安排他们的打水顺序，才能使所有人等待的时间之和最小？</p></blockquote><h5 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>​按照打水时间从小到大排序即可，总时间最小</p></blockquote><h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++) cin &gt;&gt; a[i];<span class="hljs-comment">//读入</span><br><br><span class="hljs-built_in">sort</span>(a, a + n);<span class="hljs-comment">//排序</span><br><br><span class="hljs-type">long</span> <span class="hljs-type">long</span>  res = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++)<br>&#123;<br>    res += a[i] * (n - i - <span class="hljs-number">1</span>); <span class="hljs-comment">//每次打水，后面都会有 n - i - 1个人等他</span><br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
     
     
+    <categories>
+      
+      <category>贪心</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>c++</tag>
+      
+    </tags>
     
   </entry>
   
@@ -47,7 +83,7 @@
     <link href="/2023/04/04/Huffman%E6%A0%91/"/>
     <url>/2023/04/04/Huffman%E6%A0%91/</url>
     
-    <content type="html"><![CDATA[<h2 id="Huffman树"><a href="#Huffman树" class="headerlink" title="Huffman树"></a>Huffman树<span id="more"></span></h2><h3 id="合并果子："><a href="#合并果子：" class="headerlink" title="合并果子："></a>合并果子：</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>​将若干堆果子合并到一堆，每次可以将任意两堆进行合并。</p></blockquote><h5 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>​每次选取最少的两堆进行合并即可，采用优先队列，即小根堆进行存储所有果子。</p></blockquote><h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c++">priority_queue&lt;<span class="hljs-type">int</span>, vector&lt;<span class="hljs-type">int</span>&gt;, greater&lt;<span class="hljs-type">int</span>&gt;&gt; heap; <span class="hljs-comment">//小根堆定义</span><br>    <br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++)<br>&#123;<br>    <span class="hljs-type">int</span> x;<br>    cin &gt;&gt; x;<br>    heap.<span class="hljs-built_in">push</span>(x); <span class="hljs-comment">//入堆</span><br>&#125;<br><br><span class="hljs-keyword">while</span> (heap.<span class="hljs-built_in">size</span>() &gt; <span class="hljs-number">1</span>)<br>&#123;<br>    <span class="hljs-type">int</span> a = heap.<span class="hljs-built_in">top</span>(); heap.<span class="hljs-built_in">pop</span>();<span class="hljs-comment">//取出堆顶并剔除</span><br>    <span class="hljs-type">int</span> b = heap.<span class="hljs-built_in">top</span>(); heap.<span class="hljs-built_in">pop</span>();<br>    res += a + b;<br>        <br>    heap.<span class="hljs-built_in">push</span>(a + b);<span class="hljs-comment">//将合并得到的新堆加入堆中</span><br>&#125;<br></code></pre></td></tr></table></figure><h5 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h5><blockquote><p>​很容易忽略的一点是，没有将合并得到的新堆加入堆中。</p></blockquote>]]></content>
+    <content type="html"><![CDATA[<h2 id="Huffman树"><a href="#Huffman树" class="headerlink" title="Huffman树"></a>Huffman树<span id="more"></span></h2><h3 id="1、合并果子："><a href="#1、合并果子：" class="headerlink" title="1、合并果子："></a>1、合并果子：</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>​将若干堆果子合并到一堆，每次可以将任意两堆进行合并。</p></blockquote><h5 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>​每次选取最少的两堆进行合并即可，采用优先队列，即小根堆进行存储所有果子。</p></blockquote><h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c++">priority_queue&lt;<span class="hljs-type">int</span>, vector&lt;<span class="hljs-type">int</span>&gt;, greater&lt;<span class="hljs-type">int</span>&gt;&gt; heap; <span class="hljs-comment">//小根堆定义</span><br>    <br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++)<br>&#123;<br>    <span class="hljs-type">int</span> x;<br>    cin &gt;&gt; x;<br>    heap.<span class="hljs-built_in">push</span>(x); <span class="hljs-comment">//入堆</span><br>&#125;<br><br><span class="hljs-keyword">while</span> (heap.<span class="hljs-built_in">size</span>() &gt; <span class="hljs-number">1</span>)<br>&#123;<br>    <span class="hljs-type">int</span> a = heap.<span class="hljs-built_in">top</span>(); heap.<span class="hljs-built_in">pop</span>();<span class="hljs-comment">//取出堆顶并剔除</span><br>    <span class="hljs-type">int</span> b = heap.<span class="hljs-built_in">top</span>(); heap.<span class="hljs-built_in">pop</span>();<br>    res += a + b;<br>        <br>    heap.<span class="hljs-built_in">push</span>(a + b);<span class="hljs-comment">//将合并得到的新堆加入堆中</span><br>&#125;<br></code></pre></td></tr></table></figure><h5 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h5><blockquote><p>​很容易忽略的一点是，没有将合并得到的新堆加入堆中。</p></blockquote>]]></content>
     
     
     <categories>
