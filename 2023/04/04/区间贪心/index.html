@@ -24,7 +24,7 @@
 <meta property="og:description" content="四种区间贪心问题">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-04T10:26:58.000Z">
-<meta property="article:modified_time" content="2023-04-04T12:47:26.938Z">
+<meta property="article:modified_time" content="2023-04-04T12:50:15.895Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="c++">
 <meta name="twitter:card" content="summary_large_image">
@@ -300,9 +300,7 @@
               <div class="markdown-body">
                 
                 <h2 id="四种区间贪心问题"><a href="#四种区间贪心问题" class="headerlink" title="四种区间贪心问题"></a>四种区间贪心问题<span id="more"></span></h2><h3 id="1、区间选点"><a href="#1、区间选点" class="headerlink" title="1、区间选点"></a>1、区间选点</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote>
-<pre><code class="hljs">   给定 N 个闭区间 [ai,bi]，请你在数轴上选择尽量少的点，使得每个区间内至少包含一个选出的点。
-   输出选择的点的最小数量。
-</code></pre>
+<p>   给定 N 个闭区间 [ai,bi]，请你在数轴上选择尽量少的点，使得每个区间内至少包含一个选出的点。<br>   输出选择的点的最小数量。</p>
 </blockquote>
 <h5 id="核心思路："><a href="#核心思路：" class="headerlink" title="核心思路："></a>核心思路：</h5><blockquote>
 <p>​	（1）定义一个pair&lt;int, int&gt;类型的数组，进行所有区间的维护，将所有区间按右端点从小到大进行排序<br>​	（2）从前往后遍历所有区间，如果当前区间与后一个区间没有交集（即后一个区间的左端点大于前一个区间的右端点），相当于把有交集的区间用一个点进行替代，然后答案 ++，更新新区间的右端点<br>​	（3）有交集则不用进行任何处理，因为右端点是按照从小到大进行排序的，我们正需要保证右端点是最小的，故当前枚举到的区间右端点就是最小的</p>

@@ -24,7 +24,7 @@
 <meta property="og:description" content="五种背包问题">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-04T04:51:00.000Z">
-<meta property="article:modified_time" content="2023-04-04T12:47:11.133Z">
+<meta property="article:modified_time" content="2023-04-04T12:50:49.897Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="c++">
 <meta name="twitter:card" content="summary_large_image">
@@ -344,7 +344,9 @@
 <h3 id="4、分组背包："><a href="#4、分组背包：" class="headerlink" title="4、分组背包："></a>4、分组背包：</h3><h5 id="描述：-2"><a href="#描述：-2" class="headerlink" title="描述："></a>描述：</h5><blockquote>
 <p>从n组物品中选，每组物品有若干个，同一组的物品只能选择一个，求解将哪些物品装入背包，可使物品总体积不超过背包容量，且总价值最大。</p>
 </blockquote>
-<h5 id="时间复杂度：-2"><a href="#时间复杂度：-2" class="headerlink" title="时间复杂度："></a>时间复杂度：</h5><p>​	O(nms)</p>
+<h5 id="时间复杂度：-2"><a href="#时间复杂度：-2" class="headerlink" title="时间复杂度："></a>时间复杂度：</h5><blockquote>
+<p>​	O(nms)</p>
+</blockquote>
 <h5 id="分析过程：-3"><a href="#分析过程：-3" class="headerlink" title="分析过程："></a>分析过程：</h5><blockquote>
 <p>集合：从n组物品中选，每组物品有若干个，同一组的物品只能选择一个，在总体积不超过j的情况下，所有选法的价值的最大值。<br>    属性：max<br>    状态计算：以最后一个组是否选择划分：<br>    （1）不选，f[i][j] &#x3D; f[i - 1][j]<br>    （2）选，由于每组有k个物品，故需要枚举这k个物品<br>        for (int k &#x3D; 1; k &lt;&#x3D; cnt[i]; k ++)<br>            if (j &gt;&#x3D; v[i][k]) f[i][j] &#x3D; max(f[i][j], f[i - 1][j - v[i][k]] + w[i][k]);</p>
 </blockquote>
