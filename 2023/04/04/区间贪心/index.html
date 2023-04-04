@@ -1,0 +1,789 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="四种区间贪心问题：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="区间贪心">
+<meta property="og:url" content="http://example.com/2023/04/04/%E5%8C%BA%E9%97%B4%E8%B4%AA%E5%BF%83/index.html">
+<meta property="og:site_name" content="小樱桃">
+<meta property="og:description" content="四种区间贪心问题：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-04T10:26:58.000Z">
+<meta property="article:modified_time" content="2023-04-04T12:37:17.753Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="原创">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>区间贪心 - 小樱桃</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"lBwkKPHSowjEDFhKBLK0YCvo-gzGzoHsz","app_key":"vX99TJqyX7lpdiEcliqnCW51","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>小樱桃</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="区间贪心"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-04 18:26" pubdate>
+          2023年4月4日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          28 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">区间贪心</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="四种区间贪心问题："><a href="#四种区间贪心问题：" class="headerlink" title="四种区间贪心问题："></a>四种区间贪心问题：<span id="more"></span></h2><h3 id="1、区间选点"><a href="#1、区间选点" class="headerlink" title="1、区间选点"></a>1、区间选点</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<pre><code class="hljs">   给定 N 个闭区间 [ai,bi]，请你在数轴上选择尽量少的点，使得每个区间内至少包含一个选出的点。
+   输出选择的点的最小数量。
+</code></pre>
+</blockquote>
+<h5 id="核心思路："><a href="#核心思路：" class="headerlink" title="核心思路："></a>核心思路：</h5><blockquote>
+<p>​	（1）定义一个pair&lt;int, int&gt;类型的数组，进行所有区间的维护，将所有区间按右端点从小到大进行排序<br>​	（2）从前往后遍历所有区间，如果当前区间与后一个区间没有交集（即后一个区间的左端点大于前一个区间的右端点），相当于把有交集的区间用一个点进行替代，然后答案 ++，更新新区间的右端点<br>​	（3）有交集则不用进行任何处理，因为右端点是按照从小到大进行排序的，我们正需要保证右端点是最小的，故当前枚举到的区间右端点就是最小的</p>
+</blockquote>
+<h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c++">   <span class="hljs-keyword">typedef</span> pair&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt; PII;	<span class="hljs-comment">//区间维护</span><br>   PII e[N];<br><br>   <span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">cmp</span><span class="hljs-params">(PII a, PII b)</span> <span class="hljs-comment">//自定义右端点排序</span></span><br><span class="hljs-function">   </span>&#123;<br>       <span class="hljs-keyword">return</span> a.y &lt; b.y;<br>   &#125;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) cin &gt;&gt; e[i].x &gt;&gt; e[i].y;<span class="hljs-comment">//输入区间</span><br>   <span class="hljs-built_in">sort</span>(e + <span class="hljs-number">1</span>, e + <span class="hljs-number">1</span> + n, cmp);<span class="hljs-comment">//排序</span><br>   <br>   <span class="hljs-type">int</span> ed = <span class="hljs-number">-0x3f3f3f3f</span>;<br>   <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)	<span class="hljs-comment">//进行枚举</span><br>   &#123;<br>       <span class="hljs-keyword">if</span> (e[i].x &gt; ed) res ++, ed = e[i].y;<br>   &#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h5><blockquote>
+<p>​	在区间有交集的时候，一定不要更新右端点了，因为我们需要的就是选定区间中的最小右端点，这与我们按照右端点进行从小到大排序是刚好符合的。</p>
+</blockquote>
+<h5 id="证明："><a href="#证明：" class="headerlink" title="证明："></a>证明：</h5><blockquote>
+<p>略</p>
+</blockquote>
+<h3 id="2、最大不相交区间数量"><a href="#2、最大不相交区间数量" class="headerlink" title="2、最大不相交区间数量"></a>2、最大不相交区间数量</h3><h5 id="描述：-1"><a href="#描述：-1" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>​	给定N个区间[a, b]，请你在数轴上选择若干区间，使得选中的区间之间互不相交（包括端点）。输出可选取区间的最大数量。</p>
+</blockquote>
+<h5 id="核心思路：-1"><a href="#核心思路：-1" class="headerlink" title="核心思路："></a>核心思路：</h5><blockquote>
+<p>​	将所有有交集的区间看作一个区间，因为每次只能选择有交集中的一个，故这样假设没有错，即我们在前往后枚举每个区间的时候，遇到有交集的区间就跳过，只需要在每次遇到没有交集的区间的时候进行统计，步骤如下：</p>
+<p>（1）定义一个pair&lt;int, int&gt;类型的数组，进行所有区间的维护，将所有区间按右端点从小到大进行排序<br>（2）从前往后遍历所有区间，如果当前区间与后一个区间没有交集（即后一个区间的左端点大于前一个区间的右端点），相当于把有交集的区间看作一个区间，然后在遇到没有交集的区间时，答案 ++，更新新区间的右端点<br>（3）有交集则不用进行任何处理，因为我们将他们看作一个区间</p>
+</blockquote>
+<h5 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c++">   <span class="hljs-keyword">typedef</span> pair&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt; PII;	<span class="hljs-comment">//区间维护</span><br>   PII e[N];<br><br>   <span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">cmp</span><span class="hljs-params">(PII a, PII b)</span> <span class="hljs-comment">//自定义右端点排序</span></span><br><span class="hljs-function">   </span>&#123;<br>       <span class="hljs-keyword">return</span> a.y &lt; b.y;<br>   &#125;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) cin &gt;&gt; e[i].x &gt;&gt; e[i].y;<span class="hljs-comment">//输入区间</span><br>   <span class="hljs-built_in">sort</span>(e + <span class="hljs-number">1</span>, e + <span class="hljs-number">1</span> + n, cmp);<span class="hljs-comment">//排序</span><br>   <br>   <span class="hljs-type">int</span> ed = <span class="hljs-number">-0x3f3f3f3f</span>;<br>   <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)	<span class="hljs-comment">//进行枚举</span><br>   &#123;<br>       <span class="hljs-keyword">if</span> (e[i].x &gt; ed) res ++, ed = e[i].y;<br>   &#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="证明：-1"><a href="#证明：-1" class="headerlink" title="证明："></a>证明：</h5><blockquote>
+<p>略</p>
+</blockquote>
+<h3 id="3、区间分组"><a href="#3、区间分组" class="headerlink" title="3、区间分组"></a>3、区间分组</h3><h5 id="描述：-2"><a href="#描述：-2" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>给定N个闭区间[a, b]，请你将这些区间分成若干组，使得每组内部的区间两两之间（包括端点）没有交集，并使组数尽可能小。</p>
+</blockquote>
+<h5 id="核心思路：-2"><a href="#核心思路：-2" class="headerlink" title="核心思路："></a>核心思路：</h5><blockquote>
+<p>​	我们需要思考，想要将当前区间加入到已有的集合中，则必选满足当前区间与某个集合中的所有区间都没有交集，即当前区间的左端点要大于某个集合的所有右端点，贪心一下，我们只需要维护一个小根堆，存入每个组的最大右端点，在判断能否加入当前组的时候，就与堆顶元素（所有组里最小的最大右区间）步骤如下：</p>
+<p>​	（1）先将所有区间按照左端点从小到大排序</p>
+<p>​	（2）从前往后处理每一个区间</p>
+<p>​	（3）判断是否能放入当前某一个组内：能放的条件是当前一个组都没有或者现有的组中，存在一个组的最大右区间，可以用小根堆的堆顶元素作为边界，大于则可以放入现有组，小于等于则无法放入</p>
+<p>​	（4）存在这样的组，就把该区间放入组中，更新当前组的max_r</p>
+<p>​	（5）不存在这样的组，就重新创建一个组，将该区间放入</p>
+</blockquote>
+<h5 id="代码模板：-1"><a href="#代码模板：-1" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">typedef</span> pair&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt; PII;<br>PII e[N];<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) cin &gt;&gt; e[i].x &gt;&gt; e[i].y;<br>    <span class="hljs-built_in">sort</span>(e + <span class="hljs-number">1</span>, e + <span class="hljs-number">1</span> + n);<br><br>    priority_queue&lt;<span class="hljs-type">int</span>, vector&lt;<span class="hljs-type">int</span>&gt;, greater&lt;<span class="hljs-type">int</span>&gt;&gt; heap;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>    &#123;<br>        <span class="hljs-keyword">if</span> (heap.<span class="hljs-built_in">empty</span>() || e[i].x &lt;= heap.<span class="hljs-built_in">top</span>()) heap.<span class="hljs-built_in">push</span>(e[i].y);<br>        <span class="hljs-keyword">else</span><br>        &#123;<br>            heap.<span class="hljs-built_in">pop</span>();<br>            heap.<span class="hljs-built_in">push</span>(e[i].y);<br>        &#125;<br>    &#125;<br>cout &lt;&lt; heap.<span class="hljs-built_in">size</span>();<br></code></pre></td></tr></table></figure>
+
+<h5 id="注意：-1"><a href="#注意：-1" class="headerlink" title="注意："></a>注意：</h5><blockquote>
+<p>这里用小根堆（优先队列），进行维护每一个组的所有区间最大右区间，则堆顶就是所有组的最大右区间的最小值，<br>也就是一个新区间想要加入现有组的条件，即新区间的左端点要大于该条件</p>
+</blockquote>
+<h5 id="证明：-2"><a href="#证明：-2" class="headerlink" title="证明："></a>证明：</h5><blockquote>
+<p>略</p>
+</blockquote>
+<h3 id="4、区间覆盖"><a href="#4、区间覆盖" class="headerlink" title="4、区间覆盖"></a>4、区间覆盖</h3><h5 id="描述：-3"><a href="#描述：-3" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>​	给定N个闭区间[a, b]以及一个线性区间[s, t]，请你选择尽量少的区间，将指定线段区间完全覆盖。</p>
+</blockquote>
+<h5 id="核心思路：-3"><a href="#核心思路：-3" class="headerlink" title="核心思路："></a>核心思路：</h5><blockquote>
+<p>​	（1）按照左端点进行排序</p>
+<p>​	（2）用双指针算法线性扫描一下所有区间，每次扫描 找出 能覆盖还未覆盖的区间 的左端点的 所有区间中，右端点最大的区间，将start更新为其左端点。</p>
+</blockquote>
+<h5 id="代码模板：-2"><a href="#代码模板：-2" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">typedef</span> pair&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt; PII;	<br>PII e[N];<br><br><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">cmp</span><span class="hljs-params">(PII a, PII b)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">return</span> a.x &lt; b.x;<br>&#125;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) cin &gt;&gt; e[i].x &gt;&gt; e[i].y;	<span class="hljs-comment">//输入</span><br>    <span class="hljs-built_in">sort</span>(e + <span class="hljs-number">1</span>, e + <span class="hljs-number">1</span> + n, cmp);	<span class="hljs-comment">//排序</span><br>    <br>    <span class="hljs-type">int</span> res = <span class="hljs-number">0</span>;	<span class="hljs-comment">//答案</span><br>    <span class="hljs-type">bool</span> flag = <span class="hljs-literal">false</span>;	<span class="hljs-comment">//标志位</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>    &#123;<br>        <span class="hljs-type">int</span> j = i, r = <span class="hljs-number">-2e9</span>;	<span class="hljs-comment">//获取当前区间，即e[i] ~ ed</span><br>        <span class="hljs-keyword">while</span> (j &lt;= n &amp;&amp; e[j].x &lt;= st)	<span class="hljs-comment">//双指针扫描</span><br>        &#123;<br>            r = <span class="hljs-built_in">max</span>(r, e[j].y);<br>            j ++;<br>        &#125;<br>        <br>        <span class="hljs-keyword">if</span> (r &lt; st) <span class="hljs-comment">//后面区间无法覆盖，提前结束</span><br>        &#123;<br>            res = <span class="hljs-number">-1</span>;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <br>        res ++;	<span class="hljs-comment">//可以覆盖，所用区间 ++</span><br>        <br>        <span class="hljs-keyword">if</span> (r &gt;= ed) 	<span class="hljs-comment">//完全覆盖，标志成功，结束扫描</span><br>        &#123;<br>            flag = <span class="hljs-literal">true</span>;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <br>        st = r;	<span class="hljs-comment">//更新未扫描区间</span><br>        <br>        i = j - <span class="hljs-number">1</span>;	<span class="hljs-comment">//由于for循环中i ++,故这里i更新为需要扫描的点j的前一个点</span><br>    &#125;<br>    <br>    <span class="hljs-keyword">if</span> (!flag) res = <span class="hljs-number">-1</span>;<br>    cout &lt;&lt; res;<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="注意：-2"><a href="#注意：-2" class="headerlink" title="注意："></a>注意：</h5><blockquote>
+<p>​	（1）需要注意的点是几个特判：如果更新后r &lt; st说明剩余区间没有一个区间能够覆盖剩余部分，直接结束扫描，反之则所用的区间 ++；<br>​	（2）是当前区间的r &gt;&#x3D; ed，说明需要覆盖的区间已经完全覆盖，标志位设置为true，结束遍历即可。<br>​	（3）最后根据标志位判断是否覆盖了全部区间。</p>
+<p>（4）避免遍历重复的区间，但为什么是i &#x3D; j - 1，而不是i &#x3D; j，    因为前j个区间我们已经判断过了，需要判断第j个区间，    但由于for循环结束会i++，如果这里i &#x3D; j，再算上循环结束的i++，    下一次循环遍历的就会是第j + 1个区间，而导致跳过了第j个区间</p>
+</blockquote>
+<h5 id="证明：-3"><a href="#证明：-3" class="headerlink" title="证明："></a>证明：</h5><blockquote>
+<p>略</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%B4%AA%E5%BF%83/" class="category-chain-item">贪心</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%8E%9F%E5%88%9B/">#原创</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>区间贪心</div>
+      <div>http://example.com/2023/04/04/区间贪心/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/04/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" title="背包问题">
+                        <span class="hidden-mobile">背包问题</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lBwkKPHSowjEDFhKBLK0YCvo-gzGzoHsz","appKey":"vX99TJqyX7lpdiEcliqnCW51","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
