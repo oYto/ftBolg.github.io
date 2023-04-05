@@ -4,14 +4,155 @@
   
   
   <entry>
+    <title>前缀和与差分</title>
+    <link href="/2025/04/05/%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86/"/>
+    <url>/2025/04/05/%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86/</url>
+    
+    <content type="html"><![CDATA[<h2 id="前缀和与差分"><a href="#前缀和与差分" class="headerlink" title="前缀和与差分"></a>前缀和与差分<span id="more"></span></h2><h3 id="1、一维前缀和"><a href="#1、一维前缀和" class="headerlink" title="1、一维前缀和"></a>1、一维前缀和</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>​可以在O(1)的时间算出一段区间内的所有数的和。</p></blockquote><h5 id="模板："><a href="#模板：" class="headerlink" title="模板："></a>模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++ ) <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;a[i]);<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) s[i] = s[i - <span class="hljs-number">1</span>] + a[i];   <span class="hljs-comment">//预处理  计算前缀和数组</span><br><br><span class="hljs-type">int</span> l, r;<br><span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d&quot;</span>, &amp;l, &amp;r);<br><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, s[r] - s[l - <span class="hljs-number">1</span>]);  <span class="hljs-comment">//进行每一段的求和</span><br></code></pre></td></tr></table></figure><h5 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h5><blockquote><p>​前缀和与差分数组下标都必须从1开始。</p></blockquote><h3 id="2、二维前缀和"><a href="#2、二维前缀和" class="headerlink" title="2、二维前缀和"></a>2、二维前缀和</h3><h5 id="描述：-1"><a href="#描述：-1" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>​能够在O(1)的时间内算出一个矩阵中所有数的和。</p></blockquote><h5 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>（1）数组下标都从1开始，便于后续的处理<br>（2）遍历二维数组中的每一个点<br>构造：每一个点执行s[i][j] &#x3D; s[i - 1][j] + s[i][j - 1] + a[i][j] - s[i - 1][j - 1];<br>（3）获取(x1, y1)与(x2, y2)之间的子矩阵的所有数的和<br>构造完成后的二维前缀和数组，直接输出<br>s[x2][y2] - s[x2][y1 - 1] - s[x1 - 1][y2] + s[x1 - 1][y1 - 1]，即可获得该子矩阵的所有数的和</p></blockquote><h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++">s[i][j] = s[i - <span class="hljs-number">1</span>][j] + s[i][j - <span class="hljs-number">1</span>] - s[i - <span class="hljs-number">1</span>][j - <span class="hljs-number">1</span>] + a[i][j];    <span class="hljs-comment">//求二维前缀和数组</span><br><br><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, s[x2][y2] - s[x2][y1 - <span class="hljs-number">1</span>] - s[x1 - <span class="hljs-number">1</span>][y2] + s[x1 - <span class="hljs-number">1</span>][y1 - <span class="hljs-number">1</span>]);  <span class="hljs-comment">//想要的矩阵之内的所有数之和</span><br></code></pre></td></tr></table></figure><h3 id="3、一维差分"><a href="#3、一维差分" class="headerlink" title="3、一维差分"></a>3、一维差分</h3><h5 id="描述：-2"><a href="#描述：-2" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>​用于给某个区间快速地加上或者减去某个数。</p></blockquote><h5 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>（1）构造差分数组<br>    （1.1）将差分数组看作原本都是0，a[i]是原数组，b[i]是差分数组<br>    （1.2）然后将原数组中的每一个数，都插入到差分数组中，<br>        b[l] +&#x3D; c, &#x2F;&#x2F;a[l]后的数都会+c<br>        b[r + 1] -&#x3D; c; &#x2F;&#x2F;a[r + 1]后的数都会-c，【补丁】<br>        最后达到的效果就是a[l] ~a[r]之间的每一个数都加上了c<br>（2）然后根据题目要求在差分数组中指定区间中的每一个数都加上一个数，即在差分数组中的该区域中插入该数<br>（3）将差分数组还原成原数组（前缀和数组）输出即可 b[i] +&#x3D; b[i - 1];</p></blockquote><h5 id="代码模板：-1"><a href="#代码模板：-1" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-type">int</span> l, <span class="hljs-type">int</span> r, <span class="hljs-type">int</span> c)</span></span><br><span class="hljs-function"></span>&#123;<br>    b[l] += c;<br>    b[r + <span class="hljs-number">1</span>] -= c;<br>&#125;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;a[i]);   <span class="hljs-comment">//输入原数组</span><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) <span class="hljs-built_in">insert</span>(i, i, a[i]);   <span class="hljs-comment">//将原数组变成差分数组，此时原数组为该数组的前缀和数组</span><br><br><span class="hljs-comment">//给区间[l, r]上的数都加上c</span><br><span class="hljs-built_in">insert</span>(l, r, c);    <span class="hljs-comment">//将差分数组的第l个，加上c，后续在还原原数组的时候，后续到r的数，都会加上c</span><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) b[i] += b[i - <span class="hljs-number">1</span>]; <span class="hljs-comment">//将差分数组还原成原数组</span><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, b[i]);  <span class="hljs-comment">//输出原数组</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法</category>
+      
+      <category>基础算法</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>c++</tag>
+      
+      <tag>前缀和与差分</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>区间合并</title>
+    <link href="/2023/04/05/%E5%8C%BA%E9%97%B4%E5%90%88%E5%B9%B6/"/>
+    <url>/2023/04/05/%E5%8C%BA%E9%97%B4%E5%90%88%E5%B9%B6/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>离散化</title>
+    <link href="/2023/04/05/%E7%A6%BB%E6%95%A3%E5%8C%96/"/>
+    <url>/2023/04/05/%E7%A6%BB%E6%95%A3%E5%8C%96/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>位运算</title>
+    <link href="/2023/04/05/%E4%BD%8D%E8%BF%90%E7%AE%97/"/>
+    <url>/2023/04/05/%E4%BD%8D%E8%BF%90%E7%AE%97/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>双指针算法</title>
+    <link href="/2023/04/05/%E5%8F%8C%E6%8C%87%E9%92%88%E7%AE%97%E6%B3%95/"/>
+    <url>/2023/04/05/%E5%8F%8C%E6%8C%87%E9%92%88%E7%AE%97%E6%B3%95/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>高精度算法</title>
+    <link href="/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E9%AB%98%E7%B2%BE%E5%BA%A6%E7%AE%97%E6%B3%95/"/>
+    <url>/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E9%AB%98%E7%B2%BE%E5%BA%A6%E7%AE%97%E6%B3%95/</url>
+    
+    <content type="html"><![CDATA[<h2 id="高精度算法"><a href="#高精度算法" class="headerlink" title="高精度算法"></a>高精度算法<span id="more"></span></h2><h3 id="1、高精度加法"><a href="#1、高精度加法" class="headerlink" title="1、高精度加法"></a>1、高精度加法</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>求两个大正整数相加的和。</p></blockquote><h5 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>​（1）用可变长数组vectorA，B存储</p><p>​（2）将输入的大数用字符串a，b读入，并逆序存入A，B</p><p>​（3）进行套用高精度模板</p><p>​（4）最后逆序输出答案即可</p></blockquote><h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span> N = <span class="hljs-number">100010</span>;<br><br>vector&lt;<span class="hljs-type">int</span>&gt; A, B;<br><span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">Add</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt; A, vector&lt;<span class="hljs-type">int</span>&gt; B)</span></span><br><span class="hljs-function"></span>&#123;<br>    vector&lt;<span class="hljs-type">int</span>&gt; C;<br><br>    <span class="hljs-type">int</span> t = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; A.<span class="hljs-built_in">size</span>() || i &lt; B.<span class="hljs-built_in">size</span>(); i ++ )<br>    &#123;<br>        <span class="hljs-keyword">if</span> (i &lt; A.<span class="hljs-built_in">size</span>()) t += A[i];<br>        <span class="hljs-keyword">if</span> (i &lt; B.<span class="hljs-built_in">size</span>()) t += B[i];<br>        C.<span class="hljs-built_in">push_back</span>(t % <span class="hljs-number">10</span>);<br>        t /= <span class="hljs-number">10</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (t) C.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">return</span> C;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    string a, b;<br>    cin &gt;&gt; a &gt;&gt; b;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = a.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i --) A.<span class="hljs-built_in">push_back</span>(a[i] - <span class="hljs-string">&#x27;0&#x27;</span>);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = b.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i --) B.<span class="hljs-built_in">push_back</span>(b[i] - <span class="hljs-string">&#x27;0&#x27;</span>);<br><br>    <span class="hljs-keyword">auto</span> C = <span class="hljs-built_in">Add</span>(A, B);<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = C.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>;i &gt;= <span class="hljs-number">0</span>; i--) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d&quot;</span>, C[i]);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><h5 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h5><blockquote><p>最后可能会存在一位进位，需要特判，若存在直接push进答案最后即可</p></blockquote><h3 id="2、高精度减法"><a href="#2、高精度减法" class="headerlink" title="2、高精度减法"></a>2、高精度减法</h3><h5 id="描述：-1"><a href="#描述：-1" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>​求两个大正整数A，B的差。</p></blockquote><h5 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>高精度减法：大数A - 大数B<br>（1）用可变长数组vector存储A，B<br>（2）将字符串a、b逆序存入数组A、B中<br>（3）为了计算方便，我们再计算之前先保证较大的数减去较小的数，即我们要先判读出A、B谁大<br>    （3.1）自定一个比较大小的cmp函数，用于返回若 A &gt; B,返回true，反之返回false<br>    （3.2）cmp函数的构造分为两种情况    位数相同 和  位数不同<br>    （3.3）位数不同：肯定是位数长的数大<br>    （3.4）位数相同，我们就需要从后向前遍历两个数组（因为我们已经逆序存储了），<br>    找到第一个不相同的数进行比较，谁大，说明该数组表示的数大<br>（4）高精度减法的构造<br>    （4.1）定义一个答案数组和临时变量t（存放借位）<br>    （4.2）从前到后遍历较大数组（因为是逆序存储，所以原本低位相减变成了现在的前面的数相减）：<br>    （4.3）每一次遍历，先让较大的数减去借位，然后再减去较小的数中（需要判读较小的数是否还剩于）<br>    （4.4）因为有可能相减为负数，这里利用一个技巧直接将(t + 10) % 10的结果加入答案末尾即可，这里保证了加入的一定是相减结果的绝对值<br>    （4.5）更新借位，<br>        如果t为负数，说明在相减的时候，借位了，让 t &#x3D; 1，表示借了一位，保留到下一次计算进行减去<br>        如果t为正数，说明在相减的时候，没有借位，让借位置零即可<br>    （4.6）最后再进行去前导0即可<br>        如果答案的长度大于1，且答案最后有0，就将0弹出即可<br>（5）最后逆序输出答案即可</p></blockquote><h5 id="代码模板：-1"><a href="#代码模板：-1" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">cmp</span> <span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt; &amp;A, vector&lt;<span class="hljs-type">int</span>&gt; &amp;B)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">if</span> (A.<span class="hljs-built_in">size</span>() != B.<span class="hljs-built_in">size</span>()) <span class="hljs-keyword">return</span> A.<span class="hljs-built_in">size</span>() &gt; B.<span class="hljs-built_in">size</span>();<br>    <span class="hljs-keyword">else</span><br>    &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = A.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i --)<br>        &#123;<br>            <span class="hljs-keyword">if</span> (A[i] != B[i]) <span class="hljs-keyword">return</span> A[i] &gt; B[i];<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>&#125;<br><br><span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">sub</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt; A, vector&lt;<span class="hljs-type">int</span>&gt; B)</span></span><br><span class="hljs-function"></span>&#123;<br>    vector&lt;<span class="hljs-type">int</span>&gt; C;<br><br>    <span class="hljs-type">int</span> t = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; A.<span class="hljs-built_in">size</span>(); i ++ )<br>    &#123;<br>        t = A[i] - t;<br>        <span class="hljs-keyword">if</span> (i &lt; B.<span class="hljs-built_in">size</span>()) t -= B[i];<br>        C.<span class="hljs-built_in">push_back</span>((t + <span class="hljs-number">10</span>) % <span class="hljs-number">10</span>);<br>        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0</span>) t = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">else</span> t = <span class="hljs-number">0</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">while</span> (C.<span class="hljs-built_in">size</span>() &gt; <span class="hljs-number">1</span> &amp;&amp; C.<span class="hljs-built_in">back</span>() == <span class="hljs-number">0</span>) C.<span class="hljs-built_in">pop_back</span>();<br>    <span class="hljs-keyword">return</span> C;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    string a, b;<br>    cin &gt;&gt; a &gt;&gt; b;<br><br>    vector&lt;<span class="hljs-type">int</span>&gt; A, B, C;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = a.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i --) A.<span class="hljs-built_in">push_back</span>(a[i] - <span class="hljs-string">&#x27;0&#x27;</span>);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = b.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i --) B.<span class="hljs-built_in">push_back</span>(b[i] - <span class="hljs-string">&#x27;0&#x27;</span>);<br><br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">cmp</span>(A, B)) C = <span class="hljs-built_in">sub</span>(A, B);<br>    <span class="hljs-keyword">else</span> C = <span class="hljs-built_in">sub</span>(B, A), cout &lt;&lt; <span class="hljs-string">&#x27;-&#x27;</span>;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = C.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i --) cout &lt;&lt; C[i];<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><h5 id="注意：-1"><a href="#注意：-1" class="headerlink" title="注意："></a>注意：</h5><blockquote><p>​（1）首先一定要保证是用大于减小数，故需要实现一个cmp函数</p><p>​（2）其次由于保证了是大数减小数，故不存在剩一位的情况，一定能减得下，故一定会被存进答案里</p><p>​（3）由于高位在后，低位在前，故有可能存在前导零，故需要取前导零。</p></blockquote><h3 id="3、高精度乘法"><a href="#3、高精度乘法" class="headerlink" title="3、高精度乘法"></a>3、高精度乘法</h3><h5 id="描述：-2"><a href="#描述：-2" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>​求一个大正整数与一个数的乘积。</p></blockquote><h5 id="思路：-2"><a href="#思路：-2" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>（1）用可变长数组vector存储A</p><p>（2）将字符串a逆序存入数组A中<br>（3）高精度乘法的构造：<br>    （3.1）定义一个答案数组，并且初始化进位t<br>    （3.2）从头到尾遍历大数A，<br>    （3.3）将每一位与b的乘积的计算结果放入t中<br>    （3.4）将t % 10的结果放入答案数组的末尾<br>    （3.5）更新进位t<br>    （3.6）看进位t是否还有数，如果还有，就在答案数组末尾加入该数<br>    （3.7）去前导0<br>（4）逆序输出答案数组即可</p></blockquote><h5 id="代码模板：-2"><a href="#代码模板：-2" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">mul</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt; A, <span class="hljs-type">int</span> b)</span></span><br><span class="hljs-function"></span>&#123;<br>    vector&lt;<span class="hljs-type">int</span>&gt; C;<br>    <span class="hljs-type">int</span> t = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;  i &lt; A.<span class="hljs-built_in">size</span>() || t; i ++)<br>    &#123;<br>        <span class="hljs-keyword">if</span> (i &lt; A.<span class="hljs-built_in">size</span>()) t += A[i] * b;<br><br>        C.<span class="hljs-built_in">push_back</span>(t % <span class="hljs-number">10</span>);<br>        t /= <span class="hljs-number">10</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (t) C.<span class="hljs-built_in">push_back</span>(t);<br>    <span class="hljs-keyword">while</span> (C.<span class="hljs-built_in">size</span>() &gt; <span class="hljs-number">1</span> &amp;&amp; C.<span class="hljs-built_in">back</span>() == <span class="hljs-number">0</span>) C.<span class="hljs-built_in">pop_back</span>();<br>    <span class="hljs-keyword">return</span> C;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    string a;<br>    vector&lt;<span class="hljs-type">int</span>&gt; A;<br>    <span class="hljs-type">int</span> b;<br>    cin &gt;&gt; a &gt;&gt; b;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = a.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i -- ) A.<span class="hljs-built_in">push_back</span>(a[i] - <span class="hljs-string">&#x27;0&#x27;</span>);<br><br>    <span class="hljs-keyword">auto</span> C = <span class="hljs-built_in">mul</span>(A, b);<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = C.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i --) cout &lt;&lt; C[i];<br><br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><h5 id="注意：-2"><a href="#注意：-2" class="headerlink" title="注意："></a>注意：</h5><blockquote><p>​（1）由于可能最后的答案可能为0，故需要去除前导零的情况。</p><p>​（2）由于可能最后一位计算后大于了10，还没有进位，故需要判断是否还有剩位，有则直接放在答案末尾即可。</p></blockquote><h3 id="4、高精度除法"><a href="#4、高精度除法" class="headerlink" title="4、高精度除法"></a>4、高精度除法</h3><h5 id="描述：-3"><a href="#描述：-3" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>​求一个一个非负大整数A与一个整数b的商和余数。</p></blockquote><h5 id="思路：-3"><a href="#思路：-3" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>高精度除法：大数A &#x2F; 小数b<br>（1）用可变长数组vector存储A<br>（2）将字符串a逆序存入数组A中<br>（3）构造高精度除法<br>    （3.1）定义答案数组，以及初始化余数t，由于余数最后要输出， 可以定义成全局变量<br>    （3.2）从后往前遍历大数（大数是逆序存储到数组的，但这里除法需要从高位开始计算，所以从最后一位即大数的高位开始）<br>    （3.3）每一位数 + 余数 * 10 ，进行计算<br>    （3.4）将上一步的结果 除 b 的结果放入答案数组<br>    （3.5）最后更新余数 t %&#x3D; b<br>    （3.6）将答案数组翻转，因为最后的输出是逆序输出的<br>    （3.7）去前导0<br>（4）逆序输出答案数组即可</p></blockquote><h5 id="代码模板：-3"><a href="#代码模板：-3" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">int</span> t;<br><span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">div</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt; A, <span class="hljs-type">int</span> b)</span></span><br><span class="hljs-function"></span>&#123;<br>    vector&lt;<span class="hljs-type">int</span>&gt; C;<br><br>    t = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = A.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i --)<br>    &#123;<br>        t = A[i] + t * <span class="hljs-number">10</span>;<br>        C.<span class="hljs-built_in">push_back</span>(t / b);<br>        t %= b;<br>    &#125;<br><br>    <span class="hljs-built_in">reverse</span>(C.<span class="hljs-built_in">begin</span>(), C.<span class="hljs-built_in">end</span>());<br>    <span class="hljs-keyword">while</span> (C.<span class="hljs-built_in">size</span>() &gt; <span class="hljs-number">1</span> &amp;&amp; C.<span class="hljs-built_in">back</span>() == <span class="hljs-number">0</span>) C.<span class="hljs-built_in">pop_back</span>();<br>    <span class="hljs-keyword">return</span> C;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    string a;<br>    <span class="hljs-type">int</span> b;<br>    cin &gt;&gt; a &gt;&gt; b;<br>    vector&lt;<span class="hljs-type">int</span>&gt; A;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = a.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i --) A.<span class="hljs-built_in">push_back</span>(a[i] - <span class="hljs-string">&#x27;0&#x27;</span>);<br><br>    <span class="hljs-keyword">auto</span> C = <span class="hljs-built_in">div</span>(A, b);<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = C.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i --) cout &lt;&lt; C[i];<br>    cout &lt;&lt; endl &lt;&lt; t;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure><h5 id="注意：-3"><a href="#注意：-3" class="headerlink" title="注意："></a>注意：</h5><blockquote><p>​（1）由于做除法只能从高位做，且模板都是逆序存，逆序输出，为了统一模板，则在除法模板中写的有些复杂</p><p>​（2）除法模板与其他模板不同，需要逆序逐位除，即高位往低位算</p><p>​（3）算出来之后，由于我们需要逆序输出，故我们要将求出来的答案用reverse进行翻转</p><p>​（4）然后由于可能前几位除不下，故需要进行去前导零。</p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法</category>
+      
+      <category>基础算法</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>c++</tag>
+      
+      <tag>高精度</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>二分</title>
+    <link href="/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86/"/>
+    <url>/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86/</url>
+    
+    <content type="html"><![CDATA[<h2 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找<span id="more"></span></h2><h3 id="1、整数二分："><a href="#1、整数二分：" class="headerlink" title="1、整数二分："></a>1、整数二分：</h3><h5 id="模板："><a href="#模板：" class="headerlink" title="模板："></a>模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">while</span> (l &lt; r)       <span class="hljs-comment">//当l &gt;= r 时，遍历结束，停止循环</span><br>&#123;<br><span class="hljs-type">int</span> mid = (l + r) &gt;&gt; <span class="hljs-number">1</span>;<br><span class="hljs-keyword">if</span> (q[mid] &gt;= x) r = mid;   <span class="hljs-comment">//check函数 当这个点，大于等于x，说明答案在左边，从右边缩小范围</span><br><span class="hljs-keyword">else</span> l = mid + <span class="hljs-number">1</span>;   <span class="hljs-comment">//反之，答案在右边，从左边缩小范围</span><br>&#125;<br><br> <span class="hljs-keyword">while</span> (l &lt; r)<br>&#123;<br><span class="hljs-keyword">if</span> (q[mid] &lt;= x) l = mid;   <span class="hljs-comment">//check函数，当这个点，小于等于x时，答案在右边，从左边缩小范围</span><br><span class="hljs-keyword">else</span> r = mid - <span class="hljs-number">1</span>;   <span class="hljs-comment">//反之，答案在左边，从右边缩小范围</span><br>&#125;<br></code></pre></td></tr></table></figure><h3 id="2、小数二分"><a href="#2、小数二分" class="headerlink" title="2、小数二分"></a>2、小数二分</h3><h5 id="模板：-1"><a href="#模板：-1" class="headerlink" title="模板："></a>模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">double</span> eps; <span class="hljs-comment">//一般比题目要求多两位</span><br><br><span class="hljs-keyword">while</span> (r - l &gt; eps)  <span class="hljs-comment">//只要 r - l 不小于该大小，就不断进行二分，找值</span><br>    &#123;<br>        <span class="hljs-type">double</span> mid = (l + r) / <span class="hljs-number">2</span>;<br>        <span class="hljs-keyword">if</span> (mid * mid * mid &gt;= n) r = mid;<br>        <span class="hljs-keyword">else</span> l = mid;<br>    &#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法</category>
+      
+      <category>基础算法</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>c++</tag>
+      
+      <tag>二分</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>排序</title>
-    <link href="/2023/04/05/%E6%8E%92%E5%BA%8F/"/>
-    <url>/2023/04/05/%E6%8E%92%E5%BA%8F/</url>
+    <link href="/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/"/>
+    <url>/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E6%8E%92%E5%BA%8F/</url>
     
     <content type="html"><![CDATA[<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序<span id="more"></span></h2><h3 id="1、快速排序"><a href="#1、快速排序" class="headerlink" title="1、快速排序"></a>1、快速排序</h3><h5 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>（1）定义出口<br>（2）选取一个随机点，以及确定左右边界<br>（3）i，j两个指针从左右两个边界向中间移动<br>    （3.1）左指针找到需要交换的值（大于参考点的值），就停下来<br>    （3.2）右指针找到需要交换的值（小于参考点的值），就停下来<br>    （3.3）当两个指针都停下来，且i指针在j指针左边时，交换两个值<br>（4）递归将每一个部分都进行同样的操作，直至细分到最小时，就满足了整个区间从左到右有序排列</p></blockquote><h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">quick_sort</span><span class="hljs-params">(<span class="hljs-type">int</span> q[], <span class="hljs-type">int</span> l, <span class="hljs-type">int</span> r)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">//边界条件 </span><br>    <span class="hljs-keyword">if</span>(l&gt;=r)<span class="hljs-keyword">return</span>;                         <span class="hljs-comment">//当左指针大于等于右指针说明两指针已经遍历了全部数据 </span><br>    <span class="hljs-comment">//确定分界点 </span><br>    <span class="hljs-type">int</span> x=q[l+r&gt;&gt;<span class="hljs-number">1</span>], i= l - <span class="hljs-number">1</span> ,j = r + <span class="hljs-number">1</span>;        <span class="hljs-comment">//随机选取一个数据中的值作为参考值  用i,j表示左右指针，但注意定义时，需要定义在数据外围外 </span><br>    <span class="hljs-keyword">while</span>(i &lt; j)<br>    &#123;<br>        <span class="hljs-keyword">do</span> i++ ; <span class="hljs-keyword">while</span>(q[i]&lt;x);          <span class="hljs-comment">//直到找到第一个不小于参考值x的值，左指针停止 ， 否则左指针不断后移 </span><br>        <span class="hljs-keyword">do</span> j-- ; <span class="hljs-keyword">while</span>(q[j]&gt;x);          <span class="hljs-comment">//直到找到第一个不大于参考值x的值，右指针停止 ， 否则右指针不断左移 </span><br>        <span class="hljs-keyword">if</span>(i &lt; j)<span class="hljs-built_in">swap</span>(q[i],q[j]);        <span class="hljs-comment">//当左右指针都停下，则说明两指针都找到了需要交换的值，则交换两值 </span><br>    &#125;<br><br>    <span class="hljs-built_in">quick_sort</span>(q, l, j);                 <span class="hljs-comment">//将左边部分作为一个新串传入， </span><br>    <span class="hljs-built_in">quick_sort</span>(q, j+<span class="hljs-number">1</span>, r);               <span class="hljs-comment">//将右边部分作为一个新串传入， </span><br>    <span class="hljs-comment">//经过上面的递归则可以完成整个数据的排序 </span><br><br>&#125;<br></code></pre></td></tr></table></figure><h3 id="2、归并排序"><a href="#2、归并排序" class="headerlink" title="2、归并排序"></a>2、归并排序</h3><h5 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h5><blockquote><p>（1）定义出口 l &gt;&#x3D; r<br>（2）先确定中间点，然后进行左右区间的递归，此时返回的序列为两个有序序列<br>（3）定义左右两个序列的开头<br>（4）同时遍历左右两个序列，每次将两个序列中最小的值拿出来，放到答案里（由于此时两个序列都是有序序列，所以只需要比较两个序列的开头就行了）<br>（5）判断两个序列是否还有元素没有加入，有则直接全部加入即可<br>（6）最后将排好序的数组重新赋值给原数组即可</p></blockquote><h5 id="代码模板：-1"><a href="#代码模板：-1" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">merge_sort</span><span class="hljs-params">(<span class="hljs-type">int</span> q[], <span class="hljs-type">int</span> l, <span class="hljs-type">int</span> r)</span>  </span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">if</span> (l &gt;= r) <span class="hljs-keyword">return</span>;     <span class="hljs-comment">//出口</span><br><br>    <span class="hljs-type">int</span> mid = (l + r) &gt;&gt; <span class="hljs-number">1</span>;     <span class="hljs-comment">//确定分界点</span><br>    <span class="hljs-type">int</span> k = <span class="hljs-number">0</span>;  <span class="hljs-comment">//用于计算存到了多少个了</span><br><br>    <span class="hljs-built_in">merge_sort</span>(q, l, mid), <span class="hljs-built_in">merge_sort</span>(q, mid + <span class="hljs-number">1</span>, r);       <span class="hljs-comment">//将序列递归成两个有序序列</span><br><br>    <span class="hljs-type">int</span> i = l, j = mid + <span class="hljs-number">1</span>;     <span class="hljs-comment">//定义左右序列的开头</span><br><br>    <span class="hljs-keyword">while</span> (i &lt;= mid &amp;&amp; j &lt;= r)  <span class="hljs-comment">//判断两个序列是否有一个序列已经遍历完成</span><br>    &#123;<br>        <span class="hljs-keyword">if</span> (q[i] &lt;= q[j]) temp[k ++] = q[i++];<br>        <span class="hljs-keyword">else</span> temp[k ++] = q[j++];<br>    &#125;<br><br>    <span class="hljs-keyword">while</span> (i &lt;= mid) temp[k ++] = q[i++];   <span class="hljs-comment">//将剩余序列的元素直接加入</span><br>    <span class="hljs-keyword">while</span> (j &lt;= r) temp[k ++] = q[j++];<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = l, j = <span class="hljs-number">0</span>; i &lt;= r; i ++, j ++) q[i] = temp[j]; <span class="hljs-comment">//将数组复原</span><br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
     
     
     <categories>
+      
+      <category>算法</category>
       
       <category>基础算法</category>
       
@@ -40,6 +181,8 @@
     
     <categories>
       
+      <category>算法</category>
+      
       <category>杂类</category>
       
     </categories>
@@ -64,6 +207,8 @@
     
     
     <categories>
+      
+      <category>算法</category>
       
       <category>动态规划</category>
       
@@ -92,6 +237,8 @@
     
     <categories>
       
+      <category>算法</category>
+      
       <category>动态规划</category>
       
     </categories>
@@ -118,6 +265,8 @@
     
     
     <categories>
+      
+      <category>算法</category>
       
       <category>贪心</category>
       
@@ -146,6 +295,8 @@
     
     <categories>
       
+      <category>算法</category>
+      
       <category>贪心</category>
       
     </categories>
@@ -172,6 +323,8 @@
     
     
     <categories>
+      
+      <category>算法</category>
       
       <category>贪心</category>
       
@@ -200,6 +353,8 @@
     
     <categories>
       
+      <category>算法</category>
+      
       <category>贪心</category>
       
     </categories>
@@ -226,6 +381,8 @@
     
     
     <categories>
+      
+      <category>算法</category>
       
       <category>贪心</category>
       
@@ -254,6 +411,8 @@
     
     <categories>
       
+      <category>算法</category>
+      
       <category>动态规划</category>
       
     </categories>
@@ -280,6 +439,8 @@
     
     
     <categories>
+      
+      <category>算法</category>
       
       <category>图论</category>
       
@@ -308,6 +469,8 @@
     
     <categories>
       
+      <category>算法</category>
+      
       <category>数论</category>
       
     </categories>
@@ -335,6 +498,8 @@
     
     <categories>
       
+      <category>算法</category>
+      
       <category>图论</category>
       
     </categories>
@@ -361,6 +526,8 @@
     
     
     <categories>
+      
+      <category>算法</category>
       
       <category>图论</category>
       
