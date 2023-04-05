@@ -98,6 +98,14 @@
     <content type="html"><![CDATA[<h2 id="双指针算法"><a href="#双指针算法" class="headerlink" title="双指针算法"></a>双指针算法<span id="more"></span></h2><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>常见问题分类：<br>    (1) 对于一个序列，用两个指针维护一段区间<br>    (2) 对于两个序列，维护某种次序，比如归并排序中合并两个有序序列的操作</p></blockquote><h4 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>, j = <span class="hljs-number">0</span>; i &lt; n; i ++ )<br>&#123;<br>    <span class="hljs-keyword">while</span> (j &lt; i &amp;&amp; <span class="hljs-built_in">check</span>(i, j)) j ++ ;<br><br>    <span class="hljs-comment">// 具体问题的逻辑</span><br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
     
     
+    <categories>
+      
+      <category>算法</category>
+      
+      <category>基础算法</category>
+      
+    </categories>
+    
     
     <tags>
       
