@@ -16,21 +16,23 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="小樱桃的个人博客">
+    <meta name="description" content="位运算">
 <meta property="og:type" content="article">
-<meta property="og:title" content="双指针算法">
-<meta property="og:url" content="http://example.com/2023/04/05/%E5%8F%8C%E6%8C%87%E9%92%88%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:title" content="位运算">
+<meta property="og:url" content="http://example.com/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E4%BD%8D%E8%BF%90%E7%AE%97/index.html">
 <meta property="og:site_name" content="小樱桃">
-<meta property="og:description" content="小樱桃的个人博客">
+<meta property="og:description" content="位运算">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-04-05T10:48:39.000Z">
-<meta property="article:modified_time" content="2023-04-05T10:48:39.805Z">
+<meta property="article:published_time" content="2023-04-05T10:48:51.000Z">
+<meta property="article:modified_time" content="2023-04-05T13:28:36.878Z">
 <meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="位运算">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>双指针算法 - 小樱桃</title>
+  <title>位运算 - 小樱桃</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +215,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="双指针算法"></span>
+            <span id="subtitle" data-typed-text="位运算"></span>
           
         </div>
 
@@ -236,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          154 字
         
       </span>
     
@@ -247,7 +249,7 @@
         
         
         
-          1 分钟
+          2 分钟
         
       </span>
     
@@ -293,12 +295,17 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">双指针算法</h1>
+            <h1 style="display: none">位运算</h1>
             
             
               <div class="markdown-body">
                 
-                
+                <h2 id="位运算"><a href="#位运算" class="headerlink" title="位运算"></a>位运算<span id="more"></span></h2><h3 id="1、返回n的最后一位1："><a href="#1、返回n的最后一位1：" class="headerlink" title="1、返回n的最后一位1："></a>1、返回n的最后一位1：</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">lowbit</span>(n) = n &amp; -n<br>       <br>   求一个数x，其二进制表示下<span class="hljs-number">1</span>的个数。<br>       <span class="hljs-type">int</span> res = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">while</span> (x)<br>       &#123;<br>           res ++;<br>           x -= <span class="hljs-built_in">lowbit</span>(x);<br>	&#125;<br>	cout &lt;&lt; res;<br></code></pre></td></tr></table></figure>
+
+<p>2、求n的第k位数字: </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c++">n &gt;&gt; k &amp; <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+
                 
               </div>
             
@@ -306,6 +313,43 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/" class="category-chain-item">基础算法</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/c/">#c++</a>
+      
+        <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/">#位运算</a>
+      
+    </div>
   
 </div>
 
@@ -315,8 +359,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>双指针算法</div>
-      <div>http://example.com/2023/04/05/双指针算法/</div>
+      <div>位运算</div>
+      <div>http://example.com/2023/04/05/基础算法/位运算/</div>
     </div>
     <div class="license-meta">
       
@@ -360,9 +404,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/05/%E4%BD%8D%E8%BF%90%E7%AE%97/" title="位运算">
+                      <a href="/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E7%A6%BB%E6%95%A3%E5%8C%96/" title="离散化">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">位运算</span>
+                        <span class="hidden-mobile">离散化</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -370,8 +414,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/05/%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86/" title="前缀和与差分">
-                        <span class="hidden-mobile">前缀和与差分</span>
+                      <a href="/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E5%8F%8C%E6%8C%87%E9%92%88%E7%AE%97%E6%B3%95/" title="双指针算法">
+                        <span class="hidden-mobile">双指针算法</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

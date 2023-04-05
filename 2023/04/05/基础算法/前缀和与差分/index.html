@@ -16,21 +16,23 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="小樱桃的个人博客">
+    <meta name="description" content="前缀和与差分">
 <meta property="og:type" content="article">
-<meta property="og:title" content="位运算">
-<meta property="og:url" content="http://example.com/2023/04/05/%E4%BD%8D%E8%BF%90%E7%AE%97/index.html">
+<meta property="og:title" content="前缀和与差分">
+<meta property="og:url" content="http://example.com/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86/index.html">
 <meta property="og:site_name" content="小樱桃">
-<meta property="og:description" content="小樱桃的个人博客">
+<meta property="og:description" content="前缀和与差分">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-04-05T10:48:51.000Z">
-<meta property="article:modified_time" content="2023-04-05T10:48:51.477Z">
+<meta property="article:published_time" content="2023-04-05T10:48:32.000Z">
+<meta property="article:modified_time" content="2023-04-05T13:22:51.069Z">
 <meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="前缀和与差分">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>位运算 - 小樱桃</title>
+  <title>前缀和与差分 - 小樱桃</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +215,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="位运算"></span>
+            <span id="subtitle" data-typed-text="前缀和与差分"></span>
           
         </div>
 
@@ -236,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          2.5k 字
         
       </span>
     
@@ -247,7 +249,7 @@
         
         
         
-          1 分钟
+          21 分钟
         
       </span>
     
@@ -293,12 +295,46 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">位运算</h1>
+            <h1 style="display: none">前缀和与差分</h1>
             
             
               <div class="markdown-body">
                 
-                
+                <h2 id="前缀和与差分"><a href="#前缀和与差分" class="headerlink" title="前缀和与差分"></a>前缀和与差分<span id="more"></span></h2><h3 id="1、一维前缀和"><a href="#1、一维前缀和" class="headerlink" title="1、一维前缀和"></a>1、一维前缀和</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>​	可以在O(1)的时间算出一段区间内的所有数的和。</p>
+</blockquote>
+<h5 id="模板："><a href="#模板：" class="headerlink" title="模板："></a>模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++ ) <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;a[i]);<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) s[i] = s[i - <span class="hljs-number">1</span>] + a[i];   <span class="hljs-comment">//预处理  计算前缀和数组</span><br><br><span class="hljs-type">int</span> l, r;<br><span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d&quot;</span>, &amp;l, &amp;r);<br><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, s[r] - s[l - <span class="hljs-number">1</span>]);  <span class="hljs-comment">//进行每一段的求和</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h5><blockquote>
+<p>​	前缀和与差分数组下标都必须从1开始。</p>
+</blockquote>
+<h3 id="2、二维前缀和"><a href="#2、二维前缀和" class="headerlink" title="2、二维前缀和"></a>2、二维前缀和</h3><h5 id="描述：-1"><a href="#描述：-1" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>​	能够在O(1)的时间内算出一个矩阵中所有数的和。</p>
+</blockquote>
+<h5 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h5><blockquote>
+<p>（1）数组下标都从1开始，便于后续的处理<br>（2）遍历二维数组中的每一个点<br>构造：每一个点执行s[i][j] &#x3D; s[i - 1][j] + s[i][j - 1] + a[i][j] - s[i - 1][j - 1];<br>（3）获取(x1, y1)与(x2, y2)之间的子矩阵的所有数的和<br>构造完成后的二维前缀和数组，直接输出<br>s[x2][y2] - s[x2][y1 - 1] - s[x1 - 1][y2] + s[x1 - 1][y1 - 1]，即可获得该子矩阵的所有数的和</p>
+</blockquote>
+<h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++">s[i][j] = s[i - <span class="hljs-number">1</span>][j] + s[i][j - <span class="hljs-number">1</span>] - s[i - <span class="hljs-number">1</span>][j - <span class="hljs-number">1</span>] + a[i][j];    <span class="hljs-comment">//求二维前缀和数组</span><br><br><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, s[x2][y2] - s[x2][y1 - <span class="hljs-number">1</span>] - s[x1 - <span class="hljs-number">1</span>][y2] + s[x1 - <span class="hljs-number">1</span>][y1 - <span class="hljs-number">1</span>]);  <span class="hljs-comment">//想要的矩阵之内的所有数之和</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3、一维差分"><a href="#3、一维差分" class="headerlink" title="3、一维差分"></a>3、一维差分</h3><h5 id="描述：-2"><a href="#描述：-2" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>​	用于给某个区间快速地加上或者减去某个数。</p>
+</blockquote>
+<h5 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h5><blockquote>
+<p>（1）构造差分数组<br>    （1.1）将差分数组看作原本都是0，a[i]是原数组，b[i]是差分数组<br>    （1.2）然后将原数组中的每一个数，都插入到差分数组中，<br>        b[l] +&#x3D; c, &#x2F;&#x2F;a[l]后的数都会+c<br>        b[r + 1] -&#x3D; c; &#x2F;&#x2F;a[r + 1]后的数都会-c，【补丁】<br>        最后达到的效果就是a[l] ~a[r]之间的每一个数都加上了c<br>（2）然后根据题目要求在差分数组中指定区间中的每一个数都加上一个数，即在差分数组中的该区域中插入该数<br>（3）将差分数组还原成原数组（前缀和数组）输出即可 b[i] +&#x3D; b[i - 1];</p>
+</blockquote>
+<h5 id="代码模板：-1"><a href="#代码模板：-1" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-type">int</span> l, <span class="hljs-type">int</span> r, <span class="hljs-type">int</span> c)</span></span><br><span class="hljs-function"></span>&#123;<br>    b[l] += c;<br>    b[r + <span class="hljs-number">1</span>] -= c;<br>&#125;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;a[i]);   <span class="hljs-comment">//输入原数组</span><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) <span class="hljs-built_in">insert</span>(i, i, a[i]);   <span class="hljs-comment">//将原数组变成差分数组，此时原数组为该数组的前缀和数组</span><br><br><span class="hljs-comment">//给区间[l, r]上的数都加上c</span><br><span class="hljs-built_in">insert</span>(l, r, c);    <span class="hljs-comment">//将差分数组的第l个，加上c，后续在还原原数组的时候，后续到r的数，都会加上c</span><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) b[i] += b[i - <span class="hljs-number">1</span>]; <span class="hljs-comment">//将差分数组还原成原数组</span><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, b[i]);  <span class="hljs-comment">//输出原数组</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="4、二维差分"><a href="#4、二维差分" class="headerlink" title="4、二维差分"></a>4、二维差分</h3><h5 id="描述：-3"><a href="#描述：-3" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>​	快速地将一个矩阵中所有数全部加上或者减去一个数，并求出多次操作后的结果。</p>
+</blockquote>
+<h5 id="思路：-2"><a href="#思路：-2" class="headerlink" title="思路："></a>思路：</h5><blockquote>
+<p>（1）差分矩阵的构造：<br>    （1.1）将差分数组看作全部都是0，将原数组中的数处理后，一个一个插入到差分数组中<br>    （1.2）先全部上c，再将不需要加上c的地方进行补丁，即减去c<br>        b[x1][y1] +&#x3D; c;  &#x2F;&#x2F;以(x1, y1)为左上角顶点的所有矩阵中的元素全部加上了c这个数<br>        b[x2 + 1][y1] -&#x3D; c; &#x2F;&#x2F;以(x2 + 1, y1)为左上角顶点的所有矩阵中的元素全部减去了c这个数<br>        b[x1][y2 + 1] -&#x3D; c; &#x2F;&#x2F;以(x1, y2 + 1)为左上角顶点的所有矩阵中的元素全部减去了c这个数<br>        b[x2 + 1][y2 + 1] +&#x3D; c; &#x2F;&#x2F;以(x2 + 1, y2 + 1)为左上角顶点的所有矩阵中的元素加上c这个数，前面多减了一次<br>（2）然后根据题目要求在差分数组中指定区间中的每一个数都加上一个数，即在差分数组中的该区域中插入该数<br>（3）将差分数组还原成原数组（前缀和数组）输出即可<br>    b[i][j] +&#x3D; b[i][j - 1] + b[i - 1][j] - b[i - 1][j - 1];</p>
+</blockquote>
+<h5 id="代码模板：-2"><a href="#代码模板：-2" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-type">int</span> x1, <span class="hljs-type">int</span> y1, <span class="hljs-type">int</span> x2, <span class="hljs-type">int</span> y2, <span class="hljs-type">int</span> c)</span>  <span class="hljs-comment">//初始化差分数组</span></span><br><span class="hljs-function"></span>&#123;<br>    b[x1][y1] += c;<br>    b[x2 + <span class="hljs-number">1</span>][y1] -= c;<br>    b[x1][y2 + <span class="hljs-number">1</span>] -= c;<br>    b[x2 + <span class="hljs-number">1</span>][y2 + <span class="hljs-number">1</span>] += c;<br>&#125;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)   <span class="hljs-comment">//读取原数组</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt;= m; j ++)<br>            <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;a[i][j]);<br>     <br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt;= m; j ++)<br>            <span class="hljs-built_in">insert</span>(i, j, i, j, a[i][j]);    <span class="hljs-comment">//初始化差分数组</span><br>            <br><span class="hljs-comment">//将点(x1, y1)与点(x2, y2)形成的矩阵的所有数都加上c</span><br><span class="hljs-built_in">insert</span>(x1, y1, x2, y2, c);  <span class="hljs-comment">//进行插入数字的操作 </span><br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt;= m; j ++)<br>            b[i][j] += b[i][j - <span class="hljs-number">1</span>] + b[i - <span class="hljs-number">1</span>][j] - b[i - <span class="hljs-number">1</span>][j - <span class="hljs-number">1</span>]; <span class="hljs-comment">//将差分数组还原成原数组，即还原成前缀和数组</span><br>            <br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)&#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt;= m; j ++)<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, b[i][j]);    <span class="hljs-comment">//输出还原后的数组即可            </span><br></code></pre></td></tr></table></figure>
+
+
                 
               </div>
             
@@ -306,6 +342,43 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/" class="category-chain-item">基础算法</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/c/">#c++</a>
+      
+        <a href="/tags/%E5%89%8D%E7%BC%80%E5%92%8C%E4%B8%8E%E5%B7%AE%E5%88%86/">#前缀和与差分</a>
+      
+    </div>
   
 </div>
 
@@ -315,8 +388,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>位运算</div>
-      <div>http://example.com/2023/04/05/位运算/</div>
+      <div>前缀和与差分</div>
+      <div>http://example.com/2023/04/05/基础算法/前缀和与差分/</div>
     </div>
     <div class="license-meta">
       
@@ -360,9 +433,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/05/%E7%A6%BB%E6%95%A3%E5%8C%96/" title="离散化">
+                      <a href="/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E5%8F%8C%E6%8C%87%E9%92%88%E7%AE%97%E6%B3%95/" title="双指针算法">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">离散化</span>
+                        <span class="hidden-mobile">双指针算法</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -370,8 +443,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/05/%E5%8F%8C%E6%8C%87%E9%92%88%E7%AE%97%E6%B3%95/" title="双指针算法">
-                        <span class="hidden-mobile">双指针算法</span>
+                      <a href="/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E9%AB%98%E7%B2%BE%E5%BA%A6%E7%AE%97%E6%B3%95/" title="高精度算法">
+                        <span class="hidden-mobile">高精度算法</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
