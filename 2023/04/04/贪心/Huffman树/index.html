@@ -16,22 +16,22 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="排序不等式">
+    <meta name="description" content="Huffman树">
 <meta property="og:type" content="article">
-<meta property="og:title" content="排序不等式">
-<meta property="og:url" content="http://example.com/2023/04/04/%E6%8E%92%E5%BA%8F%E4%B8%8D%E7%AD%89%E5%BC%8F/index.html">
+<meta property="og:title" content="Huffman树">
+<meta property="og:url" content="http://example.com/2023/04/04/%E8%B4%AA%E5%BF%83/Huffman%E6%A0%91/index.html">
 <meta property="og:site_name" content="小樱桃">
-<meta property="og:description" content="排序不等式">
+<meta property="og:description" content="Huffman树">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-04-04T13:07:58.000Z">
-<meta property="article:modified_time" content="2023-04-04T13:21:42.088Z">
+<meta property="article:published_time" content="2023-04-04T12:53:40.000Z">
+<meta property="article:modified_time" content="2023-04-04T13:11:37.563Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="c++">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>排序不等式 - 小樱桃</title>
+  <title>Huffman树 - 小樱桃</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -214,7 +214,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="排序不等式"></span>
+            <span id="subtitle" data-typed-text="Huffman树"></span>
           
         </div>
 
@@ -225,7 +225,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-04 21:07" pubdate>
+        <time datetime="2023-04-04 20:53" pubdate>
           2023年4月4日 晚上
         </time>
       </span>
@@ -237,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          259 字
+          423 字
         
       </span>
     
@@ -248,7 +248,7 @@
         
         
         
-          3 分钟
+          4 分钟
         
       </span>
     
@@ -294,18 +294,22 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">排序不等式</h1>
+            <h1 style="display: none">Huffman树</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="排序不等式"><a href="#排序不等式" class="headerlink" title="排序不等式"></a>排序不等式<span id="more"></span></h2><h3 id="1、排队打水："><a href="#1、排队打水：" class="headerlink" title="1、排队打水："></a>1、排队打水：</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote>
-<p>​	有n个人排队到1个水龙头打水，第i个人装满水桶所需要的时间是t，如何安排他们的打水顺序，才能使所有人等待的时间之和最小？</p>
+                <h2 id="Huffman树"><a href="#Huffman树" class="headerlink" title="Huffman树"></a>Huffman树<span id="more"></span></h2><h3 id="1、合并果子："><a href="#1、合并果子：" class="headerlink" title="1、合并果子："></a>1、合并果子：</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>​	将若干堆果子合并到一堆，每次可以将任意两堆进行合并。	</p>
 </blockquote>
 <h5 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h5><blockquote>
-<p>​	按照打水时间从小到大排序即可，总时间最小</p>
+<p>​	每次选取最少的两堆进行合并即可，采用优先队列，即小根堆进行存储所有果子。</p>
 </blockquote>
-<h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++) cin &gt;&gt; a[i];	<span class="hljs-comment">//读入</span><br><br><span class="hljs-built_in">sort</span>(a, a + n);	<span class="hljs-comment">//排序</span><br><br><span class="hljs-type">long</span> <span class="hljs-type">long</span>  res = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++)<br>&#123;<br>    res += a[i] * (n - i - <span class="hljs-number">1</span>); <span class="hljs-comment">//每次打水，后面都会有 n - i - 1个人等他</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c++">priority_queue&lt;<span class="hljs-type">int</span>, vector&lt;<span class="hljs-type">int</span>&gt;, greater&lt;<span class="hljs-type">int</span>&gt;&gt; heap; <span class="hljs-comment">//小根堆定义</span><br>    <br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++)<br>&#123;<br>    <span class="hljs-type">int</span> x;<br>    cin &gt;&gt; x;<br>    heap.<span class="hljs-built_in">push</span>(x); <span class="hljs-comment">//入堆</span><br>&#125;<br><br><span class="hljs-keyword">while</span> (heap.<span class="hljs-built_in">size</span>() &gt; <span class="hljs-number">1</span>)<br>&#123;<br>    <span class="hljs-type">int</span> a = heap.<span class="hljs-built_in">top</span>(); heap.<span class="hljs-built_in">pop</span>();	<span class="hljs-comment">//取出堆顶并剔除</span><br>    <span class="hljs-type">int</span> b = heap.<span class="hljs-built_in">top</span>(); heap.<span class="hljs-built_in">pop</span>();<br>    res += a + b;<br>        <br>    heap.<span class="hljs-built_in">push</span>(a + b);	<span class="hljs-comment">//将合并得到的新堆加入堆中</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h5><blockquote>
+<p>​	很容易忽略的一点是，没有将合并得到的新堆加入堆中。</p>
+</blockquote>
 
                 
               </div>
@@ -351,8 +355,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>排序不等式</div>
-      <div>http://example.com/2023/04/04/排序不等式/</div>
+      <div>Huffman树</div>
+      <div>http://example.com/2023/04/04/贪心/Huffman树/</div>
     </div>
     <div class="license-meta">
       
@@ -396,9 +400,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/04/%E7%BB%9D%E5%AF%B9%E5%80%BC%E4%B8%8D%E7%AD%89%E5%BC%8F/" title="绝对值不等式">
+                      <a href="/2023/04/04/%E8%B4%AA%E5%BF%83/%E6%8E%92%E5%BA%8F%E4%B8%8D%E7%AD%89%E5%BC%8F/" title="排序不等式">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">绝对值不等式</span>
+                        <span class="hidden-mobile">排序不等式</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -406,8 +410,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/04/Huffman%E6%A0%91/" title="Huffman树">
-                        <span class="hidden-mobile">Huffman树</span>
+                      <a href="/2023/04/04/%E8%B4%AA%E5%BF%83/%E5%8C%BA%E9%97%B4%E8%B4%AA%E5%BF%83/" title="区间贪心">
+                        <span class="hidden-mobile">区间贪心</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

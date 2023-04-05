@@ -19,18 +19,18 @@
     <meta name="description" content="线性DP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="线性DP">
-<meta property="og:url" content="http://example.com/2023/04/05/%E7%BA%BF%E6%80%A7DP/index.html">
+<meta property="og:url" content="http://example.com/2023/04/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/%E7%BA%BF%E6%80%A7DP/index.html">
 <meta property="og:site_name" content="小樱桃">
 <meta property="og:description" content="线性DP">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2023/04/05/%E7%BA%BF%E6%80%A7DP/%E6%95%B0%E5%AD%97%E4%B8%89%E8%A7%92%E5%BD%A2.png">
-<meta property="og:image" content="http://example.com/2023/04/05/%E7%BA%BF%E6%80%A7DP/%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB.png">
+<meta property="og:image" content="http://example.com/2023/04/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/%E7%BA%BF%E6%80%A7DP/%E6%95%B0%E5%AD%97%E4%B8%89%E8%A7%92%E5%BD%A2.png">
+<meta property="og:image" content="http://example.com/2023/04/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/%E7%BA%BF%E6%80%A7DP/%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB.png">
 <meta property="article:published_time" content="2023-04-05T03:24:09.000Z">
 <meta property="article:modified_time" content="2023-04-05T06:06:24.325Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="c++">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2023/04/05/%E7%BA%BF%E6%80%A7DP/%E6%95%B0%E5%AD%97%E4%B8%89%E8%A7%92%E5%BD%A2.png">
+<meta name="twitter:image" content="http://example.com/2023/04/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/%E7%BA%BF%E6%80%A7DP/%E6%95%B0%E5%AD%97%E4%B8%89%E8%A7%92%E5%BD%A2.png">
   
   
   
@@ -310,7 +310,7 @@
 <p>集合划分：以最后一个点是由左上方来的，还是右上方来的进行划分。</p>
 <p>状态转移方程：f[i][j] &#x3D; max(f[i - 1][j - 1], f[i - 1][j]) + g[i][j];</p>
 </blockquote>
-<img src="/2023/04/05/%E7%BA%BF%E6%80%A7DP/%E6%95%B0%E5%AD%97%E4%B8%89%E8%A7%92%E5%BD%A2.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/04/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/%E7%BA%BF%E6%80%A7DP/%E6%95%B0%E5%AD%97%E4%B8%89%E8%A7%92%E5%BD%A2.png" srcset="/img/loading.gif" lazyload class="">
 
 <h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt;= n + <span class="hljs-number">1</span>; j ++)<br>            f[i][j] = <span class="hljs-number">-2e9</span>;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt;= i; j ++)<br>            f[i][j] = <span class="hljs-built_in">max</span>(f[i - <span class="hljs-number">1</span>][j - <span class="hljs-number">1</span>], f[i - <span class="hljs-number">1</span>][j]) + g[i][j];<br></code></pre></td></tr></table></figure>
 
@@ -365,7 +365,7 @@
 <p>​	集合：f[i][j]，将第一个子串前i个字符与第二个字串前j个字符变成一样的操作方法<br>​	属性：min</p>
 <p>​	集合划分：删除、插入、替换三种不同操作<br>​	状态计算：<br>​	（1）删除：需要a[1<del>i - 1] &#x3D; b[1</del>j]<br>​	（2）插入：需要a[1<del>i] &#x3D; b[1</del>j-1]<br>​	（3）替换：需要a[1<del>i-1] &#x3D; b[1</del>j-1]</p>
 </blockquote>
-<img src="/2023/04/05/%E7%BA%BF%E6%80%A7DP/%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/04/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/%E7%BA%BF%E6%80%A7DP/%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB.png" srcset="/img/loading.gif" lazyload class="">
 
 <h5 id="代码模板：-2"><a href="#代码模板：-2" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%s&quot;</span>, &amp;n, a + <span class="hljs-number">1</span>);<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%s&quot;</span>, &amp;m, b + <span class="hljs-number">1</span>);<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt;= m; i ++) f[<span class="hljs-number">0</span>][i] = i;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt;= n; i ++) f[i][<span class="hljs-number">0</span>] = i;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>    &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt;= m; j ++)<br>        &#123;<br>            f[i][j] = <span class="hljs-built_in">min</span>(f[i - <span class="hljs-number">1</span>][j] + <span class="hljs-number">1</span>, f[i][j - <span class="hljs-number">1</span>] + <span class="hljs-number">1</span>);    <span class="hljs-comment">//删和增</span><br>            <span class="hljs-keyword">if</span> (a[i] == b[j]) f[i][j] = <span class="hljs-built_in">min</span>(f[i][j], f[i - <span class="hljs-number">1</span>][j - <span class="hljs-number">1</span>]);  <span class="hljs-comment">//改</span><br>            <span class="hljs-keyword">else</span> f[i][j] = <span class="hljs-built_in">min</span>(f[i][j], f[i - <span class="hljs-number">1</span>][j - <span class="hljs-number">1</span>] + <span class="hljs-number">1</span>);<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
 
@@ -444,7 +444,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>线性DP</div>
-      <div>http://example.com/2023/04/05/线性DP/</div>
+      <div>http://example.com/2023/04/05/动态规划/线性DP/</div>
     </div>
     <div class="license-meta">
       
@@ -488,11 +488,17 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2023/04/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/%E5%8C%BA%E9%97%B4DP/" title="区间DP">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">区间DP</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/04/%E6%8E%A8%E5%85%AC%E5%BC%8F/" title="推公式">
+                      <a href="/2023/04/04/%E8%B4%AA%E5%BF%83/%E6%8E%A8%E5%85%AC%E5%BC%8F/" title="推公式">
                         <span class="hidden-mobile">推公式</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
