@@ -4,6 +4,122 @@
   
   
   <entry>
+    <title>KMP</title>
+    <link href="/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/KMP/"/>
+    <url>/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/KMP/</url>
+    
+    <content type="html"><![CDATA[<h2 id="KMP"><a href="#KMP" class="headerlink" title="KMP"></a>KMP<span id="more"></span></h2><h4 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h4><blockquote><p>​子串的匹配算法。</p></blockquote><h4 id="核心："><a href="#核心：" class="headerlink" title="核心："></a>核心：</h4><blockquote><p>KMP算法分为两个部分：求next数组 和匹配字符串</p><p>（1）求next数组：<br>    （1.1）先让子串最近一个与其相同的位置，然后继续判断，直至能匹配上或者回到第一个字符位置。<br>    （1.2）回到能匹配到的地方后，继续开始匹配，匹配成功，则j向后移，<br>    （1.3）记录当前子串字符i的能匹配上的位置<br>    （1.4）遍历整个子串，便能找出子串中能匹配上的位置<br>（2）匹配字符串：利用子串的next数组进行匹配，优化，不用每次匹配失败都回到子串的第一个字符<br>    （2.1）匹配不成功，每次匹配前，先让子串回到能与主串匹配的位置<br>    （2.2）然后进行匹配，如果匹配成功，就把子串匹配的位置向后移<br>    （2.3）如果子串j匹配完了，即j &#x3D;&#x3D; n时，说明在主串中找到了子串匹配串，则进行输出该位置，并且将j回到能匹配的位置<br>    （2.4）逐一匹配主串中所有字符即可</p></blockquote><h4 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//求next数组</span><br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">2</span>, j = <span class="hljs-number">0</span>; i &lt;= n; i ++ ) <span class="hljs-comment">//第一位肯定是0，直接从第二位开始计算</span><br>    &#123;<br>        <span class="hljs-keyword">while</span>(j &amp;&amp; p[i] != p[j + <span class="hljs-number">1</span>])j = ne[j];        <span class="hljs-comment">//当j退到0或者，主串和子串的值对不上的时候，让j回到能对上的位置，直到找到或者无路可退为止</span><br>        <span class="hljs-keyword">if</span>(p[i] == p[j + <span class="hljs-number">1</span>])j ++;                     <span class="hljs-comment">//if能对上就让子串继续往后对</span><br>        ne[i] = j;                                    <span class="hljs-comment">//记录下该点时的next数组值</span><br>    &#125;<br><br><span class="hljs-comment">//开始匹配</span><br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>, j = <span class="hljs-number">0</span>; i &lt;= m; i ++)<br>    &#123;<br>        <span class="hljs-keyword">while</span>(j &amp;&amp; s[i] != p[j + <span class="hljs-number">1</span>])j = ne[j];        <span class="hljs-comment">//当j退到0或者，主串和子串的值对不上的时候，让j回到能对上的位置，直到找到或者无路可退为止</span><br>        <span class="hljs-keyword">if</span>(s[i] == p[j + <span class="hljs-number">1</span>])j ++;                     <span class="hljs-comment">//if能对上就让子串继续往后对</span><br>        <span class="hljs-keyword">if</span>(j == n)<br>        &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, i - n);                     <span class="hljs-comment">//输出此时的起始下标（该位置减去子串总长度，即子串起始下标）</span><br>            j = ne[j];                                <span class="hljs-comment">//将子串恢复到他下次能够匹配的位置</span><br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法</category>
+      
+      <category>数据结构</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>数据结构</tag>
+      
+      <tag>算法</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>哈希表</title>
+    <link href="/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%93%88%E5%B8%8C%E8%A1%A8/"/>
+    <url>/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%93%88%E5%B8%8C%E8%A1%A8/</url>
+    
+    <content type="html"><![CDATA[<h2 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表<span id="more"></span></h2><h4 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h4><blockquote><p>​将较大的数值映射到较小的数组下标里。</p></blockquote><h4 id="核心思路："><a href="#核心思路：" class="headerlink" title="核心思路："></a>核心思路：</h4><blockquote><p>1、开放取址法<br>可以怎么去理解呢？<br>每次先找到插入数或者查找数的映射值，然后从该映射值开始找<br>插入的时候往后找空位，如果找到了空位，就停止，返回空位的下标<br>查询的时候，往后找，一个一个对比是否存在查找的数，直至查到空位位置，说明不存在这个数，<br>因为每一个数，一定是存在其映射数后面的，如果找到了空位，说明映射到这个数的后面的数已经找完了，说明不存在该数</p><p>需要注意的是：数组长度最好开到题给的2~3倍<br>实现：<br>（1）映射数： t &#x3D; (x % N + N) % N;<br>（2）这里将查找和插入进行同步操作：<br>while (h !&#x3D; null &amp;&amp; h[t] !&#x3D; x)<br>没有找到需要的东西（插入：空位，查找：相同的值或者空位）就继续查找：t ++;<br>找了数组末尾没有找到，就从数组开头继续查找 if (t &#x3D;&#x3D; N) t &#x3D; 0;<br>（3）最后返回目标下标即可 return t</p></blockquote><h4 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> <span class="hljs-comment">//返回 查找后或者放入后x的位置</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">int</span> t = (x % N + N) % N; <span class="hljs-comment">//哈希函数，将大范围的值，全部映射到数组下标内</span><br><br>    <span class="hljs-keyword">while</span> (h[t] != null &amp;&amp; h[t] != x)   <span class="hljs-comment">//如果当前位置已经有值了，并且不等于那个值</span><br>    &#123;<br>        t ++;   <span class="hljs-comment">//往后找</span><br>        <span class="hljs-keyword">if</span> (t == N) t = <span class="hljs-number">0</span>; <span class="hljs-comment">//找到了最后，仍然没有找到，从头开始找</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> t;   <span class="hljs-comment">//返回x的位置</span><br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法</category>
+      
+      <category>数据结构</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>数据结构</tag>
+      
+      <tag>算法</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>堆</title>
+    <link href="/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%A0%86/"/>
+    <url>/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%A0%86/</url>
+    
+    <content type="html"><![CDATA[<h2 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆<span id="more"></span></h2><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote><p>​堆有两个操作：down和up</p></blockquote><h5 id="模板："><a href="#模板：" class="headerlink" title="模板："></a>模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">down</span><span class="hljs-params">(<span class="hljs-type">int</span> u)</span>    <span class="hljs-comment">//down操作，将每个节点与其左右儿子比较，判断其是否需要进行下移</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">int</span> t = u;  <span class="hljs-comment">//t记录的是该节点以及其左右两个儿子中最小的值</span><br>    <span class="hljs-keyword">while</span> (u * <span class="hljs-number">2</span> &lt;= cnt &amp;&amp; h[u * <span class="hljs-number">2</span>] &lt; h[t]) t = u * <span class="hljs-number">2</span>;  <span class="hljs-comment">//先与左儿子进行比较</span><br>    <span class="hljs-keyword">while</span> (u * <span class="hljs-number">2</span> + <span class="hljs-number">1</span> &lt;= cnt &amp;&amp; h[u * <span class="hljs-number">2</span> + <span class="hljs-number">1</span>] &lt; h[t]) t = u * <span class="hljs-number">2</span> + <span class="hljs-number">1</span>;  <span class="hljs-comment">//再与右儿子进行比较</span><br>    <span class="hljs-keyword">if</span> (t != u) <span class="hljs-comment">//若不等于，说明t发生了变化，必须进行下移</span><br>    &#123;<br>        <span class="hljs-built_in">swap</span>(h[t], h[u]);   <span class="hljs-comment">//将t位置的值，与u位置的值进行交换位置</span><br>        <span class="hljs-built_in">down</span>(t); <span class="hljs-comment">//递归，直至其不再需要下移为止</span><br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">up</span> <span class="hljs-params">(<span class="hljs-type">int</span> u)</span> <span class="hljs-comment">//up操作， 判断一个节点是否需要根据小根堆的特性进行上移操作</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">while</span> (u / <span class="hljs-number">2</span> &amp;&amp; h[u] &lt; h[u / <span class="hljs-number">2</span>])    <span class="hljs-comment">//判断，只要存在父节点，且父节点的值大于该节点的值，则需要进行交换</span><br>    &#123;   <br>        <span class="hljs-built_in">swap</span>(u, u / <span class="hljs-number">2</span>); <span class="hljs-comment">//同样进行所有信息的交换</span><br>        u &gt;&gt;= <span class="hljs-number">1</span>;        <span class="hljs-comment">//交换后，将该节点往上移，while继续判断是否需要上移</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法</category>
+      
+      <category>数据结构</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>数据结构</tag>
+      
+      <tag>算法</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>并查集</title>
+    <link href="/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%B9%B6%E6%9F%A5%E9%9B%86/"/>
+    <url>/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%B9%B6%E6%9F%A5%E9%9B%86/</url>
+    
+    <content type="html"><![CDATA[<h1 id="并查集"><a href="#并查集" class="headerlink" title="并查集"></a>并查集<span id="more"></span></h1><h4 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h4><blockquote><p>​可以快速地做到下列两个操作：（1）将两个集合合并（2）询问两个元素是否在一个集合</p></blockquote><h4 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">if</span> (p[x] != x) p[x] = <span class="hljs-built_in">find</span>(p[x]);<br>    <span class="hljs-keyword">return</span> p[x];<br>&#125;<br></code></pre></td></tr></table></figure><h4 id="代码解释："><a href="#代码解释：" class="headerlink" title="代码解释："></a>代码解释：</h4><blockquote><p>  find函数的实现</p><p>（1）int find(int x)<br>    {<br>        if(p[x]!&#x3D;x) p[x]&#x3D;find(p[x]); &#x2F;&#x2F;只要没有找到祖宗节点，就一直找，因为只有祖宗节点的p[x] &#x3D; x;<br>        return p[x]&#x3D;x; &#x2F;&#x2F;找到了祖宗节点，便返回祖宗节点的值<br>    }<br>        这个函数既实现了找到祖宗节点的功能，又实现了将所有儿子节点直接指向祖宗节点，即路径压缩<br>（2）合并两个集合，即将其中一个集合的祖宗节点变成另一个祖宗节点的子节点<br>p[find(a)] &#x3D; find(b);<br>（3）判断两个集合是否在同一个集合：则判断其祖宗节点是否为是否为同一个节点即可<br>if(find(a) &#x3D;&#x3D; find(b))printf(“Yes\n”);<br>else printf(“No\n”);</p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法</category>
+      
+      <category>数据结构</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>数据结构</tag>
+      
+      <tag>算法</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>区间合并</title>
     <link href="/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E5%8C%BA%E9%97%B4%E5%90%88%E5%B9%B6/"/>
     <url>/2023/04/05/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E5%8C%BA%E9%97%B4%E5%90%88%E5%B9%B6/</url>
@@ -22,9 +138,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>区间合并</tag>
+      <tag>基础算法</tag>
       
     </tags>
     
@@ -51,9 +167,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>离散化</tag>
+      <tag>基础算法</tag>
       
     </tags>
     
@@ -80,9 +196,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>位运算</tag>
+      <tag>基础算法</tag>
       
     </tags>
     
@@ -109,9 +225,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>双指针算法</tag>
+      <tag>基础算法</tag>
       
     </tags>
     
@@ -138,9 +254,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>前缀和与差分</tag>
+      <tag>基础算法</tag>
       
     </tags>
     
@@ -167,9 +283,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>高精度</tag>
+      <tag>基础算法</tag>
       
     </tags>
     
@@ -196,9 +312,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>二分</tag>
+      <tag>基础算法</tag>
       
     </tags>
     
@@ -225,9 +341,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>排序</tag>
+      <tag>基础算法</tag>
       
     </tags>
     
@@ -254,7 +370,7 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>进制转换</tag>
       
     </tags>
     
@@ -281,9 +397,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>区间DP</tag>
+      <tag>DP</tag>
       
     </tags>
     
@@ -310,9 +426,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>线性DP</tag>
+      <tag>DP</tag>
       
     </tags>
     
@@ -339,9 +455,9 @@
     
     <tags>
       
-      <tag>c++</tag>
-      
       <tag>贪心</tag>
+      
+      <tag>算法</tag>
       
     </tags>
     
@@ -368,9 +484,9 @@
     
     <tags>
       
-      <tag>c++</tag>
-      
       <tag>贪心</tag>
+      
+      <tag>算法</tag>
       
     </tags>
     
@@ -397,9 +513,9 @@
     
     <tags>
       
-      <tag>c++</tag>
-      
       <tag>贪心</tag>
+      
+      <tag>算法</tag>
       
     </tags>
     
@@ -426,9 +542,9 @@
     
     <tags>
       
-      <tag>c++</tag>
-      
       <tag>贪心</tag>
+      
+      <tag>算法</tag>
       
     </tags>
     
@@ -455,9 +571,9 @@
     
     <tags>
       
-      <tag>c++</tag>
-      
       <tag>贪心</tag>
+      
+      <tag>算法</tag>
       
     </tags>
     
@@ -484,9 +600,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>背包</tag>
+      <tag>DP</tag>
       
     </tags>
     
@@ -513,9 +629,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>拓扑排序</tag>
+      <tag>图论</tag>
       
     </tags>
     
@@ -542,9 +658,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>基础数论</tag>
+      <tag>基础数学知识</tag>
       
     </tags>
     
@@ -571,9 +687,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>生成树</tag>
+      <tag>图论</tag>
       
     </tags>
     
@@ -600,9 +716,9 @@
     
     <tags>
       
-      <tag>c++</tag>
+      <tag>算法</tag>
       
-      <tag>最短路</tag>
+      <tag>图论</tag>
       
     </tags>
     
