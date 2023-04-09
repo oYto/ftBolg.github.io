@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>视频</title>
+    <link href="/2023/04/09/%E8%A7%86%E9%A2%91/"/>
+    <url>/2023/04/09/%E8%A7%86%E9%A2%91/</url>
+    
+    <content type="html"><![CDATA[<video src="/videos/1.mp4" controls="controls" width="100%" height="auto" autoplay="false">您的浏览器不支持视频播放，请下载该视频后播放。</video>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>KMP</title>
     <link href="/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/KMP/"/>
     <url>/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/KMP/</url>
