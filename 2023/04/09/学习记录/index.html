@@ -16,23 +16,22 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="KMP">
+    <meta name="description" content="学习记录">
 <meta property="og:type" content="article">
-<meta property="og:title" content="KMP">
-<meta property="og:url" content="http://example.com/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/KMP/index.html">
+<meta property="og:title" content="学习记录">
+<meta property="og:url" content="http://example.com/2023/04/09/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="小樱桃">
-<meta property="og:description" content="KMP">
+<meta property="og:description" content="学习记录">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-04-06T08:19:29.000Z">
-<meta property="article:modified_time" content="2023-04-06T09:32:56.306Z">
+<meta property="article:published_time" content="2023-04-09T11:11:31.000Z">
+<meta property="article:modified_time" content="2023-04-09T14:20:02.093Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="算法">
-<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="学习记录">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>KMP - 小樱桃</title>
+  <title>学习记录 - 小樱桃</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -215,7 +214,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="KMP"></span>
+            <span id="subtitle" data-typed-text="学习记录"></span>
           
         </div>
 
@@ -226,8 +225,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-06 16:19" pubdate>
-          2023年4月6日 下午
+        <time datetime="2023-04-09 19:11" pubdate>
+          2023年4月9日 晚上
         </time>
       </span>
     
@@ -238,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          895 字
+          1.5k 字
         
       </span>
     
@@ -249,7 +248,7 @@
         
         
         
-          8 分钟
+          13 分钟
         
       </span>
     
@@ -295,63 +294,63 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">KMP</h1>
+            <h1 style="display: none">学习记录</h1>
             
             
-              <div class="markdown-body">
-                
-                <h2 id="KMP"><a href="#KMP" class="headerlink" title="KMP"></a>KMP<span id="more"></span></h2><h4 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h4><blockquote>
-<p>​	子串的匹配算法。</p>
-</blockquote>
-<h4 id="核心："><a href="#核心：" class="headerlink" title="核心："></a>核心：</h4><blockquote>
-<p>KMP算法分为两个部分：	求next数组 和匹配字符串</p>
-<p>（1）求next数组：<br>    （1.1）先让子串最近一个与其相同的位置，然后继续判断，直至能匹配上或者回到第一个字符位置。<br>    （1.2）回到能匹配到的地方后，继续开始匹配，匹配成功，则j向后移，<br>    （1.3）记录当前子串字符i的能匹配上的位置<br>    （1.4）遍历整个子串，便能找出子串中能匹配上的位置<br>（2）匹配字符串：利用子串的next数组进行匹配，优化，不用每次匹配失败都回到子串的第一个字符<br>    （2.1）匹配不成功，每次匹配前，先让子串回到能与主串匹配的位置<br>    （2.2）然后进行匹配，如果匹配成功，就把子串匹配的位置向后移<br>    （2.3）如果子串j匹配完了，即j &#x3D;&#x3D; n时，说明在主串中找到了子串匹配串，则进行输出该位置，并且将j回到能匹配的位置<br>    （2.4）逐一匹配主串中所有字符即可</p>
-</blockquote>
-<h4 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//求next数组</span><br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">2</span>, j = <span class="hljs-number">0</span>; i &lt;= n; i ++ ) <span class="hljs-comment">//第一位肯定是0，直接从第二位开始计算</span><br>    &#123;<br>        <span class="hljs-keyword">while</span>(j &amp;&amp; p[i] != p[j + <span class="hljs-number">1</span>])j = ne[j];        <span class="hljs-comment">//当j退到0或者，主串和子串的值对不上的时候，让j回到能对上的位置，直到找到或者无路可退为止</span><br>        <span class="hljs-keyword">if</span>(p[i] == p[j + <span class="hljs-number">1</span>])j ++;                     <span class="hljs-comment">//if能对上就让子串继续往后对</span><br>        ne[i] = j;                                    <span class="hljs-comment">//记录下该点时的next数组值</span><br>    &#125;<br><br><span class="hljs-comment">//开始匹配</span><br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>, j = <span class="hljs-number">0</span>; i &lt;= m; i ++)<br>    &#123;<br>        <span class="hljs-keyword">while</span>(j &amp;&amp; s[i] != p[j + <span class="hljs-number">1</span>])j = ne[j];        <span class="hljs-comment">//当j退到0或者，主串和子串的值对不上的时候，让j回到能对上的位置，直到找到或者无路可退为止</span><br>        <span class="hljs-keyword">if</span>(s[i] == p[j + <span class="hljs-number">1</span>])j ++;                     <span class="hljs-comment">//if能对上就让子串继续往后对</span><br>        <span class="hljs-keyword">if</span>(j == n)<br>        &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>, i - n);                     <span class="hljs-comment">//输出此时的起始下标（该位置减去子串总长度，即子串起始下标）</span><br>            j = ne[j];                                <span class="hljs-comment">//将子串恢复到他下次能够匹配的位置</span><br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+              
+              <script src=/js/crypto-js.js></script>
+<script>
+function doDecrypt (pwd, onError) {
+	console.log('in doDecrypt');
+	const txt = document.getElementById('enc_content').innerHTML;
+	let plantext;
+	try {
+		const bytes = CryptoJS.AES.decrypt(txt, pwd);
+		var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+	} catch(err) {
+		if(onError) {
+			onError(err);
+		}
+		return;
+	}
+	document.getElementById('enc_content').innerHTML = plaintext;
+	document.getElementById('enc_content').style.display = 'block';
+	document.getElementById('enc_passwd').style.display = 'none';
+	if(typeof MathJax !== 'undefined') {
+		MathJax.Hub.Queue(
+			['resetEquationNumbers', MathJax.InputJax.TeX],
+			['PreProcess', MathJax.Hub],
+			['Reprocess', MathJax.Hub]
+		);
+	}
+}
+</script>
+<div id="enc_content" style="display:none">U2FsdGVkX1/EzBYO0Xk1BPl2h4VoM3UBFbHuJs5CItoyRUtZFvbN+v4bk8y5Cb7ch4wubTLsEQ4tEeDVdfya7iVvKgjz2MHpiUaCdivK9hdcT4wXEirYOw2rIbv7j2dimQj9QbvHjRLRT/yoT6sM8dcNjjIkD99kBt3HEdi3kXcbSU0GwzLMkyu4j8M/w+rZHnzG25n6b3+XCd+AV+D0xj2XIEFeMpjm48Vb0vocu2xXOw11SQsmfmBQKdzCuCz5qaxOnRF66A/Knkcs4o8x3/67iAhl7HGc/XoMvzkH73KptbxX8FfGZtDuLoYc/CfJ06LPvlNnky/mJ1EJ+IStTA4Ei0deaZG/U+4ktQV2RlS0EJLC4sn3FxJLLg8+HvRRdOaRT7s7jnpKIr+GJXVvLzuBP4K+/ZE9Euk9twykI4BN2eG2sbKAL76o9AoJVyVleYX4E36F4e9xDojDSoQrQKAlrUAK0xC8M0WNDkGlck/IwIfCq/9Fy/brWVa3YldHlcvvldJCq28EGxiXnaUTk2CVnTp3l8mniGiaTDzrBcSEjn20hnLOG+1GLRvz9bKpLqp5T+9tDzMi2amO6n1RVAXhkzHJ9Q1HWFVaGXeecYtimseogUCtnuf6P5gDQ1eGb/rmjJAKiIuRGO/TaoFTug==</div>
+<div id="enc_passwd"> <input id="enc_pwd_input" type="password" style="border-radius: 5px;border-style: groove;height: 30px;width: 50%;cursor: auto;font-size: 102%;color: currentColor;outline: none;text-overflow: initial;padding-left: 5px;" onkeydown="if (event.keyCode == 13) { decrypt(); return false;}"> <input type="submit" value="解&nbsp;密" onclick="decrypt()" style="width: 58px;height: 34px;border-radius: 5px;background-color: white;border-style: solid;color: currentColor;"><div id="enc_error" style="display: inline-block;color: #d84527;margin-left: 10px"></div>
+<script>
+var onError = function(error) {
+	document.getElementById("enc_error").innerHTML = "password error!"
+};
+function decrypt() {
+var passwd = document.getElementById("enc_pwd_input").value;
+console.log(passwd);
+doDecrypt(passwd, onError);
+}
+</script>
+</div>
+              
 
-
-                
-              </div>
+              
             
             <hr/>
             <div>
               <div class="post-metas my-3">
   
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
-  
-  
-    <span>></span>
-    
-  <a href="/categories/%E7%AE%97%E6%B3%95/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="category-chain-item">数据结构</a>
-  
-  
-
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E7%AE%97%E6%B3%95/">#算法</a>
-      
-        <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">#数据结构</a>
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">#学习记录</a>
       
     </div>
   
@@ -363,8 +362,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>KMP</div>
-      <div>http://example.com/2023/04/06/数据结构/KMP/</div>
+      <div>学习记录</div>
+      <div>http://example.com/2023/04/09/学习记录/</div>
     </div>
     <div class="license-meta">
       
@@ -376,13 +375,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年4月6日</div>
+          <div>2023年4月9日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年4月6日</div>
+          <div>2023年4月9日</div>
         </div>
       
       
@@ -413,9 +412,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/09/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" title="学习记录">
+                      <a href="/2023/04/09/%E8%A7%86%E9%A2%91/" title="视频">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">学习记录</span>
+                        <span class="hidden-mobile">视频</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -423,8 +422,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%93%88%E5%B8%8C%E8%A1%A8/" title="哈希表">
-                        <span class="hidden-mobile">哈希表</span>
+                      <a href="/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/KMP/" title="KMP">
+                        <span class="hidden-mobile">KMP</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -637,6 +636,23 @@
   
 
 
+
+
+  
+  <script defer>
+    if (document.getElementById('hbePass')) {
+      Fluid.utils.waitElementLoaded('hbe-prefix', function() {
+        var hbePrefix = document.querySelector('hbe-prefix');
+        hbePrefix.parentElement.classList.add('markdown-body');
+        Fluid.utils.retry(function() {
+          if (Fluid.boot && Fluid.boot.refresh) {
+            Fluid.boot.refresh();
+            return true;
+          }
+        }, 100, 10);
+      })
+    }
+  </script>
 
 
   
