@@ -1,0 +1,808 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="五种背包问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="背包问题">
+<meta property="og:url" content="http://example.com/2023/04/04/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="小樱桃">
+<meta property="og:description" content="五种背包问题">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-04T04:51:00.000Z">
+<meta property="article:modified_time" content="2023-04-06T09:37:30.871Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="DP">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>背包问题 - 小樱桃</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"lBwkKPHSowjEDFhKBLK0YCvo-gzGzoHsz","app_key":"vX99TJqyX7lpdiEcliqnCW51","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>小樱桃的个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="背包问题"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-04 12:51" pubdate>
+          2023年4月4日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          30 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">背包问题</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="五种背包问题"><a href="#五种背包问题" class="headerlink" title="五种背包问题"></a>五种背包问题<span id="more"></span></h2><h3 id="1、01背包："><a href="#1、01背包：" class="headerlink" title="1、01背包："></a>1、01背包：</h3><h5 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h5><blockquote>
+<p>从n个物品中选，每个物品只能选一次或者不选，总体积不超过m的情况下，<br>    求总价值最大。</p>
+</blockquote>
+<h5 id="时间复杂度："><a href="#时间复杂度：" class="headerlink" title="时间复杂度："></a>时间复杂度：</h5><p>​	O(nm)</p>
+<h5 id="分析过程："><a href="#分析过程：" class="headerlink" title="分析过程："></a>分析过程：</h5><blockquote>
+<p>​    状态表示：f[i][j]，从前i个物品中选，其总体积不超过j的前提下，所有选法的总价值的最大值<br>​        属性：max<br>​        状态计算：以最后一个物品是否选择进行划分：<br>​        （1）不选：f[i][j] &#x3D; f[i - 1][j];<br>​        （2）选：if (j &gt;&#x3D; v[i]) f[i][j] &#x3D; max(f[i][j], f[i - 1][j - v[i]] + w[i])<br>​    求方案数时，注意是否需要初始化。<br>​        枚举体积一维的时候，注意是从1开始还是0开始，且枚举体积时由于每次用的是上一层的状态，故需要从后往前枚举。</p>
+</blockquote>
+<h5 id="状态转移方程："><a href="#状态转移方程：" class="headerlink" title="状态转移方程："></a>状态转移方程：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++">f[i][j] = f[i - <span class="hljs-number">1</span>][j];  <span class="hljs-comment">//不含i的一定存在</span><br>           <span class="hljs-keyword">if</span> (j &gt;= v[i]) f[i][j] = <span class="hljs-built_in">max</span>(f[i - <span class="hljs-number">1</span>][j], f[i - <span class="hljs-number">1</span>][j - v[i]] + w[i]);<span class="hljs-comment">//只有背包装的下第i个物品时，才存在这种情况</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="2、完全背包："><a href="#2、完全背包：" class="headerlink" title="2、完全背包："></a>2、完全背包：</h3><h5 id="描述："><a href="#描述：" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>从n个物品中选，每个物品可以选无数次，总体积不超过m的情况下，求总价值的<br>    最大值。</p>
+</blockquote>
+<h5 id="时间复杂度：-1"><a href="#时间复杂度：-1" class="headerlink" title="时间复杂度："></a>时间复杂度：</h5><blockquote>
+<p>O(nm)</p>
+</blockquote>
+<h5 id="分析过程：-1"><a href="#分析过程：-1" class="headerlink" title="分析过程："></a>分析过程：</h5><blockquote>
+<p>状态表示：f[i][j]，从前i个物品中选，其总体积不超过j的前提下，所有选法的总价值的最大值。<br>    属性：max<br>    状态计算：以最后一个物品是否选择划分：<br>    （1）不选：f[i][j] &#x3D; f[i - 1][j]<br>    （2）选：if (j &gt;&#x3D; v[i]) f[i][j] &#x3D; max(f[i][j], f[i][j - v[i]] + w[i]);（优化后的状态转移方程）</p>
+<pre><code class="hljs">求方案数时，注意是否需要初始化。
+枚举体积一维的时候，注意是从1开始还是0开始，枚举体积时，由于每次用的是本层的状态，故需要从前往后枚举。
+</code></pre>
+</blockquote>
+<h5 id="状态转移方程：-1"><a href="#状态转移方程：-1" class="headerlink" title="状态转移方程："></a>状态转移方程：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++">f[i][j] = f[i - <span class="hljs-number">1</span>][j];<br>            <span class="hljs-keyword">if</span> (j &gt;= v[i]) f[i][j] = <span class="hljs-built_in">max</span>(f[i - <span class="hljs-number">1</span>][j], f[i][j - v[i]] + w[i]);<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="3、多重背包："><a href="#3、多重背包：" class="headerlink" title="3、多重背包："></a>3、多重背包：</h3><h5 id="描述：-1"><a href="#描述：-1" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>从n个物品中选，每个物品只能选若干次，总体积不超过m的情况下，求总价值的<br>    最大值。</p>
+</blockquote>
+<h5 id="分析过程：-2"><a href="#分析过程：-2" class="headerlink" title="分析过程："></a>分析过程：</h5><blockquote>
+<p> 状态表示：从前i个物品中选，其总体积不超过j的前提下，所有选法的总价值的最大值。<br>    属性：max<br>    状态计算：以最后一个物品是否选择划分：<br>    （1）不选：f[i][j] &#x3D; f[i - 1][j]<br>    （2）选：由于每个物品可以选k次，故需要另外加一层循环，枚举每个物品选几个。<br>        for (int k &#x3D; 0; k &lt;&#x3D; s[i]; k ++)  O(n^3)<br>            if (j &gt;&#x3D; k * v[i]) f[i][j] &#x3D; max(f[i][j], f[i - 1][j - k * v[i]] + w[i] * k);</p>
+<pre><code class="hljs">二进制优化：	O(nlogsm)
+    将每种物品的k个物品，根据二进制进行打包成新的物品，全部打包后看作01背包做即可，注意此时的物品数量就不再是n了，而需要重新计算，并且需要注意此时的空间可能会爆掉，需要优化成一维数组，在优化的时候，由于每次用到的是上一层的状态，故不能先更新前面的状态，否则会影响结果，故需要从大到小枚举体积。
+    这里开数组时，需要多开一些空间，因为重新打包，物品种类就大于了N
+</code></pre>
+<p>最坏情况，每种物品都有2000个，1000个物品，就需要打包成log2 * 1000 &#x3D; 11000，再加上我们的数组下标是从1开始存的，所以数组空间至少要开11001；</p>
+</blockquote>
+<h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs c++">暴力解：<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt;= m; j ++)<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> k = <span class="hljs-number">0</span>; k &lt;= s[i]; k ++)<br>            &#123;<br>                <span class="hljs-keyword">if</span> (j &gt;= v[i] * k) f[i][j] = <span class="hljs-built_in">max</span>(f[i][j], f[i - <span class="hljs-number">1</span>][j - v[i] * k] + w[i] * k);<br>            &#125;<br>二进制优化：     <br>	<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><br>    <span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br>    <span class="hljs-type">const</span> <span class="hljs-type">int</span> N = <span class="hljs-number">15000</span>;<br><br>    <span class="hljs-type">int</span> v[N], w[N];<br>    <span class="hljs-type">int</span> f[N];<br>    <span class="hljs-type">int</span> n, m;<br><br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function">    </span>&#123;<br>        cin &gt;&gt; n &gt;&gt; m;  <span class="hljs-comment">//种数和容量</span><br><br>        <span class="hljs-type">int</span> cnt = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>        &#123;<br>            <span class="hljs-type">int</span> a, b, s;    <span class="hljs-comment">//体积、价值、数量</span><br>            cin &gt;&gt; a &gt;&gt; b &gt;&gt; s;<br><br>            <span class="hljs-type">int</span> k = <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">while</span> (k &lt;= s)<br>            &#123;<br>                cnt ++;<br>                v[cnt] = a * k;<br>                w[cnt] = b * k;<br>                s -= k;<br>                k *= <span class="hljs-number">2</span>;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (s &gt; <span class="hljs-number">0</span>)<br>            &#123;<br>                cnt ++;<br>                v[cnt] = a * s;<br>                w[cnt] = b * s;<br>            &#125;<br>        &#125;<br><br>        n = cnt;        <span class="hljs-comment">//更新种数</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = m; j &gt;= v[i]; j --)<br>                f[j] = <span class="hljs-built_in">max</span>(f[j], f[j - v[i]] + w[i]);<br><br>        cout &lt;&lt; f[m];<br><br><br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="4、分组背包："><a href="#4、分组背包：" class="headerlink" title="4、分组背包："></a>4、分组背包：</h3><h5 id="描述：-2"><a href="#描述：-2" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>从n组物品中选，每组物品有若干个，同一组的物品只能选择一个，求解将哪些物品装入背包，可使物品总体积不超过背包容量，且总价值最大。</p>
+</blockquote>
+<h5 id="时间复杂度：-2"><a href="#时间复杂度：-2" class="headerlink" title="时间复杂度："></a>时间复杂度：</h5><blockquote>
+<p>​	O(nms)</p>
+</blockquote>
+<h5 id="分析过程：-3"><a href="#分析过程：-3" class="headerlink" title="分析过程："></a>分析过程：</h5><blockquote>
+<p>集合：从n组物品中选，每组物品有若干个，同一组的物品只能选择一个，在总体积不超过j的情况下，所有选法的价值的最大值。<br>    属性：max<br>    状态计算：以最后一个组是否选择划分：<br>    （1）不选，f[i][j] &#x3D; f[i - 1][j]<br>    （2）选，由于每组有k个物品，故需要枚举这k个物品<br>        for (int k &#x3D; 1; k &lt;&#x3D; cnt[i]; k ++)<br>            if (j &gt;&#x3D; v[i][k]) f[i][j] &#x3D; max(f[i][j], f[i - 1][j - v[i][k]] + w[i][k]);</p>
+</blockquote>
+<h5 id="代码模板：-1"><a href="#代码模板：-1" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)   <span class="hljs-comment">//每组物品</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = m; j &gt;= <span class="hljs-number">0</span>; j --)  <span class="hljs-comment">//容量</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> k = <span class="hljs-number">1</span>; k &lt;= s[i]; k ++) <span class="hljs-comment">//枚举所有的选择</span><br>                <span class="hljs-keyword">if</span> (v[i][k] &lt;= j)   <span class="hljs-comment">//只有当容量能装得下，才有选的必要</span><br>                    f[j] = <span class="hljs-built_in">max</span>(f[j], f[j - v[i][k]] + w[i][k]);<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="5、混合背包："><a href="#5、混合背包：" class="headerlink" title="5、混合背包："></a>5、混合背包：</h3><h5 id="描述：-3"><a href="#描述：-3" class="headerlink" title="描述："></a>描述：</h5><blockquote>
+<p>有 N 种物品和一个容量是 V 的背包。物品有三种，分别是01背包，完全背包，多重背包，求解将哪些物品装入背包，可使物品体积总和不超过背包容量，且价值总和最大。<br>输出最大价值。</p>
+</blockquote>
+<h5 id="分析："><a href="#分析：" class="headerlink" title="分析："></a>分析：</h5><blockquote>
+<p>01背包、完全背包、多重背包三种背包问题放在一起，在计算状态的时候，判断是哪种背包，就用哪种状态转移方程即可。</p>
+</blockquote>
+<h5 id="代码模板：-2"><a href="#代码模板：-2" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span> N = <span class="hljs-number">1010</span>;<br><br><span class="hljs-type">int</span> n, m;<br><span class="hljs-type">int</span> f[N];<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    cin &gt;&gt; n &gt;&gt; m;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++)<br>    &#123;<br>        <span class="hljs-type">int</span> v, w, s;<br>        cin &gt;&gt; v &gt;&gt; w &gt;&gt; s;<br>        <span class="hljs-keyword">if</span> (s == <span class="hljs-number">0</span>)     <span class="hljs-comment">//完全背包</span><br>        &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = v; j &lt;= m; j ++) f[j] = <span class="hljs-built_in">max</span>(f[j], f[j - v] + w);<br>        &#125;<br>        <span class="hljs-keyword">else</span>    <span class="hljs-comment">//01背包是特殊的多重背包可以一起写，01背包是每种物品只有1件的多重背包</span><br>        &#123;<br>            <span class="hljs-keyword">if</span> (s == <span class="hljs-number">-1</span>) s = <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> k = <span class="hljs-number">1</span>; k &lt;= s; k *= <span class="hljs-number">2</span>) <span class="hljs-comment">//二进制优化多重背包，枚举几个物品分成一个新物品</span><br>            &#123;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = m; j &gt;= k * v; j --)   <span class="hljs-comment">//枚举每个新物品的体积</span><br>                    f[j] = <span class="hljs-built_in">max</span>(f[j], f[j - k * v] + k * w);<br>                s -= k;<br>            &#125;<br><br>            <span class="hljs-keyword">if</span> (s)<br>            &#123;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = m; j &gt;= s * v; j --)   <span class="hljs-comment">//将剩余不够分成新物品的物品，分成一组，枚举其体积</span><br>                    f[j] = <span class="hljs-built_in">max</span>(f[j], f[j - s * v] + s * w);<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    cout &lt;&lt; f[m] &lt;&lt; endl;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="category-chain-item">动态规划</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%AE%97%E6%B3%95/">#算法</a>
+      
+        <a href="/tags/DP/">#DP</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>背包问题</div>
+      <div>http://example.com/2023/04/04/动态规划-背包问题/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月4日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年4月6日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/04/%E8%B4%AA%E5%BF%83-%E5%8C%BA%E9%97%B4%E8%B4%AA%E5%BF%83/" title="区间贪心">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">区间贪心</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/03/%E5%9B%BE%E8%AE%BA-%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/" title="拓扑排序">
+                        <span class="hidden-mobile">拓扑排序</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lBwkKPHSowjEDFhKBLK0YCvo-gzGzoHsz","appKey":"vX99TJqyX7lpdiEcliqnCW51","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

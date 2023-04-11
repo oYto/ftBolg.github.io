@@ -1,0 +1,898 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Gin框架示例">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gin框架示例">
+<meta property="og:url" content="http://example.com/2023/04/11/Gin%E6%A1%86%E6%9E%B6%E7%A4%BA%E4%BE%8B/index.html">
+<meta property="og:site_name" content="小樱桃">
+<meta property="og:description" content="Gin框架示例">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-11T06:09:26.000Z">
+<meta property="article:modified_time" content="2023-04-11T09:06:09.325Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="原创">
+<meta property="article:tag" content="Gin">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Gin框架示例 - 小樱桃</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"lBwkKPHSowjEDFhKBLK0YCvo-gzGzoHsz","app_key":"vX99TJqyX7lpdiEcliqnCW51","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>小樱桃的个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Gin框架示例"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-11 14:09" pubdate>
+          2023年4月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          105 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Gin框架示例</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Gin框架示例"><a href="#Gin框架示例" class="headerlink" title="Gin框架示例"></a>Gin框架示例<span id="more"></span></h1><h2 id="1、AsciiJSON"><a href="#1、AsciiJSON" class="headerlink" title="1、AsciiJSON"></a>1、AsciiJSON</h2><blockquote>
+<p>​	使用 AsciiJSON 生成具有转义的非 ASCII 字符的 ASCII-only JSON。</p>
+</blockquote>
+<h4 id="（1）导入必要的包："><a href="#（1）导入必要的包：" class="headerlink" title="（1）导入必要的包："></a>（1）导入必要的包：</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;github.com/gin-gonic/gin&quot;</span> <span class="hljs-comment">// Gin 框架</span><br>	<span class="hljs-string">&quot;net/http&quot;</span>                 <span class="hljs-comment">// 标准库中的 HTTP 包</span><br>)<br></code></pre></td></tr></table></figure>
+
+<h4 id="（2）创建-Gin-路由引擎："><a href="#（2）创建-Gin-路由引擎：" class="headerlink" title="（2）创建 Gin 路由引擎："></a>（2）创建 Gin 路由引擎：</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">r := gin.Default() <span class="hljs-comment">// 创建默认的 Gin 路由引擎</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="（3）定义路由："><a href="#（3）定义路由：" class="headerlink" title="（3）定义路由："></a>（3）定义路由：</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go">r.GET(<span class="hljs-string">&quot;/someJSON&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>	<span class="hljs-comment">// 路由处理函数，当客户端以 GET 方法访问 &quot;/someJSON&quot; 路由时会执行这个函数</span><br><br>	<span class="hljs-comment">// 定义一个 JSON 数据</span><br>	data := <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;&#123;<br>		<span class="hljs-string">&quot;lang&quot;</span>: <span class="hljs-string">&quot;GO语言&quot;</span>,<br>		<span class="hljs-string">&quot;tag&quot;</span>:  <span class="hljs-string">&quot;&lt;br&gt;&quot;</span>,<br>	&#125;<br><br>	<span class="hljs-comment">// 使用 c.AsciiJSON 方法将 JSON 数据以 ASCII 编码方式返回给客户端，并设置 HTTP 状态码为 http.StatusOK (200)</span><br>	c.AsciiJSON(http.StatusOK, data)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​	这段代码定义了一个 GET 请求的路由，路径为 “&#x2F;someJSON”，当客户端以 GET 方法访问该路由时，会执行匿名函数作为处理函数，将一个包含 “lang” 和 “tag” 两个键值对的 JSON 数据以 ASCII 编码方式返回给客户端。</p>
+</blockquote>
+<h4 id="（4）启动-Web-服务："><a href="#（4）启动-Web-服务：" class="headerlink" title="（4）启动 Web 服务："></a>（4）启动 Web 服务：</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">r.Run(<span class="hljs-string">&quot;:8080&quot;</span>) <span class="hljs-comment">// 在本地的 8080 端口上启动 Web 服务</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​	这段代码将在本地的 8080 端口上启动 Web 服务，监听来自客户端的请求。</p>
+</blockquote>
+<h4 id="（5）完整代码"><a href="#（5）完整代码" class="headerlink" title="（5）完整代码"></a>（5）完整代码</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;github.com/gin-gonic/gin&quot;</span><br>	<span class="hljs-string">&quot;net/http&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	r := gin.Default() <span class="hljs-comment">// 创建一个 Gin 路由引擎</span><br><br>	r.GET(<span class="hljs-string">&quot;/someJSON&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c *gin.Context)</span></span> &#123; <span class="hljs-comment">// 注册一个 GET 路由，并定义处理函数</span><br>		data := <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;&#123; <span class="hljs-comment">// 定义一个 map 类型的数据，用于构造 JSON 响应</span><br>			<span class="hljs-string">&quot;lang&quot;</span>: <span class="hljs-string">&quot;GO语言&quot;</span>,   <span class="hljs-comment">// 设置 &quot;lang&quot; 键的值为 &quot;GO语言&quot;</span><br>			<span class="hljs-string">&quot;tag&quot;</span>:  <span class="hljs-string">&quot;&lt;br&gt;&quot;</span>, <span class="hljs-comment">// 设置 &quot;tag&quot; 键的值为 &quot;&lt;br&gt;&quot;</span><br>		&#125;<br><br>		c.AsciiJSON(http.StatusOK, data) <span class="hljs-comment">// 使用 c.AsciiJSON() 方法将 map 数据转换为 ASCII JSON 格式，并作为响应发送给客户端</span><br>	&#125;)<br><br>	r.Run(<span class="hljs-string">&quot;:8080&quot;</span>) <span class="hljs-comment">// 启动 Gin web 服务器，监听在 8080 端口</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="2、绑定表单数据至自定义结构体"><a href="#2、绑定表单数据至自定义结构体" class="headerlink" title="2、绑定表单数据至自定义结构体"></a>2、绑定表单数据至自定义结构体</h2><h4 id="（1）定义结构体"><a href="#（1）定义结构体" class="headerlink" title="（1）定义结构体"></a>（1）定义结构体</h4><blockquote>
+<p>​	 定义四个结构体<code>StructA</code>, <code>StructB</code>, <code>StructC</code>, 和 <code>StructD</code>，分别用于表示不同的数据结构。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> StructA <span class="hljs-keyword">struct</span> &#123;<br>    FieldA <span class="hljs-type">string</span> <span class="hljs-string">`form:&quot;field_a&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​	<code>StructA</code> 结构体有一个字段 <code>FieldA</code>，类型为字符串，使用 <code>form:&quot;field_a&quot;</code> 进行了标签注释。这里的标签 <code>form:&quot;field_a&quot;</code> 是用于指定在解析 HTTP 请求时，将请求的表单字段值映射到 <code>FieldA</code> 字段上。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> StructB <span class="hljs-keyword">struct</span> &#123;<br>    NestedStruct StructA<br>    FieldB <span class="hljs-type">string</span> <span class="hljs-string">`form:&quot;field_b&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​	<code>StructB</code> 结构体有两个字段，<code>NestedStruct</code> 是一个嵌套的 <code>StructA</code> 结构体，<code>FieldB</code> 是一个字符串字段，同样也使用了 <code>form:&quot;field_b&quot;</code> 标签注释。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> StructC <span class="hljs-keyword">struct</span> &#123;<br>    NestedStructPointer *StructA<br>    FieldC <span class="hljs-type">string</span> <span class="hljs-string">`form:&quot;field_c&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​	<code>StructC</code> 结构体有两个字段，<code>NestedStructPointer</code> 是一个指向 <code>StructA</code> 结构体的指针，<code>FieldC</code> 是一个字符串字段，同样也使用了 <code>form:&quot;field_c&quot;</code> 标签注释。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go">	<span class="hljs-keyword">type</span> StructD <span class="hljs-keyword">struct</span> &#123;<br>    NestedAnonyStruct <span class="hljs-keyword">struct</span> &#123;<br>        FieldX <span class="hljs-type">string</span> <span class="hljs-string">`form:&quot;field_x&quot;`</span><br>    &#125;<br>    FieldD <span class="hljs-type">string</span> <span class="hljs-string">`form:&quot;field_d&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​	<code>StructD</code> 结构体有两个字段，<code>NestedAnonyStruct</code> 是一个匿名的嵌套结构体，内部有一个字段 <code>FieldX</code>，同样也使用了 <code>form:&quot;field_x&quot;</code> 标签注释，<code>FieldD</code> 是一个字符串字段，同样也使用了 <code>form:&quot;field_d&quot;</code> 标签注释。</p>
+</blockquote>
+<h4 id="（2）定义处理函数"><a href="#（2）定义处理函数" class="headerlink" title="（2）定义处理函数"></a>（2）定义处理函数</h4><blockquote>
+<p>​	定义了三个处理函数 <code>GetDataB</code>, <code>GetDataC</code>, 和 <code>GetDataD</code>，分别用于处理不同的 HTTP GET 请求，并返回 JSON 格式的响应。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetDataB</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>    <span class="hljs-keyword">var</span> b StructB<br>    c.Bind(&amp;b)<br>    c.JSON(<span class="hljs-number">200</span>, gin.H&#123;<br>        <span class="hljs-string">&quot;a&quot;</span>: b.NestedStruct,<br>        <span class="hljs-string">&quot;b&quot;</span>: b.FieldB,<br>    &#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​	<code>GetDataB</code> 函数是一个处理函数，用于处理 HTTP GET 请求 <code>/getb</code>。在函数内部，首先创建了一个 <code>StructB</code> 类型的变量 <code>b</code>，然后通过 <code>c.Bind(&amp;b)</code> 将请求中的数据绑定到 <code>b</code> 变量上，接着使用 <code>c.JSON</code> 函数返回一个 JSON 格式的响应，包含了 <code>b.NestedStruct</code> 和 <code>b.FieldB</code> 字段的值。</p>
+<p>​	<code>c.JSON</code> 是使用 <code>gin</code> 框架中的 <code>Context</code> 对象的方法，用于将 JSON 格式的响应发送给客户端。</p>
+<p>具体而言，<code>c.JSON</code> 接受两个参数：</p>
+<ol>
+<li><p>HTTP 状态码：这是一个整数值，表示响应的 HTTP 状态码。例如，<code>200</code> 表示成功的 HTTP 响应。在示例代码中，使用了状态码 <code>200</code>，表示成功的响应。</p>
+</li>
+<li><p>数据：这是一个 <code>gin.H</code> 类型的数据，表示要发送给客户端的 JSON 数据。<code>gin.H</code> 类型是 </p>
+<p><code>map[string]interface&#123;&#125;</code> 的别名，用于表示一个键值对的集合。在示例代码中，使用了 <code>gin.H</code> 数据结构，其中包含了两个键值对：</p>
+<ul>
+<li>键为 <code>&quot;a&quot;</code>，值为 <code>b.NestedStruct</code>：表示将 <code>StructB</code> 中的 <code>NestedStruct</code> 字段的值作为 JSON 响应中键为 <code>&quot;a&quot;</code> 的值。</li>
+<li>键为 <code>&quot;b&quot;</code>，值为 <code>b.FieldB</code>：表示将 <code>StructB</code> 中的 <code>FieldB</code> 字段的值作为 JSON 响应中键为 <code>&quot;b&quot;</code> 的值。</li>
+</ul>
+<p>这样，<code>c.JSON</code> 方法会将这个包含键值对的 <code>gin.H</code> 数据转换为 JSON 格式，并设置相应的 HTTP 响应头，将 JSON 数据发送给客户端作为响应。</p>
+</li>
+</ol>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetDataC</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>    <span class="hljs-keyword">var</span> b StructC<br>    c.Bind(&amp;b)<br>    c.JSON(<span class="hljs-number">200</span>, gin.H&#123;<br>        <span class="hljs-string">&quot;a&quot;</span>: b.NestedStructPointer,<br>        <span class="hljs-string">&quot;c&quot;</span>: b.FieldC,<br>    &#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​	<code>GetDataC</code> 函数是一个处理函数，用于处理 HTTP GET 请求 <code>/getc</code>。在函数内部，首先创建了一个 <code>StructC</code> 类型的变量 <code>b</code>，然后通过 <code>c.Bind(&amp;b)</code> 将请求中的数据绑定到 <code>b</code> 变量上，接着使用 <code>c.JSON</code> 函数返回一个 JSON 格式的响应，包含了 <code>b.NestedStructPointer</code> 和 <code>b.FieldC</code> 字段的值。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetDataD</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>    <span class="hljs-keyword">var</span> b StructD<br>    c.Bind(&amp;b)<br>    c.JSON(<span class="hljs-number">200</span>, gin.H&#123;<br>        <span class="hljs-string">&quot;x&quot;</span>: b.NestedAnonyStruct,<br>        <span class="hljs-string">&quot;d&quot;</span>: b.FieldD,<br>    &#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​	<code>GetDataD</code> 函数是一个处理函数，用于处理 HTTP GET 请求 <code>/getd</code>。在函数内部，首先创建了一个 <code>StructD</code> 类型的变量 <code>b</code>，然后通过 <code>c.Bind(&amp;b)</code> 将请求中的数据绑定到 <code>b</code> 变量上，接着使用 <code>c.JSON</code> 函数返回一个 JSON 格式的响应，包含了 <code>b.NestedAnonyStruct</code> 和 <code>b.FieldD</code> 字段的值。</p>
+</blockquote>
+<h4 id="（3）程序的入口函数"><a href="#（3）程序的入口函数" class="headerlink" title="（3）程序的入口函数"></a>（3）程序的入口函数</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    r := gin.Default()<br>    r.GET(<span class="hljs-string">&quot;/getb&quot;</span>, GetDataB)<br>    r.GET(<span class="hljs-string">&quot;/getc&quot;</span>, GetDataC)<br>    r.GET(<span class="hljs-string">&quot;/getd&quot;</span>, GetDataD)<br><br>    r.Run()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​	<code>	main</code> 函数是程序的入口函数，其中初始化了一个 <code>gin</code> 实例 <code>r</code>，并通过 <code>r.GET</code> 函数分别注册了三个路由处理函数 <code>GetDataB</code>、<code>GetDataC</code> 和 <code>GetDataD</code> 到对应的路由路径 <code>/getb</code>、<code>/getc</code> 和 <code>/getd</code> 上。最后通过 <code>r.Run()</code> 启动了服务，并开始监听来自客户端的 HTTP 请求。</p>
+</blockquote>
+<h4 id="（4）完整代码"><a href="#（4）完整代码" class="headerlink" title="（4）完整代码"></a>（4）完整代码</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;github.com/gin-gonic/gin&quot;</span><br><br><span class="hljs-keyword">type</span> StructA <span class="hljs-keyword">struct</span> &#123;<br>	FieldA <span class="hljs-type">string</span> <span class="hljs-string">`form:&quot;field_a&quot;`</span> <span class="hljs-comment">// FieldA 是 StructA 的字段，使用 form 标签 &quot;field_a&quot;</span><br>&#125;<br><br><span class="hljs-keyword">type</span> StructB <span class="hljs-keyword">struct</span> &#123;<br>	NestedStruct StructA <span class="hljs-comment">// NestedStruct 是 StructB 的字段，类型为 StructA</span><br>	FieldB       <span class="hljs-type">string</span> <span class="hljs-string">`form:&quot;field_b&quot;`</span> <span class="hljs-comment">// FieldB 是 StructB 的字段，使用 form 标签 &quot;field_b&quot;</span><br>&#125;<br><br><span class="hljs-keyword">type</span> StructC <span class="hljs-keyword">struct</span> &#123;<br>	NestedStructPointer *StructA <span class="hljs-comment">// NestedStructPointer 是 StructC 的指针字段，指向 StructA</span><br>	FieldC              <span class="hljs-type">string</span> <span class="hljs-string">`form:&quot;field_c&quot;`</span> <span class="hljs-comment">// FieldC 是 StructC 的字段，使用 form 标签 &quot;field_c&quot;</span><br>&#125;<br><br><span class="hljs-keyword">type</span> StructD <span class="hljs-keyword">struct</span> &#123;<br>	NestedAnonyStruct <span class="hljs-keyword">struct</span> &#123; <span class="hljs-comment">// NestedAnonyStruct 是 StructD 的匿名结构体字段</span><br>		FieldX <span class="hljs-type">string</span> <span class="hljs-string">`form:&quot;field_x&quot;`</span> <span class="hljs-comment">// FieldX 是匿名结构体的字段，使用 form 标签 &quot;field_x&quot;</span><br>	&#125;<br>	FieldD <span class="hljs-type">string</span> <span class="hljs-string">`form:&quot;field_d&quot;`</span> <span class="hljs-comment">// FieldD 是 StructD 的字段，使用 form 标签 &quot;field_d&quot;</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetDataB</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>	<span class="hljs-keyword">var</span> b StructB<br>	c.Bind(&amp;b) <span class="hljs-comment">// 将请求数据绑定到 StructB</span><br>	c.JSON(<span class="hljs-number">200</span>, gin.H&#123;<br>		<span class="hljs-string">&quot;a&quot;</span>: b.NestedStruct, <span class="hljs-comment">// 返回 NestedStruct 的值作为响应，键名为 &quot;a&quot;</span><br>		<span class="hljs-string">&quot;b&quot;</span>: b.FieldB,       <span class="hljs-comment">// 返回 FieldB 的值作为响应，键名为 &quot;b&quot;</span><br>	&#125;)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetDataC</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>	<span class="hljs-keyword">var</span> b StructC<br>	c.Bind(&amp;b) <span class="hljs-comment">// 将请求数据绑定到 StructC</span><br>	c.JSON(<span class="hljs-number">200</span>, gin.H&#123;<br>		<span class="hljs-string">&quot;a&quot;</span>: b.NestedStructPointer, <span class="hljs-comment">// 返回 NestedStructPointer 的值作为响应，键名为 &quot;a&quot;</span><br>		<span class="hljs-string">&quot;c&quot;</span>: b.FieldC,              <span class="hljs-comment">// 返回 FieldC 的值作为响应，键名为 &quot;c&quot;</span><br>	&#125;)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetDataD</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>	<span class="hljs-keyword">var</span> b StructD<br>	c.Bind(&amp;b) <span class="hljs-comment">// 将请求数据绑定到 StructD</span><br>	c.JSON(<span class="hljs-number">200</span>, gin.H&#123;<br>		<span class="hljs-string">&quot;x&quot;</span>: b.NestedAnonyStruct, <span class="hljs-comment">// 返回 NestedAnonyStruct 的值作为响应，键名为 &quot;x&quot;</span><br>		<span class="hljs-string">&quot;d&quot;</span>: b.FieldD,            <span class="hljs-comment">// 返回 FieldD 的值作为响应，键名为 &quot;d&quot;</span><br>	&#125;)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	r := gin.Default()<br>	r.GET(<span class="hljs-string">&quot;/getb&quot;</span>, GetDataB) <span class="hljs-comment">// 注册 GetDataB 作为 GET /getb 路由的处理函数</span><br>	r.GET(<span class="hljs-string">&quot;/getc&quot;</span>, GetDataC) <span class="hljs-comment">// 注册 GetDataC 作为 GET /getc 路由的处理函数</span><br>	r.GET(<span class="hljs-string">&quot;/getd&quot;</span>, GetDataD) <span class="hljs-comment">// 注册 GetDataD 作为 GET /getd 路由的处理函数</span><br><br>	r.Run() <span class="hljs-comment">// 启动 Gin web 服务器</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​	这段代码使用了 Gin 框架来处理 HTTP 请求，并通过 <code>c.Bind</code> 函数将请求中的数据绑定到不同的结构体变量中，然后使用 <code>c.JSON</code> 函数将结构体中的字段值作为 JSON 格式的响应返回给客户端。这样可以实现在 HTTP 请求和响应中使用结构体来处理数据的需求。</p>
+</blockquote>
+<h4 id="（5）使用-curl-命令结果："><a href="#（5）使用-curl-命令结果：" class="headerlink" title="（5）使用 curl 命令结果："></a>（5）使用 <code>curl</code> 命令结果：</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go">curl <span class="hljs-string">&quot;http://localhost:8080/getb?field_a=hello&amp;field_b=world&quot;</span><br>&#123;<span class="hljs-string">&quot;a&quot;</span>:&#123;<span class="hljs-string">&quot;FieldA&quot;</span>:<span class="hljs-string">&quot;hello&quot;</span>&#125;,<span class="hljs-string">&quot;b&quot;</span>:<span class="hljs-string">&quot;world&quot;</span>&#125;<br>curl <span class="hljs-string">&quot;http://localhost:8080/getc?field_a=hello&amp;field_c=world&quot;</span><br>&#123;<span class="hljs-string">&quot;a&quot;</span>:&#123;<span class="hljs-string">&quot;FieldA&quot;</span>:<span class="hljs-string">&quot;hello&quot;</span>&#125;,<span class="hljs-string">&quot;c&quot;</span>:<span class="hljs-string">&quot;world&quot;</span>&#125;<br>curl <span class="hljs-string">&quot;http://localhost:8080/getd?field_x=hello&amp;field_d=world&quot;</span><br>&#123;<span class="hljs-string">&quot;d&quot;</span>:<span class="hljs-string">&quot;world&quot;</span>,<span class="hljs-string">&quot;x&quot;</span>:&#123;<span class="hljs-string">&quot;FieldX&quot;</span>:<span class="hljs-string">&quot;hello&quot;</span>&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​	<code>a</code> 和 <code>b</code> 是 JSON 响应中的键名，而键值对的值是通过 <code>b.NestedStruct</code> 和 <code>b.FieldB</code> 获取的。这两个值的格式差异是因为 <code>b.NestedStruct</code> 和 <code>b.FieldB</code> 分别属于不同的数据类型。</p>
+</blockquote>
+<h2 id="3、绑定-HTML-复选框"><a href="#3、绑定-HTML-复选框" class="headerlink" title="3、绑定 HTML 复选框"></a>3、绑定 HTML 复选框</h2><h4 id="main-go"><a href="#main-go" class="headerlink" title="main.go"></a>main.go</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;github.com/gin-gonic/gin&quot;</span><br>)<br><br><span class="hljs-keyword">type</span> myForm <span class="hljs-keyword">struct</span> &#123;<br>	Colors []<span class="hljs-type">string</span> <span class="hljs-string">`form:&quot;colors[]&quot;`</span> <span class="hljs-comment">/* 定义一个结构体 myForm，其中包含一个 Colors 字段，</span><br><span class="hljs-comment">    用于接收表单提交的 colors[] 参数*/</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	r := gin.Default()<br><br>	r.LoadHTMLGlob(<span class="hljs-string">&quot;views/*&quot;</span>) <span class="hljs-comment">// 加载 views 目录下的 HTML 模板文件</span><br><br>	r.GET(<span class="hljs-string">&quot;/&quot;</span>, indexHandler) <span class="hljs-comment">// 处理根路径的 GET 请求，调用 indexHandler 函数</span><br>	r.POST(<span class="hljs-string">&quot;/&quot;</span>, formHandler) <span class="hljs-comment">// 处理根路径的 POST 请求，调用 formHandler 函数</span><br><br>	r.Run(<span class="hljs-string">&quot;:8080&quot;</span>) <span class="hljs-comment">// 启动 Gin 服务器监听在 8080 端口</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">indexHandler</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>	c.HTML(<span class="hljs-number">200</span>, <span class="hljs-string">&quot;form.html&quot;</span>, <span class="hljs-literal">nil</span>) <span class="hljs-comment">// 在响应中渲染 form.html 模板并返回 200 状态码</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">formHandler</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>	<span class="hljs-keyword">var</span> fakeForm myForm<br>	c.Bind(&amp;fakeForm)                 <span class="hljs-comment">// 绑定请求参数到 myForm 结构体</span><br>	c.JSON(<span class="hljs-number">200</span>, gin.H&#123;<span class="hljs-string">&quot;color&quot;</span>: fakeForm.Colors&#125;) <span class="hljs-comment">/* 返回 JSON 格式的响应，</span><br><span class="hljs-comment">	包含 fakeForm 结构体中的 Colors 字段值*/</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<ol>
+<li><p>导入了 <code>github.com/gin-gonic/gin</code> 包，这是 Gin 框架的主要包。</p>
+</li>
+<li><p>定义了一个名为 <code>myForm</code> 的结构体，其中包含一个 <code>Colors</code> 字段，用于接收表单提交的 <code>colors[]</code> 参数。这里使用了 Gin 框架的 <code>form</code> 标签来定义字段与请求参数之间的映射关系。</p>
+</li>
+<li><p>在 <code>main()</code> 函数中创建了一个默认的 Gin 实例 <code>r</code>。</p>
+</li>
+<li><p>使用 <code>r.LoadHTMLGlob()</code> 方法加载了 <code>views</code> 目录下的 HTML 模板文件。这里使用了 <code>*</code> 通配符，表示加载该目录下的所有文件。</p>
+</li>
+<li><p>使用 <code>r.GET()</code> 方法设置了处理根路径的 GET 请求的处理函数为 <code>indexHandler</code>。<code>indexHandler</code> 函数负责渲染 <code>form.html</code> 模板并返回 200 状态码的响应。</p>
+</li>
+<li><p>使用 <code>r.POST()</code> 方法设置了处理根路径的 POST 请求的处理函数为 <code>formHandler</code>。<code>formHandler</code> 函数负责解析请求参数，将其绑定到 <code>myForm</code> 结构体中的 <code>Colors</code> 字段，并返回 JSON 格式的响应，包含 <code>myForm</code> 结构体中的 <code>Colors</code> 字段值。</p>
+</li>
+<li><p>最后调用 <code>r.Run()</code> 方法启动 Gin 服务器，监听在 8080 端口。</p>
+<p>以上代码实现了一个简单的 Web 应用，当访问根路径时，会渲染 <code>form.html</code> 模板，显示一个包含三个复选框的表单；当提交表单时，会解析提交的表单数据，并返回 JSON 格式的响应，包含选中的颜色值。</p>
+</li>
+</ol>
+</blockquote>
+<h4 id="“views-x2F-form-html”"><a href="#“views-x2F-form-html”" class="headerlink" title="“views&#x2F;form.html”"></a>“views&#x2F;form.html”</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;POST&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Check some colors<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;red&quot;</span>&gt;</span>Red<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;colors[]&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;red&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;red&quot;</span> /&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;green&quot;</span>&gt;</span>Green<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;colors[]&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;green&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;green&quot;</span> /&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;blue&quot;</span>&gt;</span>Blue<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;colors[]&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;blue&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;blue&quot;</span> /&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="4、绑定查询字符串或表单数据"><a href="#4、绑定查询字符串或表单数据" class="headerlink" title="4、绑定查询字符串或表单数据"></a>4、绑定查询字符串或表单数据</h2><h4 id="（1）完整代码"><a href="#（1）完整代码" class="headerlink" title="（1）完整代码"></a>（1）完整代码</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>    <span class="hljs-string">&quot;log&quot;</span><br>    <span class="hljs-string">&quot;time&quot;</span><br><br>    <span class="hljs-string">&quot;github.com/gin-gonic/gin&quot;</span><br>)<br><br><span class="hljs-keyword">type</span> Person <span class="hljs-keyword">struct</span> &#123;<br>    Name     <span class="hljs-type">string</span>    <span class="hljs-string">`form:&quot;name&quot;`</span>                     <span class="hljs-comment">// 表单参数 &quot;name&quot;</span><br>    Address  <span class="hljs-type">string</span>    <span class="hljs-string">`form:&quot;address&quot;`</span>                  <span class="hljs-comment">// 表单参数 &quot;address&quot;</span><br>    Birthday time.Time <span class="hljs-string">`form:&quot;birthday&quot; time_format:&quot;2006-01-02&quot; time_utc:&quot;1&quot;`</span> <br>    <span class="hljs-comment">// 表单参数 &quot;birthday&quot;，使用指定的时间格式和转换为 UTC 时间</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    route := gin.Default() <span class="hljs-comment">// 创建默认的 Gin 路由引擎</span><br><br>    route.GET(<span class="hljs-string">&quot;/testing&quot;</span>, startPage) <span class="hljs-comment">// 注册 GET 请求处理函数 &quot;/testing&quot;</span><br><br>    route.Run(<span class="hljs-string">&quot;:8085&quot;</span>) <span class="hljs-comment">// 启动 Gin 服务并监听在 8085 端口</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">startPage</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>    <span class="hljs-keyword">var</span> person Person <span class="hljs-comment">// 创建一个 Person 结构体变量用于存储请求参数</span><br><br>    <span class="hljs-comment">// 使用 Gin 的 ShouldBind 方法将请求参数绑定到 Person 结构体变量上</span><br>    <span class="hljs-comment">// 如果请求是 GET 请求，则使用 Form 绑定引擎（query）进行参数绑定</span><br>    <span class="hljs-comment">// 如果请求是 POST 请求，则首先检查 content-type 是否为 JSON 或 XML，然后再使用 Form（form-data）绑定引擎</span><br>    <span class="hljs-comment">// 详细绑定规则可以参考：https://github.com/gin-gonic/gin/blob/master/binding/binding.go#L48</span><br>    <span class="hljs-keyword">if</span> err := c.ShouldBind(&amp;person); err == <span class="hljs-literal">nil</span> &#123;<span class="hljs-comment">//绑定成功时返回nil，反之返回错误信息</span><br>		log.Println(person.Name)	<span class="hljs-comment">// 输出绑定后的 Name 字段值</span><br>		log.Println(person.Address)	<span class="hljs-comment">// 输出绑定后的 Address 字段值</span><br>		log.Println(person.Birthday)<span class="hljs-comment">// 输出绑定后的 Birthday 字段值</span><br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		log.Println(<span class="hljs-string">&quot;Error:&quot;</span>, err)<br>	&#125;<br><br>    c.String(<span class="hljs-number">200</span>, <span class="hljs-string">&quot;Success&quot;</span>) <span class="hljs-comment">// 返回 &quot;Success&quot; 字符串作为响应</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="（2）代码解释"><a href="#（2）代码解释" class="headerlink" title="（2）代码解释"></a>（2）代码解释</h4><blockquote>
+<ol>
+<li>定义了一个 <code>Person</code> 结构体，其中包含了三个字段：<code>Name</code>、<code>Address</code> 和 <code>Birthday</code>，它们分别使用了 <code>form:&quot;name&quot;</code>、<code>form:&quot;address&quot;</code> 和 <code>form:&quot;birthday&quot;</code> 标签，表示在绑定请求参数时使用了 “form” 类型，并指定了对应的参数名。</li>
+<li>在 <code>main</code> 函数中，创建了一个默认的 Gin 路由引擎 <code>route</code>，并通过 <code>route.GET</code> 方法将 “&#x2F;testing” 路由和 <code>startPage</code> 处理函数绑定在一起。</li>
+<li>在 <code>startPage</code> 函数中，首先定义了一个 <code>Person</code> 类型的变量 <code>person</code> 用于接收从请求参数中绑定的数据。</li>
+<li>使用 <code>c.ShouldBind(&amp;person)</code> 方法来将请求参数绑定到 <code>person</code> 变量，如果绑定成功，则返回 <code>nil</code>，否则可以通过返回的错误对象进行错误处理。</li>
+<li>使用 <code>log.Println()</code> 方法输出绑定后的 <code>person</code> 对象的字段值，包括 <code>Name</code>、<code>Address</code> 和 <code>Birthday</code>。</li>
+<li>最后使用 <code>c.String()</code> 方法返回一个 “Success” 字符串作为响应体，并设置响应状态码为 200。</li>
+</ol>
+</blockquote>
+<h4 id="（3）测试"><a href="#（3）测试" class="headerlink" title="（3）测试"></a>（3）测试</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">http:<span class="hljs-comment">//localhost:8085/testing?name=ft&amp;address=China&amp;birthday=2023-04-11</span><br></code></pre></td></tr></table></figure>
+
+<p>可以看到页面中会显示<code>Success</code>，并且终端中会打印出信息。</p>
+<h2 id="5、绑定-Uri"><a href="#5、绑定-Uri" class="headerlink" title="5、绑定 Uri"></a>5、绑定 Uri</h2><h4 id="（1）完整代码-1"><a href="#（1）完整代码-1" class="headerlink" title="（1）完整代码"></a>（1）完整代码</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;github.com/gin-gonic/gin&quot;</span><br>)<br><br><span class="hljs-comment">// Person 结构体用于绑定 URI 参数</span><br><span class="hljs-keyword">type</span> Person <span class="hljs-keyword">struct</span> &#123;<br>	ID   <span class="hljs-type">string</span> <span class="hljs-string">`uri:&quot;id&quot; binding:&quot;required,uuid&quot;`</span> <span class="hljs-comment">// 将 URI 中的 id 参数绑定到 ID 字段，并指定必填和 UUID 格式验证</span><br>	Name <span class="hljs-type">string</span> <span class="hljs-string">`uri:&quot;name&quot; binding:&quot;required&quot;`</span>    <span class="hljs-comment">// 将 URI 中的 name 参数绑定到 Name 字段，并指定必填验证</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	route := gin.Default()	<span class="hljs-comment">// 创建默认的 Gin 路由引擎</span><br><br>	<span class="hljs-comment">// 定义路由处理函数</span><br>	route.GET(<span class="hljs-string">&quot;/:name/:id&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>		<span class="hljs-keyword">var</span> person Person<br>		<span class="hljs-comment">// 使用 ShouldBindUri 方法将 URI 参数绑定到 Person 结构体</span><br>		<span class="hljs-keyword">if</span> err := c.ShouldBindUri(&amp;person); err != <span class="hljs-literal">nil</span> &#123;	<span class="hljs-comment">//绑定成功，返回nil</span><br>			c.JSON(<span class="hljs-number">400</span>, gin.H&#123;<span class="hljs-string">&quot;msg&quot;</span>: err.Error()&#125;) <span class="hljs-comment">// 如果绑定失败，返回错误信息</span><br>			<span class="hljs-keyword">return</span><br>		&#125;<br>		c.JSON(<span class="hljs-number">200</span>, gin.H&#123;<span class="hljs-string">&quot;name&quot;</span>: person.Name, <span class="hljs-string">&quot;uuid&quot;</span>: person.ID&#125;) <span class="hljs-comment">// 如果绑定成功，返回绑定后的值</span><br>	&#125;)<br><br>	route.Run(<span class="hljs-string">&quot;:8088&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="（2）代码解释-1"><a href="#（2）代码解释-1" class="headerlink" title="（2）代码解释"></a>（2）代码解释</h4><blockquote>
+<p>上面的代码使用了 Gin 框架来处理 HTTP 请求，并通过 <code>ShouldBindUri</code> 方法将 URI 中的参数绑定到 <code>Person</code> 结构体。</p>
+<ol>
+<li>首先，导入了 <code>github.com/gin-gonic/gin</code> 包，用于使用 Gin 框架处理 HTTP 请求。</li>
+<li>定义了 <code>Person</code> 结构体，其中包含了 <code>ID</code> 和 <code>Name</code> 两个字段，分别用于绑定 URI 中的 <code>id</code> 和 <code>name</code> 参数。</li>
+<li>创建了 Gin 的路由引擎 <code>route</code>，并使用 <code>gin.Default()</code> 方法创建了一个默认的路由引擎，包含了一些默认的中间件，例如日志和恢复中间件。</li>
+<li>定义了路由处理函数，使用 <code>route.GET</code> 方法注册了一个 GET 请求的处理函数，其中的路由路径为 <code>/:name/:id</code>，表示可以接收两个 URI 参数，分别为 <code>name</code> 和 <code>id</code>。</li>
+<li>在路由处理函数中，定义了一个 <code>Person</code> 结构体的变量 <code>person</code>，用于接收绑定后的值。</li>
+<li>使用 <code>c.ShouldBindUri</code> 方法将 URI 参数绑定到 <code>person</code> 变量。<code>ShouldBindUri</code> 方法会根据结构体字段的标签信息，将 URI 中的参数值绑定到相应的字段上。例如，<code>ID</code> 字段会绑定到 URI 中的 <code>id</code> 参数，<code>Name</code> 字段会绑定到 URI 中的 <code>name</code> 参数。</li>
+<li>判断绑定是否成功，如果发生错误，则通过 <code>err</code> 变量获取错误信息，并使用 <code>c.JSON</code> 方法返回 HTTP 状态码 400 和错误信息给客户端。</li>
+<li>如果绑定成功，使用 <code>c.JSON</code> 方法返回 HTTP 状态码 200 和绑定后的 <code>Name</code> 和 <code>ID</code> 字段值给客户端。</li>
+<li>最后，使用 <code>route.Run</code> 方法启动 HTTP 服务器，监听在端口 8088 上。</li>
+</ol>
+</blockquote>
+<h4 id="（3）测试-1"><a href="#（3）测试-1" class="headerlink" title="（3）测试"></a>（3）测试</h4><p>网页：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">http:<span class="hljs-comment">//localhost:8088/thinkerou/987fbc97-4bed-5078-9f07-9141ba07c9f3</span><br>http:<span class="hljs-comment">//localhost:8088/thinkerou/not-uuid</span><br></code></pre></td></tr></table></figure>
+
+<p>终端：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go">Invoke-WebRequest -Uri <span class="hljs-string">&quot;http://localhost:8088/thinkerou/987fbc97-4bed-5078-9f07-9141ba07c9f3&quot;</span> -Method GET<br><br>Invoke-WebRequest -Uri <span class="hljs-string">&quot;http://localhost:8088/thinkerou/not-uuid&quot;</span> -Method GET<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Go/Gin%E6%A1%86%E6%9E%B6/" class="category-chain-item">Gin框架</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%8E%9F%E5%88%9B/">#原创</a>
+      
+        <a href="/tags/Gin/">#Gin</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Gin框架示例</div>
+      <div>http://example.com/2023/04/11/Gin框架示例/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月11日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年4月11日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/11/test./" title="test">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">test</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/11/go%E7%9A%84HTTP%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" title="go的HTTP网络编程">
+                        <span class="hidden-mobile">go的HTTP网络编程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lBwkKPHSowjEDFhKBLK0YCvo-gzGzoHsz","appKey":"vX99TJqyX7lpdiEcliqnCW51","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
