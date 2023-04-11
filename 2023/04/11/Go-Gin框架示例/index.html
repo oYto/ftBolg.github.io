@@ -24,7 +24,7 @@
 <meta property="og:description" content="Gin框架示例">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-11T06:09:26.000Z">
-<meta property="article:modified_time" content="2023-04-11T09:06:09.325Z">
+<meta property="article:modified_time" content="2023-04-11T13:29:42.984Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="原创">
 <meta property="article:tag" content="Gin">
@@ -238,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          13k 字
+          18k 字
         
       </span>
     
@@ -249,7 +249,7 @@
         
         
         
-          105 分钟
+          154 分钟
         
       </span>
     
@@ -453,6 +453,91 @@
 <p>终端：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go">Invoke-WebRequest -Uri <span class="hljs-string">&quot;http://localhost:8088/thinkerou/987fbc97-4bed-5078-9f07-9141ba07c9f3&quot;</span> -Method GET<br><br>Invoke-WebRequest -Uri <span class="hljs-string">&quot;http://localhost:8088/thinkerou/not-uuid&quot;</span> -Method GET<br></code></pre></td></tr></table></figure>
 
+
+
+<h2 id="6、控制Log高亮输出"><a href="#6、控制Log高亮输出" class="headerlink" title="6、控制Log高亮输出"></a>6、控制Log高亮输出</h2><blockquote>
+<p>默认是会高亮（当然这基于你使用的 TTY）。</p>
+</blockquote>
+<h4 id="（1）完整代码-2"><a href="#（1）完整代码-2" class="headerlink" title="（1）完整代码"></a>（1）完整代码</h4><blockquote>
+<p>如果你不想使用日志高亮：</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-comment">// 关闭高亮</span><br>    gin.DisableConsoleColor()<br><br>    <span class="hljs-comment">// 创建一个带有默认中间件（logger和recovery）的gin路由器</span><br>    router := gin.Default()<br><br>    <span class="hljs-comment">// 处理GET请求，路径为&quot;/ping&quot;</span><br>    router.GET(<span class="hljs-string">&quot;/ping&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>        c.String(<span class="hljs-number">200</span>, <span class="hljs-string">&quot;pong&quot;</span>) <span class="hljs-comment">// 向客户端返回字符串&quot;pong&quot;，状态码为200</span><br>    &#125;)<br><br>    <span class="hljs-comment">// 启动HTTP服务器，监听在端口8080上，等待客户端请求</span><br>    router.Run(<span class="hljs-string">&quot;:8080&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>手动设置高亮：</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-comment">// 强制开启日志高亮显示</span><br>    gin.ForceConsoleColor()<br><br>    <span class="hljs-comment">// 创建一个带有默认中间件（logger和recovery）的gin路由器</span><br>    router := gin.Default()<br><br>    <span class="hljs-comment">// 处理GET请求，路径为&quot;/ping&quot;</span><br>    router.GET(<span class="hljs-string">&quot;/ping&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>        c.String(<span class="hljs-number">200</span>, <span class="hljs-string">&quot;pong&quot;</span>) <span class="hljs-comment">// 向客户端返回字符串&quot;pong&quot;，状态码为200</span><br>    &#125;)<br><br>    <span class="hljs-comment">// 启动HTTP服务器，监听在端口8080上，等待客户端请求</span><br>    router.Run(<span class="hljs-string">&quot;:8080&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="7、自定义HTTP配置"><a href="#7、自定义HTTP配置" class="headerlink" title="7、自定义HTTP配置"></a>7、自定义HTTP配置</h2><h4 id="（1）完整代码-3"><a href="#（1）完整代码-3" class="headerlink" title="（1）完整代码"></a>（1）完整代码</h4><blockquote>
+<p>​	直接使用</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    router := gin.Default() <span class="hljs-comment">// 创建一个 Gin 路由引擎实例，使用默认的中间件：日志和恢复中间件</span><br>    http.ListenAndServe(<span class="hljs-string">&quot;:8080&quot;</span>, router) <span class="hljs-comment">// 启动 HTTP 服务器，监听在端口 8080 上，使用创建的路由引擎处理请求</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>或</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    router := gin.Default() <span class="hljs-comment">// 创建一个 Gin 路由引擎实例，使用默认的中间件：日志和恢复中间件</span><br><br>    <span class="hljs-comment">// 创建一个自定义的 http.Server 实例</span><br>    s := &amp;http.Server&#123;<br>        Addr:           <span class="hljs-string">&quot;:8080&quot;</span>,                        <span class="hljs-comment">// 监听的地址和端口</span><br>        Handler:        router,                         <span class="hljs-comment">// 使用创建的路由引擎处理请求</span><br>        ReadTimeout:    <span class="hljs-number">10</span> * time.Second,               <span class="hljs-comment">// 读取请求超时时间</span><br>        WriteTimeout:   <span class="hljs-number">10</span> * time.Second,               <span class="hljs-comment">// 写入响应超时时间</span><br>        MaxHeaderBytes: <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">20</span>,                         <span class="hljs-comment">// 最大请求头大小</span><br>    &#125;<br><br>    s.ListenAndServe() <span class="hljs-comment">// 启动 HTTP 服务器，监听在指定的地址和端口，并使用创建的路由引擎处理请求</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="（2）代码解释-2"><a href="#（2）代码解释-2" class="headerlink" title="（2）代码解释"></a>（2）代码解释</h4><blockquote>
+<p>​	这段代码使用了 Gin 框架创建了一个 HTTP 服务器，监听在端口 8080 上，并且设置了自定义的 <code>http.Server</code> 实例作为服务器的处理器。<code>http.Server</code> 结构体包含了服务器的配置信息，例如监听的地址和端口、处理请求的处理器、超时设置等。</p>
+<p>​	通过设置 <code>ReadTimeout</code> 和 <code>WriteTimeout</code> 可以控制服务器读取请求和写入响应的超时时间，以避免长时间的阻塞。<code>MaxHeaderBytes</code> 则可以限制请求头的最大大小，防止恶意请求导致服务器资源耗尽。</p>
+</blockquote>
+<h2 id="8、-自定义-Log-文件"><a href="#8、-自定义-Log-文件" class="headerlink" title="8、 自定义 Log 文件"></a>8、 自定义 Log 文件</h2><h4 id="（1）完整代码-4"><a href="#（1）完整代码-4" class="headerlink" title="（1）完整代码"></a>（1）完整代码</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    router := gin.New() <span class="hljs-comment">// 创建一个新的 Gin 路由引擎实例，不使用默认的中间件</span><br><br>    <span class="hljs-comment">// 添加自定义的日志中间件，将日志格式化为自定义格式</span><br>    router.Use(gin.LoggerWithFormatter(<span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(param gin.LogFormatterParams)</span></span> <span class="hljs-type">string</span> &#123;     <br>        <span class="hljs-comment">// 自定义日志格式</span><br>        <span class="hljs-keyword">return</span> fmt.Sprintf(<span class="hljs-string">&quot;%s - [%s] \&quot;%s %s %s %d %s \&quot;%s\&quot; %s\&quot;\n&quot;</span>,<br>            param.ClientIP: <span class="hljs-comment">//客户端 IP 地址</span><br>            param.TimeStamp.Format(time.RFC1123), <span class="hljs-comment">//时间戳</span><br>            param.Method,	<span class="hljs-comment">//请求方法</span><br>            param.Path,	<span class="hljs-comment">//请求路径</span><br>            param.Request.Proto,	<span class="hljs-comment">//请求协议版本</span><br>            param.StatusCode,	<span class="hljs-comment">//响应状态码</span><br>            param.Latency,	<span class="hljs-comment">//请求耗时</span><br>            param.Request.UserAgent(),	<span class="hljs-comment">//客户端 UserAgent 信息</span><br>            param.ErrorMessage,	<span class="hljs-comment">// 错误信息（若有错误发生时）</span><br>        )<br>    &#125;))<br><br>    router.Use(gin.Recovery()) <span class="hljs-comment">// 添加恢复中间件，用于恢复从 panic 中恢复</span><br><br>    router.GET(<span class="hljs-string">&quot;/ping&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>        c.String(<span class="hljs-number">200</span>, <span class="hljs-string">&quot;pong&quot;</span>)<br>    &#125;)<br><br>    router.Run(<span class="hljs-string">&quot;:8080&quot;</span>) <span class="hljs-comment">// 启动 HTTP 服务器，监听在指定的地址和端口，并使用创建的路由引擎处理请求</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="（2）代码解释-3"><a href="#（2）代码解释-3" class="headerlink" title="（2）代码解释"></a>（2）代码解释</h4><blockquote>
+<p>这段代码中使用了 <code>gin.LoggerWithFormatter</code> 方法创建了一个自定义的日志中间件，并在其中使用了 <code>gin.LogFormatterParams</code> 结构体中的不同字段来格式化日志。这些字段的含义如下：</p>
+<ul>
+<li><code>param.ClientIP</code>: 客户端 IP 地址</li>
+<li><code>param.TimeStamp</code>: 时间戳</li>
+<li><code>param.Method</code>: 请求方法</li>
+<li><code>param.Path</code>: 请求路径</li>
+<li><code>param.Request.Proto</code>: 请求协议版本</li>
+<li><code>param.StatusCode</code>: 响应状态码</li>
+<li><code>param.Latency</code>: 请求耗时</li>
+<li><code>param.Request.UserAgent()</code>: 客户端 UserAgent 信息</li>
+<li><code>param.ErrorMessage</code>: 错误信息（若有错误发生时）</li>
+</ul>
+<p>这些字段会根据实际请求和响应的情况被填充，并在日志中以自定义的格式输出。</p>
+</blockquote>
+<h2 id="9、自定义中间件"><a href="#9、自定义中间件" class="headerlink" title="9、自定义中间件"></a>9、自定义中间件</h2><h4 id="（1）完整代码-5"><a href="#（1）完整代码-5" class="headerlink" title="（1）完整代码"></a>（1）完整代码</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Logger</span><span class="hljs-params">()</span></span> gin.HandlerFunc &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>        t := time.Now() <span class="hljs-comment">// 记录当前时间</span><br><br>        c.Set(<span class="hljs-string">&quot;example&quot;</span>, <span class="hljs-string">&quot;12345&quot;</span>) <span class="hljs-comment">// 设置一个名为 &quot;example&quot; 的自定义变量到 Gin 上下文中</span><br><br>        <span class="hljs-comment">// 请求前的处理逻辑</span><br><br>        c.Next() <span class="hljs-comment">// 执行下一个处理函数</span><br><br>        <span class="hljs-comment">// 请求后的处理逻辑</span><br>        latency := time.Since(t) <span class="hljs-comment">// 计算请求耗时</span><br>        log.Print(latency) <span class="hljs-comment">// 打印请求耗时</span><br><br>        status := c.Writer.Status() <span class="hljs-comment">// 获取响应状态码</span><br>        log.Println(status) <span class="hljs-comment">// 打印响应状态码</span><br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    r := gin.New() <span class="hljs-comment">// 创建一个新的 Gin 路由引擎实例</span><br><br>    r.Use(Logger()) <span class="hljs-comment">// 使用自定义的 Logger 中间件</span><br><br>    r.GET(<span class="hljs-string">&quot;/test&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>        example := c.MustGet(<span class="hljs-string">&quot;example&quot;</span>).(<span class="hljs-type">string</span>) <span class="hljs-comment">// 从 Gin 上下文中获取之前设置的 &quot;example&quot; 变量</span><br><br>        <span class="hljs-comment">// 打印：&quot;12345&quot;</span><br>        log.Println(example)<br>    &#125;)<br><br>    r.Run(<span class="hljs-string">&quot;:8080&quot;</span>) <span class="hljs-comment">// 启动 HTTP 服务器，监听在指定的地址和端口，并使用创建的路由引擎处理请求</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="（2）代码解释-4"><a href="#（2）代码解释-4" class="headerlink" title="（2）代码解释"></a>（2）代码解释</h4><blockquote>
+<p>​	<code>Logger()</code> 函数是一个 <code>gin.HandlerFunc</code> 类型的中间件函数，用于在每次请求前后进行处理。具体工作如下：</p>
+<ol>
+<li>记录当前时间 <code>t</code>，用于后续计算请求耗时。</li>
+<li>设置一个名为 “example” 的自定义变量到 <code>gin</code> 上下文中，使用 <code>c.Set()</code> 方法将 “example” 设置为 “12345”，使得在后续的处理函数中可以通过 <code>c.MustGet()</code> 方法获取该值。</li>
+<li>在请求前进行一些处理逻辑，这里未展示出来，可以根据需要自行添加。</li>
+<li>调用 <code>c.Next()</code> 方法执行下一个处理函数，这样后续的中间件或路由处理函数可以继续处理请求。</li>
+<li>在请求后进行一些处理逻辑：<ul>
+<li>计算请求耗时，通过 <code>time.Since(t)</code> 方法获取耗时，其中 <code>t</code> 是请求前记录的时间。</li>
+<li>将请求耗时打印到日志中，使用 <code>log.Print()</code> 方法。</li>
+<li>获取响应状态码，通过 <code>c.Writer.Status()</code> 方法获取响应状态码。</li>
+<li>将响应状态码打印到日志中，使用 <code>log.Println()</code> 方法。</li>
+</ul>
+</li>
+</ol>
+<p>	</p>
+</blockquote>
+<blockquote>
+<p>​		<code>main()</code> 函数是程序的入口函数，具体工作如下：</p>
+<ol>
+<li>创建一个新的 <code>gin</code> 路由引擎实例 <code>r</code>。</li>
+<li>使用自定义的中间件函数 <code>Logger()</code>，通过 <code>r.Use()</code> 方法将其注册到路由引擎中，以便在每次请求时都会调用该中间件进行处理。</li>
+<li>定义一个 <code>/test</code> 路由路径上的处理函数，其中通过调用 <code>c.MustGet()</code> 方法从 <code>gin</code> 上下文中获取之前设置的 “example” 变量，并将其打印到日志中。</li>
+<li>调用 <code>r.Run()</code> 方法启动 HTTP 服务器，监听在指定的地址和端口，并使用创建的路由引擎处理请求。</li>
+<li>当客户端发送请求时，先经过注册的中间件函数 <code>Logger()</code> 进行处理，然后再由具体的路由处理函数处理请求，并生成响应。</li>
+</ol>
+</blockquote>
+<h2 id="10、自定义验证器"><a href="#10、自定义验证器" class="headerlink" title="10、自定义验证器"></a>10、自定义验证器</h2><h4 id="（1）完整代码-6"><a href="#（1）完整代码-6" class="headerlink" title="（1）完整代码"></a>（1）完整代码</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>    <span class="hljs-string">&quot;net/http&quot;</span><br>    <span class="hljs-string">&quot;time&quot;</span><br><br>    <span class="hljs-string">&quot;github.com/gin-gonic/gin&quot;</span><br>    <span class="hljs-string">&quot;github.com/gin-gonic/gin/binding&quot;</span><br>    <span class="hljs-string">&quot;github.com/go-playground/validator/v10&quot;</span><br>)<br><br><span class="hljs-comment">// Booking contains binded and validated data.</span><br><span class="hljs-keyword">type</span> Booking <span class="hljs-keyword">struct</span> &#123;<br>    CheckIn  time.Time <span class="hljs-string">`form:&quot;check_in&quot; binding:&quot;required,bookabledate&quot; time_format:&quot;2006-01-02&quot;`</span><br>    CheckOut time.Time <span class="hljs-string">`form:&quot;check_out&quot; binding:&quot;required,gtfield=CheckIn,bookabledate&quot; time_format:&quot;2006-01-02&quot;`</span><br>&#125;<br><br><span class="hljs-keyword">var</span> bookableDate validator.Func = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(fl validator.FieldLevel)</span></span> <span class="hljs-type">bool</span> &#123;<br>    date, ok := fl.Field().Interface().(time.Time)<br>    <span class="hljs-keyword">if</span> ok &#123;<br>        today := time.Now()<br>        <span class="hljs-keyword">if</span> today.After(date) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    route := gin.Default()<br><br>    <span class="hljs-comment">// 注册自定义验证器函数</span><br>    <span class="hljs-keyword">if</span> v, ok := binding.Validator.Engine().(*validator.Validate); ok &#123;<br>        v.RegisterValidation(<span class="hljs-string">&quot;bookabledate&quot;</span>, bookableDate)<br>    &#125;<br><br>    <span class="hljs-comment">// 定义路由</span><br>    route.GET(<span class="hljs-string">&quot;/bookable&quot;</span>, getBookable)<br><br>    <span class="hljs-comment">// 启动服务</span><br>    route.Run(<span class="hljs-string">&quot;:8085&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getBookable</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>    <span class="hljs-keyword">var</span> b Booking<br>    <span class="hljs-keyword">if</span> err := c.ShouldBindWith(&amp;b, binding.Query); err == <span class="hljs-literal">nil</span> &#123;<br>        c.JSON(http.StatusOK, gin.H&#123;<span class="hljs-string">&quot;message&quot;</span>: <span class="hljs-string">&quot;Booking dates are valid!&quot;</span>&#125;)<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        c.JSON(http.StatusBadRequest, gin.H&#123;<span class="hljs-string">&quot;error&quot;</span>: err.Error()&#125;)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="（2）代码解释-5"><a href="#（2）代码解释-5" class="headerlink" title="（2）代码解释"></a>（2）代码解释</h4><blockquote>
+<ul>
+<li><code>Booking</code> 结构体定义了要绑定和验证的数据，包括 <code>CheckIn</code> 和 <code>CheckOut</code> 两个时间字段。</li>
+<li><code>bookableDate</code> 是一个自定义的验证器函数，用于验证日期是否有效，它检查日期是否在当前时间之后，如果在当前时间之前，则返回验证失败。</li>
+<li>在 <code>main</code> 函数中，通过 <code>binding.Validator.Engine()</code> 获取到 Validator 实例，并使用 <code>RegisterValidation</code> 方法注册了自定义的验证器函数 <code>bookabledate</code>。</li>
+<li>定义了 <code>/bookable</code> 接口的处理函数 <code>getBookable</code>，该函数通过 <code>ShouldBindWith</code> 方法将请求参数绑定到 <code>Booking</code> 结构体，并进行验证。如果验证通过，则返回状态码为 200 的 JSON 响应，表示预订日期有效；否则，返回状态码为 400 的 JSON 响应，表示验证失败并包含错误信息。</li>
+</ul>
+</blockquote>
 
                 
               </div>
