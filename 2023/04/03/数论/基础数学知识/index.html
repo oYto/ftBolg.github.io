@@ -1,0 +1,823 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="质数 质因数 约数 公约数 快速幂">
+<meta property="og:type" content="article">
+<meta property="og:title" content="质数 质因数 约数 公约数 快速幂">
+<meta property="og:url" content="http://example.com/2023/04/03/%E6%95%B0%E8%AE%BA/%E5%9F%BA%E7%A1%80%E6%95%B0%E5%AD%A6%E7%9F%A5%E8%AF%86/index.html">
+<meta property="og:site_name" content="小樱桃">
+<meta property="og:description" content="质数 质因数 约数 公约数 快速幂">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-03T13:08:15.000Z">
+<meta property="article:modified_time" content="2023-04-06T09:36:18.853Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="基础数学知识">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>质数 质因数 约数 公约数 快速幂 - 小樱桃</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"lBwkKPHSowjEDFhKBLK0YCvo-gzGzoHsz","app_key":"vX99TJqyX7lpdiEcliqnCW51","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>小樱桃的个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/5.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="质数 质因数 约数 公约数 快速幂"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-03 21:08" pubdate>
+          2023年4月3日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          38 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">质数 质因数 约数 公约数 快速幂</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="质数-质因数-约数-公约数-快速幂"><a href="#质数-质因数-约数-公约数-快速幂" class="headerlink" title="质数 质因数 约数 公约数 快速幂	"></a>质数 质因数 约数 公约数 快速幂	<span id="more"></span></h2><h3 id="1、质数的判定————试除法"><a href="#1、质数的判定————试除法" class="headerlink" title="1、质数的判定————试除法"></a>1、质数的判定————试除法</h3><h5 id="时间复杂度："><a href="#时间复杂度：" class="headerlink" title="时间复杂度："></a>时间复杂度：</h5><blockquote>
+<p>​	O(sqrt(n))</p>
+</blockquote>
+<h5 id="核心思路："><a href="#核心思路：" class="headerlink" title="核心思路："></a>核心思路：</h5><blockquote>
+<p>​    优化： | 表示整除，如果d | n，显然n &#x2F; d | n 一定成立，因为d的约数一定是成对出现的，而这一对就是d 和 n &#x2F; d，<br>故我们在枚举的时候，只需要枚举较小的那个就能判定当前这对是不是该数的约数，如下：<br>​    d &lt;&#x3D; n &#x2F; d， d ^ 2 &lt;&#x3D; n， d &lt;&#x3D; 根号n，就把上面的O(n)的复杂度降到了O(根号n)。</p>
+</blockquote>
+<h5 id="代码模板："><a href="#代码模板：" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">is_prime</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">2</span>; i &lt;= n / i; i ++)<br>        <span class="hljs-keyword">if</span> (n % i == <span class="hljs-number">0</span>) <br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h5><blockquote>
+<p>在判断的时候，一定要记得特判小于2的所有数，都不是质数。</p>
+</blockquote>
+<h3 id="2、分解质因数："><a href="#2、分解质因数：" class="headerlink" title="2、分解质因数："></a>2、分解质因数：</h3><h5 id="时间复杂度：-1"><a href="#时间复杂度：-1" class="headerlink" title="时间复杂度："></a>时间复杂度：</h5><blockquote>
+<p>​	O（sqrt(N)）</p>
+</blockquote>
+<h5 id="核心思路：-1"><a href="#核心思路：-1" class="headerlink" title="核心思路："></a>核心思路：</h5><blockquote>
+<p>​	从小到大枚举所有数，即从小到大尝试n的所有质因数，并求其次数。</p>
+</blockquote>
+<h5 id="代码模板：-1"><a href="#代码模板：-1" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">2</span>; i &lt;= n; i ++)<br>    <span class="hljs-keyword">if</span> (n % i == <span class="hljs-number">0</span>)<br>    &#123;<br>        <span class="hljs-type">int</span> s = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">while</span> (n % i == <span class="hljs-number">0</span>)<br>        &#123;<br>            n /= i;.<br>            s ++;<br>        &#125;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d\n&quot;</span>, i, s);<br>    &#125;<br><span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">1</span>) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d\n&quot;</span>, n, <span class="hljs-number">1</span>);<br></code></pre></td></tr></table></figure>
+
+<h5 id="注意：-1"><a href="#注意：-1" class="headerlink" title="注意："></a>注意：</h5><blockquote>
+<p>​	（1）、关于枚举时，为什么一定不会枚举到合数？<br>​    答： 当我们枚举到i时，就说明n当中，已经不包含任何2 ~ i - 1的质因子了，<br>​    然后n能整除i，说明i当中也不包含任何2 ~ i - 1的质因子了，因此i一定是一个质数<br>​	（2）、n中最多只包含一个大于sqrt(n)的质因子，故在枚举时，可以先把所有小于sqrt(n)的质因子枚举出来，<br>​	最后将大于sqrt(n)的质因子特判输出即可。————————这样时间复杂度就从O(n)降到了O(sqrt(n));</p>
+</blockquote>
+<h3 id="3、线性筛法：筛质数"><a href="#3、线性筛法：筛质数" class="headerlink" title="3、线性筛法：	筛质数"></a>3、线性筛法：	筛质数</h3><h5 id="时间复杂度：-2"><a href="#时间复杂度：-2" class="headerlink" title="时间复杂度："></a>时间复杂度：</h5><blockquote>
+<p>​		O(n)</p>
+</blockquote>
+<h5 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路:"></a>核心思路:</h5><blockquote>
+<p>​    核心：每一个数i，只会被其最小质因子筛掉。<br>​        分析：在筛掉时候，是从小到大枚举所有质数，每次把当前质数和i的乘积筛掉，当 i % primes[j] &#x3D;&#x3D; 0成立时，<br>​        说明primes[j] 一定是i的最小质因子，因为primes[j]是从小到大枚举的，且所有的质数都放在了primes里。</p>
+</blockquote>
+<h5 id="代码模板：-2"><a href="#代码模板：-2" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">get_primes</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">2</span>; i &lt;= n; i ++)<br>    &#123;<br>        <span class="hljs-keyword">if</span> (!st[i]) primes[cnt ++] = i;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; primes[j] &lt;= n / i; j ++)<br>        &#123;<br>            st[primes[j] * i] = <span class="hljs-literal">true</span>;<br>            <span class="hljs-keyword">if</span> (i % primes[j] == <span class="hljs-number">0</span>) <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="注意点："><a href="#注意点：" class="headerlink" title="注意点："></a>注意点：</h5><blockquote>
+<p>​    1、因为prime中素数是递增的，所以如果i%prime[j]!&#x3D;0代表i的最小质因数还没有找到，<br>​    即i的最小质因数大于prime[j]。也就是说prime[j]就是iprime[j]的最小质因数，于是iprime[j]被它的最小质因数筛掉了。</p>
+<p>​    2、如果当i%prime[j]&#x3D;&#x3D;0时，代表i的最小质因数是prime[j]，<br>​    那么iprimej+k这个合数的最小质因数就不是prime[j+k]而是prime[j]了。<br>​    所以iprime[j+k]应该被prime[j]筛掉，而不是后续的prime[j+k]。于是在此时break。</p>
+<p>​    3、对于一个合数x，假设primes[j]是x的最小质因子，当i枚举到x &#x2F; primes[j]时，i就会被筛掉，且一定是被其最小质因子筛掉的。</p>
+</blockquote>
+<h3 id="4、试除法求约数"><a href="#4、试除法求约数" class="headerlink" title="4、试除法求约数"></a>4、试除法求约数</h3><h5 id="时间复杂度：-3"><a href="#时间复杂度：-3" class="headerlink" title="时间复杂度："></a>时间复杂度：</h5><blockquote>
+<p>​	O(sqrt(n))</p>
+</blockquote>
+<h5 id="核心思路：-2"><a href="#核心思路：-2" class="headerlink" title="核心思路："></a>核心思路：</h5><blockquote>
+<p>​	试除法求约数：<br>（1）i从1开始，遍历到n &#x2F; int<br>（2）每找到一个约数：<br>​    （2.1）就将它约数放入数组中，<br>​    （2.2）判断一个n &#x2F; i &#x3D;&#x3D; i，如果不相等，就把他放入数组中<br>（3）找完之后sort一下，即可获得从小到大的一个数的约数数组<br>​	优化同质数，一个数的约数也是成对出现的，故在枚举时，直接枚举较小的约数即可，即i &lt;&#x3D; sqrt(n)</p>
+</blockquote>
+<h5 id="代码模板：-3"><a href="#代码模板：-3" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c++"> <span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">get_divisors</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span></span><br><span class="hljs-function">    </span>&#123;<br>        vector&lt;<span class="hljs-type">int</span>&gt; res;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n / i; i ++)<br>        &#123;<br>            <span class="hljs-keyword">if</span> (n % i == <span class="hljs-number">0</span>)<br>            &#123;<br>                res.<span class="hljs-built_in">push_back</span>(i);<br>                <span class="hljs-keyword">if</span> (i != n / i) res.<span class="hljs-built_in">push_back</span>(n / i);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-built_in">sort</span>(res.<span class="hljs-built_in">begin</span>(), res.<span class="hljs-built_in">end</span>());<br><br>        <span class="hljs-keyword">return</span> res;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="5、约数个数："><a href="#5、约数个数：" class="headerlink" title="5、约数个数："></a>5、约数个数：</h3><h5 id="核心思路：-3"><a href="#核心思路：-3" class="headerlink" title="核心思路："></a>核心思路：</h5><blockquote>
+<p>​    N &#x3D; p1 ^ a1 * p2 ^ a2 * … * pk ^ ak<br>​    则约数个数为cnt &#x3D; (a1 + 1)(a2 + 2)…(ak + 1)，证明：<br>​                                    N &#x3D; p1 ^ a1 * p2 ^ a2 * … * pk ^ ak<br>​    因为N的任意一个约数d，都可以写作d &#x3D; p1 ^ b1 * p2 ^ b2 * … * pk ^ bk, 0 &lt;&#x3D; bi &lt;&#x3D; ai，<br>​    pi每一项的指数b如果不同，则构成的约数就不同，故对于每一个pi都有(ai + 1)种情况，故约数个数就有(ai + 1)个。<br>​    而对于N来说，N的每一个约数，都对应了b1 ~ bk的不同取法，则选法种数即为约数个数，<br>​    故约数个数则为cnt &#x3D; (a1 + 1)(a2 + 1)…(ak + 1)</p>
+<p>​    int范围内，约数个数最多的数只有1500~1600个。</p>
+</blockquote>
+<h5 id="代码模板：-4"><a href="#代码模板：-4" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unordered_map&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span>  mod = <span class="hljs-number">1e9</span> + <span class="hljs-number">7</span>;<br><br><span class="hljs-type">long</span> <span class="hljs-type">long</span> res;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">int</span> n;<br>    cin &gt;&gt; n;<br><br>    unordered_map&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt; primes;<br>    <span class="hljs-keyword">while</span> (n --)<br>    &#123;<br>        <span class="hljs-type">int</span> x;<br>        cin &gt;&gt; x;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">2</span>; i &lt;= x / i; i ++)<br>        &#123;<br>            <span class="hljs-keyword">while</span> (x % i == <span class="hljs-number">0</span>)<br>            &#123;<br>                x /= i;<br>                primes[i] ++;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (x &gt; <span class="hljs-number">1</span>) primes[x] ++;<br>    &#125;<br>    res = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> prime : primes) res = res * (prime.second + <span class="hljs-number">1</span> ) % mod;<br><br>    cout &lt;&lt; res &lt;&lt; endl;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="注意：-2"><a href="#注意：-2" class="headerlink" title="注意："></a>注意：</h5><blockquote>
+<p>​	约数个数 &#x3D; 分解质因数后，（所有指数 + 1）相乘</p>
+</blockquote>
+<h3 id="6、约数之和"><a href="#6、约数之和" class="headerlink" title="6、约数之和"></a>6、约数之和</h3><h5 id="核心思路：-4"><a href="#核心思路：-4" class="headerlink" title="核心思路："></a>核心思路：</h5><blockquote>
+<p>​    N &#x3D; p1 ^ a1 * p2 ^ a2 * … * pk ^ ak<br>​    则约数之和为sum &#x3D; (p1 ^ 0 + p1 ^ 1 + … + p1 ^ a1) * … *(pk ^ 0 + pk ^ 1 + … + pk ^ ak)，证明：<br>​    用乘法分配律将上式展开，就是一堆乘积（） + 一堆乘积（） + （）…<br>​    而（）则是从上式括号中每一个括号中任取一项组成的，任意一堆乘积（）都是一个约数，<br>​    故这个公式就是将所有约数加在一起了。</p>
+</blockquote>
+<h5 id="代码模板：-5"><a href="#代码模板：-5" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unordered_map&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">long</span> <span class="hljs-type">long</span> res;<br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span> mod = <span class="hljs-number">1e9</span> + <span class="hljs-number">7</span>;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">int</span> n;<br>    cin &gt;&gt; n;<br><br>    unordered_map&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt; primes;<br><br>    <span class="hljs-keyword">while</span> (n --)<br>    &#123;<br>        <span class="hljs-type">int</span> x;<br>        cin &gt;&gt; x;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">2</span>; i &lt;= x / i; i ++)<br>        &#123;<br>            <span class="hljs-keyword">while</span> (x % i == <span class="hljs-number">0</span>)<br>            &#123;<br>                x /= i;<br>                primes[i] ++;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (x &gt; <span class="hljs-number">1</span>) primes[x] ++;<br>    &#125;<br><br>    res = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> prime : primes)<br>    &#123;<br>        <span class="hljs-type">long</span> <span class="hljs-type">long</span> a = prime.first, b = prime.second;<br>        <span class="hljs-type">long</span> <span class="hljs-type">long</span> t = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">while</span> (b --) t = (t * a + <span class="hljs-number">1</span>) % mod;<br>        res = res * t % mod;<br><br>    &#125;<br>    cout &lt;&lt; res;<br><br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="注意：-3"><a href="#注意：-3" class="headerlink" title="注意："></a>注意：</h5><blockquote>
+<p>​	约数之和 &#x3D; 因式分解后（所有幂的0~其指数次方之和）的乘积</p>
+</blockquote>
+<h3 id="7、最大公约数："><a href="#7、最大公约数：" class="headerlink" title="7、最大公约数："></a>7、最大公约数：</h3><h5 id="核心思路-1"><a href="#核心思路-1" class="headerlink" title="核心思路:"></a>核心思路:</h5><blockquote>
+<p>​    	d | a, d | b，则d | (a + b) &#x3D; d | ax + by，<br>​    (a, b)的最大公约数 &#x3D; (b, a % b) 的最大公约数。</p>
+<p>​    证明：a mod b &#x3D; a - (a&#x2F;b) * b &#x3D; a - c * b<br>​    (a, b) &#x3D; (b, a - c * b)，d | a, d | b，所以d | (a - c * b)成立<br>​    d | b, d | a - c * b,则d | a - c * b + c * b，即d | a，所以右边的公约数 &#x3D; 左边的公约数，左边的公约数等于右边的公约数<br>​    故，(a, b) &#x3D; (b, a mod b)成立</p>
+</blockquote>
+<h5 id="代码模板：-6"><a href="#代码模板：-6" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">gcd</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">return</span> b ? <span class="hljs-built_in">gcd</span>(b, a % b) : a;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="8、快速幂："><a href="#8、快速幂：" class="headerlink" title="8、快速幂："></a>8、快速幂：</h3><h5 id="核心思路：-5"><a href="#核心思路：-5" class="headerlink" title="核心思路："></a>核心思路：</h5><blockquote>
+<p>反复平方法。<br>    预处理出来一些值：a ^ (2 ^ 0) mod p, a ^ (2 ^ 1) mod p,,,a ^ (2 ^ logk) modp的值,共logk个，<br>    用这些值去组合出a ^ k<br>    a ^ k &#x3D; a ^ (2 ^ x1) * a ^ (2 ^ x2) … * a ^ (2 ^ xt)<br>      &#x3D; a ^ (2 ^ x1 + 2 ^ x2 + …2 ^ xt)，即把k拆分成2^x1,2^x2,,,2^xt这logk个数的和。<br>（1）拆k的方式：把k用二进制表示，把二进制数下是1的位，加上其所属幂位即可，<br>    例k的二进制表示为： 110110，k &#x3D; 2^1 + w^2 + 2^4 + 2^5，<br>（2）如何预处理出我们所需要的值：<br>    第一个数a^(2^0) &#x3D; a^1 &#x3D; a,后面每个数都是前面一个数的平方。</p>
+</blockquote>
+<h5 id="代码模板：-7"><a href="#代码模板：-7" class="headerlink" title="代码模板："></a>代码模板：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//返回的就是a^k % p</span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">qmi</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> k, <span class="hljs-type">int</span> p)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">int</span> res = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">while</span> (k)<br>    &#123;<br>        <span class="hljs-keyword">if</span> (k &amp; <span class="hljs-number">1</span>) res = (LL) res * a % p;  <span class="hljs-comment">//当前位是1，则前位更新到答案中</span><br>        k &gt;&gt;= <span class="hljs-number">1</span>;    <span class="hljs-comment">//算过的位删掉</span><br>        a = (LL) a * a % p;<span class="hljs-comment">//把a变成下一个</span><br>    &#125;<br><br>    <span class="hljs-keyword">return</span> res;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="注意：-4"><a href="#注意：-4" class="headerlink" title="注意："></a>注意：</h5><blockquote>
+<p>​	一定一定要注意每个运算的地方都要进行(long long)的转换，以及 取模%p</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/%E6%95%B0%E8%AE%BA/" class="category-chain-item">数论</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%AE%97%E6%B3%95/">#算法</a>
+      
+        <a href="/tags/%E5%9F%BA%E7%A1%80%E6%95%B0%E5%AD%A6%E7%9F%A5%E8%AF%86/">#基础数学知识</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>质数 质因数 约数 公约数 快速幂</div>
+      <div>http://example.com/2023/04/03/数论/基础数学知识/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月3日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年4月6日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/03/%E5%9B%BE%E8%AE%BA/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/" title="拓扑排序">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">拓扑排序</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/01/%E5%9B%BE%E8%AE%BA/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%97%AE%E9%A2%98/" title="最小生成树问题">
+                        <span class="hidden-mobile">最小生成树问题</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lBwkKPHSowjEDFhKBLK0YCvo-gzGzoHsz","appKey":"vX99TJqyX7lpdiEcliqnCW51","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
