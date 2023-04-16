@@ -16,24 +16,22 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目：方格取数">
+    <meta name="description" content="题目：登山">
 <meta property="og:type" content="article">
-<meta property="og:title" content="方格取数">
-<meta property="og:url" content="http://example.com/2023/04/14/%E5%88%B7%E9%A2%98/%E6%96%B9%E6%A0%BC%E5%8F%96%E6%95%B0/index.html">
+<meta property="og:title" content="登山">
+<meta property="og:url" content="http://example.com/2023/04/16/%E5%88%B7%E9%A2%98/%E7%99%BB%E5%B1%B1/index.html">
 <meta property="og:site_name" content="小樱桃">
-<meta property="og:description" content="题目：方格取数">
+<meta property="og:description" content="题目：登山">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.acwing.com/media/article/image/2019/09/12/19_764ece6ed5-2.gif">
-<meta property="article:published_time" content="2023-04-14T13:14:02.000Z">
-<meta property="article:modified_time" content="2023-04-14T13:33:24.228Z">
+<meta property="article:published_time" content="2023-04-16T11:53:45.000Z">
+<meta property="article:modified_time" content="2023-04-16T12:03:54.807Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="数字三角形模型">
+<meta property="article:tag" content="最长上升子序列模型">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cdn.acwing.com/media/article/image/2019/09/12/19_764ece6ed5-2.gif">
   
   
   
-  <title>方格取数 - 小樱桃</title>
+  <title>登山 - 小樱桃</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +214,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="方格取数"></span>
+            <span id="subtitle" data-typed-text="登山"></span>
           
         </div>
 
@@ -227,8 +225,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-14 21:14" pubdate>
-          2023年4月14日 晚上
+        <time datetime="2023-04-16 19:53" pubdate>
+          2023年4月16日 晚上
         </time>
       </span>
     
@@ -239,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          1.1k 字
         
       </span>
     
@@ -250,7 +248,7 @@
         
         
         
-          15 分钟
+          9 分钟
         
       </span>
     
@@ -296,40 +294,27 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">方格取数</h1>
+            <h1 style="display: none">登山</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目：方格取数"><a href="#题目：方格取数" class="headerlink" title="题目：方格取数"></a>题目：方格取数<span id="more"></span></h1><p>设有 N×N 的方格图，我们在其中的某些方格中填入正整数，而其它的方格中则放入数字0。如下图所示：</p>
-<p><img src="https://cdn.acwing.com/media/article/image/2019/09/12/19_764ece6ed5-2.gif" srcset="/img/loading.gif" lazyload></p>
-<p>某人从图中的左上角 A 出发，可以向下行走，也可以向右行走，直到到达右下角的 B 点。</p>
-<p>在走过的路上，他可以取走方格中的数（取走后的方格中将变为数字0）。</p>
-<p>此人从 A 点到 B 点共走了两次，试找出两条这样的路径，使得取得的数字和为最大。</p>
-<h4 id="输入格式"><a href="#输入格式" class="headerlink" title="输入格式"></a>输入格式</h4><p>第一行为一个整数N，表示 N×N 的方格图。</p>
-<p>接下来的每行有三个整数，第一个为行号数，第二个为列号数，第三个为在该行、该列上所放的数。</p>
-<p>行和列编号从 11 开始。</p>
-<p>一行“0 0 0”表示结束。</p>
-<h4 id="输出格式"><a href="#输出格式" class="headerlink" title="输出格式"></a>输出格式</h4><p>输出一个整数，表示两条路径上取得的最大的和。</p>
-<h4 id="数据范围"><a href="#数据范围" class="headerlink" title="数据范围"></a>数据范围</h4><p>N≤10</p>
-<h4 id="输入样例："><a href="#输入样例：" class="headerlink" title="输入样例："></a>输入样例：</h4><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-number">8</span><br><span class="hljs-symbol">2 </span><span class="hljs-number">3</span> <span class="hljs-number">13</span><br><span class="hljs-symbol">2 </span><span class="hljs-number">6</span> <span class="hljs-number">6</span><br><span class="hljs-symbol">3 </span><span class="hljs-number">5</span> <span class="hljs-number">7</span><br><span class="hljs-symbol">4 </span><span class="hljs-number">4</span> <span class="hljs-number">14</span><br><span class="hljs-symbol">5 </span><span class="hljs-number">2</span> <span class="hljs-number">21</span><br><span class="hljs-symbol">5 </span><span class="hljs-number">6</span> <span class="hljs-number">4</span><br><span class="hljs-symbol">6 </span><span class="hljs-number">3</span> <span class="hljs-number">15</span><br><span class="hljs-symbol">7 </span><span class="hljs-number">2</span> <span class="hljs-number">14</span><br><span class="hljs-symbol">0 </span><span class="hljs-number">0</span> <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+                <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h1 id="题目：登山"><a href="#题目：登山" class="headerlink" title="题目：登山"></a>题目：登山<span id="more"></span></h1><p>五一到了，ACM队组织大家去登山观光，队员们发现山上一共有N个景点，并且决定按照顺序来浏览这些景点，即每次所浏览景点的编号都要大于前一个浏览景点的编号。</p>
+<p>同时队员们还有另一个登山习惯，就是不连续浏览海拔相同的两个景点，并且一旦开始下山，就不再向上走了。</p>
+<p>队员们希望在满足上面条件的同时，尽可能多的浏览景点，你能帮他们找出最多可能浏览的景点数么？</p>
+<h4 id="输入格式"><a href="#输入格式" class="headerlink" title="输入格式"></a>输入格式</h4><p>第一行包含整数N，表示景点数量。</p>
+<p>第二行包含N个整数，表示每个景点的海拔。</p>
+<h4 id="输出格式"><a href="#输出格式" class="headerlink" title="输出格式"></a>输出格式</h4><p>输出一个整数，表示最多能浏览的景点数。</p>
+<h4 id="数据范围"><a href="#数据范围" class="headerlink" title="数据范围"></a>数据范围</h4><p>2≤N≤1000</p>
+<h4 id="输入样例："><a href="#输入样例：" class="headerlink" title="输入样例："></a>输入样例：</h4><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-number">8</span><br><span class="hljs-symbol">186 </span><span class="hljs-number">186</span> <span class="hljs-number">150</span> <span class="hljs-number">200</span> <span class="hljs-number">160</span> <span class="hljs-number">130</span> <span class="hljs-number">197</span> <span class="hljs-number">220</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="输出样例："><a href="#输出样例：" class="headerlink" title="输出样例："></a>输出样例：</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">4<br></code></pre></td></tr></table></figure>
 
 
 
-<h4 id="输出样例："><a href="#输出样例：" class="headerlink" title="输出样例："></a>输出样例：</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">67<br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h4><p>​	从左上角走到右下角，于是想到DP中的数字三角形模型。关于数字三角形模型，可以去看这篇文章[线性DP](<a target="_blank" rel="noopener" href="https://oyto.github.io/2023/04/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/%E7%BA%BF%E6%80%A7DP/">线性DP - 小樱桃 (oyto.github.io)</a>&#x2F;)。</p>
-<p>​	这题的不同点是，这里要取两次数，于是进行DP过程：</p>
-<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs llvm">f[<span class="hljs-type">i1</span><span class="hljs-punctuation">,</span>j<span class="hljs-number">1</span><span class="hljs-punctuation">,</span><span class="hljs-type">i2</span><span class="hljs-punctuation">,</span>j<span class="hljs-number">2</span>]表示所有从(<span class="hljs-number">1</span><span class="hljs-punctuation">,</span><span class="hljs-number">1</span>)<span class="hljs-punctuation">,</span>(<span class="hljs-number">1</span><span class="hljs-punctuation">,</span><span class="hljs-number">1</span>)分别走到(<span class="hljs-type">i1</span><span class="hljs-punctuation">,</span>j<span class="hljs-number">1</span>)<span class="hljs-punctuation">,</span>(<span class="hljs-type">i2</span><span class="hljs-punctuation">,</span>j<span class="hljs-number">2</span>)路径的最大值。<br><br>如何处理“同一个格子不能被重复选择”？<br>    分析后发现，只有当<span class="hljs-type">i1</span> + j<span class="hljs-number">1</span> <span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-type">i2</span> + j<span class="hljs-number">2</span>时，两条路径的格子才可能重合，<br>    于是可以根据这条性质将思维优化成三维，<br><br>集合：f[k<span class="hljs-punctuation">,</span><span class="hljs-type">i1</span><span class="hljs-punctuation">,</span><span class="hljs-type">i2</span>]表示所有从(<span class="hljs-number">1</span><span class="hljs-punctuation">,</span><span class="hljs-number">1</span>)<span class="hljs-punctuation">,</span>(<span class="hljs-number">1</span><span class="hljs-punctuation">,</span><span class="hljs-number">1</span>)走到(<span class="hljs-type">i1</span><span class="hljs-punctuation">,</span>k-<span class="hljs-type">i1</span>)<span class="hljs-punctuation">,</span>(<span class="hljs-type">i2</span><span class="hljs-punctuation">,</span>k-<span class="hljs-type">i2</span>)的路径的最大值<br>    k表示两条路线当前走到的格子的横纵坐标之和<br><br>属性：<span class="hljs-keyword">max</span><br><br>状态计算：<br>    以最后一步是从往下走还是往右走进行划分，因为有两次走法，所以被分成了四种情况<br>        下下、下右、右下、右右<br></code></pre></td></tr></table></figure>
-
-<p>​	<strong>为什么下面四个状态转移方程能代表四种状态？</strong></p>
-<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs llvm">原因是，因为k 变小了<span class="hljs-number">1</span>，先不看最后一步，如果i变小<span class="hljs-number">1</span>，则j就不用变；如果i没有变，则j就需要变小<span class="hljs-number">1</span>；<br>上述两种情况刚好对应了最后一步是向下、右走，的横纵坐标变化情况，又因为是两次一起走，故有四种情况。<br><br><span class="hljs-keyword">x</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">max</span>(<span class="hljs-keyword">x</span><span class="hljs-punctuation">,</span> f[k - <span class="hljs-number">1</span>][<span class="hljs-type">i1</span> - <span class="hljs-number">1</span>][<span class="hljs-type">i2</span> - <span class="hljs-number">1</span>] + t)<span class="hljs-comment">;   //下 下</span><br><span class="hljs-keyword">x</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">max</span>(<span class="hljs-keyword">x</span><span class="hljs-punctuation">,</span> f[k - <span class="hljs-number">1</span>][<span class="hljs-type">i1</span> - <span class="hljs-number">1</span>][<span class="hljs-type">i2</span>] + t)<span class="hljs-comment">;       //下 右</span><br><span class="hljs-keyword">x</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">max</span>(<span class="hljs-keyword">x</span><span class="hljs-punctuation">,</span> f[k - <span class="hljs-number">1</span>][<span class="hljs-type">i1</span>][<span class="hljs-type">i2</span> - <span class="hljs-number">1</span>] + t)<span class="hljs-comment">;       //右 下</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="AC代码"><a href="#AC代码" class="headerlink" title="AC代码"></a>AC代码</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span> N = <span class="hljs-number">15</span>;<br><br><span class="hljs-type">int</span> n;<br><span class="hljs-type">int</span> f[N * <span class="hljs-number">2</span>][N][N], g[N][N];<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    cin &gt;&gt; n;<br><br>    <span class="hljs-type">int</span> a, b, c;<br>    <span class="hljs-keyword">while</span> (cin &gt;&gt; a &gt;&gt; b &gt;&gt; c, a || b || c) g[a][b] = c;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> k = <span class="hljs-number">2</span>; k &lt;= n + n; k ++)   <span class="hljs-comment">//枚举横纵坐标之和</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i1 = <span class="hljs-number">1</span>; i1 &lt;= n; i1 ++)    <span class="hljs-comment">//枚举第一次走的横坐标</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i2 = <span class="hljs-number">1</span>; i2 &lt;= n; i2 ++)    <span class="hljs-comment">//枚举第二次走的横坐标</span><br>            &#123;<br>                <span class="hljs-type">int</span> j1 = k - i1, j2 = k - i2;   <span class="hljs-comment">//计算出两次走的纵坐标</span><br>                <span class="hljs-keyword">if</span> (j1 &gt;= <span class="hljs-number">1</span> &amp;&amp; j1 &lt;= n &amp;&amp; j2 &gt;= <span class="hljs-number">1</span> &amp;&amp; j2 &lt;= n)<br>                &#123;<br>                    <span class="hljs-type">int</span> t = g[i1][j1];  <span class="hljs-comment">//如果两个坐标相等，只加一次，因为第二次走这里，已经被拿走清空了</span><br>                    <span class="hljs-keyword">if</span> (i1 != i2) t += g[i2][j2];   <span class="hljs-comment">//坐标不相同，就两个位置全加上</span><br>                    <span class="hljs-type">int</span> &amp;x = f[k][i1][i2];<br>                    x = <span class="hljs-built_in">max</span>(x, f[k - <span class="hljs-number">1</span>][i1 - <span class="hljs-number">1</span>][i2 - <span class="hljs-number">1</span>] + t);   <span class="hljs-comment">//下 下</span><br>                    x = <span class="hljs-built_in">max</span>(x, f[k - <span class="hljs-number">1</span>][i1 - <span class="hljs-number">1</span>][i2] + t);       <span class="hljs-comment">//下 右</span><br>                    x = <span class="hljs-built_in">max</span>(x, f[k - <span class="hljs-number">1</span>][i1][i2 - <span class="hljs-number">1</span>] + t);       <span class="hljs-comment">//右 下</span><br>                    x = <span class="hljs-built_in">max</span>(x, f[k - <span class="hljs-number">1</span>][i1][i2] + t);            <span class="hljs-comment">//右 右</span><br>                &#125;<br>            &#125;<br><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, f[n + n][n][n]);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h4><p>​	题目中说按照顺序来浏览这些景点，即只能往右走，不能往左走；不连续浏览海拔相同的两个景点，并且一旦开始下山，就不再向上走了，即路线一定是<code>先上后下</code>，这很明显是最长上升子序列模型，我们只需要求出所有景点的最长上升子序列和最长下降子序列，最后枚举所有景点，求出最长上升子序列与最长下降子序列和的最大值即可。</p>
+<p>​	这里还需要注意的是，由于求出来的是<code>最长上升子序列与最长下降子序列和的最大值</code>这里的顶点被算了两次，故最后的答案需要减去一次。</p>
+<h4 id="AC代码"><a href="#AC代码" class="headerlink" title="AC代码"></a>AC代码</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span> N = <span class="hljs-number">1010</span>;<br><br><span class="hljs-type">int</span> n;<br><span class="hljs-type">int</span> f[N], g[N], a[N];<br><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    cin &gt;&gt; n;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) cin &gt;&gt; a[i];<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>    &#123;<br>        f[i] = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt; i; j ++)<br>            <span class="hljs-keyword">if</span> (a[i] &gt; a[j]) f[i] = <span class="hljs-built_in">max</span>(f[i], f[j] + <span class="hljs-number">1</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = n; i; i --)<br>    &#123;<br>        g[i] = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = n; j &gt; i; j --)<br>            <span class="hljs-keyword">if</span> (a[i] &gt; a[j]) g[i] = <span class="hljs-built_in">max</span>(g[i], g[j] + <span class="hljs-number">1</span>);<br>    &#125;<br><br>    <span class="hljs-type">int</span> res = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) res = <span class="hljs-built_in">max</span>(res, f[i] + g[i] - <span class="hljs-number">1</span>);  <span class="hljs-comment">//中间点求了两次需要减去一次</span><br><br>    cout &lt;&lt; res &lt;&lt;  endl;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 
                 
@@ -371,7 +356,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E6%95%B0%E5%AD%97%E4%B8%89%E8%A7%92%E5%BD%A2%E6%A8%A1%E5%9E%8B/">#数字三角形模型</a>
+        <a href="/tags/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97%E6%A8%A1%E5%9E%8B/">#最长上升子序列模型</a>
       
     </div>
   
@@ -383,8 +368,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>方格取数</div>
-      <div>http://example.com/2023/04/14/刷题/方格取数/</div>
+      <div>登山</div>
+      <div>http://example.com/2023/04/16/刷题/登山/</div>
     </div>
     <div class="license-meta">
       
@@ -396,13 +381,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年4月14日</div>
+          <div>2023年4月16日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年4月14日</div>
+          <div>2023年4月16日</div>
         </div>
       
       
@@ -433,9 +418,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/16/%E5%88%B7%E9%A2%98/%E6%80%AA%E7%9B%97%E5%9F%BA%E5%BE%B7%E7%9A%84%E6%BB%91%E7%BF%94%E7%BF%BC/" title="怪盗基德的滑翔翼">
+                      <a href="/2023/04/16/%E5%90%88%E5%94%B1%E9%98%9F%E5%BD%A2/" title="合唱队形">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">怪盗基德的滑翔翼</span>
+                        <span class="hidden-mobile">合唱队形</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -443,8 +428,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/14/%E5%88%B7%E9%A2%98/%E6%9C%80%E4%BD%8E%E9%80%9A%E8%A1%8C%E8%B4%B9/" title="最低通行费">
-                        <span class="hidden-mobile">最低通行费</span>
+                      <a href="/2023/04/16/%E5%88%B7%E9%A2%98/%E6%80%AA%E7%9B%97%E5%9F%BA%E5%BE%B7%E7%9A%84%E6%BB%91%E7%BF%94%E7%BF%BC/" title="怪盗基德的滑翔翼">
+                        <span class="hidden-mobile">怪盗基德的滑翔翼</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
