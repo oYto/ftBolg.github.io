@@ -4,9 +4,38 @@
   
     
     <entry>
+      <title>友好城市</title>
+      <link href="/2023/04/16/%E5%8F%8B%E5%A5%BD%E5%9F%8E%E5%B8%82/"/>
+      <url>/2023/04/16/%E5%8F%8B%E5%A5%BD%E5%9F%8E%E5%B8%82/</url>
+      
+        <content type="html"><![CDATA[<h1 id="题目：友好城市"><a href="#题目：友好城市" class="headerlink" title="题目：友好城市"></a>题目：友好城市<span id="more"></span></h1><p>Palmia国有一条横贯东西的大河，河有笔直的南北两岸，岸上各有位置各不相同的N个城市。</p><p>北岸的每个城市有且仅有一个友好城市在南岸，而且不同城市的友好城市不相同。</p><p>每对友好城市都向政府申请在河上开辟一条直线航道连接两个城市，但是由于河上雾太大，政府决定避免任意两条航道交叉，以避免事故。</p><p>编程帮助政府做出一些批准和拒绝申请的决定，使得在保证任意两条航线不相交的情况下，被批准的申请尽量多。</p><h4 id="输入格式"><a href="#输入格式" class="headerlink" title="输入格式"></a>输入格式</h4><p>第1行，一个整数N，表示城市数。</p><p>第2行到第n+1行，每行两个整数，中间用1个空格隔开，分别表示南岸和北岸的一对友好城市的坐标。</p><h4 id="输出格式"><a href="#输出格式" class="headerlink" title="输出格式"></a>输出格式</h4><p>仅一行，输出一个整数，表示政府所能批准的最多申请数。</p><h4 id="数据范围"><a href="#数据范围" class="headerlink" title="数据范围"></a>数据范围</h4><p>1≤N≤5000<br>0≤xi≤10000</p><h4 id="输入样例："><a href="#输入样例：" class="headerlink" title="输入样例："></a>输入样例：</h4><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-number">7</span><br><span class="hljs-symbol">22 </span><span class="hljs-number">4</span><br><span class="hljs-symbol">2 </span><span class="hljs-number">6</span><br><span class="hljs-symbol">10 </span><span class="hljs-number">3</span><br><span class="hljs-symbol">15 </span><span class="hljs-number">12</span><br><span class="hljs-symbol">9 </span><span class="hljs-number">8</span><br><span class="hljs-symbol">17 </span><span class="hljs-number">17</span><br><span class="hljs-symbol">4 </span><span class="hljs-number">2</span><br></code></pre></td></tr></table></figure><h4 id="输出样例："><a href="#输出样例：" class="headerlink" title="输出样例："></a>输出样例：</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">4<br></code></pre></td></tr></table></figure><h4 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h4><p>​（1）每个城市上只能建立一座桥</p><p>​（2）所有的桥与桥之间不能相交<br>​目标：最多可以建立多少桥？</p><p>​贪心 + LIS：</p><p>​（1）用pair将每对友好城市绑定在一起，进行排序<br>​（2）对第二关键字求其LIS最长上升子序列的最大值即可</p><p>为何将其中一岸城市从小到大排序即可？<br>    因为如果将一岸的城市从小到大排好序，如果要满足题目要求不相交，则必须满足对岸也是从小到大排序的，否则就会有相交方案，则将某一岸排好序，再对另一岸求一遍<a href="https://oyto.github.io/2023/04/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/%E7%BA%BF%E6%80%A7DP/">最长上升子序列</a>即可。</p><h4 id="AC代码"><a href="#AC代码" class="headerlink" title="AC代码"></a>AC代码</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span> N = <span class="hljs-number">5010</span>;<br><br><span class="hljs-keyword">typedef</span> pair&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt; PII;<br><br><span class="hljs-type">int</span> n;<br><span class="hljs-type">int</span> f[N];<br>PII q[N];<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    cin &gt;&gt; n;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++) cin &gt;&gt; q[i].first &gt;&gt; q[i].second;<br>    <span class="hljs-built_in">sort</span>(q, q + n); <span class="hljs-comment">//高度从低到高排序</span><br><br>    <span class="hljs-type">int</span> res = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i ++)    <span class="hljs-comment">//故求的时候也要求的是从低到高的最长上升子序列</span><br>    &#123;<br>        f[i] = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; i; j ++)<br>            <span class="hljs-keyword">if</span> (q[i].second &gt; q[j].second) f[i] = <span class="hljs-built_in">max</span>(f[i], f[j] + <span class="hljs-number">1</span>);<br><br>        res = <span class="hljs-built_in">max</span>(res, f[i]);<br>    &#125;<br><br>    cout &lt;&lt; res &lt;&lt; endl;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 刷题 </category>
+          
+          <category> DP </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 贪心 </tag>
+            
+            <tag> LIS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>合唱队形</title>
-      <link href="/2023/04/16/%E5%90%88%E5%94%B1%E9%98%9F%E5%BD%A2/"/>
-      <url>/2023/04/16/%E5%90%88%E5%94%B1%E9%98%9F%E5%BD%A2/</url>
+      <link href="/2023/04/16/%E5%88%B7%E9%A2%98/%E5%90%88%E5%94%B1%E9%98%9F%E5%BD%A2/"/>
+      <url>/2023/04/16/%E5%88%B7%E9%A2%98/%E5%90%88%E5%94%B1%E9%98%9F%E5%BD%A2/</url>
       
         <content type="html"><![CDATA[<h1 id=""><a href="#" class="headerlink" title=""></a></h1><h1 id="题目：合唱队形"><a href="#题目：合唱队形" class="headerlink" title="题目：合唱队形"></a>题目：合唱队形<span id="more"></span></h1><p>N 位同学站成一排，音乐老师要请其中的 (N−K)位同学出列，使得剩下的 K 位同学排成合唱队形。     </p><p>合唱队形是指这样的一种队形：设 K 位同学从左到右依次编号为 1，2…，K，他们的身高分别为 T1，T2，…，TK,则他们的身高满足 T1&lt;…<Ti>Ti+1&gt;…&gt;TK(1≤i≤K)。  </p><p>你的任务是，已知所有 N 位同学的身高，计算最少需要几位同学出列，可以使得剩下的同学排成合唱队形。</p><h4 id="输入格式"><a href="#输入格式" class="headerlink" title="输入格式"></a>输入格式</h4><p>输入的第一行是一个整数 N，表示同学的总数。</p><p>第二行有 N 个整数，用空格分隔，第 i 个整数 Ti是第 i 位同学的身高(厘米)。</p><h4 id="输出格式"><a href="#输出格式" class="headerlink" title="输出格式"></a>输出格式</h4><p>输出包括一行，这一行只包含一个整数，就是最少需要几位同学出列。</p><h4 id="数据范围"><a href="#数据范围" class="headerlink" title="数据范围"></a>数据范围</h4><p>2≤N≤100<br>130≤Ti≤230</p><h4 id="输入样例："><a href="#输入样例：" class="headerlink" title="输入样例："></a>输入样例：</h4><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-number">8</span><br><span class="hljs-symbol">186 </span><span class="hljs-number">186</span> <span class="hljs-number">150</span> <span class="hljs-number">200</span> <span class="hljs-number">160</span> <span class="hljs-number">130</span> <span class="hljs-number">197</span> <span class="hljs-number">220</span><br></code></pre></td></tr></table></figure><h4 id="输出样例："><a href="#输出样例：" class="headerlink" title="输出样例："></a>输出样例：</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">4<br></code></pre></td></tr></table></figure><h4 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h4><p>​要求最少需要几位同学出列，即求合唱队形最多由多少人组成。</p><p>​这题与 <a href="https://oyto.github.io/2023/04/16/%E5%88%B7%E9%A2%98/%E7%99%BB%E5%B1%B1/">登山</a>同出一辙，都是需要求出以某个人的身高为最高点，该点的最长上升子序列最长和下降子序列，求出来之后，枚举所有人的身高，找出最长上升子序列最长与下降子序列之和的最大值，这个最大值就是我们能组成的合唱队形的最大人数，我们再用总的同学数<code>n</code> - <code>最大人数</code>，即可以求出需要最少出列同学数。</p><h4 id="AC代码："><a href="#AC代码：" class="headerlink" title="AC代码："></a>AC代码：</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span> N = <span class="hljs-number">110</span>;<br><br><span class="hljs-type">int</span> n;<br><span class="hljs-type">int</span> f[N], g[N], a[N];<br><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    cin &gt;&gt; n;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) cin &gt;&gt; a[i];<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>    &#123;<br>        f[i] = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt; i; j ++)<br>            <span class="hljs-keyword">if</span> (a[i] &gt; a[j]) f[i] = <span class="hljs-built_in">max</span>(f[i], f[j] + <span class="hljs-number">1</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = n; i; i --)<br>    &#123;<br>        g[i] = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = n; j &gt; i; j --)<br>            <span class="hljs-keyword">if</span> (a[i] &gt; a[j]) g[i] = <span class="hljs-built_in">max</span>(g[i], g[j] + <span class="hljs-number">1</span>);<br>    &#125;<br><br>    <span class="hljs-type">int</span> res = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) res = <span class="hljs-built_in">max</span>(res, f[i] + g[i] - <span class="hljs-number">1</span>);  <span class="hljs-comment">//中间点求了两次需要减去一次</span><br><br>    cout &lt;&lt; n - res &lt;&lt;  endl;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
       
@@ -22,7 +51,7 @@
       
         <tags>
             
-            <tag> 最长上升子序列模型 </tag>
+            <tag> LIS </tag>
             
         </tags>
       
@@ -49,7 +78,7 @@
       
         <tags>
             
-            <tag> 最长上升子序列模型 </tag>
+            <tag> LIS </tag>
             
         </tags>
       
@@ -76,7 +105,7 @@
       
         <tags>
             
-            <tag> 最长上升子序列模型 </tag>
+            <tag> LIS </tag>
             
         </tags>
       
