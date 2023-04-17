@@ -16,22 +16,24 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="学习记录">
+    <meta name="description" content="题目：最大上升子序列和">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习记录">
-<meta property="og:url" content="http://example.com/2023/04/09/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:title" content="最大上升子序列和">
+<meta property="og:url" content="http://example.com/2023/04/17/%E6%9C%80%E5%A4%A7%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97%E5%92%8C/index.html">
 <meta property="og:site_name" content="小樱桃">
-<meta property="og:description" content="学习记录">
+<meta property="og:description" content="题目：最大上升子序列和">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-04-09T11:11:31.000Z">
-<meta property="article:modified_time" content="2023-04-17T13:45:10.259Z">
+<meta property="og:image" content="http://example.com/images/%E6%9C%80%E5%A4%A7%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97%E5%92%8C.png">
+<meta property="article:published_time" content="2023-04-17T13:58:20.000Z">
+<meta property="article:modified_time" content="2023-04-17T14:02:59.849Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="学习记录">
+<meta property="article:tag" content="最长上升子序列模型">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/%E6%9C%80%E5%A4%A7%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97%E5%92%8C.png">
   
   
   
-  <title>学习记录 - 小樱桃</title>
+  <title>最大上升子序列和 - 小樱桃</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -214,7 +216,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="学习记录"></span>
+            <span id="subtitle" data-typed-text="最大上升子序列和"></span>
           
         </div>
 
@@ -225,8 +227,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-09 19:11" pubdate>
-          2023年4月9日 晚上
+        <time datetime="2023-04-17 21:58" pubdate>
+          2023年4月17日 晚上
         </time>
       </span>
     
@@ -237,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.4k 字
+          931 字
         
       </span>
     
@@ -248,7 +250,7 @@
         
         
         
-          45 分钟
+          8 分钟
         
       </span>
     
@@ -294,63 +296,73 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">学习记录</h1>
+            <h1 style="display: none">最大上升子序列和</h1>
             
             
-              
-              <script src=/js/crypto-js.js></script>
-<script>
-function doDecrypt (pwd, onError) {
-	console.log('in doDecrypt');
-	const txt = document.getElementById('enc_content').innerHTML;
-	let plantext;
-	try {
-		const bytes = CryptoJS.AES.decrypt(txt, pwd);
-		var plaintext = bytes.toString(CryptoJS.enc.Utf8);
-	} catch(err) {
-		if(onError) {
-			onError(err);
-		}
-		return;
-	}
-	document.getElementById('enc_content').innerHTML = plaintext;
-	document.getElementById('enc_content').style.display = 'block';
-	document.getElementById('enc_passwd').style.display = 'none';
-	if(typeof MathJax !== 'undefined') {
-		MathJax.Hub.Queue(
-			['resetEquationNumbers', MathJax.InputJax.TeX],
-			['PreProcess', MathJax.Hub],
-			['Reprocess', MathJax.Hub]
-		);
-	}
-}
-</script>
-<div id="enc_content" style="display:none">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</div>
-<div id="enc_passwd"> <input id="enc_pwd_input" type="password" style="border-radius: 5px;border-style: groove;height: 30px;width: 50%;cursor: auto;font-size: 102%;color: currentColor;outline: none;text-overflow: initial;padding-left: 5px;" onkeydown="if (event.keyCode == 13) { decrypt(); return false;}"> <input type="submit" value="解&nbsp;密" onclick="decrypt()" style="width: 58px;height: 34px;border-radius: 5px;background-color: white;border-style: solid;color: currentColor;"><div id="enc_error" style="display: inline-block;color: #d84527;margin-left: 10px"></div>
-<script>
-var onError = function(error) {
-	document.getElementById("enc_error").innerHTML = "password error!"
-};
-function decrypt() {
-var passwd = document.getElementById("enc_pwd_input").value;
-console.log(passwd);
-doDecrypt(passwd, onError);
-}
-</script>
-</div>
-              
+              <div class="markdown-body">
+                
+                <h1 id="题目：最大上升子序列和"><a href="#题目：最大上升子序列和" class="headerlink" title="题目：最大上升子序列和"></a>题目：最大上升子序列和<span id="more"></span></h1><p>一个数的序列 bi，当 b1&lt;b2&lt;…&lt;bS 的时候，我们称这个序列是上升的。</p>
+<p>对于给定的一个序列(a1,a2,…,aN)，我们可以得到一些上升的子序列(ai1,ai2,…,aiK)，这里1≤i1&lt;i2&lt;…&lt;iK≤N。</p>
+<p>比如，对于序列(1,7,3,5,9,4,8)，有它的一些上升子序列，如(1,7),(3,4,8)等等。</p>
+<p>这些子序列中和最大为18，为子序列(1,3,5,9)的和。</p>
+<p>你的任务，就是对于给定的序列，求出最大上升子序列和。</p>
+<p>注意，最长的上升子序列的和不一定是最大的，比如序列(100,1,2,3)的最大上升子序列和为100，而最长上升子序列为(1,2,3)。</p>
+<h4 id="输入格式"><a href="#输入格式" class="headerlink" title="输入格式"></a>输入格式</h4><p>输入的第一行是序列的长度N。</p>
+<p>第二行给出序列中的N个整数，这些整数的取值范围都在0到10000(可能重复)。</p>
+<h4 id="输出格式"><a href="#输出格式" class="headerlink" title="输出格式"></a>输出格式</h4><p>输出一个整数，表示最大上升子序列和。</p>
+<h4 id="数据范围"><a href="#数据范围" class="headerlink" title="数据范围"></a>数据范围</h4><p>1≤N≤1000</p>
+<h4 id="输入样例："><a href="#输入样例：" class="headerlink" title="输入样例："></a>输入样例：</h4><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-number">7</span><br><span class="hljs-symbol">1 </span><span class="hljs-number">7</span> <span class="hljs-number">3</span> <span class="hljs-number">5</span> <span class="hljs-number">9</span> <span class="hljs-number">4</span> <span class="hljs-number">8</span><br></code></pre></td></tr></table></figure>
 
-              
+<h4 id="输出样例："><a href="#输出样例：" class="headerlink" title="输出样例："></a>输出样例：</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">18<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析:"></a>题目分析:</h4><p>​	一看题目就知道是最长上升子序列模型，只不过这里求的是最大和，只需要对代码进行一部分修改即可。</p>
+<p>​	DP分析过程如下：</p>
+<p>​	<img src="/images/%E6%9C%80%E5%A4%A7%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97%E5%92%8C.png" srcset="/img/loading.gif" lazyload alt="最大上升子序列和"></p>
+<h4 id="AC代码"><a href="#AC代码" class="headerlink" title="AC代码"></a>AC代码</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstring&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-type">const</span> <span class="hljs-type">int</span> N = <span class="hljs-number">1010</span>;<br><br><span class="hljs-type">int</span> n;<br><span class="hljs-type">int</span> f[N], a[N];<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    cin &gt;&gt; n;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++) cin &gt;&gt; a[i];<br>    <br>    <span class="hljs-type">int</span> res = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i ++)<br>    &#123;<br>        f[i] = a[i];	<span class="hljs-comment">//求的是最大和，故需要加上当前数</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt; i; j ++)<br>            <span class="hljs-keyword">if</span> (a[i] &gt; a[j])<br>                f[i] = <span class="hljs-built_in">max</span>(f[i], f[j] + a[i]);	<span class="hljs-comment">//状态转移方程</span><br>        res = <span class="hljs-built_in">max</span>(res, f[i]);<br>    &#125;<br>    <br>    cout &lt;&lt; res &lt;&lt; endl;<br>    <br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
             
             <hr/>
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%88%B7%E9%A2%98/" class="category-chain-item">刷题</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%88%B7%E9%A2%98/DP/" class="category-chain-item">DP</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">#学习记录</a>
+        <a href="/tags/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97%E6%A8%A1%E5%9E%8B/">#最长上升子序列模型</a>
       
     </div>
   
@@ -362,8 +374,8 @@ doDecrypt(passwd, onError);
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>学习记录</div>
-      <div>http://example.com/2023/04/09/学习记录/学习记录/</div>
+      <div>最大上升子序列和</div>
+      <div>http://example.com/2023/04/17/最大上升子序列和/</div>
     </div>
     <div class="license-meta">
       
@@ -375,7 +387,7 @@ doDecrypt(passwd, onError);
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年4月9日</div>
+          <div>2023年4月17日</div>
         </div>
       
       
@@ -412,18 +424,12 @@ doDecrypt(passwd, onError);
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/11/Go/go%E7%9A%84HTTP%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" title="go的HTTP网络编程">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">go的HTTP网络编程</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/KMP/" title="KMP">
-                        <span class="hidden-mobile">KMP</span>
+                      <a href="/2023/04/17/Go%E6%98%93%E9%94%99%E7%9F%A5%E8%AF%86%E7%82%B9/" title="Go易错知识点">
+                        <span class="hidden-mobile">Go易错知识点</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -636,23 +642,6 @@ doDecrypt(passwd, onError);
   
 
 
-
-
-  
-  <script defer>
-    if (document.getElementById('hbePass')) {
-      Fluid.utils.waitElementLoaded('hbe-prefix', function() {
-        var hbePrefix = document.querySelector('hbe-prefix');
-        hbePrefix.parentElement.classList.add('markdown-body');
-        Fluid.utils.retry(function() {
-          if (Fluid.boot && Fluid.boot.refresh) {
-            Fluid.boot.refresh();
-            return true;
-          }
-        }, 100, 10);
-      })
-    }
-  </script>
 
 
   
