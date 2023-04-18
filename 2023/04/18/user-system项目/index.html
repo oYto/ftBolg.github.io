@@ -24,7 +24,7 @@
 <meta property="og:description" content="项目：user_system">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-18T06:57:31.000Z">
-<meta property="article:modified_time" content="2023-04-18T10:27:41.122Z">
+<meta property="article:modified_time" content="2023-04-18T12:39:38.664Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="项目">
@@ -243,7 +243,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          22k 字
+          34k 字
         
       </span>
     
@@ -254,7 +254,7 @@
         
         
         
-          180 分钟
+          282 分钟
         
       </span>
     
@@ -442,6 +442,181 @@
 <p>​	这个函数的功能是更新数据库中用户信息。它接收两个参数，一个是userName，代表要更新信息的用户的用户名；另一个是user指针，它是要更新的用户信息。</p>
 <p>​	在函数内部，使用<code>utils.GetDB()</code>方法获取数据库连接对象，然后使用<code>Model</code>方法指定操作的数据表。<code>Where</code>方法根据指定的用户名查询要更新的用户信息，并使用<code>Updates</code>方法将用户信息更新到数据库中。最后，<code>RowsAffected</code>方法返回更新的行数。</p>
 <p>​	这个函数的返回值是更新的行数，可以用于判断更新是否成功。</p>
+<h3 id="（4）service包"><a href="#（4）service包" class="headerlink" title="（4）service包"></a>（4）service包</h3><h4 id="①entity-go"><a href="#①entity-go" class="headerlink" title="①	entity.go"></a>①	entity.go</h4><h5 id="RegisterRequest类型注册请求"><a href="#RegisterRequest类型注册请求" class="headerlink" title="RegisterRequest类型	注册请求"></a>RegisterRequest类型	注册请求</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> RegisterRequest <span class="hljs-keyword">struct</span> &#123;<br>	UserName <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;user_name&quot;`</span><br>	Password <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;pass_word&quot;`</span><br>	Age      <span class="hljs-type">int</span>    <span class="hljs-string">`json:&quot;age&quot;`</span><br>	Gender   <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;gender&quot;`</span><br>	NickName <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;nick_name&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>RegisterRequest</code> 是一个结构体，包含了注册请求的参数信息。其中包括：</p>
+<ul>
+<li><code>UserName</code>：字符串类型，表示用户名。</li>
+<li><code>Password</code>：字符串类型，表示用户密码。</li>
+<li><code>Age</code>：整型，表示用户年龄。</li>
+<li><code>Gender</code>：字符串类型，表示用户性别。</li>
+<li><code>NickName</code>：字符串类型，表示用户昵称。</li>
+</ul>
+<h5 id="LoginRequest类型-登陆请求"><a href="#LoginRequest类型-登陆请求" class="headerlink" title="LoginRequest类型 登陆请求"></a>LoginRequest类型 登陆请求</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> LoginRequest <span class="hljs-keyword">struct</span> &#123;<br>	UserName <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;user_name&quot;`</span><br>	PassWord <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;pass_word&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>LoginRequest </code>结构体，用于表示登录请求。它包含两个字段：</p>
+<ul>
+<li><code>UserName</code>：表示用户的名称的字符串类型。</li>
+<li><code>PassWord</code>：表示用户密码的字符串类型。</li>
+</ul>
+<h5 id="LogoutRequest类型登出请求"><a href="#LogoutRequest类型登出请求" class="headerlink" title="LogoutRequest类型	登出请求"></a>LogoutRequest类型	登出请求</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> LogoutRequest <span class="hljs-keyword">struct</span> &#123;<br>	UserName <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;user_name&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>UserName</code>：表示要注销用户的用户名（string类型）。</p>
+<h5 id="GetUserInfoRequest-获取用户信息请求"><a href="#GetUserInfoRequest-获取用户信息请求" class="headerlink" title="GetUserInfoRequest 获取用户信息请求"></a>GetUserInfoRequest 获取用户信息请求</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> GetUserInfoRequest <span class="hljs-keyword">struct</span> &#123;<br>   UserName <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;user_name&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>一个获取用户信息的请求结构体，它只有一个字段：</p>
+<ul>
+<li>UserName：表示要获取信息的用户的用户名，类型为字符串。</li>
+</ul>
+<h5 id="GetUserInfoResponse-获取用户信息返回结构"><a href="#GetUserInfoResponse-获取用户信息返回结构" class="headerlink" title="GetUserInfoResponse 获取用户信息返回结构"></a>GetUserInfoResponse 获取用户信息返回结构</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> GetUserInfoResponse <span class="hljs-keyword">struct</span> &#123;<br>   UserName <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;user_name&quot;`</span><br>   Age      <span class="hljs-type">int</span>    <span class="hljs-string">`json:&quot;age&quot;`</span><br>   Gender   <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;gender&quot;`</span><br>   PassWord <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;pass_word&quot;`</span><br>   NickName <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;nick_name&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>GetUserInfoResponse</code> 是获取用户信息的返回结构，包含以下字段：</p>
+<ul>
+<li><code>UserName</code>：用户名称。</li>
+<li><code>Age</code>：用户年龄。</li>
+<li><code>Gender</code>：用户性别。</li>
+<li><code>PassWord</code>：用户密码。</li>
+<li><code>NickName</code>：用户昵称。</li>
+</ul>
+<h5 id="UpdateNickNameRequest-修改用户信息返回结构"><a href="#UpdateNickNameRequest-修改用户信息返回结构" class="headerlink" title="UpdateNickNameRequest 修改用户信息返回结构"></a>UpdateNickNameRequest 修改用户信息返回结构</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> UpdateNickNameRequest <span class="hljs-keyword">struct</span> &#123;<br>   UserName    <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;user_name&quot;`</span><br>   NewNickName <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;new_nick_name&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>表示修改用户昵称的请求。它有两个字段：</p>
+<ul>
+<li>UserName：字符串类型，表示要修改昵称的用户的名称。</li>
+<li>NewNickName：字符串类型，表示用户要修改的新昵称。</li>
+</ul>
+<h4 id="②user-go"><a href="#②user-go" class="headerlink" title="②	user.go"></a>②	user.go</h4><h5 id="Register函数用户注册"><a href="#Register函数用户注册" class="headerlink" title="Register函数	用户注册"></a>Register函数	用户注册</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Register</span><span class="hljs-params">(req *RegisterRequest)</span></span> <span class="hljs-type">error</span> &#123;<br>	<span class="hljs-keyword">if</span> req.UserName == <span class="hljs-string">&quot;&quot;</span> || req.Password == <span class="hljs-string">&quot;&quot;</span> || req.Age &lt;= <span class="hljs-number">0</span> || !utils.Contains([]<span class="hljs-type">string</span>&#123;constant.GenderMale, constant.GenderFeMale&#125;, req.Gender) &#123;<br>		log.Errorf(<span class="hljs-string">&quot;register param invalid&quot;</span>)<br>		<span class="hljs-keyword">return</span> fmt.Errorf(<span class="hljs-string">&quot;register param invalid&quot;</span>)<br>	&#125;<br>	existedUser, err := dao.GetUserByName(req.UserName)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Errorf(<span class="hljs-string">&quot;Register|%v&quot;</span>, err)<br>		<span class="hljs-keyword">return</span> fmt.Errorf(<span class="hljs-string">&quot;register|%v&quot;</span>, err)<br>	&#125;<br>	<span class="hljs-keyword">if</span> existedUser != <span class="hljs-literal">nil</span> &#123;<br>		log.Errorf(<span class="hljs-string">&quot;用户已经注册,user_name==%s&quot;</span>, req.UserName)<br>		<span class="hljs-keyword">return</span> fmt.Errorf(<span class="hljs-string">&quot;用户已经注册，不能重复注册&quot;</span>)<br>	&#125;<br><br>	user := &amp;model.User&#123;<br>		Name:     req.UserName,<br>		Age:      req.Age,<br>		Gender:   req.Gender,<br>		PassWord: req.Password,<br>		NickName: req.NickName,<br>		CreateModel: model.CreateModel&#123;<br>			Creator: req.UserName,<br>		&#125;,<br>		ModifyModel: model.ModifyModel&#123;<br>			Modifier: req.UserName,<br>		&#125;,<br>	&#125;<br>	log.Infof(<span class="hljs-string">&quot;user ====== %+v&quot;</span>, user)<br>	<span class="hljs-keyword">if</span> err := dao.CreateUser(user); err != <span class="hljs-literal">nil</span> &#123;<br>		log.Errorf(<span class="hljs-string">&quot;Register|%v&quot;</span>, err)<br>		<span class="hljs-keyword">return</span> fmt.Errorf(<span class="hljs-string">&quot;register|%v&quot;</span>, err)<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这段代码实现了用户注册的功能。</p>
+<p>​	首先，代码会校验请求参数的合法性，如果参数无效，则返回错误信息。接着，代码会调用<code>dao.GetUserByName</code>方法来查询数据库中是否已经存在了该用户名的用户。</p>
+<ul>
+<li>​	如果查询出错，则返回错误信息，</li>
+<li>​	如果查询到已经存在的用户，则返回错误信息，提示用户已经注册。	</li>
+<li>​	如果查询结果为空，则说明该用户名可以注册，代码会根据请求参数构造一个新的<code>model.User</code>对象，并通过调用<code>dao.CreateUser</code>方法将用户信息插入到数据库中。<ul>
+<li>如果插入失败，则返回错误信息。</li>
+<li>最终，如果注册成功，则返回<code>nil</code>，表示没有错误。</li>
+</ul>
+</li>
+</ul>
+<h5 id=""><a href="#" class="headerlink" title=""></a></h5><h5 id="GetUserInfo函数-获取用户信息请求，"><a href="#GetUserInfo函数-获取用户信息请求，" class="headerlink" title="GetUserInfo函数	 获取用户信息请求，"></a>GetUserInfo函数	 获取用户信息请求，</h5><p>​	只能在用户登陆的情况下使用</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetUserInfo</span><span class="hljs-params">(ctx context.Context, req *GetUserInfoRequest)</span></span> (*GetUserInfoResponse, <span class="hljs-type">error</span>) &#123;<br>	uuid := ctx.Value(constant.ReqUuid)<br>	session := ctx.Value(constant.SessionKey).(<span class="hljs-type">string</span>)<br>	log.Infof(<span class="hljs-string">&quot;%s|GetUserInfo access from,user_name=%s|session=%s&quot;</span>, uuid, req.UserName, session)<br><br>	<span class="hljs-keyword">if</span> session == <span class="hljs-string">&quot;&quot;</span> || req.UserName == <span class="hljs-string">&quot;&quot;</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, fmt.Errorf(<span class="hljs-string">&quot;GetUserInfo|request params invalid&quot;</span>)<br>	&#125;<br><br>	user, err := cache.GetSessionInfo(session)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Errorf(<span class="hljs-string">&quot;%s|Failed to get with session=%s|err =%v&quot;</span>, uuid, session, err)<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, fmt.Errorf(<span class="hljs-string">&quot;getUserInfo|GetSessionInfo err:%v&quot;</span>, err)<br>	&#125;<br><br>	<span class="hljs-keyword">if</span> user.Name != req.UserName &#123;<br>		log.Errorf(<span class="hljs-string">&quot;%s|session info not match with username=%s&quot;</span>, uuid, req.UserName)<br>	&#125;<br>	log.Infof(<span class="hljs-string">&quot;%s|Succ to GetUserInfo|user_name=%s|session=%s&quot;</span>, uuid, req.UserName, session)<br>	<span class="hljs-keyword">return</span> &amp;GetUserInfoResponse&#123;<br>		UserName: user.Name,<br>		Age:      user.Age,<br>		Gender:   user.Gender,<br>		PassWord: user.PassWord,<br>		NickName: user.NickName,<br>	&#125;, <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这是一个获取用户信息的函数。</p>
+<p>​	函数使用了一个上下文(Context)对象来传递请求信息。函数接收一个包含用户名的请求(GetUserInfoRequest)并返回包含用户信息的响应(GetUserInfoResponse)。</p>
+<p>​	函数先从上下文中获取用户的session信息，然后再从缓存中获取用户的信息。</p>
+<ul>
+<li>​	如果session信息和请求中的用户名不匹配，则函数会记录错误日志。</li>
+<li>​	如果获取用户信息成功，函数会记录成功日志并返回包含用户信息的响应。</li>
+<li>​    如果请求参数无效，函数将返回错误信息。</li>
+</ul>
+<h5 id="getUserInfo函数"><a href="#getUserInfo函数" class="headerlink" title="getUserInfo函数"></a>getUserInfo函数</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getUserInfo</span><span class="hljs-params">(userName <span class="hljs-type">string</span>)</span></span> (*model.User, <span class="hljs-type">error</span>) &#123;<br>	user, err := cache.GetUserInfoFromCache(userName)<br>	<span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &amp;&amp; user.Name == userName &#123;<br>		log.Infof(<span class="hljs-string">&quot;cache_user ======= %v&quot;</span>, user)<br>		<span class="hljs-keyword">return</span> user, <span class="hljs-literal">nil</span><br>	&#125;<br><br>	user, err = dao.GetUserByName(userName)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> user, err<br>	&#125;<br><br>	<span class="hljs-keyword">if</span> user == <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, fmt.Errorf(<span class="hljs-string">&quot;用户尚未注册&quot;</span>)<br>	&#125;<br>	log.Infof(<span class="hljs-string">&quot;user === %+v&quot;</span>, user)<br>	err = cache.SetUserCacheInfo(user)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Error(<span class="hljs-string">&quot;cache userinfo failed for user:&quot;</span>, user.Name, <span class="hljs-string">&quot; with err:&quot;</span>, err.Error())<br>	&#125;<br>	log.Infof(<span class="hljs-string">&quot;getUserInfo successfully, with key userinfo_%s&quot;</span>, user.Name)<br>	<span class="hljs-keyword">return</span> user, <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这函数的输入参数是一个字符串类型的用户名，返回一个model.User类型的结构体指针和一个错误类型。</p>
+<p>​	函数的作用是根据用户名从缓存或数据库中获取用户信息，</p>
+<ul>
+<li>​	如果用户信息存在于缓存中，则直接从缓存中获取，</li>
+<li>​	否则从数据库中获取。<ul>
+<li>如果获取成功，将会将获取到的用户信息存储在缓存中，并返回用户信息的指针，</li>
+<li>否则返回错误信息。如果数据库中没有该用户名对应的用户信息，则返回一个错误信息说明该用户尚未注册。</li>
+</ul>
+</li>
+</ul>
+<h5 id="Login函数用户登录"><a href="#Login函数用户登录" class="headerlink" title="Login函数	用户登录"></a>Login函数	用户登录</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Login</span><span class="hljs-params">(ctx context.Context, req *LoginRequest)</span></span> (<span class="hljs-type">string</span>, <span class="hljs-type">error</span>) &#123;<br>	uuid := ctx.Value(constant.ReqUuid)<br>	log.Debugf(<span class="hljs-string">&quot; %s| Login access from:%s,@,%s&quot;</span>, uuid, req.UserName, req.PassWord)<br><br>	user, err := getUserInfo(req.UserName)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Errorf(<span class="hljs-string">&quot;Login|%v&quot;</span>, err)<br>		<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span>, fmt.Errorf(<span class="hljs-string">&quot;login|%v&quot;</span>, err)<br>	&#125;<br><br>	<span class="hljs-comment">// 用户存在</span><br>	<span class="hljs-keyword">if</span> req.PassWord != user.PassWord &#123;<br>		log.Errorf(<span class="hljs-string">&quot;Login|password err: req.password=%s|user.password=%s&quot;</span>, req.PassWord, user.PassWord)<br>		<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span>, fmt.Errorf(<span class="hljs-string">&quot;password is not correct&quot;</span>)<br>	&#125;<br><br>	session := utils.GenerateSession(user.Name)<br>	err = cache.SetSessionInfo(user, session)<br><br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Errorf(<span class="hljs-string">&quot; Login|Failed to SetSessionInfo, uuid=%s|user_name=%s|session=%s|err=%v&quot;</span>, uuid, user.Name, session, err)<br>		<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span>, fmt.Errorf(<span class="hljs-string">&quot;login|SetSessionInfo fail:%v&quot;</span>, err)<br>	&#125;<br><br>	log.Infof(<span class="hljs-string">&quot;Login successfully, %s@%s with redis_session session_%s&quot;</span>, req.UserName, req.PassWord, session)<br>	<span class="hljs-keyword">return</span> session, <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这是一个处理用户登录的函数。</p>
+<p>​	函数接收一个上下文对象和一个登录请求对象。函数首先通过调用getUserInfo()函数获取登录请求中的用户名对应的用户信息，</p>
+<ul>
+<li>​	如果获取用户信息出错，函数会返回一个错误。</li>
+<li>​	如果用户信息获取成功，函数会检查用户输入的密码是否与获取的用户信息中的密码匹配，<ul>
+<li>如果不匹配，则函数会返回一个密码不正确的错误。</li>
+<li>如果密码正确，则函数会生成一个新的 session 并将用户信息和 session 缓存到 Redis 中，<ul>
+<li>如果缓存出错，函数也会返回一个错误。</li>
+<li>最后，函数会返回新生成的 session。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="Logout-退出登陆"><a href="#Logout-退出登陆" class="headerlink" title="Logout 退出登陆"></a>Logout 退出登陆</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Logout</span><span class="hljs-params">(ctx context.Context, req *LogoutRequest)</span></span> <span class="hljs-type">error</span> &#123;<br>	uuid := ctx.Value(constant.ReqUuid)<br>	session := ctx.Value(constant.SessionKey).(<span class="hljs-type">string</span>)<br>	log.Infof(<span class="hljs-string">&quot;%s|Logout access from,user_name=%s|session=%s&quot;</span>, uuid, req.UserName, session)<br>	<span class="hljs-comment">// 要退出登录，必须要是在登录态</span><br>	_, err := cache.GetSessionInfo(session)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Errorf(<span class="hljs-string">&quot;%s|Failed to get with session=%s|err =%v&quot;</span>, uuid, session, err)<br>		<span class="hljs-keyword">return</span> fmt.Errorf(<span class="hljs-string">&quot;Logout|GetSessionInfo err:%v&quot;</span>, err)<br>	&#125;<br><br>	err = cache.DelSessionInfo(session)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Errorf(<span class="hljs-string">&quot;%s|Failed to delSessionInfo :%s&quot;</span>, uuid, session)<br>		<span class="hljs-keyword">return</span> fmt.Errorf(<span class="hljs-string">&quot;del session err:%v&quot;</span>, err)<br>	&#125;<br>	log.Infof(<span class="hljs-string">&quot;%s|Success to delSessionInfo :%s&quot;</span>, uuid, session)<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这段代码实现了用户登出的功能。</p>
+<p>​	函数签名为<code>func Logout(ctx context.Context, req *LogoutRequest) error</code>，接收一个上下文和一个注销请求结构体指针，返回一个错误。</p>
+<p>​	函数首先从上下文中获取会话 ID 和请求唯一标识符，然后调用<code>cache.GetSessionInfo(session)</code>方法检查会话是否存在于缓存中。</p>
+<ul>
+<li>​	如果会话不存在，则返回一个错误。</li>
+<li>​	否则，它将调用<code>cache.DelSessionInfo(session)</code>方法从缓存中删除会话。<ul>
+<li>如果删除失败，则返回一个错误。</li>
+<li>如果删除成功，则返回<code>nil</code>表示操作成功完成。</li>
+</ul>
+</li>
+</ul>
+<h5 id="updateUserInfo函数更新用户信息"><a href="#updateUserInfo函数更新用户信息" class="headerlink" title="updateUserInfo函数	更新用户信息"></a>updateUserInfo函数	更新用户信息</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">updateUserInfo</span><span class="hljs-params">(user *model.User, userName, session <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">error</span> &#123;<br>	affectedRows := dao.UpdateUserInfo(userName, user)<br><br>	<span class="hljs-comment">// db更新成功</span><br>	<span class="hljs-keyword">if</span> affectedRows == <span class="hljs-number">1</span> &#123;<br>		user, err := dao.GetUserByName(userName)<br>		<span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>			cache.UpdateCachedUserInfo(user)<br>			<span class="hljs-keyword">if</span> session != <span class="hljs-string">&quot;&quot;</span> &#123;<br>				err = cache.SetSessionInfo(user, session)<br>				<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>					log.Error(<span class="hljs-string">&quot;update session failed:&quot;</span>, err.Error())<br>					cache.DelSessionInfo(session)<br>				&#125;<br>			&#125;<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			log.Error(<span class="hljs-string">&quot;Failed to get dbUserInfo for cache, username=%s with err:&quot;</span>, userName, err.Error())<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这是一个更新用户信息的函数。</p>
+<p>​	它接收一个<code>model.User</code>类型的指针<code>user</code>，表示要更新的用户信息，以及<code>userName</code>和<code>session</code>两个字符串。</p>
+<ul>
+<li>​	函数首先调用<code>dao.UpdateUserInfo()</code>更新数据库中该用户的信息，<ul>
+<li>​	如果成功更新了一行，则调用<code>dao.GetUserByName()</code>从数据库中重新获取该用户的信息。<ul>
+<li>​	如果能够成功获取，则调用<code>cache.UpdateCachedUserInfo()</code>更新缓存中的用户信息。<ul>
+<li>​	如果传入的<code>session</code>参数非空，则调用<code>cache.SetSessionInfo()</code>更新该用户的会话信息。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>​	如果其中任何一个步骤失败，函数会打印相应的错误日志，但仍然会继续执行并返回nil。</li>
+</ul>
+</li>
+</ul>
+<h5 id="UpdateUserNickName-更新昵称"><a href="#UpdateUserNickName-更新昵称" class="headerlink" title="UpdateUserNickName 更新昵称"></a>UpdateUserNickName 更新昵称</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">UpdateUserNickName</span><span class="hljs-params">(ctx context.Context, req *UpdateNickNameRequest)</span></span> <span class="hljs-type">error</span> &#123;<br>	uuid := ctx.Value(constant.ReqUuid)<br>	session := ctx.Value(constant.SessionKey).(<span class="hljs-type">string</span>)<br>	log.Infof(<span class="hljs-string">&quot;%s|UpdateUserNickName access from,user_name=%s|session=%s&quot;</span>, uuid, req.UserName, session)<br>	log.Infof(<span class="hljs-string">&quot;UpdateUserNickName|req==%v&quot;</span>, req)<br><br>	<span class="hljs-keyword">if</span> session == <span class="hljs-string">&quot;&quot;</span> || req.UserName == <span class="hljs-string">&quot;&quot;</span> &#123;<br>		<span class="hljs-keyword">return</span> fmt.Errorf(<span class="hljs-string">&quot;UpdateUserNickName|request params invalid&quot;</span>)<br>	&#125;<br><br>	user, err := cache.GetSessionInfo(session)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Errorf(<span class="hljs-string">&quot;%s|Failed to get with session=%s|err =%v&quot;</span>, uuid, session, err)<br>		<span class="hljs-keyword">return</span> fmt.Errorf(<span class="hljs-string">&quot;UpdateUserNickName|GetSessionInfo err:%v&quot;</span>, err)<br>	&#125;<br><br>	<span class="hljs-keyword">if</span> user.Name != req.UserName &#123;<br>		log.Errorf(<span class="hljs-string">&quot;UpdateUserNickName|%s|session info not match with username=%s&quot;</span>, uuid, req.UserName)<br>	&#125;<br><br>	updateUser := &amp;model.User&#123;<br>		NickName: req.NewNickName,<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> updateUserInfo(updateUser, req.UserName, session)<br><br></code></pre></td></tr></table></figure>
+
+<p>这是一个用于更新用户昵称的函数。</p>
+<p>​	函数接收一个 context 对象和一个 UpdateNickNameRequest 对象作为输入，并返回一个错误对象。	它首先从 context 中获取请求的 session ID 和请求的用户名，然后使用这些信息从缓存中获取用户信息。如果获取过程中出现错误，则函数返回一个带有错误信息的错误对象。</p>
+<p>​	接下来，函数检查 session ID 和用户名是否为空。如果是，则返回一个错误对象，指示请求参数无效。然后，函数检查缓存中获取的用户信息是否与请求的用户名相匹配。</p>
+<ul>
+<li>​	如果不匹配，则函数返回一个带有错误信息的错误对象。</li>
+<li>​	如果用户信息与请求匹配，则函数创建一个新的 User 对象，其中包含用户新的昵称，并调用 updateUserInfo 函数来更新缓存中的用户信息。<ul>
+<li>如果更新过程中出现错误，则函数返回一个带有错误信息的错误对象。</li>
+<li>否则，函数返回 nil，表示更新成功。</li>
+</ul>
+</li>
+</ul>
+<h3 id="（5）cache"><a href="#（5）cache" class="headerlink" title="（5）cache"></a>（5）cache</h3><h5 id="GetUserInfoFromCache"><a href="#GetUserInfoFromCache" class="headerlink" title="GetUserInfoFromCache"></a>GetUserInfoFromCache</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetUserInfoFromCache</span><span class="hljs-params">(username <span class="hljs-type">string</span>)</span></span> (*model.User, <span class="hljs-type">error</span>) &#123;<br>	redisKey := constant.UserInfoPrefix + username<br>	val, err := utils.GetRedisCli().Get(context.Background(), redisKey).Result()<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, err<br>	&#125;<br>	user := &amp;model.User&#123;&#125;<br>	err = json.Unmarshal([]<span class="hljs-type">byte</span>(val), user)<br>	<span class="hljs-keyword">return</span> user, err<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	该函数接收一个字符串类型的参数 <code>username</code>，并返回一个指向 <code>model.User</code> 结构体的指针和一个错误对象。</p>
+<p>​	在函数内部，首先使用给定的 <code>username</code> 构造 Redis 的 key，然后使用 Redis 客户端库的 <code>Get</code> 方法从 Redis 中获取对应的值。</p>
+<ul>
+<li>​	如果操作 Redis 过程中出现了错误，函数会返回一个 <code>nil</code> 指针和该错误对象。</li>
+<li>​	如果获取到了 Redis 中存储的值，函数会定义一个 <code>model.User</code> 类型的指针 <code>user</code>，并使用 <code>json.Unmarshal</code> 方法将 Redis 中的值解码成 <code>user</code> 对象。</li>
+<li>最后，函数返回 <code>user</code> 指针和任何在解码过程中出现的错误。</li>
+</ul>
+<h5 id="SetUserCacheInfo"><a href="#SetUserCacheInfo" class="headerlink" title="SetUserCacheInfo"></a>SetUserCacheInfo</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">SetUserCacheInfo</span><span class="hljs-params">(user *model.User)</span></span> <span class="hljs-type">error</span> &#123;<br>	redisKey := constant.UserInfoPrefix + user.Name<br>	val, err := json.Marshal(user)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> err<br>	&#125;<br>	expired := time.Second * time.Duration(config.GetGlobalConf().Cache.UserExpired)<br>	_, err = utils.GetRedisCli().Set(context.Background(), redisKey, val, expired*time.Second).Result()<br>	<span class="hljs-keyword">return</span> err<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>函数接受一个指向 <code>model.User</code> 类型的指针作为参数，并返回一个 <code>error</code> 类型的错误。函数主要做了以下事情：</p>
+<ol>
+<li>根据传入的 <code>user</code> 指针生成 Redis 的键名，键名格式为 <code>constant.UserInfoPrefix + user.Name</code>。</li>
+<li>将 <code>user</code> 对象转换为 JSON 格式的字符串。</li>
+<li>根据全局配置文件中定义的缓存过期时间，为 <code>redisKey</code> 对应的键设置过期时间。</li>
+<li>将转换后的 JSON 字符串与 Redis 中的键 <code>redisKey</code> 一起存入 Redis 中。如果存储成功，则返回 <code>nil</code>，否则返回 <code>error</code>。</li>
+</ol>
+<h5 id="UpdateCachedUserInfo"><a href="#UpdateCachedUserInfo" class="headerlink" title="UpdateCachedUserInfo"></a>UpdateCachedUserInfo</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">UpdateCachedUserInfo</span><span class="hljs-params">(user *model.User)</span></span> <span class="hljs-type">error</span> &#123;<br>	err := SetUserCacheInfo(user)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		redisKey := constant.UserInfoPrefix + user.Name<br>		utils.GetRedisCli().Del(context.Background(), redisKey).Result()<br>	&#125;<br>	<span class="hljs-keyword">return</span> err<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	该函数的作用是更新缓存中用户信息。</p>
+<ul>
+<li>​	首先调用<code>SetUserCacheInfo</code>尝试将用户信息写入缓存中，</li>
+<li>​	如果写入失败，则删除缓存中已存在的用户信息。</li>
+<li>​	无论写入是否成功，最后都会返回一个错误（nil或者错误信息）。</li>
+</ul>
+<h5 id="SetSessionInfo"><a href="#SetSessionInfo" class="headerlink" title="SetSessionInfo"></a>SetSessionInfo</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">SetSessionInfo</span><span class="hljs-params">(user *model.User, session <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">error</span> &#123;<br>	redisKey := constant.SessionKeyPrefix + session<br>	val, err := json.Marshal(&amp;user)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> err<br>	&#125;<br>	expired := time.Second * time.Duration(config.GetGlobalConf().Cache.SessionExpired)<br>	_, err = utils.GetRedisCli().Set(context.Background(), redisKey, val, expired*time.Second).Result()<br>	<span class="hljs-keyword">return</span> err<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	 <code>GetSessionInfo</code> 的输入参数是一个字符串 <code>session</code>，表示用户的 session id。</p>
+<p>​	这个函数的功能是从 Redis 中获取保存在该 session id 对应的值，并将其反序列化成一个 <code>model.User</code> 结构体并返回。</p>
+<p>​	具体实现中，该函数先将 session id 拼接上一个固定的前缀，得到一个 Redis key，然后通过 <code>utils.GetRedisCli().Get()</code> 函数从 Redis 中获取该 key 对应的值。</p>
+<p>​	获取到值后，使用 <code>json.Unmarshal()</code> 函数将其反序列化成一个 <code>model.User</code> 结构体，最终将该结构体和可能存在的错误一同返回。</p>
+<h5 id="DelSessionInfo"><a href="#DelSessionInfo" class="headerlink" title="DelSessionInfo"></a>DelSessionInfo</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">DelSessionInfo</span><span class="hljs-params">(session <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">error</span> &#123;<br>	redisKey := constant.SessionKeyPrefix + session<br>	_, err := utils.GetRedisCli().Del(context.Background(), redisKey).Result()<br>	<span class="hljs-keyword">return</span> err<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>	DelSessionInfo</code> 	接受一个 <code>session</code> 字符串参数，该参数是会话 ID，用于从 Redis 中删除存储的用户会话信息。</p>
+<p>​	函数使用 <code>constant.SessionKeyPrefix</code> 常量和 <code>session</code> 字符串参数组合成 Redis 中的键值，然后使用 <code>utils.GetRedisCli().Del()</code> 方法从 Redis 中删除该键值，并返回错误。</p>
+<p>​	如果键值在 Redis 中不存在，<code>Del()</code> 方法将返回一个 <code>nil</code> 的结果，但不会返回错误。</p>
 
                 
               </div>
