@@ -143,5 +143,12 @@ div.dropdown-menu {
     }
 }
 
+/* 设置背景图片 */
+body {
+  background: url(/img/5.jpg);
+  background-attachment: fixed;
+  background-size: cover;  
+}
+
 
 
