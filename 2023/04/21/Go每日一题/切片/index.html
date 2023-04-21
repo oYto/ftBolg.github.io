@@ -18,14 +18,14 @@
   
     <meta name="description" content="问题：下面这段代码输出什么？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="slice">
-<meta property="og:url" content="http://example.com/2023/04/20/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/slice/index.html">
+<meta property="og:title" content="数组与slice">
+<meta property="og:url" content="http://example.com/2023/04/21/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%88%87%E7%89%87/index.html">
 <meta property="og:site_name" content="小樱桃">
 <meta property="og:description" content="问题：下面这段代码输出什么？">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-04-20T02:23:39.000Z">
-<meta property="article:modified_time" content="2023-04-21T05:03:02.272Z">
+<meta property="article:published_time" content="2023-04-21T05:20:51.000Z">
+<meta property="article:modified_time" content="2023-04-21T05:34:01.996Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>slice - 小樱桃</title>
+  <title>数组与slice - 小樱桃</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -222,7 +222,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="slice"></span>
+            <span id="subtitle" data-typed-text="数组与slice"></span>
           
         </div>
 
@@ -233,8 +233,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-20 10:23" pubdate>
-          2023年4月20日 上午
+        <time datetime="2023-04-21 13:20" pubdate>
+          2023年4月21日 下午
         </time>
       </span>
     
@@ -245,7 +245,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          508 字
+          493 字
         
       </span>
     
@@ -302,19 +302,25 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">slice</h1>
+            <h1 style="display: none">数组与slice</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="问题：下面这段代码输出什么？"><a href="#问题：下面这段代码输出什么？" class="headerlink" title="问题：下面这段代码输出什么？"></a>问题：下面这段代码输出什么？<span id="more"></span></h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">change</span><span class="hljs-params">(s ...<span class="hljs-type">int</span>)</span></span> &#123;<br>	s = <span class="hljs-built_in">append</span>(s,<span class="hljs-number">3</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	slice := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>,<span class="hljs-number">5</span>,<span class="hljs-number">5</span>)<br>	slice[<span class="hljs-number">0</span>] = <span class="hljs-number">1</span><br>	slice[<span class="hljs-number">1</span>] = <span class="hljs-number">2</span><br>	change(slice...)<br>	fmt.Println(slice)<br>	change(slice[<span class="hljs-number">0</span>:<span class="hljs-number">2</span>]...)<br>	fmt.Println(slice)<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h2 id="问题：下面这段代码输出什么？"><a href="#问题：下面这段代码输出什么？" class="headerlink" title="问题：下面这段代码输出什么？"></a>问题：下面这段代码输出什么？<span id="more"></span></h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> a = []<span class="hljs-type">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;<br>	<span class="hljs-keyword">var</span> r [<span class="hljs-number">5</span>]<span class="hljs-type">int</span><br><br>	<span class="hljs-keyword">for</span> i, v := <span class="hljs-keyword">range</span> a &#123;<br>		<span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span> &#123;<br>			a[<span class="hljs-number">1</span>] = <span class="hljs-number">12</span><br>			a[<span class="hljs-number">2</span>] = <span class="hljs-number">13</span><br>		&#125;<br>		r[i] = v<br>	&#125;<br>	fmt.Println(<span class="hljs-string">&quot;r = &quot;</span>, r)<br>	fmt.Println(<span class="hljs-string">&quot;a = &quot;</span>, a)<br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 
-<h4 id="答案如下"><a href="#答案如下" class="headerlink" title="答案如下"></a>答案如下</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">[<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>]<br>[<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>]<br></code></pre></td></tr></table></figure>
+<h4 id="答案："><a href="#答案：" class="headerlink" title="答案："></a>答案：</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">r =  [<span class="hljs-number">1</span> <span class="hljs-number">12</span> <span class="hljs-number">13</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span>]<br>a =  [<span class="hljs-number">1</span> <span class="hljs-number">12</span> <span class="hljs-number">13</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span>]<br></code></pre></td></tr></table></figure>
 
-<h4 id="原因："><a href="#原因：" class="headerlink" title="原因："></a>原因：</h4><p>​	第一次调用change函数时，在函数内需要往切片里加入一个元素，但此时slice切片的长度已经达到了容量的上限，故需要扩容。当一个slice需要扩容时，Go会创建一个新的数组，将原有数组的元素复制到新数组中，并将新的元素插入到新数组中，故原slice的底层数组不变</p>
-<p>​	第二次调用change函数时，使用了操作符<code>[i,j]</code>获得一个新的切片，假定为 slice1，它的底层数组和原切片底层数组是重合的，不过 slice1 的长度、容量分别是 2、5，没有达到容量的上限，所以在使用 change() 函数中对 slice1增加元素时，底层数组的修改会影响到原切片。</p>
+
+
+<h4 id="原因："><a href="#原因：" class="headerlink" title="原因："></a>原因：</h4><p>​	这一题与前面的 <a target="_blank" rel="noopener" href="https://oyto.github.io/2023/04/19/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/for-range/">for - range</a>很相似，一眼就能看出来，因为for-range执行前是将原数组进行拷贝，所以在循环里改变的数组，是不会影响到我们循环时的副本的，所以答案为：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">r =  [<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span>]<br>a =  [<span class="hljs-number">1</span> <span class="hljs-number">12</span> <span class="hljs-number">13</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span>]<br></code></pre></td></tr></table></figure>
+
+<p>​	但事实并非如此，我们在之前的题目中，a是数组，而在这里a是slice。slice是引用类型，故其是一个指向底层数组的指针，因此我们在循环使用的副本依旧是一个指向原底层数组的副本，故对切片所有的操作，都会影响到底层数组，所以考研通过v获得修改后的数组元素。</p>
+<p>​	你学会了吗？</p>
+<p>​	</p>
 
                 
               </div>
@@ -369,8 +375,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>slice</div>
-      <div>http://example.com/2023/04/20/Go每日一题/slice/</div>
+      <div>数组与slice</div>
+      <div>http://example.com/2023/04/21/Go每日一题/切片/</div>
     </div>
     <div class="license-meta">
       
@@ -382,7 +388,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年4月20日</div>
+          <div>2023年4月21日</div>
         </div>
       
       
@@ -419,18 +425,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/21/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%88%87%E7%89%87/" title="数组与slice">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">数组与slice</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/19/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/for-range/" title="for-range">
-                        <span class="hidden-mobile">for-range</span>
+                      <a href="/2023/04/20/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/slice/" title="slice">
+                        <span class="hidden-mobile">slice</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
