@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>两数之和</title>
+      <link href="/2023/04/21/%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/"/>
+      <url>/2023/04/21/%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</url>
+      
+        <content type="html"><![CDATA[<h2 id="题目：两数之和"><a href="#题目：两数之和" class="headerlink" title="题目：两数之和"></a>题目：两数之和</h2><p>​给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 target  的那 两个 整数，并返回它们的数组下标。</p><p>​你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。</p><p>​你可以按任意顺序返回答案。</p><p>示例 1：</p><blockquote><p>输入：nums &#x3D; [2,7,11,15], target &#x3D; 9<br>输出：[0,1]<br>解释：因为 nums[0] + nums[1] &#x3D;&#x3D; 9 ，返回 [0, 1] 。</p></blockquote><p>示例 2：</p><p>输入：nums &#x3D; [3,2,4], target &#x3D; 6<br>输出：[1,2]</p><p>示例 3：</p><blockquote><p>输入：nums &#x3D; [3,3], target &#x3D; 6<br>输出：[0,1]</p></blockquote><p>提示：</p><blockquote><p>2 &lt;&#x3D; nums.length &lt;&#x3D; 10^4<br>-10^9 &lt;&#x3D; nums[i] &lt;&#x3D; 10^9<br>-10^9 &lt;&#x3D; target &lt;&#x3D; 10^9<br>只会存在一个有效答案</p></blockquote><p>题目来源：力扣（LeetCode）</p><h4 id="解题思路一："><a href="#解题思路一：" class="headerlink" title="解题思路一："></a>解题思路一：</h4><p>​题意很清楚，就是要从一个数组里找到唯一存在的一对数的和为<code>target</code>，并返回他们的下标，很容易就能想到暴力：两层循环分别枚举一遍数组，如果<code>nums[i] + nums[j] == target</code>，就找到了答案，然后将其放入<code>vector</code>中返回即可，时间复杂度O(n^2)，勉强能过。</p><h4 id="AC代码"><a href="#AC代码" class="headerlink" title="AC代码"></a>AC代码</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">twoSum</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; nums, <span class="hljs-type">int</span> target)</span> </span>&#123;<br>        vector&lt;<span class="hljs-type">int</span>&gt; res;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; nums.<span class="hljs-built_in">size</span>(); i ++)<br>        &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; i; j ++)<br>            &#123;<br>                <span class="hljs-keyword">if</span> (nums[i] + nums[j] == target)<br>                &#123;<br>                    res.<span class="hljs-built_in">push_back</span>(i), res.<span class="hljs-built_in">push_back</span>(j);<br>                    <span class="hljs-keyword">break</span>;<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (res.<span class="hljs-built_in">size</span>() &gt; <span class="hljs-number">1</span>) <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure><h4 id="解题思路二："><a href="#解题思路二：" class="headerlink" title="解题思路二："></a>解题思路二：</h4><p>​这题比较友好，n的数据范围比较小，但如果n的范围更大，显然是过不了的，故我们需要想一想别的 方法。</p><p>​这里有一种非常巧妙的方法：哈希表。</p><p>​我们只需要枚举一次数组，然后在每一次枚举时，我们需要做：</p><blockquote><ol><li>判断<code>target - nums[i]</code>是否存在哈希表中</li><li>将nums[i]插入哈希表中</li></ol></blockquote><p>​然后就能找到答案了。</p><p>​解释：由于数据只有一组解，假设答案为[i, j]（i &lt; j），则当我们循环到j时，nums[i]一定会存在哈希表中，且有nums[i] + nums[j] &#x3D; target，故一定能找到解。</p><p>​时间复杂度：只扫描一遍数组，且哈希表的插入和查询操作的复杂度是O(1)，故总时间复杂度为O(n)</p><h4 id="AC代码-1"><a href="#AC代码-1" class="headerlink" title="AC代码"></a>AC代码</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">twoSum</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; nums, <span class="hljs-type">int</span> target)</span> </span>&#123;<br>        unordered_map&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt; hash;<br>        vector&lt;<span class="hljs-type">int</span>&gt; res;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; nums.<span class="hljs-built_in">size</span>(); i ++)<br>        &#123;<br>            <span class="hljs-type">int</span> another = target - nums[i];<br>            <span class="hljs-keyword">if</span> (hash.<span class="hljs-built_in">count</span>(another))<br>            &#123;<br>                res.<span class="hljs-built_in">push_back</span>(i), res.<span class="hljs-built_in">push_back</span>(hash[another]);<br>                <span class="hljs-keyword">return</span> res;<br>            &#125;<br>            hash[nums[i]] = i;<br>        &#125;<br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 刷题 </category>
+          
+          <category> 哈希表 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 暴力 </tag>
+            
+            <tag> 哈希表 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>数组与slice</title>
       <link href="/2023/04/21/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%88%87%E7%89%87/"/>
       <url>/2023/04/21/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%88%87%E7%89%87/</url>

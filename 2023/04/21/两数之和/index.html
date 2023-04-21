@@ -16,25 +16,25 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="问题：下面这段代码输出什么？">
+    <meta name="description" content="题目：两数之和​	给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 target  的那 两个 整数，并返回它们的数组下标。 ​	你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。 ​	你可以按任意顺序返回答案。 示例 1：  输入：nums &#x3D; [2,7,11,15], target &#x3D; 9输出：[0,1">
 <meta property="og:type" content="article">
-<meta property="og:title" content="数组与slice">
-<meta property="og:url" content="http://example.com/2023/04/21/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%88%87%E7%89%87/index.html">
+<meta property="og:title" content="两数之和">
+<meta property="og:url" content="http://example.com/2023/04/21/%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="问题：下面这段代码输出什么？">
+<meta property="og:description" content="题目：两数之和​	给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 target  的那 两个 整数，并返回它们的数组下标。 ​	你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。 ​	你可以按任意顺序返回答案。 示例 1：  输入：nums &#x3D; [2,7,11,15], target &#x3D; 9输出：[0,1">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-04-21T05:20:51.000Z">
-<meta property="article:modified_time" content="2023-04-21T05:34:01.996Z">
+<meta property="og:image" content="http://example.com/images/LC.png">
+<meta property="article:published_time" content="2023-04-21T13:28:14.000Z">
+<meta property="article:modified_time" content="2023-04-21T13:46:57.324Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="GO">
-<meta property="article:tag" content="每日一题">
+<meta property="article:tag" content="暴力">
+<meta property="article:tag" content="哈希表">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/Golang.png">
+<meta name="twitter:image" content="http://example.com/images/LC.png">
   
   
   
-  <title>数组与slice - 胤凯</title>
+  <title>两数之和 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -222,7 +222,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="数组与slice"></span>
+            <span id="subtitle" data-typed-text="两数之和"></span>
           
         </div>
 
@@ -233,8 +233,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-21 13:20" pubdate>
-          2023年4月21日 下午
+        <time datetime="2023-04-21 21:28" pubdate>
+          2023年4月21日 晚上
         </time>
       </span>
     
@@ -245,7 +245,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          493 字
+          1.6k 字
         
       </span>
     
@@ -256,7 +256,7 @@
         
         
         
-          5 分钟
+          14 分钟
         
       </span>
     
@@ -302,25 +302,48 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">数组与slice</h1>
+            <h1 style="display: none">两数之和</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="问题：下面这段代码输出什么？"><a href="#问题：下面这段代码输出什么？" class="headerlink" title="问题：下面这段代码输出什么？"></a>问题：下面这段代码输出什么？<span id="more"></span></h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> a = []<span class="hljs-type">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;<br>	<span class="hljs-keyword">var</span> r [<span class="hljs-number">5</span>]<span class="hljs-type">int</span><br><br>	<span class="hljs-keyword">for</span> i, v := <span class="hljs-keyword">range</span> a &#123;<br>		<span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span> &#123;<br>			a[<span class="hljs-number">1</span>] = <span class="hljs-number">12</span><br>			a[<span class="hljs-number">2</span>] = <span class="hljs-number">13</span><br>		&#125;<br>		r[i] = v<br>	&#125;<br>	fmt.Println(<span class="hljs-string">&quot;r = &quot;</span>, r)<br>	fmt.Println(<span class="hljs-string">&quot;a = &quot;</span>, a)<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h2 id="题目：两数之和"><a href="#题目：两数之和" class="headerlink" title="题目：两数之和"></a>题目：两数之和</h2><p>​	给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 target  的那 两个 整数，并返回它们的数组下标。</p>
+<p>​	你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。</p>
+<p>​	你可以按任意顺序返回答案。</p>
+<p>示例 1：</p>
+<blockquote>
+<p>输入：nums &#x3D; [2,7,11,15], target &#x3D; 9<br>输出：[0,1]<br>解释：因为 nums[0] + nums[1] &#x3D;&#x3D; 9 ，返回 [0, 1] 。</p>
+</blockquote>
+<p>示例 2：</p>
+<p>输入：nums &#x3D; [3,2,4], target &#x3D; 6<br>输出：[1,2]</p>
+<p>示例 3：</p>
+<blockquote>
+<p>输入：nums &#x3D; [3,3], target &#x3D; 6<br>输出：[0,1]</p>
+</blockquote>
+<p>提示：</p>
+<blockquote>
+<p>2 &lt;&#x3D; nums.length &lt;&#x3D; 10^4<br>-10^9 &lt;&#x3D; nums[i] &lt;&#x3D; 10^9<br>-10^9 &lt;&#x3D; target &lt;&#x3D; 10^9<br>只会存在一个有效答案</p>
+</blockquote>
+<p>题目来源：力扣（LeetCode）</p>
+<h4 id="解题思路一："><a href="#解题思路一：" class="headerlink" title="解题思路一："></a>解题思路一：</h4><p>​	题意很清楚，就是要从一个数组里找到唯一存在的一对数的和为<code>target</code>，并返回他们的下标，很容易就能想到暴力：两层循环分别枚举一遍数组，如果<code>nums[i] + nums[j] == target</code>，就找到了答案，然后将其放入<code>vector</code>中返回即可，时间复杂度O(n^2)，勉强能过。</p>
+<h4 id="AC代码"><a href="#AC代码" class="headerlink" title="AC代码"></a>AC代码</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">twoSum</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; nums, <span class="hljs-type">int</span> target)</span> </span>&#123;<br>        vector&lt;<span class="hljs-type">int</span>&gt; res;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; nums.<span class="hljs-built_in">size</span>(); i ++)<br>        &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; i; j ++)<br>            &#123;<br>                <span class="hljs-keyword">if</span> (nums[i] + nums[j] == target)<br>                &#123;<br>                    res.<span class="hljs-built_in">push_back</span>(i), res.<span class="hljs-built_in">push_back</span>(j);<br>                    <span class="hljs-keyword">break</span>;<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (res.<span class="hljs-built_in">size</span>() &gt; <span class="hljs-number">1</span>) <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 
 
-<h4 id="答案："><a href="#答案：" class="headerlink" title="答案："></a>答案：</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">r =  [<span class="hljs-number">1</span> <span class="hljs-number">12</span> <span class="hljs-number">13</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span>]<br>a =  [<span class="hljs-number">1</span> <span class="hljs-number">12</span> <span class="hljs-number">13</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span>]<br></code></pre></td></tr></table></figure>
+<h4 id="解题思路二："><a href="#解题思路二：" class="headerlink" title="解题思路二："></a>解题思路二：</h4><p>​	这题比较友好，n的数据范围比较小，但如果n的范围更大，显然是过不了的，故我们需要想一想别的 方法。</p>
+<p>​	这里有一种非常巧妙的方法：哈希表。</p>
+<p>​	我们只需要枚举一次数组，然后在每一次枚举时，我们需要做：</p>
+<blockquote>
+<ol>
+<li>判断<code>target - nums[i]</code>是否存在哈希表中</li>
+<li>将nums[i]插入哈希表中</li>
+</ol>
+</blockquote>
+<p>​	然后就能找到答案了。</p>
+<p>​	解释：由于数据只有一组解，假设答案为[i, j]（i &lt; j），则当我们循环到j时，nums[i]一定会存在哈希表中，且有nums[i] + nums[j] &#x3D; target，故一定能找到解。</p>
+<p>​	时间复杂度：只扫描一遍数组，且哈希表的插入和查询操作的复杂度是O(1)，故总时间复杂度为O(n)</p>
+<h4 id="AC代码-1"><a href="#AC代码-1" class="headerlink" title="AC代码"></a>AC代码</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">twoSum</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; nums, <span class="hljs-type">int</span> target)</span> </span>&#123;<br>        unordered_map&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt; hash;<br>        vector&lt;<span class="hljs-type">int</span>&gt; res;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; nums.<span class="hljs-built_in">size</span>(); i ++)<br>        &#123;<br>            <span class="hljs-type">int</span> another = target - nums[i];<br>            <span class="hljs-keyword">if</span> (hash.<span class="hljs-built_in">count</span>(another))<br>            &#123;<br>                res.<span class="hljs-built_in">push_back</span>(i), res.<span class="hljs-built_in">push_back</span>(hash[another]);<br>                <span class="hljs-keyword">return</span> res;<br>            &#125;<br>            hash[nums[i]] = i;<br>        &#125;<br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
-
-
-<h4 id="原因："><a href="#原因：" class="headerlink" title="原因："></a>原因：</h4><p>​	这一题与前面的 <a target="_blank" rel="noopener" href="https://oyto.github.io/2023/04/19/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/for-range/">for - range</a>很相似，一眼就能看出来，因为for-range执行前是将原数组进行拷贝，所以在循环里改变的数组，是不会影响到我们循环时的副本的，所以答案为：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">r =  [<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span>]<br>a =  [<span class="hljs-number">1</span> <span class="hljs-number">12</span> <span class="hljs-number">13</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span>]<br></code></pre></td></tr></table></figure>
-
-<p>​	但事实并非如此，我们在之前的题目中，a是数组，而在这里a是slice。slice是引用类型，故其是一个指向底层数组的指针，因此我们在循环使用的副本依旧是一个指向原底层数组的副本，故对切片所有的操作，都会影响到底层数组，所以考研通过v获得修改后的数组元素。</p>
-<p>​	你学会了吗？</p>
-<p>​	</p>
 
                 
               </div>
@@ -339,12 +362,12 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  <a href="/categories/%E5%88%B7%E9%A2%98/" class="category-chain-item">刷题</a>
   
   
     <span>></span>
     
-  <a href="/categories/Go/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/" class="category-chain-item">每日一题</a>
+  <a href="/categories/%E5%88%B7%E9%A2%98/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="category-chain-item">哈希表</a>
   
   
 
@@ -361,9 +384,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/GO/">#GO</a>
+        <a href="/tags/%E6%9A%B4%E5%8A%9B/">#暴力</a>
       
-        <a href="/tags/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">#每日一题</a>
+        <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/">#哈希表</a>
       
     </div>
   
@@ -375,8 +398,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>数组与slice</div>
-      <div>http://example.com/2023/04/21/Go每日一题/切片/</div>
+      <div>两数之和</div>
+      <div>http://example.com/2023/04/21/两数之和/</div>
     </div>
     <div class="license-meta">
       
@@ -425,18 +448,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/21/%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" title="两数之和">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">两数之和</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/20/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/slice/" title="slice">
-                        <span class="hidden-mobile">slice</span>
+                      <a href="/2023/04/21/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%88%87%E7%89%87/" title="数组与slice">
+                        <span class="hidden-mobile">数组与slice</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
