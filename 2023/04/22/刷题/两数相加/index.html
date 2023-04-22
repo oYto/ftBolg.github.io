@@ -16,24 +16,26 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="学习记录">
+    <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习记录">
-<meta property="og:url" content="http://example.com/2023/04/09/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:title" content="两数之和">
+<meta property="og:url" content="http://example.com/2023/04/22/%E5%88%B7%E9%A2%98/%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="学习记录">
+<meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95.png">
-<meta property="article:published_time" content="2023-04-09T11:11:31.000Z">
-<meta property="article:modified_time" content="2023-04-22T12:34:54.681Z">
+<meta property="og:image" content="http://example.com/images/LC.jpg">
+<meta property="article:published_time" content="2023-04-22T11:52:08.000Z">
+<meta property="article:modified_time" content="2023-04-22T12:34:43.810Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="学习记录">
+<meta property="article:tag" content="LeetCode">
+<meta property="article:tag" content="模拟">
+<meta property="article:tag" content="链表">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95.png">
+<meta name="twitter:image" content="http://example.com/images/LC.jpg">
   
   
   
-  <title>学习记录 - 胤凯</title>
+  <title>两数之和 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -221,7 +223,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="学习记录"></span>
+            <span id="subtitle" data-typed-text="两数之和"></span>
           
         </div>
 
@@ -232,8 +234,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-09 19:11" pubdate>
-          2023年4月9日 晚上
+        <time datetime="2023-04-22 19:52" pubdate>
+          2023年4月22日 晚上
         </time>
       </span>
     
@@ -244,7 +246,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.7k 字
+          1.2k 字
         
       </span>
     
@@ -255,7 +257,7 @@
         
         
         
-          57 分钟
+          11 分钟
         
       </span>
     
@@ -301,63 +303,98 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">学习记录</h1>
+            <h1 style="display: none">两数之和</h1>
             
             
-              
-              <script src=/js/crypto-js.js></script>
-<script>
-function doDecrypt (pwd, onError) {
-	console.log('in doDecrypt');
-	const txt = document.getElementById('enc_content').innerHTML;
-	let plantext;
-	try {
-		const bytes = CryptoJS.AES.decrypt(txt, pwd);
-		var plaintext = bytes.toString(CryptoJS.enc.Utf8);
-	} catch(err) {
-		if(onError) {
-			onError(err);
-		}
-		return;
-	}
-	document.getElementById('enc_content').innerHTML = plaintext;
-	document.getElementById('enc_content').style.display = 'block';
-	document.getElementById('enc_passwd').style.display = 'none';
-	if(typeof MathJax !== 'undefined') {
-		MathJax.Hub.Queue(
-			['resetEquationNumbers', MathJax.InputJax.TeX],
-			['PreProcess', MathJax.Hub],
-			['Reprocess', MathJax.Hub]
-		);
-	}
-}
-</script>
-<div id="enc_content" style="display:none">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</div>
-<div id="enc_passwd"> <input id="enc_pwd_input" type="password" style="border-radius: 5px;border-style: groove;height: 30px;width: 50%;cursor: auto;font-size: 102%;color: currentColor;outline: none;text-overflow: initial;padding-left: 5px;" onkeydown="if (event.keyCode == 13) { decrypt(); return false;}"> <input type="submit" value="解&nbsp;密" onclick="decrypt()" style="width: 58px;height: 34px;border-radius: 5px;background-color: white;border-style: solid;color: currentColor;"><div id="enc_error" style="display: inline-block;color: #d84527;margin-left: 10px"></div>
-<script>
-var onError = function(error) {
-	document.getElementById("enc_error").innerHTML = "password error!"
-};
-function decrypt() {
-var passwd = document.getElementById("enc_pwd_input").value;
-console.log(passwd);
-doDecrypt(passwd, onError);
-}
-</script>
-</div>
-              
+              <div class="markdown-body">
+                
+                <h2 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h2><p>给你两个 非空 的链表，表示两个非负的整数。它们每位数字都是按照 逆序 的方式存储的，并且每个节点只能存储 一位 数字。</p>
+<p>请你将两个数相加，并以相同形式返回一个表示和的链表。</p>
+<p>你可以假设除了数字 0 之外，这两个数都不会以 0 开头。</p>
+<p>示例 1：</p>
+<blockquote>
+<p>输入：l1 &#x3D; [2,4,3], l2 &#x3D; [5,6,4]<br>输出：[7,0,8]<br>解释：342 + 465 &#x3D; 807.</p>
+</blockquote>
+<p>示例 2：</p>
+<blockquote>
+<p>输入：l1 &#x3D; [0], l2 &#x3D; [0]<br>输出：[0]</p>
+</blockquote>
+<p>示例 3：</p>
+<blockquote>
+<p>输入：l1 &#x3D; [9,9,9,9,9,9,9], l2 &#x3D; [9,9,9,9]<br>输出：[8,9,9,9,0,0,0,1]</p>
+</blockquote>
+<p>提示：</p>
+<ul>
+<li><p>每个链表中的节点数在范围 [1, 100] 内</p>
+</li>
+<li><p>0 &lt;&#x3D; Node.val &lt;&#x3D; 9</p>
+</li>
+<li><p>题目数据保证列表表示的数字不含前导零</p>
+</li>
+</ul>
+<p>来源：力扣（LeetCode）</p>
+<h4 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h4><p>​		这题的思想和高精度类似，都是从低位开始算，然后逐渐进位到高位，只不过这里的用的链表的形式。</p>
+<p>​	在模拟需要注意：</p>
+<ol>
+<li>​	从低位到高位，逐位相加，如果和大于10，就保留个位，即<code>t % 10</code></li>
+<li>如果最高位有进位，则在最前面补1</li>
+</ol>
+<p>​		这里还用到了一个做链表题目的小技巧：</p>
+<blockquote>
+<p>​	添加一个虚拟头节点：<code>ListNode *head = new ListNode(-1);</code>，这样可以不用特判处理完后的链表是否为空，返回的形式都是res -&gt; next</p>
+</blockquote>
+<p>下面是链表进行加入一个数的操作：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++">ListNode* temp = <span class="hljs-keyword">new</span> <span class="hljs-built_in">ListNode</span>(t % <span class="hljs-number">10</span>);<br>cur-&gt;next = temp;<br>cur = temp;<br></code></pre></td></tr></table></figure>
 
-              
+
+
+<h4 id="AC代码"><a href="#AC代码" class="headerlink" title="AC代码"></a>AC代码</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Definition for singly-linked list.</span><br><span class="hljs-comment"> * struct ListNode &#123;</span><br><span class="hljs-comment"> *     int val;</span><br><span class="hljs-comment"> *     ListNode *next;</span><br><span class="hljs-comment"> *     ListNode() : val(0), next(nullptr) &#123;&#125;</span><br><span class="hljs-comment"> *     ListNode(int x) : val(x), next(nullptr) &#123;&#125;</span><br><span class="hljs-comment"> *     ListNode(int x, ListNode *next) : val(x), next(next) &#123;&#125;</span><br><span class="hljs-comment"> * &#125;;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function">ListNode* <span class="hljs-title">addTwoNumbers</span><span class="hljs-params">(ListNode* l1, ListNode* l2)</span> </span>&#123;<br>        <span class="hljs-keyword">auto</span> head = <span class="hljs-keyword">new</span> <span class="hljs-built_in">ListNode</span>(<span class="hljs-number">-1</span>), cur = head;<br>        <br>        <span class="hljs-type">int</span> t = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">while</span> (l1 || l2 || t)&#123;<br>            <span class="hljs-keyword">if</span> (l1) t += l1-&gt;val, l1 = l1-&gt;next;<br>            <span class="hljs-keyword">if</span> (l2) t += l2-&gt;val, l2 = l2-&gt;next;<br>            cur-&gt;next = <span class="hljs-keyword">new</span> <span class="hljs-built_in">ListNode</span>(t % <span class="hljs-number">10</span>);<br>            cur = cur-&gt;next;<br>            t /= <span class="hljs-number">10</span>;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> head-&gt;next;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
             
             <hr/>
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%88%B7%E9%A2%98/" class="category-chain-item">刷题</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%88%B7%E9%A2%98/%E6%A8%A1%E6%8B%9F/" class="category-chain-item">模拟</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">#学习记录</a>
+        <a href="/tags/LeetCode/">#LeetCode</a>
+      
+        <a href="/tags/%E6%A8%A1%E6%8B%9F/">#模拟</a>
+      
+        <a href="/tags/%E9%93%BE%E8%A1%A8/">#链表</a>
       
     </div>
   
@@ -369,8 +406,8 @@ doDecrypt(passwd, onError);
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>学习记录</div>
-      <div>http://example.com/2023/04/09/学习记录/学习记录/</div>
+      <div>两数之和</div>
+      <div>http://example.com/2023/04/22/刷题/两数相加/</div>
     </div>
     <div class="license-meta">
       
@@ -382,7 +419,7 @@ doDecrypt(passwd, onError);
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年4月9日</div>
+          <div>2023年4月22日</div>
         </div>
       
       
@@ -419,9 +456,9 @@ doDecrypt(passwd, onError);
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/11/Go/go%E7%9A%84HTTP%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" title="go的HTTP网络编程">
+                      <a href="/2023/04/22/%E5%88%B7%E9%A2%98/%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/" title="无重复字符的最长子串">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">go的HTTP网络编程</span>
+                        <span class="hidden-mobile">无重复字符的最长子串</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -429,8 +466,8 @@ doDecrypt(passwd, onError);
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/KMP/" title="KMP">
-                        <span class="hidden-mobile">KMP</span>
+                      <a href="/2023/04/22/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/for-range%E5%8F%88%E6%9D%A5%E4%BA%86/" title="for-range又来啦~">
+                        <span class="hidden-mobile">for-range又来啦~</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -643,23 +680,6 @@ doDecrypt(passwd, onError);
   
 
 
-
-
-  
-  <script defer>
-    if (document.getElementById('hbePass')) {
-      Fluid.utils.waitElementLoaded('hbe-prefix', function() {
-        var hbePrefix = document.querySelector('hbe-prefix');
-        hbePrefix.parentElement.classList.add('markdown-body');
-        Fluid.utils.retry(function() {
-          if (Fluid.boot && Fluid.boot.refresh) {
-            Fluid.boot.refresh();
-            return true;
-          }
-        }, 100, 10);
-      })
-    }
-  </script>
 
 
   
