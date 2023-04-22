@@ -16,24 +16,25 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="学习记录">
+    <meta name="description" content="下面这段代码输出结果正确吗？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习记录">
-<meta property="og:url" content="http://example.com/2023/04/09/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:title" content="for-range又来啦~">
+<meta property="og:url" content="http://example.com/2023/04/22/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/for-range%E5%8F%88%E6%9D%A5%E4%BA%86/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="学习记录">
+<meta property="og:description" content="下面这段代码输出结果正确吗？">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95.png">
-<meta property="article:published_time" content="2023-04-09T11:11:31.000Z">
-<meta property="article:modified_time" content="2023-04-22T09:48:17.402Z">
+<meta property="og:image" content="http://example.com/images/Golang.png">
+<meta property="article:published_time" content="2023-04-22T09:59:25.000Z">
+<meta property="article:modified_time" content="2023-04-22T10:18:41.654Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="学习记录">
+<meta property="article:tag" content="GO">
+<meta property="article:tag" content="每日一题">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95.png">
+<meta name="twitter:image" content="http://example.com/images/Golang.png">
   
   
   
-  <title>学习记录 - 胤凯</title>
+  <title>for-range又来啦~ - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -221,7 +222,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="学习记录"></span>
+            <span id="subtitle" data-typed-text="for-range又来啦~"></span>
           
         </div>
 
@@ -232,8 +233,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-09 19:11" pubdate>
-          2023年4月9日 晚上
+        <time datetime="2023-04-22 17:59" pubdate>
+          2023年4月22日 下午
         </time>
       </span>
     
@@ -244,7 +245,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.7k 字
+          688 字
         
       </span>
     
@@ -255,7 +256,7 @@
         
         
         
-          57 分钟
+          6 分钟
         
       </span>
     
@@ -301,63 +302,64 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">学习记录</h1>
+            <h1 style="display: none">for-range又来啦~</h1>
             
             
-              
-              <script src=/js/crypto-js.js></script>
-<script>
-function doDecrypt (pwd, onError) {
-	console.log('in doDecrypt');
-	const txt = document.getElementById('enc_content').innerHTML;
-	let plantext;
-	try {
-		const bytes = CryptoJS.AES.decrypt(txt, pwd);
-		var plaintext = bytes.toString(CryptoJS.enc.Utf8);
-	} catch(err) {
-		if(onError) {
-			onError(err);
-		}
-		return;
-	}
-	document.getElementById('enc_content').innerHTML = plaintext;
-	document.getElementById('enc_content').style.display = 'block';
-	document.getElementById('enc_passwd').style.display = 'none';
-	if(typeof MathJax !== 'undefined') {
-		MathJax.Hub.Queue(
-			['resetEquationNumbers', MathJax.InputJax.TeX],
-			['PreProcess', MathJax.Hub],
-			['Reprocess', MathJax.Hub]
-		);
-	}
-}
-</script>
-<div id="enc_content" style="display:none">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</div>
-<div id="enc_passwd"> <input id="enc_pwd_input" type="password" style="border-radius: 5px;border-style: groove;height: 30px;width: 50%;cursor: auto;font-size: 102%;color: currentColor;outline: none;text-overflow: initial;padding-left: 5px;" onkeydown="if (event.keyCode == 13) { decrypt(); return false;}"> <input type="submit" value="解&nbsp;密" onclick="decrypt()" style="width: 58px;height: 34px;border-radius: 5px;background-color: white;border-style: solid;color: currentColor;"><div id="enc_error" style="display: inline-block;color: #d84527;margin-left: 10px"></div>
-<script>
-var onError = function(error) {
-	document.getElementById("enc_error").innerHTML = "password error!"
-};
-function decrypt() {
-var passwd = document.getElementById("enc_pwd_input").value;
-console.log(passwd);
-doDecrypt(passwd, onError);
-}
-</script>
-</div>
-              
+              <div class="markdown-body">
+                
+                <h2 id="下面这段代码输出结果正确吗？"><a href="#下面这段代码输出结果正确吗？" class="headerlink" title="下面这段代码输出结果正确吗？"></a>下面这段代码输出结果正确吗？<span id="more"></span></h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Foo <span class="hljs-keyword">struct</span> &#123;<br>	bar <span class="hljs-type">string</span><br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	s1 := []Foo&#123;<br>		&#123;<span class="hljs-string">&quot;A&quot;</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;B&quot;</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;C&quot;</span>&#125;,<br>	&#125;<br>	s2 := <span class="hljs-built_in">make</span>([]*Foo, <span class="hljs-built_in">len</span>(s1))<br>	<span class="hljs-keyword">for</span> i, value := <span class="hljs-keyword">range</span> s1 &#123;<br>		s2[i] = &amp;value<br>	&#125;<br>	fmt.Println(s1[<span class="hljs-number">0</span>], s1[<span class="hljs-number">1</span>], s1[<span class="hljs-number">2</span>])<br>	fmt.Println(s2[<span class="hljs-number">0</span>], s2[<span class="hljs-number">1</span>], s2[<span class="hljs-number">2</span>])<br>&#125;<br></code></pre></td></tr></table></figure>
 
-              
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go">输出：<br>&#123;A&#125; &#123;B&#125; &#123;C&#125;<br>&amp;&#123;A&#125; &amp;&#123;B&#125; &amp;&#123;C&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="答案："><a href="#答案：" class="headerlink" title="答案："></a>答案：</h4><p>​	s2输出的结果是<code>&amp;&#123;C&#125;&amp;&#123;C&#125;&amp;&#123;C&#125;</code>，故上述的输出是错误的。</p>
+<p>​	在前面的题目，我们提到过，for-range使用短变量声明(:&#x3D;)的形式迭代变量时，变量i、value每次在循环题中都会被重用，而不是重新声明。故s2每次填充的都说value的地址，而在组后一次循环中，value被赋值为{C}。因此s2输出显示三个&amp;{C}。</p>
+<h4 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> i := <span class="hljs-keyword">range</span> s1 &#123;<br>	s2[i] = &amp;s1[i]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
             
             <hr/>
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Go/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/" class="category-chain-item">每日一题</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">#学习记录</a>
+        <a href="/tags/GO/">#GO</a>
+      
+        <a href="/tags/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">#每日一题</a>
       
     </div>
   
@@ -369,8 +371,8 @@ doDecrypt(passwd, onError);
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>学习记录</div>
-      <div>http://example.com/2023/04/09/学习记录/学习记录/</div>
+      <div>for-range又来啦~</div>
+      <div>http://example.com/2023/04/22/Go每日一题/for-range又来了/</div>
     </div>
     <div class="license-meta">
       
@@ -382,7 +384,7 @@ doDecrypt(passwd, onError);
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年4月9日</div>
+          <div>2023年4月22日</div>
         </div>
       
       
@@ -419,18 +421,12 @@ doDecrypt(passwd, onError);
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/11/Go/go%E7%9A%84HTTP%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" title="go的HTTP网络编程">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">go的HTTP网络编程</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/KMP/" title="KMP">
-                        <span class="hidden-mobile">KMP</span>
+                      <a href="/2023/04/21/%E5%88%B7%E9%A2%98/%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" title="两数之和">
+                        <span class="hidden-mobile">两数之和</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -643,23 +639,6 @@ doDecrypt(passwd, onError);
   
 
 
-
-
-  
-  <script defer>
-    if (document.getElementById('hbePass')) {
-      Fluid.utils.waitElementLoaded('hbe-prefix', function() {
-        var hbePrefix = document.querySelector('hbe-prefix');
-        hbePrefix.parentElement.classList.add('markdown-body');
-        Fluid.utils.retry(function() {
-          if (Fluid.boot && Fluid.boot.refresh) {
-            Fluid.boot.refresh();
-            return true;
-          }
-        }, 100, 10);
-      })
-    }
-  </script>
 
 
   
