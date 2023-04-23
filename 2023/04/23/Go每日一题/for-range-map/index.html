@@ -16,25 +16,25 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目：寻找两个正序数组的中位数">
+    <meta name="description" content="下面代码里的ocounter的输出值？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="寻找两个正序数组的中位数">
-<meta property="og:url" content="http://example.com/2023/04/22/%E5%88%B7%E9%A2%98/%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/index.html">
+<meta property="og:title" content="for-range 又又又来了">
+<meta property="og:url" content="http://example.com/2023/04/23/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/for-range-map/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目：寻找两个正序数组的中位数">
+<meta property="og:description" content="下面代码里的ocounter的输出值？">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/LC.jpg">
-<meta property="article:published_time" content="2023-04-22T12:47:53.000Z">
-<meta property="article:modified_time" content="2023-04-22T13:08:16.985Z">
+<meta property="og:image" content="http://example.com/images/Golang.png">
+<meta property="article:published_time" content="2023-04-23T02:48:59.000Z">
+<meta property="article:modified_time" content="2023-04-23T02:51:43.004Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="LeetCode">
-<meta property="article:tag" content="递归">
+<meta property="article:tag" content="GO">
+<meta property="article:tag" content="每日一题">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/LC.jpg">
+<meta name="twitter:image" content="http://example.com/images/Golang.png">
   
   
   
-  <title>寻找两个正序数组的中位数 - 胤凯</title>
+  <title>for-range 又又又来了 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -222,7 +222,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="寻找两个正序数组的中位数"></span>
+            <span id="subtitle" data-typed-text="for-range 又又又来了"></span>
           
         </div>
 
@@ -233,8 +233,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-22 20:47" pubdate>
-          2023年4月22日 晚上
+        <time datetime="2023-04-23 10:48" pubdate>
+          2023年4月23日 上午
         </time>
       </span>
     
@@ -245,7 +245,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          346 字
         
       </span>
     
@@ -256,7 +256,7 @@
         
         
         
-          9 分钟
+          3 分钟
         
       </span>
     
@@ -302,47 +302,20 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">寻找两个正序数组的中位数</h1>
+            <h1 style="display: none">for-range 又又又来了</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="题目：寻找两个正序数组的中位数"><a href="#题目：寻找两个正序数组的中位数" class="headerlink" title="题目：寻找两个正序数组的中位数"></a>题目：寻找两个正序数组的中位数<span id="more"></span></h2><p>给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的 中位数 。</p>
-<p>算法的时间复杂度应该为 O(log (m+n)) 。</p>
-<p> 示例 1：</p>
-<blockquote>
-<p>输入：nums1 &#x3D; [1,3], nums2 &#x3D; [2]<br>输出：2.00000<br>解释：合并数组 &#x3D; [1,2,3] ，中位数 2</p>
-</blockquote>
-<p>示例 2：</p>
-<blockquote>
-<p>输入：nums1 &#x3D; [1,2], nums2 &#x3D; [3,4]<br>输出：2.50000<br>解释：合并数组 &#x3D; [1,2,3,4] ，中位数 (2 + 3) &#x2F; 2 &#x3D; 2.5</p>
-</blockquote>
-<p>提示：</p>
-<ul>
-<li><p>nums1.length &#x3D;&#x3D; m</p>
-</li>
-<li><p>nums2.length &#x3D;&#x3D; n</p>
-</li>
-<li><p>0 &lt;&#x3D; m &lt;&#x3D; 1000</p>
-</li>
-<li><p>0 &lt;&#x3D; n &lt;&#x3D; 1000</p>
-</li>
-<li><p>1 &lt;&#x3D; m + n &lt;&#x3D; 2000</p>
-</li>
-<li><p>-106 &lt;&#x3D; nums1[i], nums2[i] &lt;&#x3D; 106</p>
-</li>
-</ul>
-<p>来源：力扣（LeetCode）</p>
-<h4 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h4><h4 id="（1）暴力"><a href="#（1）暴力" class="headerlink" title="（1）暴力"></a>（1）暴力</h4><p>​	直接将两个数组合并，然后进行排序，直接算出中位数:</p>
-<ul>
-<li>数组长度为奇数，数组的中位数为<code>a[len / 2]</code></li>
-<li>数组长度为偶数，数组的中位数为<code>(a[len / 2] + a[len / 2 - 1]) / 2</code></li>
-</ul>
-<p>​	这题的时间复杂度的上限在排序，是<code>O((n + m)long(n + m))</code>，显然没有达到题目的要求， 但也勉强可以AC。</p>
-<p>​	代码如下</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">findMedianSortedArrays</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; nums1, vector&lt;<span class="hljs-type">int</span>&gt;&amp; nums2)</span> </span>&#123;<br>        vector&lt;<span class="hljs-type">int</span>&gt; res;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; nums1.<span class="hljs-built_in">size</span>(); i ++)<br>            res.<span class="hljs-built_in">push_back</span>(nums1[i]);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; nums2.<span class="hljs-built_in">size</span>(); i ++)<br>            res.<span class="hljs-built_in">push_back</span>(nums2[i]);<br>        <span class="hljs-built_in">sort</span>(res.<span class="hljs-built_in">begin</span>(), res.<span class="hljs-built_in">end</span>());<br><br>        <span class="hljs-type">int</span> len = res.<span class="hljs-built_in">size</span>();<br>        <span class="hljs-keyword">if</span> (len &amp; <span class="hljs-number">1</span>) &#123;<br>            <span class="hljs-keyword">return</span> res[len / <span class="hljs-number">2</span>];<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-built_in">double</span>((res[len / <span class="hljs-number">2</span>] + res[len / <span class="hljs-number">2</span> - <span class="hljs-number">1</span>]) / <span class="hljs-number">2.0</span>);<br>        &#125;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
+                <h2 id="下面代码里的ocounter的输出值？"><a href="#下面代码里的ocounter的输出值？" class="headerlink" title="下面代码里的ocounter的输出值？"></a>下面代码里的ocounter的输出值？<span id="more"></span></h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> m = <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">int</span>&#123;<br>		<span class="hljs-string">&quot;A&quot;</span>: <span class="hljs-number">21</span>,<br>		<span class="hljs-string">&quot;B&quot;</span>: <span class="hljs-number">22</span>,<br>		<span class="hljs-string">&quot;C&quot;</span>: <span class="hljs-number">23</span>,<br>	&#125;<br>	counter := <span class="hljs-number">0</span><br>	<span class="hljs-keyword">for</span> k, v := <span class="hljs-keyword">range</span> m &#123;<br>		<span class="hljs-keyword">if</span> counter == <span class="hljs-number">0</span> &#123;<br>			<span class="hljs-built_in">delete</span>(m, <span class="hljs-string">&quot;A&quot;</span>)<br>		&#125;<br>		counter++<br>		fmt.Println(k, v)<br>	&#125;<br>	fmt.Println(<span class="hljs-string">&quot;counter is &quot;</span>, counter)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>​	</p>
+
+
+<h4 id="答案"><a href="#答案" class="headerlink" title="答案"></a>答案</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-number">2</span>或者<span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>​	因为for range map是无序的，故如果第一次循环到A,则输出3，否则输出2。</p>
 
                 
               </div>
@@ -361,12 +334,12 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%88%B7%E9%A2%98/" class="category-chain-item">刷题</a>
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
   
   
     <span>></span>
     
-  <a href="/categories/%E5%88%B7%E9%A2%98/%E9%80%92%E5%BD%92/" class="category-chain-item">递归</a>
+  <a href="/categories/Go/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/" class="category-chain-item">每日一题</a>
   
   
 
@@ -383,9 +356,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/LeetCode/">#LeetCode</a>
+        <a href="/tags/GO/">#GO</a>
       
-        <a href="/tags/%E9%80%92%E5%BD%92/">#递归</a>
+        <a href="/tags/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">#每日一题</a>
       
     </div>
   
@@ -397,8 +370,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>寻找两个正序数组的中位数</div>
-      <div>http://example.com/2023/04/22/刷题/寻找两个正序数组的中位数/</div>
+      <div>for-range 又又又来了</div>
+      <div>http://example.com/2023/04/23/Go每日一题/for-range-map/</div>
     </div>
     <div class="license-meta">
       
@@ -410,13 +383,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年4月22日</div>
+          <div>2023年4月23日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年4月22日</div>
+          <div>2023年4月23日</div>
         </div>
       
       
@@ -447,18 +420,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/23/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/for-range-map/" title="for-range 又又又来了">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">for-range 又又又来了</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/22/%E5%88%B7%E9%A2%98/%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/" title="无重复字符的最长子串">
-                        <span class="hidden-mobile">无重复字符的最长子串</span>
+                      <a href="/2023/04/22/%E5%88%B7%E9%A2%98/%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" title="寻找两个正序数组的中位数">
+                        <span class="hidden-mobile">寻找两个正序数组的中位数</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

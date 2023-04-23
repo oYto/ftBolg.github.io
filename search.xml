@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>for-range 又又又来了</title>
+      <link href="/2023/04/23/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/for-range-map/"/>
+      <url>/2023/04/23/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/for-range-map/</url>
+      
+        <content type="html"><![CDATA[<h2 id="下面代码里的ocounter的输出值？"><a href="#下面代码里的ocounter的输出值？" class="headerlink" title="下面代码里的ocounter的输出值？"></a>下面代码里的ocounter的输出值？<span id="more"></span></h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><span class="hljs-keyword">var</span> m = <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">int</span>&#123;<br><span class="hljs-string">&quot;A&quot;</span>: <span class="hljs-number">21</span>,<br><span class="hljs-string">&quot;B&quot;</span>: <span class="hljs-number">22</span>,<br><span class="hljs-string">&quot;C&quot;</span>: <span class="hljs-number">23</span>,<br>&#125;<br>counter := <span class="hljs-number">0</span><br><span class="hljs-keyword">for</span> k, v := <span class="hljs-keyword">range</span> m &#123;<br><span class="hljs-keyword">if</span> counter == <span class="hljs-number">0</span> &#123;<br><span class="hljs-built_in">delete</span>(m, <span class="hljs-string">&quot;A&quot;</span>)<br>&#125;<br>counter++<br>fmt.Println(k, v)<br>&#125;<br>fmt.Println(<span class="hljs-string">&quot;counter is &quot;</span>, counter)<br>&#125;<br></code></pre></td></tr></table></figure><h4 id="答案"><a href="#答案" class="headerlink" title="答案"></a>答案</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-number">2</span>或者<span class="hljs-number">3</span><br></code></pre></td></tr></table></figure><h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>​因为for range map是无序的，故如果第一次循环到A,则输出3，否则输出2。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Go </category>
+          
+          <category> 每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> GO </tag>
+            
+            <tag> 每日一题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>寻找两个正序数组的中位数</title>
       <link href="/2023/04/22/%E5%88%B7%E9%A2%98/%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/"/>
       <url>/2023/04/22/%E5%88%B7%E9%A2%98/%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</url>
