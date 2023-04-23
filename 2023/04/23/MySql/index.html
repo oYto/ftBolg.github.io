@@ -1,0 +1,869 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#274c5e">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="《MySQL必知必会》">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySql">
+<meta property="og:url" content="http://example.com/2023/04/23/MySql/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="《MySQL必知必会》">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-23T06:04:01.000Z">
+<meta property="article:modified_time" content="2023-04-23T08:17:42.413Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>MySql - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MySql"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-23 14:04" pubdate>
+          2023年4月23日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          32 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">MySql</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="《MySQL必知必会》"><a href="#《MySQL必知必会》" class="headerlink" title="《MySQL必知必会》"></a>《MySQL必知必会》<span id="more"></span></h1><h2 id="一、了解SQL"><a href="#一、了解SQL" class="headerlink" title="一、了解SQL"></a>一、了解SQL</h2><h3 id="1、数据库基础"><a href="#1、数据库基础" class="headerlink" title="1、数据库基础"></a>1、数据库基础</h3><p><strong>数据库</strong>：一个以某种有组织的方式存储的数据集合。</p>
+<p><strong>表</strong>：一种结构化的文件，可用来存储某种特定类型的数据。数据库中的每个表都有一个自己的名字，用来标识自己，此名字是唯一的。</p>
+<blockquote>
+<p><strong>表名</strong>：相同数据库不能两次使用相同的表名，不同数据库可以使用相同的表名。</p>
+</blockquote>
+<p><strong>列</strong>：表中的一个字段。所有表都说由一个或者多个列组成的。可以把数据库想象成一个网格，每一列存储着一条特定的信息，如一个列存储所有顾客的编号，另一个列存储所有顾客的地址。</p>
+<p><strong>数据类型</strong>：每个表列都有相应的数据类型，它限制该列中存储的数据。</p>
+<p><strong>行</strong>：表中的数据是按行存储的，所保存的每个记录存储在自己的行内，如果将表想象成网格，网格中垂直的列为表列，水平行为表行。例如顾客表可以每行存储一个顾客，表中的行数为记录的总数。</p>
+<p><strong>主键</strong>：一列或者一组列。其值能够唯一区分表中的每个行。表中每一行都应该有可以唯一标识自己的一列。</p>
+<p>​	唯一标识表中每行的这个列或者这组列称为主键。主键用来表示要给特定的行。</p>
+<blockquote>
+<p><strong>应该总是定义主键</strong>：虽然并不是总需要主键，但为每个表创建一个主键，以便于以后的数据操作和管理。</p>
+</blockquote>
+<p>​	表中的任何列都可以作为主键，只有满足以下条件：</p>
+<ul>
+<li>任意两行不具有相同的 主键值</li>
+<li>每个行都必须有一个主键值（主键列不允许NULL值）</li>
+</ul>
+<p>​	在使用多列作为主键时，上述条件必须应用到构造主键的所有列，所有列值的组合必须是唯一的。</p>
+<h3 id="2、什么是SQL"><a href="#2、什么是SQL" class="headerlink" title="2、什么是SQL"></a>2、什么是SQL</h3><p><strong>SQL</strong>是结构化查询语言的缩写。SQL是一种专门用来与数据库通信的语言。</p>
+<p><strong>SQL的优点</strong>：</p>
+<ul>
+<li>几乎所有重要的DBMS都支持SQL，所以学习此语言使你几乎能与所有数据库打交道。</li>
+<li>简单易学。</li>
+<li>虽然看上去很简单，但实际上是一种强有力的语言，灵活使用其语言元素，可以进行非常复杂和高级的数据库操作。</li>
+</ul>
+<h2 id="二、MySQL简介"><a href="#二、MySQL简介" class="headerlink" title="二、MySQL简介"></a>二、MySQL简介</h2><h3 id="1、什么是MySQL"><a href="#1、什么是MySQL" class="headerlink" title="1、什么是MySQL"></a>1、什么是MySQL</h3><p>​	<strong>MySQL</strong>：数据的所有存储、检索、管理和吹了实际上是由数据库软件——DBMS（数据库管理系统）完成的。MySQL是一种DBMS，即它是一种数据库软件。</p>
+<p>​	MySQL数据库是基于客户机-服务器的数据库。</p>
+<h3 id="2、MySQL工具"><a href="#2、MySQL工具" class="headerlink" title="2、MySQL工具"></a>2、MySQL工具</h3><p>​	<strong>mysql命令行实用程序</strong>：每个MySQL安装都会有一个mysql的简单命令行使用程序。在使用这个实用程序的时候，需要注意：</p>
+<ul>
+<li>命令行输入在mysql&gt;之后</li>
+<li>命令用;或者\g结束，仅按Enter不执行命令</li>
+<li>输入help或者\h获取帮助。</li>
+<li>输入quit或者exit退出命令行实用程序。</li>
+</ul>
+<p><strong>MySQL Administrator</strong>：是一个图形交互客户机，用于简化MySQL服务器的管理。</p>
+<p><strong>MySQL Query Browser</strong>：一个图形交互客户机，用来编写和执行MySQL命令。</p>
+<h2 id="三、使用MySQL"><a href="#三、使用MySQL" class="headerlink" title="三、使用MySQL"></a>三、使用MySQL</h2><h3 id="1、连接"><a href="#1、连接" class="headerlink" title="1、连接"></a>1、连接</h3><p><strong>信息</strong>：连接MySQl，需要以下信息：</p>
+<ul>
+<li>主机名——连接本地MySQL服务器，为localhost；</li>
+<li>端口（如果使用默认端口3306之外的端口）；</li>
+<li>一个合法的用户名；</li>
+<li>用户口令。</li>
+</ul>
+<h3 id="2、选择数据库"><a href="#2、选择数据库" class="headerlink" title="2、选择数据库"></a>2、选择数据库</h3><p><code>use</code>：一个关键字，用于执行任意数据库操作前选择一个数据库。</p>
+<h3 id="3、了解数据库和表"><a href="#3、了解数据库和表" class="headerlink" title="3、了解数据库和表"></a>3、了解数据库和表</h3><p><strong>查看数据库</strong>：在你不知道可以使用哪些数据库名时，可以使用<code>SHOW DATABASES</code>显示这些信息</p>
+<p>​	<code>SHOW DATABASES</code>；返回可用数据库的一个列表。</p>
+<p><strong>查看要给数据库内的表的列表</strong>：可以使用<code>SHOW TABLES</code></p>
+<p>​	<code>SHOW TABLES</code>；返回当前选择的数据库内的可用表的列表。</p>
+<p><strong>查看表的信息</strong>：<code>SHOW COLUMNS FROM TABLE</code>要求给出一个表名，它对于每个字段返回一行，行中包括字段名、数据类型、是否允许NULL、键信息、默认值、以及其他信息。</p>
+<p><strong>所支持的其他SHOW语句</strong>：</p>
+<ul>
+<li><code>SHOW STATUS</code>，用于显示广泛的服务器状态信息；</li>
+<li><code>SHOW CREATE DATABASE</code>和<code>SHOW CREATE TABLE</code>，分别用来显示创建特定数据库或表的MySQL语句；</li>
+<li><code>SHOW GRANTS</code>用来显示授权用户的安全权限</li>
+<li><code>SHO ERRORS</code>和<code>SHOW WARNINGS</code>用来显示服务器错误或者警告信息。</li>
+</ul>
+<h2 id="四、检索数据"><a href="#四、检索数据" class="headerlink" title="四、检索数据"></a>四、检索数据</h2><h3 id="1、SELECT语句"><a href="#1、SELECT语句" class="headerlink" title="1、SELECT语句"></a>1、SELECT语句</h3><p>​	SQL语句是用简单的英语单词构成的，这些单词称为关键词，每个SQL语句都是由一个或者多个关键字构成的。</p>
+<p>​	最经常使用的SQL语句就是<code>SELECT</code>语句，它的用途是从一个或者多个表中检索信息。使用<code>SELECT</code>检索信息，至少给出两条信息——想选择什么，以及从什么地方开始选择。</p>
+<h3 id="2、检索单个列"><a href="#2、检索单个列" class="headerlink" title="2、检索单个列"></a>2、检索单个列</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name <br>FROM products;<br></code></pre></td></tr></table></figure>
+
+<p>​	上述语句利用<code>SELECT</code>语句从<code>products</code>表中检索一个名为<code>prod_name</code>的列。</p>
+<h3 id="3、检索多个列"><a href="#3、检索多个列" class="headerlink" title="3、检索多个列"></a>3、检索多个列</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_id, prod_name, prod_price <br>FROM products;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、检索所有列"><a href="#4、检索所有列" class="headerlink" title="4、检索所有列"></a>4、检索所有列</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT *<br>FROM products;<br></code></pre></td></tr></table></figure>
+
+<h3 id="5、检索不同的行"><a href="#5、检索不同的行" class="headerlink" title="5、检索不同的行"></a>5、检索不同的行</h3><p>执行下面语句，会返回所有匹配的行，但其中有很多重复的值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT vend_id <br>From products;<br></code></pre></td></tr></table></figure>
+
+<p>如果你不想要每个值每次都出现，怎么办？例如，你想得出products表中产品的所有供应商的ID：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT DISTINCT vend_id<br>FROM products;<br></code></pre></td></tr></table></figure>
+
+<p> 解决的办法是使用<code>DISTINCT</code>，顾名思义，此关键字指示MySQL只返回不同的值。</p>
+<h3 id="6、限制结果"><a href="#6、限制结果" class="headerlink" title="6、限制结果"></a>6、限制结果</h3><p>​	<strong>SELECT</strong>语句返回所有匹配的行，它们可能是指定表中的每个行。为了返回第一行或者前几行，可以使用<strong>LIMIT</strong>子句。</p>
+<p>​	此语句使用<strong>SELECT</strong>语句检索单个列。<code>LIMIT 5</code>指示<strong>MySQL</strong>返回不多于5行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name <br>FROM products<br>LIMIT 5;<br></code></pre></td></tr></table></figure>
+
+<p>​	为得出下一个5行，可以指定要检索的开始和行数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name <br>FROM products<br>LIMIT 5, 5;<br></code></pre></td></tr></table></figure>
+
+<p><code>LIMIT 5, 5</code>指示<strong>MySQL</strong>返回从<strong>行5</strong>开始的<strong>5行</strong>。第一个数为开始为止，第二个数为要检索的行数。</p>
+<blockquote>
+<p>⭐<strong>行0</strong>：检索出来的第一行为行0，而不是行1，因此<code>LIMIT 1, 1</code>将检索出来第二行而不是第一行。</p>
+</blockquote>
+<blockquote>
+<p>⭐<strong>在行数不够时</strong>：<strong>LIMIT</strong>中指定要检索的行数为检索的最大行数，如果没用足够的行，<strong>MySQL</strong>将只返回它能返回的那么多行。</p>
+</blockquote>
+<h3 id="7、使用完全限定的表名"><a href="#7、使用完全限定的表名" class="headerlink" title="7、使用完全限定的表名"></a>7、使用完全限定的表名</h3><p>​	迄今为止使用的<strong>SQL</strong>例子只能通过列名引用列。也可能会使用完全限定的名字来引用列（同时使用表名和列名）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select products.prod_name<br>FROM products;<br></code></pre></td></tr></table></figure>
+
+<p>​	这条<strong>SQL</strong>语句在功能上等于本章最开始使用的那一条语句，但这里指定了一个完全限定的列名。</p>
+<p>​	表名也可以是完全限定的，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select products.prod_name<br>FROM book.products;<br></code></pre></td></tr></table></figure>
+
+<p>​	这条SQL语句在功能上等于刚刚使用的那条语句（假设products表确实存在book数据库中）</p>
+<p>​	虽然这种表示很麻烦，但是有些情形需要这么用，后面会介绍。</p>
+<h2 id="五、排序检索数据"><a href="#五、排序检索数据" class="headerlink" title="五、排序检索数据"></a>五、排序检索数据</h2><h3 id="1、排序数据"><a href="#1、排序数据" class="headerlink" title="1、排序数据"></a>1、排序数据</h3><p>​	正如前面所述，下面的<strong>SQL</strong>语句返回某个数据库表的单个列，但却没用特定的顺序。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name<br>FROM products;<br></code></pre></td></tr></table></figure>
+
+<p>​	其次，检索出来的数据并不是以纯粹的随机顺序显示的。如果不排序，数据一般将以它在底层表中出现的顺序显示。这可以是数据最初添加到表中的顺序。但是，如果数据后来进行过更新或删除，则此顺序会收到MySQL重用收回存储空间的影响。因此，如果补明确控制的话，不能（也不应该）依赖该排序顺序。关系数据库设计理论认为，如果不明确规定排序顺序，则不应该假定检索出的数据的顺序有意义。</p>
+<p>​	为了明确地排序用<strong>SELECT</strong>语句检索出来的数据，可以用<strong>ORDER BY</strong>自居。<strong>ORDER BY</strong>子句取一个或多个列的名字，据此对输出进行排序。如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name<br>FROM products<br>ORDER BY prod_name;<br></code></pre></td></tr></table></figure>
+
+<p>​	这条语句除了指示<strong>MySQL</strong>对<code>prod_name</code>列以字母顺序排序数据的<strong>ORDER BY</strong>子句外，与前面的语句相同。</p>
+<h3 id="2、按多个列排序"><a href="#2、按多个列排序" class="headerlink" title="2、按多个列排序"></a>2、按多个列排序</h3><p>​	下面的语句指示<strong>MySQL</strong>按照——先按价格，然后再按名称排序。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_id, prod_name, prod_price<br>FROM products<br>ORDER BY prod_price, prod_name;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="3、指定排序方向"><a href="#3、指定排序方向" class="headerlink" title="3、指定排序方向"></a>3、指定排序方向</h3><p>​	数据排序分为——升序排序（默认）、降序排序。</p>
+<p>​	当我们想使用降序排序的时候，必须指定<strong>DESC</strong>关键字。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_id, prod_name, prod_price<br>FROM products<br>ORDER BY prod_price DESC;<br></code></pre></td></tr></table></figure>
+
+<p>​	但是，如果打算用多个列排序怎么办？下面的例子以降序排序产品（最贵的在前面），然后再对产品名排序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_id, prod_name, prod_price<br>FROM products<br>ORDER BY prod_price DESC, prod_name;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>DESC</strong>关键字只应用到直接位于其前面的列名。如果想在多个列上进行降序排序，必须对每个列指定<strong>DECS</strong>关键字。</p>
+<p>与<strong>DESC</strong>对应的是<strong>ASC</strong>关键字，在升序排序时可以指定它，但实际上没用多大用处，因为升序是默认的。</p>
+</blockquote>
+<p>​	使用<strong>ORDER BY</strong>和<strong>LIMIT</strong>的组合，能够找出一个列中最高或者最低的只。下面的例子演示如何找出最昂贵物品的值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_price<br>FROM products<br>ORDER BY prod_price DESC<br>LIMIT 1<br></code></pre></td></tr></table></figure>
+
+<p>​	<code>prod_price DESC</code>保证行是按照最昂贵到最便宜检索的，而<code>LIMIT 1</code>告诉<strong>MySQL</strong>仅返回一行。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%9C%8B%E4%B9%A6/" class="category-chain-item">看书</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MySQL/">#MySQL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MySql</div>
+      <div>http://example.com/2023/04/23/MySql/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月23日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年4月23日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/23/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/for-range-map/" title="for-range 又又又来了">
+                        <span class="hidden-mobile">for-range 又又又来了</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>
