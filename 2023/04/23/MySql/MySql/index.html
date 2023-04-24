@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/MySQL.png">
 <meta property="article:published_time" content="2023-04-23T06:04:01.000Z">
-<meta property="article:modified_time" content="2023-04-23T09:40:01.438Z">
+<meta property="article:modified_time" content="2023-04-24T11:31:43.779Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary_large_image">
@@ -244,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          7.4k 字
+          11k 字
         
       </span>
     
@@ -255,7 +255,7 @@
         
         
         
-          62 分钟
+          92 分钟
         
       </span>
     
@@ -431,6 +431,72 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_price<br>FROM products<br>ORDER BY prod_price DESC<br>LIMIT 1<br></code></pre></td></tr></table></figure>
 
 <p>​	<code>prod_price DESC</code>保证行是按照最昂贵到最便宜检索的，而<code>LIMIT 1</code>告诉<strong>MySQL</strong>仅返回一行。</p>
+<h2 id="六、过滤数据"><a href="#六、过滤数据" class="headerlink" title="六、过滤数据"></a>六、过滤数据</h2><h3 id="1、使用WHERE子句"><a href="#1、使用WHERE子句" class="headerlink" title="1、使用WHERE子句"></a>1、使用WHERE子句</h3><p>​	数据库表一般包含大量的数据，很少需要检索表中所有行。通常只会根据特定操作或报告的需要提取表数据的子集。只检索所需数据需要指定搜索条件，搜索条件也称为过滤条件。</p>
+<p>​	在SELECT语句中，数据根据WHERE子中指定的搜索条件进行过滤WHERE子句在表名之后给出，如下所示:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name, prod_price<br>FROM products<br>WHERE prod_price = 2.50;<br></code></pre></td></tr></table></figure>
+
+<p>​	这条语句从products表中检索两个列，但不返回所有行，只返回prod_price值为2.50的行。</p>
+<h3 id="2、WHERE子句操作符"><a href="#2、WHERE子句操作符" class="headerlink" title="2、WHERE子句操作符"></a>2、WHERE子句操作符</h3><p>​	<img src="/images/where.png" srcset="/img/loading.gif" lazyload alt="子句操作符"></p>
+<h4 id="（1）检查单个值"><a href="#（1）检查单个值" class="headerlink" title="（1）检查单个值"></a>（1）检查单个值</h4><p>​	上面举的例子就是，我们再举一个例子，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select prod_name, prod_price<br>FROM products<br>where prod_name = &#x27;fuses&#x27;;<br></code></pre></td></tr></table></figure>
+
+<p>​	检查<code>WHERE prod_name=fuses</code>语句，它返回prod_name的值为Fuses的一行。MySQL在执行匹配时默认不区分大小写，所以fuses与Fuses匹配。</p>
+<h4 id="（2）不匹配检查"><a href="#（2）不匹配检查" class="headerlink" title="（2）不匹配检查"></a>（2）不匹配检查</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select vend_id, prod_name<br>FROM products<br>where vend_id &lt;&gt; 1003<br></code></pre></td></tr></table></figure>
+
+<p>​	上述例子是列出不是由供应商1003制造的所有产品。</p>
+<p>下面是相同的例子，只是用的是**!&#x3D;<strong>而不是</strong>&lt;&gt;**</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select vend_id, prod_name<br>FROM products<br>where vend_id != 1003<br></code></pre></td></tr></table></figure>
+
+<h4 id="（3）范围值检查"><a href="#（3）范围值检查" class="headerlink" title="（3）范围值检查"></a>（3）范围值检查</h4><p>​	为了检查某个范围的值，可使用BETWEEN操作符。其语法与其他WHERE子句的操作符稍有不同，因为它需要两个值，即范围的开始值和结束值。</p>
+<p>​	例如，BETWEEN操作符可用来检索价格在5美元和10美元之间或日期在指定的开始日期和结束日期之间的所有产品，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT	prod_name,	prod_price <br>FROM	products <br>WHERE	prod_price BETWEEN 5 	AND 10;<br></code></pre></td></tr></table></figure>
+
+<p>​	从这个例子中可以看到，在使用BETWEEN时，必须指定两个值——所需范围的低端值和高端值。这两个值必须用AND关键字分隔。BETWEEN匹配范围中所有的值，包括指定的开始值和结束值。</p>
+<h4 id="（4）空值检查"><a href="#（4）空值检查" class="headerlink" title="（4）空值检查"></a>（4）空值检查</h4><p>​	在创建表时，表设计人员可以指定其中的列是否可以不包含值。在一个列不包含值时，称其为包含空值<strong>NULL</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT cust_id<br>FROM customers<br>WHERE cust_email IS NULL<br></code></pre></td></tr></table></figure>
+
+<p>​	ustomers包含有具有空值的列，如果在文件中没有某位顾客的电子邮件地址，则cust_email列将包含NULL值:</p>
+<h2 id="七、数据过滤"><a href="#七、数据过滤" class="headerlink" title="七、数据过滤"></a>七、数据过滤</h2><h3 id="1、组合WHERE子句"><a href="#1、组合WHERE子句" class="headerlink" title="1、组合WHERE子句"></a>1、组合WHERE子句</h3><p>​	第6章中介绍的所有WHERE子句在过滤数据时使用的都是单一的条件。为了进行更强的过滤控制，MySQL允许给出多个WHERE子句。这些子句可以两种方式使用:以AND子句的方式或OR子句的方式使用。</p>
+<h4 id="（1）AND操作符"><a href="#（1）AND操作符" class="headerlink" title="（1）AND操作符"></a>（1）AND操作符</h4><p>​		为了通过不止一个列进行过滤，可使用AND操作符给WHERE子句附加条件。下面的代码给出了一个例子:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_id, prod_price, prod_name<br>FROM products<br>WHERE vend_id = 1003 AND prod_price &lt;= 10<br></code></pre></td></tr></table></figure>
+
+<p>​	此SQL语句检索由供应商1003制造且价格小于等于10美元的所有产品的名称和价格。这条SELECT语句中的WHERE子句包含两个条件，并且用AND关键字联结它们。AND指示DBMS只返回满足所有给定条件的行。如果某个产品由供应商1003制造，但它的价格高于10美元，则不检索它。类似，如果产品价格小于10美元，但不是由指定供应商制造的也不被检索。</p>
+<h4 id="（2）OR操作符"><a href="#（2）OR操作符" class="headerlink" title="（2）OR操作符"></a>（2）OR操作符</h4><p>​		<strong>OR</strong>操作符与<strong>AND</strong>操作符不同，它指示<strong>MySQL</strong>检索匹配任一条件的行，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name, prod_price<br>FROM products<br>WHERE vend_id = 1002 OR vend_id = 1003;<br></code></pre></td></tr></table></figure>
+
+<p>​	此SQL语句检索由任一个指定供应商制造的所有产品的产品名和价格。OR操作符告诉DBMS匹配任一条件而不是同时匹配两个条件。</p>
+<h4 id="（3）计算次序"><a href="#（3）计算次序" class="headerlink" title="（3）计算次序"></a>（3）计算次序</h4><p>​	WHERE可包含任意数目的AND和OR操作符。允许两者结合以进行复杂和高级的过滤。<br>​	但是，组合AND和OR带来了一个有趣的问题。为了说明这个问题，来看一个例子。假如需要列出价格为10美元(含）以上且由1002或1003制造的所有产品。下面的SELECT语句使用AND和OR操作符的组合建立了一个WHERE子句:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name, prod_price, vend_id<br>FROM products<br>WHERE vend_id = 1002 OR vend_id = 1003 AND prod_price &gt;= 10;<br></code></pre></td></tr></table></figure>
+
+<p>​	上面的结果返回的行中有两行价格小于10美元，显然，返回的行未按预期的进行过滤。为什么会这样呢?原因在于计算的次序。SQL(像多数语言一样）在处理OR操作符前，优先处理AND操作符。当SQL看到上述WHERE子句时，它理解为由供应商1003制造的任何价格为10美元(含）以上的产品，或者由供应商1002制造的任何产品，而不管其价格如何。换句话说，由于AND在计算次序中优先级更高，操作符被错误地组合了。</p>
+<p>​	此问题的解决方法是使用圆括号明确地分组相应的操作符。请看下面的SELECT语句及输出:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name, prod_price, vend_id<br>FROM products<br>WHERE (vend_id = 1002 OR vend_id = 1003) AND prod_price &gt;= 10;<br></code></pre></td></tr></table></figure>
+
+<p>​	这条SELECT语句与前一条的唯一差别是，这条语句中，前两个条件用圆括号括了起来。因为圆括号具有较AND或OR操作符高的计算次序，DBMS首先过滤圆括号内的OR条件。这时，SQL语句变成了选择由供应商1002或1003制造的且价格都在10美元(含）以上的任何产品，这正是我们所希望的。</p>
+<blockquote>
+<p>​	<strong>在WHERE子句中使用圆括号</strong> 	任何时候使用具有AND和OR操作符的WHERE子句,都应该使用圆括号明确地分组操作符。不要过分依赖默认计算次序，即使它确实是你想要的东西也是如此。使用圆括号没有什么坏处，它能消除歧义。</p>
+</blockquote>
+<h3 id="2、IN操作符"><a href="#2、IN操作符" class="headerlink" title="2、IN操作符"></a>2、IN操作符</h3><p>​	圆括号在<strong>WHERE</strong>子句中还有另外一种用法。<strong>IN</strong>操作符用来指定条件范围，范围中的每个条件都可以进行匹配。<strong>IN</strong>取合法值的由逗号分隔的清单，全都括在圆括号中。下面的例子说明了这个操作符:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name, prod_price<br>FROM products<br>WHERE vend_id in(1002, 1003)<br>ORDER BY prod_name<br></code></pre></td></tr></table></figure>
+
+<p>​	此<strong>SELECT</strong>语句检索供应商1002和<strong>1003</strong>制造的所有产品。IN操作符后跟由逗号分隔的合法值清单，整个清单必须括在圆括号中。</p>
+<p>​	如果你认为<strong>IN</strong>操作符完成与OR相同的功能，那么你的这种猜测是对的。下面的<strong>SQL</strong>语句完成与上面的例子相同的工作:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name, prod_price<br>FROM products<br>WHERE vend_id = 1002 OR vend_id = 1003<br>ORDER BY prod_name<br></code></pre></td></tr></table></figure>
+
+<p>​	为什么要使用IN操作符?其优点具体如下?</p>
+<ul>
+<li>在使用长的合法选项清单时，<strong>IN</strong>操作符的语法更清楚且更直观。</li>
+<li>在使用<strong>IN</strong>时，计算的次序更容易管理（因为使用的操作符更少)。<strong>IN</strong>操作符一般比<strong>OR</strong>操作符清单执行更快。</li>
+<li><strong>IN</strong>的最大优点是可以包含其他<strong>SELECT</strong>语句,使得能够更动态地建立<strong>WHERE</strong>子句。第14章将对此进行详细介绍。</li>
+</ul>
+<h3 id="3、NOT操作符"><a href="#3、NOT操作符" class="headerlink" title="3、NOT操作符"></a>3、<strong>NOT</strong>操作符</h3><p>​	<strong>WHERE</strong>子句中的<strong>NOT</strong>操作符有且只有一个功能，那就是否定它之后所跟的任何条件。</p>
+<p>​	下面的例子说明<strong>NOT</strong>的使用。为了列出除<strong>1002</strong>和<strong>1003</strong>之外的所有供应商制造的产品，可编写如下的代码:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name, prod_price<br>FROM products<br>WHERE vend_id NOT IN (1002, 1003)<br>ORDER BY prod_name<br></code></pre></td></tr></table></figure>
+
+<p>​	这里的<strong>NOT</strong>否定跟在它之后的条件，因此，<strong>MySQ</strong>L不是匹配<strong>1002</strong>和<strong>1003</strong>的<strong>vend_id</strong>，而是匹配<strong>1002</strong>和<strong>1003</strong>之外供应商的<strong>vend_id</strong>。<br>​	为什么使用<strong>NOT</strong>?对于简单的<strong>WHERE</strong>子句，使用<strong>NOT</strong>确实没有什么优势。但在更复杂的子句中，<strong>NOT</strong>是非常有用的。例如，在与<strong>IN</strong>操作符联合使用时，<strong>NOT</strong>使找出与条件列表不匹配的行非常简单。</p>
+<blockquote>
+<p><strong>MySQL中的NOT</strong>	 <strong>MySQL</strong>支持使用<strong>NOT</strong>对<strong>IN</strong>、<strong>BETWEEN</strong>和<strong>EXISTS</strong>子句取反,这与多数其他<strong>DBMS</strong>允许使用<strong>NOT</strong>对各种条件取反有很大的差别。</p>
+</blockquote>
 <h2 id="二十一、创建和操作表"><a href="#二十一、创建和操作表" class="headerlink" title="二十一、创建和操作表"></a>二十一、创建和操作表</h2><h3 id="1、创建表"><a href="#1、创建表" class="headerlink" title="1、创建表"></a>1、创建表</h3><p>​	<strong>MySQL</strong>不仅用于表数据操纵，而且还可以用来执行数据库和表的所有操作，包括表本身的创建和处理。</p>
 <p>​	创建表的方法有两种：</p>
 <ul>
@@ -568,7 +634,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年4月23日</div>
+          <div>2023年4月24日</div>
         </div>
       
       
