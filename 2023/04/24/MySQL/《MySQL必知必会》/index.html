@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/MySQL.png">
 <meta property="article:published_time" content="2023-04-24T13:52:05.000Z">
-<meta property="article:modified_time" content="2023-04-25T06:49:33.494Z">
+<meta property="article:modified_time" content="2023-04-26T11:26:47.346Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary_large_image">
@@ -256,7 +256,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          18k 字
+          26k 字
         
       </span>
     
@@ -267,7 +267,7 @@
         
         
         
-          152 分钟
+          218 分钟
         
       </span>
     
@@ -670,6 +670,199 @@
 <h4 id="（3）数值处理函数"><a href="#（3）数值处理函数" class="headerlink" title="（3）数值处理函数"></a>（3）数值处理函数</h4><p>​	数值处理函数仅处理数值数据。这些函数一般主要用于代数、三角或几何运算，因此没有串或日期-时间处理函数的使用那么频繁。</p>
 <p>​	具有讽刺意味的是，在主要DBMS的函数中，数值函数是最一致最统一的函数。下面列出一些常用的数值处理函数。</p>
 <p><img src="/images/%E5%B8%B8%E7%94%A8%E6%95%B0%E5%80%BC%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0.png" srcset="/img/loading.gif" lazyload alt="常用数值处理函数"></p>
+<h2 id="十二、汇总数据"><a href="#十二、汇总数据" class="headerlink" title="十二、汇总数据"></a>十二、汇总数据</h2><h3 id="1、聚集函数"><a href="#1、聚集函数" class="headerlink" title="1、聚集函数"></a>1、聚集函数</h3><p>​	我们经常需要汇总数据而不用把它们实际检索出来，为此MySQL提供了专门的函数。使用这些函数，MySQL查询可用于检索数据，以便分析和报表生成。这种类型的检索例子有以下几种。</p>
+<ul>
+<li>确定表中行数（或者满足某个条件或包含某个特定值的行数)。</li>
+<li>获得表中行组的和。</li>
+<li>找出表列（或所有行或某些特定的行）的最大值、最小值和平均值。</li>
+</ul>
+<p>​	上述例子都需要对表中数据（而不是实际数据本身）汇总。因此，返回实际表数据是对时间和处理资源的一种浪费（更不用说带宽了)。重复一遍，实际想要的是汇总信息。<br>​	为方便这种类型的检索，MySQL给出了5个聚集函数，见下图1。这些函数能进行上述罗列的检索。</p>
+<p><img src="/images/SQL%E8%81%9A%E9%9B%86%E5%87%BD%E6%95%B0.png" srcset="/img/loading.gif" lazyload alt="SQL聚集函数"></p>
+<h4 id="（1）AVG-函数"><a href="#（1）AVG-函数" class="headerlink" title="（1）AVG()函数"></a>（1）AVG()函数</h4><p>​	**AVG( )**通过对表中行数计数并计算特定列值之和，求得该列的平均值。AVG ( )可用来返回所有列的平均值，也可以用来返回特定列或行的平均值。</p>
+<p>下面的例子使用<strong>AVG()<strong>返回</strong>products</strong>表中所有产品的平均价格:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT AVG(prod_price) AS avg_price<br>FROM	products;<br></code></pre></td></tr></table></figure>
+
+<p>​	此SELECT语句返回值<strong>avg_Price</strong>，它包含<strong>products</strong>表中所有产品的平均价格。<strong>avg_price</strong>是一个别名。</p>
+<p>​	**AVG()**也可以用来确定特定列或行的平均值。下面的例子返回特定供应商所提供产品的平均价格:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT AVG(prod_price) AS avg_price<br>FROM	products<br>WHERE vend_id = 1003;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>avg_price<br>13.212857</p>
+</blockquote>
+<p>​	这条SELECT语句与前一条的不同之处在于它包含了<strong>WHERE</strong>子句。此<strong>WHERE</strong>子句仅过滤出<strong>vend_id</strong>为1003的产品，因此<br>​	<strong>avg_price</strong>中返回的值只是该供应商的产品的平均值。</p>
+<h4 id="（2）COUNT-函数"><a href="#（2）COUNT-函数" class="headerlink" title="（2）COUNT()函数"></a>（2）COUNT()函数</h4><p>​	<em>*COUNT()<strong>函数进行计数。可利用</strong>COUNT()<strong>确定表中行的数目或符合特定条件的行的数目。<br>​	COUNT( )函数有两种使用方式。<br>​	使用</strong>COUNT(* )<strong>对表中行的数目进行计数,不管表列中包含的是空<br>值</strong>（NULL)<strong>还是非空值。<br>​	使用</strong>COUNT (column)<strong>对特定列中具有值的行进行计数，忽略</strong>NULL</em>*值。<br>​	下面的例子返回<strong>customers</strong>表中客户的总数:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT COUNT(*) AS num_cust <br>FROM customers;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>num_cust<br>5</p>
+</blockquote>
+<p>​	在此例子中，利用<strong>COUNT (*)<strong>对所有行计数，不管行中各列有什么值。计数值在</strong>num_cust</strong>中返回。</p>
+<p>​	下面的例子只对具有电子邮件地址的客户计数:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT COUNT(cust_email) AS num_cust <br>FROM customers;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>num_cust<br>3</p>
+</blockquote>
+<p>​	这条<strong>SELECT</strong>语句使用<strong>COUNT (cust_email)<strong>对</strong>cust_email</strong>列中有值的行进行计数。在此例子中,<strong>cust_email</strong>的计数为3(表示5个客户中只有3个客户有电子邮件地址)。</p>
+<blockquote>
+<p><strong>NULL</strong> 	值如果指定列名，则指定列的值为空的行被COUNT()函数忽略，但如果**COUNT ()*<em>函数中用的是星号（</em>),则不忽略。</p>
+</blockquote>
+<h4 id="（3）MAX-函数"><a href="#（3）MAX-函数" class="headerlink" title="（3）MAX()函数"></a>（3）MAX()函数</h4><p>**MAX()**返回指定列中的最大值。MAX()要求指定列名，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT MAX(prod_price) AS max_price <br>FROM products;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>max_price<br>55.00</p>
+</blockquote>
+<p>​	这里，<strong>MAX()<strong>返回</strong>products</strong>表中最贵的物品的价格。</p>
+<h4 id="（4）MIN-函数"><a href="#（4）MIN-函数" class="headerlink" title="（4）MIN()函数"></a>（4）MIN()函数</h4><p>​	<strong>MIN()<strong>的功能正好与MAX()功能相反，它返回指定列的</strong>最小值</strong>。与**MAX ()**一样，MIN()要求指定列名，如下所示:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT min(prod_price) AS max_price <br>FROM products;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>max_price<br>2.50</p>
+</blockquote>
+<h4 id="（5）SUM-函数"><a href="#（5）SUM-函数" class="headerlink" title="（5）SUM()函数"></a>（5）SUM()函数</h4><p>​	SUM()用来返回指定列值的和（总计）。		</p>
+<p>​	下面举一个例子，<strong>orderitems</strong>表包含订单中实际的物品，每个物品有相应的数量（ <strong>quantity</strong>)。可如下检索所订购物品的总数（所有<strong>quantity</strong>值之和):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT SUM(quantity) AS items_ordered <br>FROM orderitems<br>WHERE order_num = 20005;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>items_ordered<br>19</p>
+</blockquote>
+<p>​	<strong>SUM()<strong>也可以用来合计计算值。在下面的例子中，合计每项物品的</strong>item_price*quantity</strong>，得出总的订单金额:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT SUM(quantity * item_price) AS items_ordered <br>FROM orderitems<br>WHERE order_num = 20005;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>items_ordered<br>149.87</p>
+</blockquote>
+<h3 id="2、聚集不同值-DISTINCT"><a href="#2、聚集不同值-DISTINCT" class="headerlink" title="2、聚集不同值 DISTINCT"></a>2、聚集不同值 DISTINCT</h3><p>​	下面的例子使用<strong>AVG()<strong>函数返回特定供应商提供的产品的平均价格。它与上面的SELECT语句相同，但使用了</strong>DISTINCT</strong>参数，因此平均值只考虑各个不同的价格:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT AVG(DISTINCT prod_price) AS avg_price <br>FROM products<br>WHERE vend_id = 1003;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>avg_price<br>15.998000</p>
+</blockquote>
+<p>​	可以看到，在使用了<strong>DISTINCT</strong>后，此例子中的<strong>avg_price</strong>比较高，因为有多个物品具有相同的较低价格。排除它们提升了平均价格。</p>
+<h3 id="3、组合聚集函数"><a href="#3、组合聚集函数" class="headerlink" title="3、组合聚集函数"></a>3、组合聚集函数</h3><p>​	目前为止的所有聚集函数例子都只涉及单个函数。但实际上<strong>SELECT</strong>语句可根据需要包含多个聚集函数。请看下面的例子:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT COUNT(*) AS num_items,<br>	MIN(prod_price) AS price_min,<br>	MAX(prod_price) AS price_max,<br>	AVG(prod_price) AS price_avg<br>FROM products;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>num_items	price_min	price_max	price_avg<br>14					2.50				55.00		16.133571</p>
+</blockquote>
+<p>​	这里用单条SELECT语句执行了4个聚集计算，返回4个值( <strong>products</strong>表中物品的数目，产品价格的最高、最低以及平均值）。</p>
+<h2 id="十三、分组数据"><a href="#十三、分组数据" class="headerlink" title="十三、分组数据"></a>十三、分组数据</h2><h3 id="1、数据分组"><a href="#1、数据分组" class="headerlink" title="1、数据分组"></a>1、数据分组</h3><p>​	从上一章知道，SQL聚集函数可用来汇总数据。这使我们能够对行进行计数，计算和与平均数，获得最大和最小值而不用检索所有数据。<br>​	目前为止的所有计算都是在表的所有数据或匹配特定的WHERE子句的数据上进行的。提示一下，下面的例子返回供应商1003提供的产品数目:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT COUNT(*) AS num_prods <br>FROM products<br>WHERE vend_id = 1003;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>num_prods<br>7</p>
+</blockquote>
+<p>​	但如果要返回每个供应商提供的产品数目怎么办?或者返回只提供单项产品的供应商所提供的产品，或返回提供10个以上产品的供应商怎么办?<br>​	这就是分组显身手的时候了。分组允许把数据分为多个逻辑组，以便能对每个组进行聚集计算。</p>
+<h3 id="2、创建分组"><a href="#2、创建分组" class="headerlink" title="2、创建分组"></a>2、创建分组</h3><p>​	分组是在SELECT语句的<strong>GROUP BY</strong>子句中建立的。理解分组的最好办法是看一个例子:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT vend_id, COUNT(*) AS num_prods <br>FROM products<br>GROUP BY vend_id;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>vend_id	num_prods<br>1001				3<br>1002				2<br>1003				7<br>1005				2</p>
+</blockquote>
+<p>​	上面的SELECT语句指定了两个列，<strong>vend_id</strong>包含产品供应商的<strong>ID</strong>，<strong>num_prods</strong>为计算字段（用<strong>COUNT(*)<strong>函数建立)。GROUP BY<br>子句指示MySQL按</strong>vend_id</strong>排序并分组数据。这导致对每个<strong>vend_id</strong>而不是整个表计算<strong>num_prods</strong>一次。从输出中可以看到,供应商1001有3个产品，供应商1002有2个产品，供应商1003有7个产品，而供应商1005有2个产品。<br>因为使用了<strong>GROUP BY</strong>，就不必指定要计算和估值的每个组了。系统会自动完成。<strong>GROUP BY</strong>子句指示MySQL分组数据，然后对每个组而不是整个结果集进行聚集。<br>​	在具体使用<strong>GROUP BY</strong>子句前，需要知道一些重要的规定。</p>
+<ul>
+<li>GROUP BY子句可以包含任意数目的列。这使得能对分组进行嵌套，为数据分组提供更细致的控制。</li>
+<li>如果在<strong>GROUP BY</strong>子句中嵌套了分组，数据将在最后规定的分组上进行汇总。换句话说，在建立分组时，指定的所有列都一起计算(所以不能从个别的列取回数据)。</li>
+<li><strong>GROUP BY</strong>子句中列出的每个列都必须是检索列或有效的表达式(但不能是聚集函数)。如果在SELECT中使用表达式，则必须在<strong>GROUP BY</strong>子句中指定相同的表达式。不能使用别名。</li>
+<li>除聚集计算语句外，SELECT语句中的每个列都必须在GROUP BY子句中给出。</li>
+<li>如果分组列中具有<strong>NULL</strong>值，则<strong>NULL</strong>将作为一个分组返回。如果列中有多行<strong>NULL</strong>值，它们将分为一组。</li>
+<li><strong>GROUP BY</strong>子句必须出现在WHERE子句之后，<strong>ORDER BY</strong>子句之前。</li>
+</ul>
+<h3 id="3、过滤分组"><a href="#3、过滤分组" class="headerlink" title="3、过滤分组"></a>3、过滤分组</h3><p>​	除了能用<strong>GROUP BY</strong>分组数据外，MySQL还允许过滤分组，规定包括哪些分组，排除哪些分组。例如，可能想要列出至少有两个订单的所有顾客。为得出这种数据，必须基于完整的分组而不是个别的行进行过滤。<br>​	我们已经看到了<strong>WHERE</strong>子句的作用(第6章中引入)。但是，在这个例子中<strong>WHERE</strong>不能完成任务，因为<strong>WHERE</strong>过滤指定的是行而不是分组。事实上，<strong>WHERE</strong>没有分组的概念。<br>​	那么，不使用<strong>WHERE</strong>使用什么呢? MySQL为此目的提供了另外的子句，那就是<strong>HAVING</strong>子句。<strong>HAVING</strong>非常类似于WHERE。事实上，目前为止所学过的所有类型的<strong>WHERE</strong>子句都可以用<strong>HAVING</strong>来替代。唯一的差别是<strong>WHERE</strong>过滤行，而<strong>HAVING</strong>过滤分组。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT cust_id, COUNT(*) AS orders<br>FROM orders<br>GROUP BY cust_id<br>HAVING COUNT(*) &gt;= 2;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>cust_id	orders<br>10001		2</p>
+</blockquote>
+<p>​	这条SELECT语句的前3行类似于上面的语句。最后一行增加了HAVING子句，它过滤COUNT(* ) &gt;&#x3D;2(两个以上的订单）的那些分组。</p>
+<p>​	那么，有没有在一条语句中同时使用<strong>WHERE</strong>和<strong>HAVING</strong>子句的需要呢﹖事实上，确实有。假如想进一步过滤上面的语句，使它返回过去12个月内具有两个以上订单的顾客。为达到这一点,可增加一条<strong>WHERE</strong>子句，过滤出过去12个月内下过的订单。然后再增加<strong>HAVING</strong>子句过滤出具有两个以上订单的分组。</p>
+<p>​	为更好地理解，请看下面的例子，它列出具有<strong>2个</strong>（含)以上、价格10(含）以上的产品的供应商:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT vend_id, COUNT(*) AS num_prods <br>FROM products<br>WHERE prod_price &gt;= 10<br>GROUP BY vend_id<br>HAVING COUNT(*) &gt;= 2<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>vend_id	num_prods<br>1003				4<br>1005				2</p>
+</blockquote>
+<p>​	这条语句中，第一行是使用了聚集函数的基本SELECT，它与前面的例子很相像。WHERE子句过滤所有prod_price至少为10的行。然后按vend_id分组数据，HAVING子句过滤计数为2或2以上的分组。</p>
+<p>​	如果没有WHERE子句，将会多检索出两行（供应商1002，销售的所有产品价格都在10以下;供应商1001，销售3个产品，但只有一个产品的价格大于等于10):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT vend_id, COUNT(*) AS num_prods <br>FROM products<br>GROUP BY vend_id<br>HAVING COUNT(*) &gt;= 2<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>vend_id	num_prods<br>1001				3<br>1002				2<br>1003				7<br>1005				2</p>
+</blockquote>
+<h3 id="4、分组和排序"><a href="#4、分组和排序" class="headerlink" title="4、分组和排序"></a>4、分组和排序</h3><p>​	虽然<strong>GROUPBY</strong>和<strong>ORDER BY</strong>经常完成相同的工作，但它们是非常不同的。下面汇总了它们之间的差别。</p>
+<p>ORDER BY</p>
+<ul>
+<li>排序产生的输出</li>
+<li>任意列都可以使用(甚至非选择的列也可以使用)</li>
+<li>不一定需要</li>
+</ul>
+<p>GROUP BY</p>
+<ul>
+<li>分组行。但输出可能不是分组的顺序</li>
+<li>只可能使用选择列或表达式列，而且必须使用每个选择列表达式</li>
+<li>如果与聚集函数一起使用列（或表达式)，则必须使用</li>
+</ul>
+<p>​	上面列出的第一项差别极为重要。我们经常发现用GROUP BY分组的数据确实是以分组顺序输出的。但情况并不总是这样，它并不是SQL规范所要求的。此外，用户也可能会要求以不同于分组的顺序排序。仅因为你以某种方式分组数据（获得特定的分组聚集值)，并不表示你需要以相同的方式排序输出。应该提供明确的ORDER BY子句，即使其效果等同于GROUP BY子句也是如此。</p>
+<blockquote>
+<p><strong>不要忘记ORDER</strong> 	BY一般在使用GROUP BY子句时，应该也给出ORDER BY子句。这是保证数据正确排序的唯一方法。千万不要仅依赖GROUP BY排序数据。</p>
+</blockquote>
+<p>​	为说明<strong>GROUP BY</strong>和ORDER BY的使用方法，请看一个例子。下面的SELECT语句类似于前面那些例子。它检索总计订单价格大于等于50的订单的订单号和总计订单价格:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT order_num, SUM(quantity * item_price) AS ordertotal <br>FROM orderitems<br>GROUP BY order_num <br>HAVING SUM(quantity * item_price) &gt;= 50<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>order_num	ordertotal<br>20005				149.87<br>20006				55.00<br>20007				1000.00<br>20008				125.00</p>
+</blockquote>
+<p>​	为按总计订单价格排序输出，需要添加<strong>ORDER BY</strong>子句，如下所示;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT order_num, SUM(quantity * item_price) AS ordertotal <br>FROM orderitems<br>GROUP BY order_num <br>HAVING SUM(quantity * item_price) &gt;= 50<br>ORDER BY ordertotal;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>order_num	ordertotal<br>20006				55.00<br>20008				125.00<br>20005				149.87<br>20007				1000.00</p>
+</blockquote>
+<p>​	在这个例子中，<strong>GROUP BY</strong>子句用来按订单号(order_num列)分组数据，以便<em><em>SUM(</em> )<strong>函数能够返回总计订单价格。</strong>HAVING</em>*子句过滤数据，使得只返回总计订单价格大于等于<strong>50</strong>的订单。最后，用<strong>ORDER BY</strong>子句排序输出。</p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h2 id="十四、使用子查询"><a href="#十四、使用子查询" class="headerlink" title="十四、使用子查询"></a>十四、使用子查询</h2><h3 id="1、利用子查询进行过滤"><a href="#1、利用子查询进行过滤" class="headerlink" title="1、利用子查询进行过滤"></a>1、利用子查询进行过滤</h3><p>​	订单存储在两个表中。对于包含订单号、客户ID、订单日期的每个订单，orders表存储一行。各订单的物品存储在相关的orderitems表中。orders表不存储客户信息。它只存储客户的ID。实际的客户信息存储在customers表中。<br>现在，假如需要列出订购物品TNT2的所有客户，应该怎样检索?下面列出具体的步骤。</p>
+<p>​	(1)检索包含物品TNT2的所有订单的编号。</p>
+<p>​	(2)检索具有前一步骤列出的订单编号的所有客户的ID。</p>
+<p>​	(3)检索前一步骤返回的所有客户ID的客户信息。</p>
+<p>​	上述每个步骤都可以单独作为一个查询来执行。可以把<strong>一条SELECT</strong>语句返回的结果<strong>用于另一条SELECT</strong>语句的WHERE子句。<br>​	也可以使用子查询来把3个查询组合成一条语句。<br>​	第一条SELECT语句的含义很明确,对于prod_id为TNT2的所有订单物品，它检索其order_num列。输出列出两个包含此物品的订单:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT order_num<br>FROM orderitems<br>WHERE prod_id = &#x27;TNT2&#x27;;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>order_num<br>20005<br>20007</p>
+</blockquote>
+<p>​	下一步，检索具有前一步骤列出的订单编号的所有客户的ID：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT cust_id<br>FROM orders<br>WHERE order_num IN (20005, 20007);<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>cust_id<br>10001<br>10004</p>
+</blockquote>
+<p>​	现在，把第一个查询变为子查询，组合成两个查询：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT cust_id<br>FROM orders<br>WHERE order_num IN (SELECT order_num<br>										FROM orderitems<br>										WHERE prod_id = &#x27;TNT2&#x27;)<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>cust_id<br>10001<br>10004</p>
+</blockquote>
+<p>​	在<strong>SELECT</strong>语句中，子查询总是<strong>从内向外</strong>处理。在处理上面的SELECT语句时，MySQL实际上执行了两个操作。<br>首先，它执行下面的查询:<br><code>SELECT order_num FROM orderitems wHERE prod_id=&#39;TNT2&#39;</code><br>此查询返回两个订单号:20005和20007。然后，这两个值以IN操作符要求的逗号分隔的格式传递给外部查询的WHERE子句。外部查询变成:<br>​	<code>SELECT cust_id FROM orders WHERE order_num IN (20005,20007)</code><br>可以看到，输出是正确的并且与前面硬编码WHERE子句所返回的值相同。</p>
+<p>​	现在得到了订购物品TNT2的所有客户的ID。下一步是检索这些客户ID的客户信息。检索两列的SQL语句为:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT cust_name, cust_contact<br>FROM customers<br>WHERE cust_id  IN (10001, 10004)<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>cust_name				cust_contact<br>Coyote Inc.					Y Lee<br>Yosemite Place			 Y Sam</p>
+</blockquote>
+<p>​	可以把其中的WHERE子句转换为子查询而不是硬编码这些客户ID:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT cust_name, cust_contact<br>FROM customers<br>WHERE cust_id IN (SELECT cust_id<br>									FROM orders<br>									WHERE order_num IN (SELECT order_num<br>																			FROM orderitems<br>																			WHERE prod_id = &#x27;TNT2&#x27;))<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>cust_name				cust_contact<br>Coyote Inc.					Y Lee<br>Yosemite Place			 Y Sam</p>
+</blockquote>
+<h3 id="2、作为计算字段使用子查询"><a href="#2、作为计算字段使用子查询" class="headerlink" title="2、作为计算字段使用子查询"></a>2、作为计算字段使用子查询</h3><p>​	使用子查询的另一方法是创建计算字段。假如需要显示customers表中<strong>每个客户的订单总数</strong>。订单与相应的客户ID存储在orders表中。<br>为了执行这个操作，遵循下面的步骤。<br>​	(1)从customers表中检索客户列表。<br>​	(2)对于检索出的每个客户，统计其在orders表中的订单数目。</p>
+<p>​	为了对每个客户执行*<em>COUNT(</em>)<strong>计算，应该将</strong>COUNT (*)**作为一个子查询。请看下面的代码:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT<br>	cust_name,<br>	cust_state,<br>	( SELECT COUNT(*) FROM orders WHERE orders.cust_id = customers.cust_id ) AS orders <br>FROM<br>	customers <br>ORDER BY<br>	cust_name<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>cust_name			cust_state	orders<br>Coyote Inc.					MI			2<br>E Fudd							IL			 1<br>Mouse House			   OH	       0<br>Wascals						  IN	        1<br>Yosemite Place			 AZ			1</p>
+</blockquote>
+<p>​	这条SELECT语句对customers表中每个客户返回3列:cust_name、cust_state和orders。orders是一个<strong>计算字段</strong>，它是由圆括号中的子查询建立的。该子查询对检索出的每个客户执行一次。在此例子中，该子查询执行了5次，因为检索出了5个客户。<br>​	子查询中的<strong>WHERE</strong>子句与前面使用的<strong>WHERE</strong>子句稍有不同,因为它使用了完全限定列名（在第4章中首次提到)。下面的语句告诉SQL比较<strong>orders表中的cust_id</strong>与<strong>当前正从customers</strong>表中检索的<strong>cust_id</strong>:<br><code>wHERE orders.cust_id = customers.cust_id</code></p>
 <h2 id="二十一、创建和操作表"><a href="#二十一、创建和操作表" class="headerlink" title="二十一、创建和操作表"></a>二十一、创建和操作表</h2><h3 id="1、创建表"><a href="#1、创建表" class="headerlink" title="1、创建表"></a>1、创建表</h3><p>​	<strong>MySQL</strong>不仅用于表数据操纵，而且还可以用来执行数据库和表的所有操作，包括表本身的创建和处理。</p>
 <p>​	创建表的方法有两种：</p>
 <ul>
@@ -807,7 +1000,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年4月25日</div>
+          <div>2023年4月26日</div>
         </div>
       
       
