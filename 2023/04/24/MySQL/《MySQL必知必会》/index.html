@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/MySQL.png">
 <meta property="article:published_time" content="2023-04-24T13:52:05.000Z">
-<meta property="article:modified_time" content="2023-04-26T11:26:47.346Z">
+<meta property="article:modified_time" content="2023-04-27T13:17:46.186Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary_large_image">
@@ -256,7 +256,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          26k 字
+          36k 字
         
       </span>
     
@@ -267,7 +267,7 @@
         
         
         
-          218 分钟
+          297 分钟
         
       </span>
     
@@ -863,6 +863,132 @@
 <p>cust_name			cust_state	orders<br>Coyote Inc.					MI			2<br>E Fudd							IL			 1<br>Mouse House			   OH	       0<br>Wascals						  IN	        1<br>Yosemite Place			 AZ			1</p>
 </blockquote>
 <p>​	这条SELECT语句对customers表中每个客户返回3列:cust_name、cust_state和orders。orders是一个<strong>计算字段</strong>，它是由圆括号中的子查询建立的。该子查询对检索出的每个客户执行一次。在此例子中，该子查询执行了5次，因为检索出了5个客户。<br>​	子查询中的<strong>WHERE</strong>子句与前面使用的<strong>WHERE</strong>子句稍有不同,因为它使用了完全限定列名（在第4章中首次提到)。下面的语句告诉SQL比较<strong>orders表中的cust_id</strong>与<strong>当前正从customers</strong>表中检索的<strong>cust_id</strong>:<br><code>wHERE orders.cust_id = customers.cust_id</code></p>
+<h2 id="十五、联结表"><a href="#十五、联结表" class="headerlink" title="十五、联结表"></a>十五、联结表</h2><h3 id="1、联结"><a href="#1、联结" class="headerlink" title="1、联结"></a>1、联结</h3><p>​	SQL最强大的功能之一就是能在数据检索查询的执行中联结( join)表。联结是利用SQL的SELECT能执行的最重要的操作，很好地理解联结及其语法是学习SQL的一个极为重要的组成部分。</p>
+<h4 id="（1）关系表"><a href="#（1）关系表" class="headerlink" title="（1）关系表"></a>（1）关系表</h4><p>​	理解关系表的最好方法是来看一个现实世界中的例子。<br>​	假如有一个包含产品目录的数据库表，其中每种类别的物品占一行。对于每种物品要存储的信息包括产品描述和价格，以及生产该产品的供应商信息。<br>​	现在，假如有由同一供应商生产的多种物品，那么在何处存储供应商信息（如，供应商名、地址、联系方法等）呢?将这些数据与产品信息分开存储的理由如下。</p>
+<ul>
+<li>因为同一供应商生产的每个产品的供应商信息都是相同的，对每个产品重复此信息既浪费时间又浪费存储空间。</li>
+<li>如果供应商信息改变（例如，供应商搬家或电话号码变动)，只需改动一次即可。</li>
+<li>如果有重复数据（即每种产品都存储供应商信息)，很难保证每次输入该数据的方式都相同。不一致的数据在报表中很难利用。</li>
+</ul>
+<p>​	关键是，相同数据出现多次决不是一件好事，此因素是关系数据库设计的基础。关系表的设计就是要保证把信息分解成多个表，一类数据一个表。各表通过某些常用的值（即关系设计中的关系( relational ) )互相关联。<br>​	在这个例子中，可建立两个表，一个存储供应商信息，另一个存储产品信息。<strong>vendors</strong>表包含所有供应商信息，每个供应商占一行，<strong>每个供应商具有唯一</strong>的标识。此标识称为<strong>主键</strong>( primary key)(，可以是供应商ID或任何其他唯一值。<br>​	<strong>products</strong>表只存储产品信息，它除了存储供应商ID(<strong>vendors</strong>表的主键）外不存储其他供应商信息。<strong>vendors表的主键</strong>又叫作<strong>products的外键</strong>，它将vendors表与products表关联，利用<strong>供应商ID</strong>能从vendors表中找出相应供应商的详细信息。</p>
+<blockquote>
+<p><strong>外键(foreign key)</strong>	外键为某个表中的一列，它包含另一个表的主键值，定义了两个表之间的关系。<br>    这样做的好处如下:</p>
+<ul>
+<li>供应商信息不重复，从而不浪费时间和空间;</li>
+<li>如果供应商信息变动，可以只更新vendors表中的单个记录，相关表中的数据不用改动;</li>
+<li>由于数据无重复，显然数据是一致的，这使得处理数据更简单。</li>
+</ul>
+<p>​	总之，关系数据可以有效地存储和方便地处理。因此，关系数据库的可伸缩性远比非关系数据库要好。(foreign key)外键为某个表中的一列，它包含另一个表的主键值，定义了两个表之间的关系。</p>
+</blockquote>
+<blockquote>
+<p><strong>可伸缩性(scale)</strong>	能够适应不断增加的工作量而不失败。设计良好的数据库或应用程序称之为可伸缩性好( scale well )。</p>
+</blockquote>
+<h4 id="（2）为什么要使用联结"><a href="#（2）为什么要使用联结" class="headerlink" title="（2）为什么要使用联结"></a>（2）为什么要使用联结</h4><p>​	正如所述，分解数据为多个表能更有效地存储，更方便地处理，并且具有更大的可伸缩性。但这些好处是有代价的。<br>​	如果数据存储在多个表中，怎样用单条SELECT语句检索出数据?答案是使用<strong>联结</strong>。简单地说，联结是一种机制，用来在一条SELECT语句中<strong>关联表</strong>，因此称之为<strong>联结</strong>。使用特殊的语法，可以联结多个表返回一组输出，联结在运行时关联表中正确的行。</p>
+<h3 id="2、创建联结"><a href="#2、创建联结" class="headerlink" title="2、创建联结"></a>2、创建联结</h3><p>联结的创建非常简单，规定要联结的所有表以及它们如何关联即可，请看下面的例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT vend_name, prod_name, prod_price<br>FROM vendors, products<br>WHERE vendors.vend_id = products.vend_id<br>ORDER BY vend_name, prod_name<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>vend_name	prod_name	prod_price<br>ACME				Bird seed			10.00<br>ACME				Carrots				2.50<br>ACME				Detonator			13.00<br>ACME				Safe					50.00<br>ACME				Sling					4.49<br>ACME				TNT (1 stick)		2.50<br>ACME				TNT (5 sticks)		10.00<br>Anvils R Us		.5 ton anvil		5.99<br>Anvils R Us		1 ton anvil		9.99<br>Anvils R Us		2 ton anvil		14.99<br>Jet Set				JetPack 1000		35.00<br>Jet Set				JetPack 2000		55.00<br>LT Supplies		Fuses					3.42<br>LT Supplies		Oil can				8.99</p>
+</blockquote>
+<p>​	我们来考察一下此代码。SELECT语句与前面所有语句一样指定要检索的列。这里,最大的差别是所指定的两个列(prod_name<br>和prod_price)在一个表中，而另一个列(vend_name)在另一个表中。<br>​	现在来看FROM子句。与以前的SELECT语句不一样，这条语句的FROM子句列出了两个表,分别是vendors和products。它们就是这条SELECT语句联结的两个表的名字。这两个表用WHERE子句正确联结，WHERE子句指示MySQL匹配<strong>vendors表中的vend_id</strong>和<strong>products表中的vend_id</strong>。<br>​	可以看到要匹配的两个列以<strong>vendors.vend_id</strong>和<strong>products.vend_id</strong>指定。这里需要这种<strong>完全限定列名</strong>，因为如果只给出vend_id，则MySQL不知道指的是哪一个（它们有两个，每个表中一个)。</p>
+<h4 id="（1）WHERE子句的重要性"><a href="#（1）WHERE子句的重要性" class="headerlink" title="（1）WHERE子句的重要性"></a>（1）WHERE子句的重要性</h4><p>​	在联结两个表时，你实际上做的是将第一个表中的每一行与第二个表中的每一行配对。<strong>WHERE</strong>子句作为<strong>过滤条件</strong>，它只包含那些匹配给定条件（这里是联结条件）的行。没有WHERE子句，第一个表中的每个行将与第二个表中的每个行配对，而不管它们逻辑上是否可以配在一起。</p>
+<blockquote>
+<p><strong>笛卡儿积(cartesian product)</strong>	由没有联结条件的表关系返回的结果为<strong>笛卡儿积</strong>。检索出的行的数目将是第一个表中的行数乘以第二个表中的行数。</p>
+</blockquote>
+<p>​	对于<strong>笛卡尔积</strong>的理解可以对比下述代码与上一个例子进行理解：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT vend_name, prod_name, prod_price<br>FROM vendors, products<br>ORDER BY vend_name, prod_name<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>vend_name	prod_name	prod_price<br>ACME	.5 ton anvil	5.99<br>ACME	1 ton anvil	9.99<br>ACME	2 ton anvil	14.99<br>ACME	Bird seed	10.00<br>ACME	Carrots	2.50<br>ACME	Detonator	13.00<br>ACME	Fuses	3.42<br>ACME	JetPack 1000	35.00<br>ACME	JetPack 2000	55.00<br>ACME	Oil can	8.99<br>ACME	Safe	50.00<br>ACME	Sling	4.49<br>ACME	TNT (1 stick)	2.50<br>ACME	TNT (5 sticks)	10.00<br>Anvils R Us	.5 ton anvil	5.99<br>Anvils R Us	1 ton anvil	9.99<br>Anvils R Us	2 ton anvil	14.99<br>Anvils R Us	Bird seed	10.00<br>Anvils R Us	Carrots	2.50<br>Anvils R Us	Detonator	13.00<br>Anvils R Us	Fuses	3.42<br>Anvils R Us	JetPack 1000	35.00<br>Anvils R Us	JetPack 2000	55.00<br>Anvils R Us	Oil can	8.99<br>Anvils R Us	Safe	50.00<br>Anvils R Us	Sling	4.49<br>Anvils R Us	TNT (1 stick)	2.50<br>Anvils R Us	TNT (5 sticks)	10.00<br>Furball Inc.	.5 ton anvil	5.99<br>Furball Inc.	1 ton anvil	9.99<br>Furball Inc.	2 ton anvil	14.99<br>Furball Inc.	Bird seed	10.00<br>Furball Inc.	Carrots	2.50<br>Furball Inc.	Detonator	13.00<br>Furball Inc.	Fuses	3.42<br>Furball Inc.	JetPack 1000	35.00<br>Furball Inc.	JetPack 2000	55.00<br>Furball Inc.	Oil can	8.99<br>Furball Inc.	Safe	50.00<br>Furball Inc.	Sling	4.49<br>Furball Inc.	TNT (1 stick)	2.50<br>Furball Inc.	TNT (5 sticks)	10.00<br>Jet Set	.5 ton anvil	5.99<br>Jet Set	1 ton anvil	9.99<br>Jet Set	2 ton anvil	14.99<br>Jet Set	Bird seed	10.00<br>Jet Set	Carrots	2.50<br>Jet Set	Detonator	13.00<br>Jet Set	Fuses	3.42<br>Jet Set	JetPack 1000	35.00<br>Jet Set	JetPack 2000	55.00<br>Jet Set	Oil can	8.99<br>Jet Set	Safe	50.00<br>Jet Set	Sling	4.49<br>Jet Set	TNT (1 stick)	2.50<br>Jet Set	TNT (5 sticks)	10.00<br>Jouets Et Ours	.5 ton anvil	5.99<br>Jouets Et Ours	1 ton anvil	9.99<br>Jouets Et Ours	2 ton anvil	14.99<br>Jouets Et Ours	Bird seed	10.00<br>Jouets Et Ours	Carrots	2.50<br>Jouets Et Ours	Detonator	13.00<br>Jouets Et Ours	Fuses	3.42<br>Jouets Et Ours	JetPack 1000	35.00<br>Jouets Et Ours	JetPack 2000	55.00<br>Jouets Et Ours	Oil can	8.99<br>Jouets Et Ours	Safe	50.00<br>Jouets Et Ours	Sling	4.49<br>Jouets Et Ours	TNT (1 stick)	2.50<br>Jouets Et Ours	TNT (5 sticks)	10.00<br>LT Supplies	.5 ton anvil	5.99<br>LT Supplies	1 ton anvil	9.99<br>LT Supplies	2 ton anvil	14.99<br>LT Supplies	Bird seed	10.00<br>LT Supplies	Carrots	2.50<br>LT Supplies	Detonator	13.00<br>LT Supplies	Fuses	3.42<br>LT Supplies	JetPack 1000	35.00<br>LT Supplies	JetPack 2000	55.00<br>LT Supplies	Oil can	8.99<br>LT Supplies	Safe	50.00<br>LT Supplies	Sling	4.49<br>LT Supplies	TNT (1 stick)	2.50<br>LT Supplies	TNT (5 sticks)	10.00</p>
+</blockquote>
+<p>​	从上面的输出中可以看到，相应的笛卡儿积不是我们所想要的。这里返回的数据用每个供应商匹配了每个产品，它包括了<br>供应商不正确的产品。实际上有的供应商根本就没有产品。</p>
+<h4 id="（2）内部联结"><a href="#（2）内部联结" class="headerlink" title="（2）内部联结"></a>（2）内部联结</h4><p>​	目前为止所用的联结称为<strong>等值联结</strong>，它基于两个表之间的相等测试。这种联结也称为<strong>内部联结</strong>。其实，对于这种联结可以使用稍微不同的语法来明确指定联结的类型。下面的SELECT语句返回与前面例子完全相同的数据:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT vend_name, prod_name, prod_price<br>FROM vendors<br>INNER JOIN products <br>ON vendors.vend_id = products.vend_id<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>vend_name	prod_name	prod_price<br>Anvils R Us	.5 ton anvil	5.99<br>Anvils R Us	1 ton anvil	9.99<br>Anvils R Us	2 ton anvil	14.99<br>LT Supplies	Fuses	3.42<br>LT Supplies	Oil can	8.99<br>ACME	Detonator	13.00<br>ACME	Bird seed	10.00<br>ACME	Carrots	2.50<br>ACME	Safe	50.00<br>ACME	Sling	4.49<br>ACME	TNT (1 stick)	2.50<br>ACME	TNT (5 sticks)	10.00<br>Jet Set	JetPack 1000	35.00<br>Jet Set	JetPack 2000	55.00</p>
+</blockquote>
+<h4 id="（3）联结多个表"><a href="#（3）联结多个表" class="headerlink" title="（3）联结多个表"></a>（3）联结多个表</h4><p>​	SQL对一条SELECT语句中可以联结的表的数目没有限制。创建联结的基本规则也相同。首先列出所有表，然后定义表之间的关系。例如:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_name, vend_name, prod_price, quantity<br>FROM orderitems, products, vendors<br>WHERE products.vend_id = vendors.vend_id <br>	AND orderitems.prod_id = products.prod_id<br>	AND order_num = 20005<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>prod_name	vend_name	prod_price	quantity<br>.5 ton anvil	Anvils R Us	5.99	10<br>1 ton anvil	Anvils R Us	9.99	3<br>TNT (5 sticks)	ACME	10.00	5<br>Bird seed	ACME	10.00	1</p>
+</blockquote>
+<p>​	此例子显示编号为<strong>20005</strong>的订单中的物品。订单物品存储在<strong>orderitems</strong>表中。每个产品按其产品ID存储，它引用<strong>products</strong>表中的产品。这些产品通过供应商<strong>ID</strong>联结到<strong>vendors</strong>表中相应的供应商，供应商ID存储在每个产品的记录中。这里的<strong>FROM</strong>子句列出了3个表，而<strong>WHERE</strong>子句定义了这两个联结条件，而第三个联结条件用来过滤出订单<strong>20005</strong>中的物品。</p>
+<h2 id="十六、创建高级联结"><a href="#十六、创建高级联结" class="headerlink" title="十六、创建高级联结"></a>十六、创建高级联结</h2><h3 id="1、使用表别名"><a href="#1、使用表别名" class="headerlink" title="1、使用表别名"></a>1、使用表别名</h3><p>​	给列起别名的语法如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT CONCAT(RTrim(vend_name),&#x27;(&#x27;,RTRIM(vend_country), &#x27;)&#x27;) AS vend_title <br>FROM vendors<br>ORDER BY vend_name;<br></code></pre></td></tr></table></figure>
+
+<p>​	<code>CONCAT(RTrim(vend_name), &#39;(&#39;, RTRIM(vend_country), &#39;)&#39;) AS vend_title</code>: 这个部分使用<code>CONCAT</code>函数将两个列的值组合在一起，创建了一个新的名为<code>vend_title</code>的列。<code>RTRIM</code>函数用于从列的末尾去掉空格，因此<code>RTRIM(vend_name)</code>和<code>RTRIM(vend_country)</code>将去除这些列中可能存在的多余空格。最终结果会将每个供应商的名称和国家组合成一个标题，并将其放在括号中</p>
+<p>​	别名除了用于列名和计算字段外，SQL还允许给表名起别名。这样做有两个主要理由:</p>
+<ul>
+<li>缩短SQL语句;</li>
+<li>允许在单条SELECT语句中多次使用相同的表。</li>
+</ul>
+<p>下面的例子，就是运用了别名的方式，其功能与上一章的例子基本相同：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT cust_name, cust_contact<br>FROM customers AS c, orders AS o, orderitems AS oi  <br>WHERE c.cust_id = o.cust_id<br>	AND oi.order_num = o.order_num<br>	AND prod_id = &#x27;TNT2&#x27;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2、使用不同类型的联结"><a href="#2、使用不同类型的联结" class="headerlink" title="2、使用不同类型的联结"></a>2、使用不同类型的联结</h3><h4 id="（1）自联结"><a href="#（1）自联结" class="headerlink" title="（1）自联结"></a>（1）自联结</h4><p>​	如前所述，使用表别名的主要原因之一是能在单条SELECT语句中不止一次引用相同的表。下面举一个例子。<br>​	假如你发现某物品(其<strong>ID</strong>为<strong>DTNTR</strong>）存在问题，因此想知道生产该物品的供应商生产的其他物品是否也存在这些问题。此查询要求首先找到生产<strong>ID</strong>为<strong>DTNTR</strong>的物品的供应商，然后找出这个供应商生产的其他物品。下面是解决此问题的一种方法:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT prod_id, prod_name<br>FROM products<br>WHERE vend_id = (SELECT vend_id<br>								 FROM products<br>								 WHERE prod_id = &#x27;DTNTR&#x27;);<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>prod_id	prod_name<br>DTNTR	Detonator<br>FB	Bird seed<br>FC	Carrots<br>SAFE	Safe<br>SLING	Sling<br>TNT1	TNT (1 stick)<br>TNT2	TNT (5 sticks)</p>
+</blockquote>
+<p>​	这是第一种解决方案，它使用了<strong>子查询</strong>。内部的<strong>SELECT</strong>语句做了一个简单的检索，返回生产ID为DTNTR的物品供应商的vend_id。该ID用于外部查询的WHERE子句中，以便检索出这个供应商生产的所有物品（第14章中讲授了子查询的所有内容。更多信息请参阅该章)。</p>
+<p>​	下面是使用联结的相同查询：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT p1.prod_id, p1.prod_name<br>FROM products AS p1, products AS p2<br>WHERE p1.vend_id = p2.vend_id<br>	AND p2.prod_id = &#x27;DTNTR&#x27;;<br></code></pre></td></tr></table></figure>
+
+<p>​	此查询中需要的两个表实际上是相同的表，因此products表在FROM子句中出现了两次。虽然这是完全合法的，但对<br>products的引用具有<strong>二义性</strong>，因为MySQL不知道你引用的是products表中的哪个实例。<br>​	为解决此问题，使用了表别名。products的第一次出现为别名<strong>p1</strong>，第二次出现为别名p2。现在可以将这些别名用作表名。例如，SELECT语句使用<strong>p1前缀明确地给出所需列的全名</strong>。如果不这样，MySQL将返回错误，因为分别存在两个名为prod_id、prod_name的列。MySQL不知道想要的是哪一个列（即使它们事实上是同一个列)。WHERE（通过<strong>匹配p1中的vend_id和p2中的vend_id</strong>）首先联结两个表，然后按<strong>第二个表中的prod_id过滤数据</strong>，返回所需的数据。	</p>
+<h4 id="（2）自然联结"><a href="#（2）自然联结" class="headerlink" title="（2）自然联结"></a>（2）自然联结</h4><p>​	自然联结是这样一种联结，其中你只能选择那些唯一的列。这一般是通过对表使用通配符(SELECT *)，对所有其他表的列使用明确的子集来完成的。下面举一个例子:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT c.*, o.order_num, o.order_date, oi.prod_id, oi.quantity, oi.item_price<br>FROM customers AS c, orders AS o, orderitems AS oi <br>WHERE c.cust_id = o.cust_id<br>	AND oi.order_num = o.order_num<br>	AND prod_id = &#x27;FB&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>​	在这个例子中，通配符只对第一个表使用。所有其他列明确列出，所以没有重复的列被检索出来。</p>
+<h4 id="（3）外部联结"><a href="#（3）外部联结" class="headerlink" title="（3）外部联结"></a>（3）外部联结</h4><p>​	许多联结将一个表中的行与另一个表中的行相关联。但有时候会需要包含没有关联行的那些行。例如，可能需要使用联结来完成以下工作:</p>
+<ul>
+<li>对每个客户下了多少订单进行计数，包括那些至今尚未下订单的客户;</li>
+<li>列出所有产品以及订购数量，包括没有人订购的产品;</li>
+<li>计算平均销售规模，包括那些至今尚未下订单的客户。</li>
+</ul>
+<p>​	在上述例子中，联结<strong>包含了那些在相关表中没有关联行的行</strong>。这种类型的联结称为<strong>外部联结</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT customers.cust_id, orders.order_num<br>FROM customers INNER JOIN orders<br>ON customers.cust_id = orders.cust_id<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>cust_id	order_num<br>10001	20005<br>10001	20009<br>10003	20006<br>10004	20007<br>10005	20008</p>
+</blockquote>
+<p>​	可以看到只输出了有订单的客户，而那些没有订单的客户被忽略了，为了检索所有客户，可如下进行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT customers.cust_id, orders.order_num<br>FROM customers LEFT OUTER JOIN orders<br>ON customers.cust_id = orders.cust_id<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>cust_id	order_num<br>10001	20005<br>10001	20009<br>10002	NULL<br>10003	20006<br>10004	20007<br>10005	20008</p>
+</blockquote>
+<p>​	类似于上一章中所看到的内部联结,这条SELECT语句使用了关键字<code>OUTER JOIN</code>来指定联结的类型（而不是在WHERE子句中指定)。但是，与内部联结关联两个表中的行不同的是，外部联结还包括没有关联行的行。在使用<code>OUTER JOIN</code>语法时，必须使用<strong>RIGHT</strong>或<strong>LEFT</strong>关键字指定包括其所有行的表（RIGHT指出的是<code>OUTER JOIN</code>右边的表，而LEFT指出的是<code>OUTER JOIN</code>左边的表)。上面的例子使用<code>LEFT OUTERJOIN</code>从FROM子句的左边表( <strong>customers</strong>表）中选择所有行。为了从右边的表中选择所有行，应该使用<code>RIGHT OUTER JOIN</code>，如下例所示:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT customers.cust_id, orders.order_num<br>FROM customers RIGHT OUTER JOIN orders<br>ON customers.cust_id = orders.cust_id<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>cust_id	order_num<br>10001	20005<br>10001	20009<br>10003	20006<br>10004	20007<br>10005	20008</p>
+</blockquote>
+<blockquote>
+<p><strong>外部联结的类型</strong>	存在两种基本的外部联结形式:左外部联结和右外部联结。它们之间的唯一差别是所关联的表的顺序不同。换句话说,左外部联结可通过颠倒FROM或WHERE子句中表的顺序转换为右外部联结。因此,两种类型的外部联结可互换使用，而究竟使用哪一种纯粹是根据方便而定。</p>
+</blockquote>
+<h3 id="3、使用带聚集函数的联结"><a href="#3、使用带聚集函数的联结" class="headerlink" title="3、使用带聚集函数的联结"></a>3、使用带聚集函数的联结</h3><p>​	虽然至今为止聚集函数的所有例子只是从单个表汇总数据，但这些函数也可以与联结一起使用。<br>​	请看下面的例子。如果要检索所有客户及每个客户所下的订单数，下面使用了COUNT ()函数的代码可完成此工作:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT customers.cust_name, customers.cust_id, COUNT(orders.order_num) AS num_ord <br>FROM customers INNER JOIN orders<br>ON customers.cust_id = orders.cust_id<br>GROUP BY customers.cust_id<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>cust_name			cust_id	num_ord<br>Coyote Inc.	  	 10001			2<br>Wascals				 10003			1<br>Yosemite Place	10004			1<br>E Fudd					10005			1	</p>
+</blockquote>
+<p>​	此SELECT语句使用<strong>INNER JOIN</strong>将<strong>customers</strong>和<strong>orders</strong>表互相关联。GROUP BY子句按客户分组数据，因此，函数调用<code>COUNT (orders.order_num)</code>对每个客户的订单计数，将它作为<strong>num_ord</strong>返回。<br>​	聚集函数也可以方便地与其他联结一起使用。请看下面的例子:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT customers.cust_name, customers.cust_id, COUNT(orders.order_num) AS num_ord <br>FROM customers LEFT OUTER JOIN orders<br>ON customers.cust_id = orders.cust_id<br>GROUP BY customers.cust_id<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>cust_name		cust_id	num_ord<br>Coyote Inc.		10001			2<br>Mouse House	10002			0<br>Wascals			  10003			1<br>Yosemite Place	10004		 1<br>E Fudd				 10005			1</p>
+</blockquote>
+<p>​	这个例子使用左外部联结来包含所有客户，甚至包含那些没有任何下订单的客户。结果显示也包含了客户<strong>Mouse House</strong>，它<br>有0个订单。</p>
+<h3 id="4、使用联结和联结条件"><a href="#4、使用联结和联结条件" class="headerlink" title="4、使用联结和联结条件"></a>4、使用联结和联结条件</h3><p>​	汇总一下关于联结及其使用的某些要点。</p>
+<ul>
+<li>注意所使用的联结类型。一般我们使用内部联结，但使用外部联结也是有效的。</li>
+<li>保证使用正确的联结条件，否则将返回不正确的数据。</li>
+<li>应该总是提供联结条件，否则会得出笛卡儿积。</li>
+<li>在一个联结中可以包含多个表，甚至对于每个联结可以采用不同的联结类型。虽然这样做是合法的，一般也很有用，但应该在一起测试它们前，分别测试每个联结。这将使故障排除更为简单。</li>
+</ul>
 <h2 id="二十一、创建和操作表"><a href="#二十一、创建和操作表" class="headerlink" title="二十一、创建和操作表"></a>二十一、创建和操作表</h2><h3 id="1、创建表"><a href="#1、创建表" class="headerlink" title="1、创建表"></a>1、创建表</h3><p>​	<strong>MySQL</strong>不仅用于表数据操纵，而且还可以用来执行数据库和表的所有操作，包括表本身的创建和处理。</p>
 <p>​	创建表的方法有两种：</p>
 <ul>
@@ -1000,7 +1126,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年4月26日</div>
+          <div>2023年4月27日</div>
         </div>
       
       
