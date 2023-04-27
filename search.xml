@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>user_system项目实现流程</title>
+      <link href="/2023/04/27/Go%E9%A1%B9%E7%9B%AE/user-system%E9%A1%B9%E7%9B%AE%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B/"/>
+      <url>/2023/04/27/Go%E9%A1%B9%E7%9B%AE/user-system%E9%A1%B9%E7%9B%AE%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B/</url>
+      
+        <content type="html"><![CDATA[<h1 id="零、启动redis和mysql并连接数据库："><a href="#零、启动redis和mysql并连接数据库：" class="headerlink" title="零、启动redis和mysql并连接数据库："></a>零、启动redis和mysql并连接数据库<span id="more"></span>：</h1><p>打开docker软件</p><p>连接reids</p><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">docker <span class="hljs-literal">start</span> f0a411ffda99<br></code></pre></td></tr></table></figure><p>连接数据库</p><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">docker</span> start <span class="hljs-number">43512</span>a2a6381<br></code></pre></td></tr></table></figure><p>然后打开Navicat连接数据库”my_camps”</p><p>注册界面</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">8080</span><span class="hljs-regexp">/static/</span>register.html<br></code></pre></td></tr></table></figure><p>登录界面</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">8080</span><span class="hljs-regexp">/static/</span>login.html<br></code></pre></td></tr></table></figure><h1 id="一、Ping-健康检查"><a href="#一、Ping-健康检查" class="headerlink" title="一、Ping 健康检查"></a>一、Ping 健康检查</h1><ol><li><p>调用<strong>config</strong>包下的<strong>GetGlobalConf</strong>方法，获取AppConf 服务配置</p><p>（1）在这个方法中，通过<strong>once.Do(readConf)<strong>调用</strong>readConf</strong>函数，读取配置文件的信息。</p><p>a、在<strong>readConf</strong>函数中通过**viper.SetConfigName()<strong>设置配置文件的名称，</strong>viper.SetConfigType()<strong>设置配置文件的类型，</strong>viper.AddConfigPath()**配置文件的路径，如果有多个配置，则按照配置的先后顺序进行搜索。</p><p>b、用**err :&#x3D; viper.ReadInConfig()**读取配置文件，将配置文件内容读取到内存中，若读取配置文件出错，将会返回一个错误对象。</p><p>c、用<strong>err &#x3D; viper.Unmarshal(&amp;config)<strong>将读取到的配置数解析为一个结构体，该结构体在这里传递给了一个指针</strong>&amp;config</strong>，通过解析将配置数据填充到该结构体中。</p><p>d、最后用<strong>log.Infof</strong>打印<strong>info</strong>级别的日志信息。</p><p>（2）将读取到的配置信息返回</p></li><li><p>用<strong>confInfo, _ :&#x3D; json.MarshalIndent(appConfig, “”, “  “)<strong>将服务配置信息转为</strong>JSON</strong>格式</p></li><li><p>用**appInfo :&#x3D; fmt.Sprintf(“app_name: %s\nversion: %s\n\n%s”, appConfig.AppName, appConfig.Version, string(confInfo))**将全局配置信息格式化写入字符串</p></li><li><p>用<code>c.String(http.StatusOK, appInfo)</code>将名称、版本、全局配置信息返回给客户端。</p></li></ol><h1 id="二、用户注册"><a href="#二、用户注册" class="headerlink" title="二、用户注册"></a>二、用户注册</h1><p>​在浏览器中输入网址后，可以看到一个前端登录页面，输入信息后，点击注册按钮后如下：</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">8080</span><span class="hljs-regexp">/static/</span>register.html<br></code></pre></td></tr></table></figure><ol><li><p>​首先会检查需要输入的信息是否全部输入，若有空白，则会将鼠标聚焦到未输入的信息里。</p></li><li><p>调用jQuery库中的<strong>ajax</strong>方法，发起<strong>AJAX POST</strong>请求</p><ul><li><strong>type</strong>：指定请求类型</li><li><strong>dataType</strong>：指定请求的数据类型</li><li><strong>url</strong>：指定路由</li><li><strong>contentType</strong>：指定发送请求的数据格式，本项目中”application&#x2F;json”指<strong>JSON</strong></li><li><strong>data</strong>：请求数据，本项目中使用**JSON.stringify({…})**将用户对象转化为JSON格式的字符串</li><li>**sucess:function(){}**：回调函数，请求成功的话会调用这个函数</li><li>**error:funciont(){}**：回调函数，请求失败会调用这个函数</li></ul></li><li><p>上述的<strong>AJAX POST</strong>请求就会通过**&#x2F;user&#x2F;register<strong>索引到</strong>router<strong>包下注册好的</strong>Register**函数，即用户注册函数，开始注册</p><p>（1）首先定义<strong>注册请求信息</strong>结构体<strong>req</strong>，用于存放用户的注册信息，定义<strong>注册请求返回对象</strong>结构体<strong>rsp</strong>，用于存放请求结果的信息</p><p>（2）通过调用上下文传递信息的<strong>ShouldBindJSON</strong>函数，将JSON数据绑定到<strong>req</strong>中，若解析失败或无法绑定，则会返回错误</p><p>①如果上一步出现错误，这里将会用**log.Errorf()**在日志中打印错误信息</p><p>②并调用<strong>rsq</strong>的<strong>ResponseWithError()<strong>方法，将错误码，错误信息写入</strong>rsq</strong>，并调用**c.JSON(http.StatusInternalServerError, rsp)**将信息返回给客户端</p><p>③注册停止</p><p>（3）调用service包下的<strong>Register()<strong>函数，传入注册请求信息</strong>req</strong>，进行注册：</p><p>①首先会验证参数的合法性，只要有一项不合法，就调用<strong>log.Errorf</strong>在日志中打印错误信息，并用**fmt.Errorf()**自定义错误信息，返回给上一层函数：</p><p>a、信息不能为空</p><p>b、年龄不能小于等于0</p><p>c、性别只能是<strong>male</strong>或者<strong>female</strong></p><p>①然后用<strong>dao</strong>包下的<strong>GetUserByName()<strong>函数，传入用户名</strong>name</strong>，查找数据库中是否已经存在该用户，用<strong>existedUser</strong>和<strong>err</strong>接受返回来的参数</p><p>a、创建一个空的用户对象</p><p>b、使用gorm框架中的方法连接数据库，并查找是否存在用户名为<strong>name</strong>的用户，若存在，将其信息绑定到<strong>user</strong>上，若有错误，则进行错误处理：</p><ul><li>没有找到，就返回<strong>空用户</strong>和<strong>空错误</strong></li><li>其他错误，则打印到日志中，并返回<strong>空对象</strong>和<strong>错误信息</strong></li></ul><p>c、没有错误，则说明数据库中存在该用户，则返回该用户信息即<strong>user</strong>和<strong>空错误</strong></p><p>②查询出现错误，且错误不为空，则说明查询失败，使用**log.Errorf()<strong>在日志中打印错误信息，并使用</strong>fmt.Errorf()**返回错误信息</p><p>③<strong>existedUser</strong>不为空，说明该用户已经注册，打印日志，并返回错误“用户已经注册，不能重复注册”</p><p>④查询过程中没有出现任何错误且用户未注册，则开始注册</p><p>⑤根据请求参数构造一个新的<strong>model.User</strong>对象，然后用**log.Infof()**将信息打印到日志中</p><p>⑥然后调用<strong>dao</strong>包下的**CreateUser()**函数，创建一个新的用户：</p><p>a、同样使用gorm框架中的语句，连接数据库，并创建一个用户到数据库中，</p><p>b、如果出现错误，则打印错误信息到日志中，并返回错误</p><p>c、没有出现错误，则打印“insert success”到日志中，并返回一个<strong>空错误</strong></p><p>①根据<strong>CreateUser()<strong>函数返回的错误信息，如果不为空，则将错误信息写入日志，并返回一个错误信息给</strong>Register</strong>函数，</p><p>②为空则只返回一个<strong>空错误</strong>即可</p><p>（4）然后调用<strong>rsq</strong>的方法<strong>ResponseSuccess()<strong>函数，将请求成功响应码、”success”写入</strong>rsq</strong>，然后用**c.JSON(http.StatusOK, rsp)**返回给客户端即可</p></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Go </category>
+          
+          <category> 项目 </category>
+          
+          <category> user_system </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> GO </tag>
+            
+            <tag> 项目 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>类型转化</title>
       <link href="/2023/04/27/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E5%8C%96/"/>
       <url>/2023/04/27/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E5%8C%96/</url>
