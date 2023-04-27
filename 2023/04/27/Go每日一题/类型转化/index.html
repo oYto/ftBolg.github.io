@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目">
+    <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="多重赋值">
-<meta property="og:url" content="http://example.com/2023/04/26/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%A4%9A%E9%87%8D%E8%B5%8B%E5%80%BC/index.html">
+<meta property="og:title" content="类型转化">
+<meta property="og:url" content="http://example.com/2023/04/27/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E5%8C%96/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目">
+<meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-04-26T09:47:11.000Z">
-<meta property="article:modified_time" content="2023-04-26T09:54:44.538Z">
+<meta property="article:published_time" content="2023-04-27T01:58:39.000Z">
+<meta property="article:modified_time" content="2023-04-27T02:20:38.896Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>多重赋值 - 胤凯</title>
+  <title>类型转化 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="多重赋值"></span>
+            <span id="subtitle" data-typed-text="类型转化"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-26 17:47" pubdate>
-          2023年4月26日 下午
+        <time datetime="2023-04-27 09:58" pubdate>
+          2023年4月27日 上午
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          315 字
+          859 字
         
       </span>
     
@@ -268,7 +268,7 @@
         
         
         
-          3 分钟
+          8 分钟
         
       </span>
     
@@ -314,27 +314,41 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">多重赋值</h1>
+            <h1 style="display: none">类型转化</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目<span id="more"></span></h1><h4 id="下面代码输出正确的是？"><a href="#下面代码输出正确的是？" class="headerlink" title="下面代码输出正确的是？"></a>下面代码输出正确的是？</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	i := <span class="hljs-number">1</span><br>	s := []<span class="hljs-type">string</span>&#123;<span class="hljs-string">&quot;A&quot;</span>, <span class="hljs-string">&quot;B&quot;</span>, <span class="hljs-string">&quot;C&quot;</span>&#125;<br>	i, s[i<span class="hljs-number">-1</span>] = <span class="hljs-number">2</span>, <span class="hljs-string">&quot;Z&quot;</span><br>	fmt.Printf(<span class="hljs-string">&quot;s: %v \n&quot;</span>, s)<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">A. s: [Z,B,C]<br>B. s: [A,Z,C]<br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="正确答案："><a href="#正确答案：" class="headerlink" title="正确答案："></a>正确答案：</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">A</span><br></code></pre></td></tr></table></figure>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>关于类型转化，下面选项正确的是？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go">A.<br><span class="hljs-keyword">type</span> MyInt <span class="hljs-type">int</span><br><span class="hljs-keyword">var</span> i <span class="hljs-type">int</span> = <span class="hljs-number">1</span><br><span class="hljs-keyword">var</span> j MyInt = i<br><br>B.<br><span class="hljs-keyword">type</span> MyInt <span class="hljs-type">int</span><br><span class="hljs-keyword">var</span> i <span class="hljs-type">int</span> = <span class="hljs-number">1</span><br><span class="hljs-keyword">var</span> j MyInt = (MyInt)i<br><br>C.<br><span class="hljs-keyword">type</span> MyInt <span class="hljs-type">int</span><br><span class="hljs-keyword">var</span> i <span class="hljs-type">int</span> = <span class="hljs-number">1</span><br><span class="hljs-keyword">var</span> j MyInt = MyInt(i)<br><br>D.<br><span class="hljs-keyword">type</span> MyInt <span class="hljs-type">int</span><br><span class="hljs-keyword">var</span> i <span class="hljs-type">int</span> = <span class="hljs-number">1</span><br><span class="hljs-keyword">var</span> j MyInt = i.(MyInt)<br></code></pre></td></tr></table></figure>
 
 
 
-<h4 id="解析："><a href="#解析：" class="headerlink" title="解析："></a>解析：</h4><p>​	多重赋值分为两个步骤，有先后顺序：</p>
-<ul>
-<li>计算等号左边的索引表达式和取址表达式，接着计算等号右边的表达式；</li>
-<li>赋值；</li>
+<h4 id="答案："><a href="#答案：" class="headerlink" title="答案："></a>答案：</h4><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">C</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="解析："><a href="#解析：" class="headerlink" title="解析："></a>解析：</h4><ul>
+<li>​	A选项是错误的，因为将int类型的变量赋值给MyInt类型的变量是不允许的。</li>
+<li>选项 B 是错误的，应该是使用类型转换语法将 int 类型的变量转换为 MyInt 类型，即 <code>var j MyInt = MyInt(i)</code>。</li>
+<li>对于选项 C，使用类型转换表达式 <code>MyInt(i)</code> 可以将 <code>i</code> 的值从 <code>int</code> 类型转换为 <code>MyInt</code> 类型，并将结果赋给 <code>j</code>。</li>
+<li>对于选项 D，使用类型断言 <code>i.(MyInt)</code> 是错误的，因为 <code>i</code> 的底层类型是 <code>int</code>，而不是 <code>MyInt</code>，所以无法将其转换为 <code>MyInt</code> 类型。</li>
 </ul>
-<p>​	所以本题，会先计算 s[i-1]，等号右边是两个表达式是常量，所以赋值运算等同于 <code>i, s[0] = 2, &quot;Z&quot;</code>。</p>
+<p><strong>类型断言</strong>：用于将接口类型的值转换为具体的类型。在转换的过程中需要注意以下几点：</p>
+<ol>
+<li>语法：value.(type)<ul>
+<li>value：接口类型的值</li>
+<li>type：需要转换的具体类型</li>
+</ul>
+</li>
+<li>转换前需要判断接口类型的值是否为 nil 或者对应类型的零值，避免在转换时出现 panic。</li>
+</ol>
+<p>下面是一个类型断言的正确使用示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;reflect&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> i <span class="hljs-keyword">interface</span>&#123;&#125; = <span class="hljs-number">1</span><br><br>	v, _ := i.(<span class="hljs-type">int</span>)<br>	str, _ := i.(<span class="hljs-type">string</span>)<br>	fmt.Println(<span class="hljs-string">&quot;v type is&quot;</span>, reflect.TypeOf(v))<br>	fmt.Println(<span class="hljs-string">&quot;str type is&quot;</span>, reflect.TypeOf(str))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">v <span class="hljs-keyword">type</span> is <span class="hljs-type">int</span><br>str <span class="hljs-keyword">type</span> is <span class="hljs-type">string</span><br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
@@ -389,8 +403,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>多重赋值</div>
-      <div>http://example.com/2023/04/26/Go每日一题/多重赋值/</div>
+      <div>类型转化</div>
+      <div>http://example.com/2023/04/27/Go每日一题/类型转化/</div>
     </div>
     <div class="license-meta">
       
@@ -402,13 +416,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年4月26日</div>
+          <div>2023年4月27日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年4月26日</div>
+          <div>2023年4月27日</div>
         </div>
       
       
@@ -439,18 +453,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/27/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E5%8C%96/" title="类型转化">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">类型转化</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/25/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5/" title="循环语句">
-                        <span class="hidden-mobile">循环语句</span>
+                      <a href="/2023/04/26/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%A4%9A%E9%87%8D%E8%B5%8B%E5%80%BC/" title="多重赋值">
+                        <span class="hidden-mobile">多重赋值</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
