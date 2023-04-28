@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/user_system.png">
 <meta property="article:published_time" content="2023-04-27T07:14:17.000Z">
-<meta property="article:modified_time" content="2023-04-27T11:08:13.443Z">
+<meta property="article:modified_time" content="2023-04-28T09:10:25.536Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="项目">
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.6k 字
+          2.9k 字
         
       </span>
     
@@ -268,7 +268,7 @@
         
         
         
-          22 分钟
+          25 分钟
         
       </span>
     
@@ -354,10 +354,8 @@
 <h1 id="二、用户注册"><a href="#二、用户注册" class="headerlink" title="二、用户注册"></a>二、用户注册</h1><p>​	在浏览器中输入网址后，可以看到一个前端登录页面，输入信息后，点击注册按钮后如下：</p>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">8080</span><span class="hljs-regexp">/static/</span>register.html<br></code></pre></td></tr></table></figure>
 
-<ol>
-<li><p>​	首先会检查需要输入的信息是否全部输入，若有空白，则会将鼠标聚焦到未输入的信息里。</p>
-</li>
-<li><p>调用jQuery库中的<strong>ajax</strong>方法，发起<strong>AJAX POST</strong>请求</p>
+<p>​	首先会检查需要输入的信息是否全部输入，若有空白，则会将鼠标聚焦到未输入的信息里。</p>
+<p>调用jQuery库中的<strong>ajax</strong>方法，发起<strong>AJAX POST</strong>请求</p>
 <ul>
 <li><strong>type</strong>：指定请求类型</li>
 <li><strong>dataType</strong>：指定请求的数据类型</li>
@@ -367,8 +365,7 @@
 <li>**sucess:function(){}**：回调函数，请求成功的话会调用这个函数</li>
 <li>**error:funciont(){}**：回调函数，请求失败会调用这个函数</li>
 </ul>
-</li>
-<li><p>上述的<strong>AJAX POST</strong>请求就会通过**&#x2F;user&#x2F;register<strong>索引到</strong>router<strong>包下注册好的</strong>Register**函数，即用户注册函数，开始注册</p>
+<p>上述的<strong>AJAX POST</strong>请求就会通过**&#x2F;user&#x2F;register<strong>索引到</strong>router<strong>包下注册好的</strong>Register**函数，即用户注册函数，开始注册</p>
 <p>（1）首先定义<strong>注册请求信息</strong>结构体<strong>req</strong>，用于存放用户的注册信息，定义<strong>注册请求返回对象</strong>结构体<strong>rsp</strong>，用于存放请求结果的信息</p>
 <p>（2）通过调用上下文传递信息的<strong>ShouldBindJSON</strong>函数，将JSON数据绑定到<strong>req</strong>中，若解析失败或无法绑定，则会返回错误</p>
 <p>①如果上一步出现错误，这里将会用**log.Errorf()**在日志中打印错误信息</p>
@@ -398,8 +395,16 @@
 <p>①根据<strong>CreateUser()<strong>函数返回的错误信息，如果不为空，则将错误信息写入日志，并返回一个错误信息给</strong>Register</strong>函数，</p>
 <p>②为空则只返回一个<strong>空错误</strong>即可</p>
 <p>（4）然后调用<strong>rsq</strong>的方法<strong>ResponseSuccess()<strong>函数，将请求成功响应码、”success”写入</strong>rsq</strong>，然后用**c.JSON(http.StatusOK, rsp)**返回给客户端即可</p>
-</li>
-</ol>
+<h1 id="三、用户登录"><a href="#三、用户登录" class="headerlink" title="三、用户登录"></a>三、用户登录</h1><p>​	用户注册成功之后，会在回调函数里用<code>window.location.href</code>将页面窗口跳转到登录窗口，</p>
+<p>在登录界面，前端使用同样的方法，先检查是否将登录信息全部填入，若填入了，则利用<strong>jQuery</strong>库中的<strong>ajax</strong>方法发送<strong>POST</strong>请求，其具体细节在用户注册有详细讲解，这里就不作过多赘述，直接看后端的登录过程。</p>
+<p>​	通过<strong>POST</strong>请求索引到**Login()**函数，并执行</p>
+<p>**Login()**函数：</p>
+<p>​	（1）定义登录请求结构体、<strong>登录请求返回结构体</strong></p>
+<p>​	（2）解析前端传来的<strong>登录请求数据</strong>，根据是否解析失败进行不同的操作</p>
+<ul>
+<li>解析失败的话，将错误写入日志，并将错误信息码和错误写入<strong>登录请求返回结构体</strong></li>
+</ul>
+<p>​	（3）解析成功则调用<code>utils.Md5String</code>方法，根据名字+时间+<strong>生成一个唯一的用户ID</strong></p>
 
                 
               </div>
@@ -420,20 +425,6 @@
         
   <a href="/categories/Go/" class="category-chain-item">Go</a>
   
-  
-    <span>></span>
-    
-  <a href="/categories/Go/%E9%A1%B9%E7%9B%AE/" class="category-chain-item">项目</a>
-  
-  
-    <span>></span>
-    
-  <a href="/categories/Go/%E9%A1%B9%E7%9B%AE/user-system/" class="category-chain-item">user_system</a>
-  
-  
-
-  
-
   
 
       </span>
@@ -480,7 +471,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年4月27日</div>
+          <div>2023年4月28日</div>
         </div>
       
       
@@ -506,29 +497,6 @@
 
 
 
-              
-                <div class="post-prevnext my-3">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2023/04/27/Go/Golang%E9%A2%98%E5%BA%93/" title="Golang小知识">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Golang小知识</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2023/04/27/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E5%8C%96/" title="类型转化">
-                        <span class="hidden-mobile">类型转化</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
               
             </div>
 
