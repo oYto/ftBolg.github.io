@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目:">
+    <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="defer_执行顺序">
-<meta property="og:url" content="http://example.com/2023/05/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/defer-%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/index.html">
+<meta property="og:title" content="map">
+<meta property="og:url" content="http://example.com/2023/05/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/map/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目:">
+<meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-05-01T06:13:04.000Z">
-<meta property="article:modified_time" content="2023-05-01T06:18:33.205Z">
+<meta property="article:published_time" content="2023-05-02T04:54:17.000Z">
+<meta property="article:modified_time" content="2023-05-02T04:57:08.854Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>defer_执行顺序 - 胤凯</title>
+  <title>map - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="defer_执行顺序"></span>
+            <span id="subtitle" data-typed-text="map"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-01 14:13" pubdate>
-          2023年5月1日 下午
+        <time datetime="2023-05-02 12:54" pubdate>
+          2023年5月2日 下午
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          413 字
+          617 字
         
       </span>
     
@@ -268,7 +268,7 @@
         
         
         
-          4 分钟
+          6 分钟
         
       </span>
     
@@ -314,21 +314,18 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">defer_执行顺序</h1>
+            <h1 style="display: none">map</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面这段代码输出的内容</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs mysql">package main<br><br>import (<br>    &quot;fmt&quot;<br>)<br><br>func main() &#123;<br>    defer_call()<br>&#125;<br><br>func defer_call() &#123;<br>    defer func() &#123; fmt.Println(&quot;打印前&quot;) &#125;()<br>    defer func() &#123; fmt.Println(&quot;打印中&quot;) &#125;()<br>    defer func() &#123; fmt.Println(&quot;打印后&quot;) &#125;()<br><br>    panic(&quot;触发异常&quot;)<br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="答案："><a href="#答案：" class="headerlink" title="答案："></a>答案：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">打印后<br>打印中<br>打印前<br>panic: 触发异常<br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="解析："><a href="#解析：" class="headerlink" title="解析："></a>解析：</h4><p>​	在函数返回或者发生panic时，defer语句会按照先进后出的顺序执行，若是因为发生panic退出函数，则最后再执行panic语句。</p>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>map 的 key 为什么是无序的？</p>
+<p>在遍历 map 的时候，我们会发现，输出的 key 是无序的。为什么？</p>
+<h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>​	map 在扩容后，会发生 key 的搬迁，原来落在同一个 bucket 中的 key，搬迁后，有些 key 就要远走高飞了（bucket 序号加上了 2^B）。而遍历的过程，就是按顺序遍历 bucket，同时按顺序遍历 bucket 中的 key。搬迁后，key 的位置发生了重大的变化，有些 key 飞上高枝，有些 key 则原地不动。这样，遍历 map 的结果就不可能按原来的顺序了。</p>
+<p>​	当然，如果我就一个 hard code 的 map，我也不会向 map 进行插入删除的操作，按理说每次遍历这样的 map 都会返回一个固定顺序的 key&#x2F;value 序列吧。的确是这样，但是 Go 杜绝了这种做法，因为这样会给新手程序员带来误解，以为这是一定会发生的事情，在某些情况下，可能会酿成大错。</p>
+<p>​	当然，Go 做得更绝，当我们在遍历 map 时，并不是固定地从 0 号 bucket 开始遍历，每次都是从一个随机值序号的 bucket 开始遍历，并且是从这个 bucket 的一个随机序号的 cell 开始遍历。这样，即使你是一个写死的 map，仅仅只是遍历它，也不太可能会返回一个固定序列的 key&#x2F;value 对了。</p>
+<p>​	多说一句，“迭代 map 的结果是无序的”这个特性是从 go 1.0 开始加入的。</p>
+<p>答案解析来自：<a target="_blank" rel="noopener" href="https://golang.design/go-questions/map/unordered/">https://golang.design/go-questions/map/unordered/</a></p>
 
                 
               </div>
@@ -383,8 +380,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>defer_执行顺序</div>
-      <div>http://example.com/2023/05/01/Go每日一题/defer-执行顺序/</div>
+      <div>map</div>
+      <div>http://example.com/2023/05/02/Go每日一题/map/</div>
     </div>
     <div class="license-meta">
       
@@ -396,13 +393,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年5月1日</div>
+          <div>2023年5月2日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年5月1日</div>
+          <div>2023年5月2日</div>
         </div>
       
       
@@ -433,18 +430,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/05/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/map/" title="map">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">map</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/30/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%86%8D%E7%BB%83for-range/" title="再练for-range">
-                        <span class="hidden-mobile">再练for-range</span>
+                      <a href="/2023/05/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/defer-%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/" title="defer_执行顺序">
+                        <span class="hidden-mobile">defer_执行顺序</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
