@@ -16,24 +16,25 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="学习记录">
+    <meta name="description" content="题目:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习记录">
-<meta property="og:url" content="http://example.com/2023/04/09/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:title" content="用append向slice添加元素">
+<meta property="og:url" content="http://example.com/2023/05/03/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%94%A8append%E5%90%91slice%E6%B7%BB%E5%8A%A0%E5%85%83%E7%B4%A0/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="学习记录">
+<meta property="og:description" content="题目:">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95.png">
-<meta property="article:published_time" content="2023-04-09T11:11:31.000Z">
-<meta property="article:modified_time" content="2023-05-03T06:16:50.806Z">
+<meta property="og:image" content="http://example.com/images/Golang.png">
+<meta property="article:published_time" content="2023-05-03T06:18:52.000Z">
+<meta property="article:modified_time" content="2023-05-03T06:33:08.331Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="学习记录">
+<meta property="article:tag" content="GO">
+<meta property="article:tag" content="每日一题">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95.png">
+<meta name="twitter:image" content="http://example.com/images/Golang.png">
   
   
   
-  <title>学习记录 - 胤凯</title>
+  <title>用append向slice添加元素 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -233,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="学习记录"></span>
+            <span id="subtitle" data-typed-text="用append向slice添加元素"></span>
           
         </div>
 
@@ -244,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-09 19:11" pubdate>
-          2023年4月9日 晚上
+        <time datetime="2023-05-03 14:18" pubdate>
+          2023年5月3日 下午
         </time>
       </span>
     
@@ -256,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          12k 字
+          435 字
         
       </span>
     
@@ -267,7 +268,7 @@
         
         
         
-          100 分钟
+          4 分钟
         
       </span>
     
@@ -313,63 +314,67 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">学习记录</h1>
+            <h1 style="display: none">用append向slice添加元素</h1>
             
             
-              
-              <script src=/js/crypto-js.js></script>
-<script>
-function doDecrypt (pwd, onError) {
-	console.log('in doDecrypt');
-	const txt = document.getElementById('enc_content').innerHTML;
-	let plantext;
-	try {
-		const bytes = CryptoJS.AES.decrypt(txt, pwd);
-		var plaintext = bytes.toString(CryptoJS.enc.Utf8);
-	} catch(err) {
-		if(onError) {
-			onError(err);
-		}
-		return;
-	}
-	document.getElementById('enc_content').innerHTML = plaintext;
-	document.getElementById('enc_content').style.display = 'block';
-	document.getElementById('enc_passwd').style.display = 'none';
-	if(typeof MathJax !== 'undefined') {
-		MathJax.Hub.Queue(
-			['resetEquationNumbers', MathJax.InputJax.TeX],
-			['PreProcess', MathJax.Hub],
-			['Reprocess', MathJax.Hub]
-		);
-	}
-}
-</script>
-<div id="enc_content" style="display:none">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</div>
-<div id="enc_passwd"> <input id="enc_pwd_input" type="password" style="border-radius: 5px;border-style: groove;height: 30px;width: 50%;cursor: auto;font-size: 102%;color: currentColor;outline: none;text-overflow: initial;padding-left: 5px;" onkeydown="if (event.keyCode == 13) { decrypt(); return false;}"> <input type="submit" value="解&nbsp;密" onclick="decrypt()" style="width: 58px;height: 34px;border-radius: 5px;background-color: white;border-style: solid;color: currentColor;"><div id="enc_error" style="display: inline-block;color: #d84527;margin-left: 10px"></div>
-<script>
-var onError = function(error) {
-	document.getElementById("enc_error").innerHTML = "password error!"
-};
-function decrypt() {
-var passwd = document.getElementById("enc_pwd_input").value;
-console.log(passwd);
-doDecrypt(passwd, onError);
-}
-</script>
-</div>
-              
+              <div class="markdown-body">
+                
+                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面两段代码输出什么？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 1.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    s := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, <span class="hljs-number">5</span>)<br>    s = <span class="hljs-built_in">append</span>(s, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)<br>    fmt.Println(s)<br>&#125;<br><br><span class="hljs-comment">// 2.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	s := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>,<span class="hljs-number">0</span>)<br>	s = <span class="hljs-built_in">append</span>(s,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>)<br>	fmt.Println(s)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-              
+
+
+<h4 id="答案："><a href="#答案：" class="headerlink" title="答案："></a>答案：</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-number">1.</span>[<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>]<br><span class="hljs-number">2.</span>[<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span>]<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="解析："><a href="#解析：" class="headerlink" title="解析："></a>解析：</h4><ol>
+<li>创建了一个长度为5的整数切片因为是使用make创建了，故是创建并初始化为0，然后将1、2、3三个整数追加到切片的末尾，最终输出切片的所有元素。由于append函数会自动扩容切片，因此最终输出的是一个长度为8的整数切片，包含5个0和1、2、3三个整数。</li>
+<li>这段代码创建了一个空的整数切片，然后将1、2、3、4四个整数追加到切片的末尾，最终输出切片的所有元素。由于append函数会自动扩容切片，因此最终输出的是一个长度为4的整数切片，包含1、2、3、4四个整数。</li>
+</ol>
+
+                
+              </div>
             
             <hr/>
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Go/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/" class="category-chain-item">每日一题</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">#学习记录</a>
+        <a href="/tags/GO/">#GO</a>
+      
+        <a href="/tags/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">#每日一题</a>
       
     </div>
   
@@ -381,8 +386,8 @@ doDecrypt(passwd, onError);
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>学习记录</div>
-      <div>http://example.com/2023/04/09/学习记录/学习记录/</div>
+      <div>用append向slice添加元素</div>
+      <div>http://example.com/2023/05/03/Go每日一题/用append向slice添加元素/</div>
     </div>
     <div class="license-meta">
       
@@ -394,7 +399,7 @@ doDecrypt(passwd, onError);
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年4月9日</div>
+          <div>2023年5月3日</div>
         </div>
       
       
@@ -431,18 +436,12 @@ doDecrypt(passwd, onError);
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/11/Go/go%E7%9A%84HTTP%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" title="go的HTTP网络编程">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">go的HTTP网络编程</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/KMP/" title="KMP">
-                        <span class="hidden-mobile">KMP</span>
+                      <a href="/2023/05/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/map%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E6%97%A0%E5%BA%8F%E7%9A%84%EF%BC%9F/" title="map为什么是无序的？">
+                        <span class="hidden-mobile">map为什么是无序的？</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -655,23 +654,6 @@ doDecrypt(passwd, onError);
   
 
 
-
-
-  
-  <script defer>
-    if (document.getElementById('hbePass')) {
-      Fluid.utils.waitElementLoaded('hbe-prefix', function() {
-        var hbePrefix = document.querySelector('hbe-prefix');
-        hbePrefix.parentElement.classList.add('markdown-body');
-        Fluid.utils.retry(function() {
-          if (Fluid.boot && Fluid.boot.refresh) {
-            Fluid.boot.refresh();
-            return true;
-          }
-        }, 100, 10);
-      })
-    }
-  </script>
 
 
   
