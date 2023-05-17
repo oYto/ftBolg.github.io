@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目">
+    <meta name="description" content="题目:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="结构体比较">
-<meta property="og:url" content="http://example.com/2023/05/16/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E6%AF%94%E8%BE%83/index.html">
+<meta property="og:title" content="常量取地址">
+<meta property="og:url" content="http://example.com/2023/05/17/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%B8%B8%E9%87%8F%E5%8F%96%E5%9C%B0%E5%9D%80/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目">
+<meta property="og:description" content="题目:">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-05-16T11:04:33.000Z">
-<meta property="article:modified_time" content="2023-05-16T11:07:44.759Z">
+<meta property="article:published_time" content="2023-05-17T09:34:24.000Z">
+<meta property="article:modified_time" content="2023-05-17T09:46:39.336Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>结构体比较 - 胤凯</title>
+  <title>常量取地址 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="结构体比较"></span>
+            <span id="subtitle" data-typed-text="常量取地址"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-16 19:04" pubdate>
-          2023年5月16日 晚上
+        <time datetime="2023-05-17 17:34" pubdate>
+          2023年5月17日 下午
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          1.1k 字
         
       </span>
     
@@ -268,7 +268,7 @@
         
         
         
-          11 分钟
+          10 分钟
         
       </span>
     
@@ -314,34 +314,45 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">结构体比较</h1>
+            <h1 style="display: none">常量取地址</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目<span id="more"></span></h1><p>下面代码是否可以编译通过？为什么？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>	sn1 := <span class="hljs-keyword">struct</span> &#123;<br>		age  <span class="hljs-type">int</span><br>		name <span class="hljs-type">string</span><br>	&#125;&#123;age: <span class="hljs-number">11</span>, name: <span class="hljs-string">&quot;qq&quot;</span>&#125;<br><br>	sn2 := <span class="hljs-keyword">struct</span> &#123;<br>		age  <span class="hljs-type">int</span><br>		name <span class="hljs-type">string</span><br>	&#125;&#123;age: <span class="hljs-number">11</span>, name: <span class="hljs-string">&quot;qq&quot;</span>&#125;<br><br>	<span class="hljs-keyword">if</span> sn1 == sn2 &#123;<br>		fmt.Println(<span class="hljs-string">&quot;sn1 == sn2&quot;</span>)<br>	&#125;<br><br>	sm1 := <span class="hljs-keyword">struct</span> &#123;<br>		age <span class="hljs-type">int</span><br>		m   <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">string</span><br>	&#125;&#123;age: <span class="hljs-number">11</span>, m: <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">string</span>&#123;<span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>&#125;&#125;<br><br>	sm2 := <span class="hljs-keyword">struct</span> &#123;<br>		age <span class="hljs-type">int</span><br>		m   <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">string</span><br>	&#125;&#123;age: <span class="hljs-number">11</span>, m: <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">string</span>&#123;<span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>&#125;&#125;<br><br>	<span class="hljs-keyword">if</span> sm1 == sm2 &#123;<br>		fmt.Println(<span class="hljs-string">&quot;sm1 == sm2&quot;</span>)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面代码有什么问题？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">const</span> cl = <span class="hljs-number">100</span><br><br><span class="hljs-keyword">var</span> bl = <span class="hljs-number">123</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>  &#123;<br>    <span class="hljs-built_in">println</span>(&amp;bl,bl)<br>    <span class="hljs-built_in">println</span>(&amp;cl,cl)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>查看答案</p>
-<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>编译不通过，因为map属于不可比较类型。</p>
-<blockquote>
-<p>.&#x2F;prog.go:31:9: invalid operation: sm1 &#x3D;&#x3D; sm2 (struct containing map[string]string cannot be compared)</p>
-</blockquote>
-<p>考点：结构体比较</p>
-<blockquote>
-<p>结构体比较规则注意1：只有相同类型的结构体才可以比较，结构体是否相同不但与属性类型个数有关，还与属性顺序相关。</p>
-</blockquote>
-<p>比如：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go">sn1 := <span class="hljs-keyword">struct</span> &#123;<br>	age  <span class="hljs-type">int</span><br>	name <span class="hljs-type">string</span><br>&#125;&#123;age: <span class="hljs-number">11</span>, name: <span class="hljs-string">&quot;qq&quot;</span>&#125;<br><br>sn3:= <span class="hljs-keyword">struct</span> &#123;<br>    name <span class="hljs-type">string</span><br>    age  <span class="hljs-type">int</span><br>&#125;&#123;age:<span class="hljs-number">11</span>, name:<span class="hljs-string">&quot;qq&quot;</span>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><code>sn3</code>与<code>sn1</code>就不是相同的结构体了，不能比较。</p>
-<blockquote>
-<p><strong>结构体比较规则注意2</strong>：结构体是相同的，但是结构体属性中有不可以比较的类型，如<code>map</code>,<code>slice</code>，则结构体不能用<code>==</code>比较。</p>
-</blockquote>
-<p>可以使用reflect.DeepEqual进行比较</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">if</span> reflect.DeepEqual(sm1, sm2) &#123;<br>		fmt.Println(<span class="hljs-string">&quot;sm1 == sm2&quot;</span>)<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>		fmt.Println(<span class="hljs-string">&quot;sm1 != sm2&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><a target="_blank" rel="noopener" href="https://studygolang.com/interview/question">文章出处</a></p>
+<h2 id="答案解析"><a href="#答案解析" class="headerlink" title="答案解析:"></a>答案解析:</h2><p>在 Go 语言中，常量在编译时被解析和计算，并直接嵌入到生成的可执行文件中。这意味着在程序运行时，常量的值已经被硬编码到了指令中，而不需要为其分配内存空间。</p>
+<p>常量的值在编译阶段就已经确定，并且是不可变的。由于常量的值是固定的，编译器可以直接将其替换为字面值。因此，在运行时并不需要为常量分配内存空间，也不需要为其保存内存地址。</p>
+<p>与常量不同，变量的值是在运行时动态确定的，因此需要为变量分配内存空间，并且变量在内存中有对应的地址。</p>
+<p>总结起来，常量在编译时被解析和计算，并且其值直接嵌入到生成的可执行文件中，因此不占用内存地址。而变量的值在运行时确定，需要为其分配内存空间，并且具有对应的内存地址。</p>
+<p>以下解析来自 Go<a target="_blank" rel="noopener" href="https://studygolang.com/interview/question">语言中文网</a></p>
+<p>考点：<strong>常量</strong></p>
+<p>常量不同于变量的在运行期分配内存，常量通常会被编译器在预处理阶段直接展开，作为指令数据使用，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">cannot take the address of cl<br></code></pre></td></tr></table></figure>
+
+<p>内存四区概念：</p>
+<h4 id="A-数据类型本质："><a href="#A-数据类型本质：" class="headerlink" title="A.数据类型本质："></a>A.数据类型本质：</h4><p>固定内存大小的别名</p>
+<h4 id="B-数据类型的作用："><a href="#B-数据类型的作用：" class="headerlink" title="B. 数据类型的作用："></a>B. 数据类型的作用：</h4><p>编译器预算对象(变量)分配的内存空间大小。</p>
+<h4 id="C-内存四区"><a href="#C-内存四区" class="headerlink" title="C. 内存四区"></a>C. 内存四区</h4><p>流程说明</p>
+<p>1、操作系统把物理硬盘代码load到内存</p>
+<p>2、操作系统把c代码分成四个区</p>
+<p>3、操作系统找到main函数入口执行</p>
+<h5 id="栈区-Stack-："><a href="#栈区-Stack-：" class="headerlink" title="栈区(Stack)："></a>栈区(Stack)：</h5><p>空间较小，要求数据读写性能高，数据存放时间较短暂。由编译器自动分配和释放，存放函数的参数值、函数的调用流程方法地址、局部变量等(局部变量如果产生逃逸现象，可能会挂在在堆区)</p>
+<h5 id="堆区-heap"><a href="#堆区-heap" class="headerlink" title="堆区(heap):"></a>堆区(heap):</h5><p>空间充裕，数据存放时间较久。一般由开发者分配及释放(但是Golang中会根据变量的逃逸现象来选择是否分配到栈上或堆上)，启动Golang的GC由GC清除机制自动回收。</p>
+<h5 id="全局区-静态全局变量区"><a href="#全局区-静态全局变量区" class="headerlink" title="全局区-静态全局变量区:"></a>全局区-静态全局变量区:</h5><p>全局变量的开辟是在程序在<code>main</code>之前就已经放在内存中。而且对外完全可见。即作用域在全部代码中，任何同包代码均可随时使用，在变量会搞混淆，而且在局部函数中如果同名称变量使用<code>:=</code>赋值会出现编译错误。</p>
+<p>全局变量最终在进程退出时，由操作系统回收。</p>
+<blockquote>
+<p>我么在开发的时候，尽量减少使用全局变量的设计</p>
+</blockquote>
+<h6 id="全局区-常量区："><a href="#全局区-常量区：" class="headerlink" title="全局区-常量区："></a>全局区-常量区：</h6><p>常量区也归属于全局区，常量为存放数值字面值单位，即不可修改。或者说的有的常量是直接挂钩字面值的。</p>
+<p>比如:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">const</span> cl = <span class="hljs-number">10</span><br></code></pre></td></tr></table></figure>
+
+<p>cl是字面量10的对等符号。</p>
+<p>所以在golang中，常量是无法取出地址的，因为字面量符号并没有地址而言。</p>
 
                 
               </div>
@@ -396,8 +407,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>结构体比较</div>
-      <div>http://example.com/2023/05/16/Go每日一题/结构体比较/</div>
+      <div>常量取地址</div>
+      <div>http://example.com/2023/05/17/Go每日一题/常量取地址/</div>
     </div>
     <div class="license-meta">
       
@@ -409,13 +420,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年5月16日</div>
+          <div>2023年5月17日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年5月16日</div>
+          <div>2023年5月17日</div>
         </div>
       
       
@@ -446,18 +457,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/05/17/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%B8%B8%E9%87%8F%E5%8F%96%E5%9C%B0%E5%9D%80/" title="常量取地址">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">常量取地址</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/15/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%85%B3%E4%BA%8Elen%E7%9A%84%E7%BB%86%E8%8A%82/" title="关于len的细节">
-                        <span class="hidden-mobile">关于len的细节</span>
+                      <a href="/2023/05/16/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E6%AF%94%E8%BE%83/" title="结构体比较">
+                        <span class="hidden-mobile">结构体比较</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
