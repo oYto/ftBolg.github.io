@@ -18,14 +18,14 @@
   
     <meta name="description" content="题目:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="短变量声明">
-<meta property="og:url" content="http://example.com/2023/05/21/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%9F%AD%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E/index.html">
+<meta property="og:title" content="指针变量访问成员变量">
+<meta property="og:url" content="http://example.com/2023/05/22/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%8C%87%E9%92%88%E5%8F%98%E9%87%8F%E8%AE%BF%E9%97%AE%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F/index.html">
 <meta property="og:site_name" content="胤凯">
 <meta property="og:description" content="题目:">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-05-21T09:16:15.000Z">
-<meta property="article:modified_time" content="2023-05-21T09:22:51.543Z">
+<meta property="article:published_time" content="2023-05-22T10:00:33.000Z">
+<meta property="article:modified_time" content="2023-05-22T10:05:50.065Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>短变量声明 - 胤凯</title>
+  <title>指针变量访问成员变量 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="短变量声明"></span>
+            <span id="subtitle" data-typed-text="指针变量访问成员变量"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-21 17:16" pubdate>
-          2023年5月21日 下午
+        <time datetime="2023-05-22 18:00" pubdate>
+          2023年5月22日 晚上
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          213 字
+          451 字
         
       </span>
     
@@ -268,7 +268,7 @@
         
         
         
-          2 分钟
+          4 分钟
         
       </span>
     
@@ -314,24 +314,29 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">短变量声明</h1>
+            <h1 style="display: none">指针变量访问成员变量</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面这段代码能否通过编译，如果可以，输出什么？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span>(<br>	size := <span class="hljs-number">1024</span><br>	max_size = size*<span class="hljs-number">2</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(size,max_size)<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>通过指针变量 p 访问其成员变量 name，有哪几种方式？（多选）</p>
+<ul>
+<li>A.p.name</li>
+<li>B.(&amp;p).name</li>
+<li>C.(*p).name</li>
+<li>D.p-&gt;name</li>
+</ul>
+<h4 id="答案解析"><a href="#答案解析" class="headerlink" title="答案解析"></a>答案解析</h4><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">AC</span><br></code></pre></td></tr></table></figure>
 
 
 
-<h4 id="答案解析"><a href="#答案解析" class="headerlink" title="答案解析"></a>答案解析</h4><p>​	不能通过编译。</p>
-<p><code>:=</code>是短变量声明，可以用来声明和初始化局部变量。题目中的<code>var</code>也是用来声明变量的，故这里会报错。</p>
-<p>对于短变量声明的使用，有以下限制</p>
-<ol>
-<li>必须使用显示初始化</li>
-<li>不能提供数据类型</li>
-<li>只能在函数内使用</li>
-</ol>
+<p>A. <code>p.name</code>：直接使用指针变量 <code>p</code> 访问其成员变量 <code>name</code>。</p>
+<p>C. <code>(*p).name</code>：通过解引用指针变量 <code>p</code>，然后访问其成员变量 <code>name</code>。</p>
+<p>B. <code>(&amp;p).name</code> 是不正确的，因为 <code>&amp;p</code> 表示取 <code>p</code> 的地址，得到的是一个指向指针变量 <code>p</code> 的指针，而非指针变量 <code>p</code> 自身。</p>
+<p>D. <code>p-&gt;name</code> 是 C&#x2F;C++ 中的语法，而在 Go 中是不支持的。</p>
+<p>参考程序如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-keyword">type</span> F <span class="hljs-keyword">struct</span> &#123;<br>	name <span class="hljs-type">string</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	f := F&#123;<br>		name: <span class="hljs-string">&quot;ft&quot;</span>,<br>	&#125;<br><br>	<span class="hljs-keyword">var</span> p *F <span class="hljs-comment">// 将指针类型声明为 *F</span><br>	p = &amp;f<br>	fmt.Println(p)<br>&#125;<br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
@@ -386,8 +391,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>短变量声明</div>
-      <div>http://example.com/2023/05/21/Go每日一题/短变量声明/</div>
+      <div>指针变量访问成员变量</div>
+      <div>http://example.com/2023/05/22/Go每日一题/指针变量访问成员变量/</div>
     </div>
     <div class="license-meta">
       
@@ -399,13 +404,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年5月21日</div>
+          <div>2023年5月22日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年5月21日</div>
+          <div>2023年5月22日</div>
         </div>
       
       
@@ -436,9 +441,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/05/22/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%8C%87%E9%92%88%E5%8F%98%E9%87%8F%E8%AE%BF%E9%97%AE%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F/" title="指针变量访问成员变量">
+                      <a href="/2023/05/23/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%B1%BB%E5%9E%8B%E5%AE%9A%E4%B9%89%E5%92%8C%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D/" title="类型定义和类型别名">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">指针变量访问成员变量</span>
+                        <span class="hidden-mobile">类型定义和类型别名</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -446,8 +451,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/20/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/make-append/" title="make+append">
-                        <span class="hidden-mobile">make+append</span>
+                      <a href="/2023/05/21/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%9F%AD%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E/" title="短变量声明">
+                        <span class="hidden-mobile">短变量声明</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
