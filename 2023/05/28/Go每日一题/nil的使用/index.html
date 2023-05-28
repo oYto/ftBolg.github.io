@@ -18,14 +18,14 @@
   
     <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iota">
-<meta property="og:url" content="http://example.com/2023/05/27/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/iota/index.html">
+<meta property="og:title" content="nil的使用">
+<meta property="og:url" content="http://example.com/2023/05/28/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/nil%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="胤凯">
 <meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-05-27T01:28:01.000Z">
-<meta property="article:modified_time" content="2023-05-27T01:48:09.032Z">
+<meta property="article:published_time" content="2023-05-28T07:24:22.000Z">
+<meta property="article:modified_time" content="2023-05-28T07:30:42.602Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>iota - 胤凯</title>
+  <title>nil的使用 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="iota"></span>
+            <span id="subtitle" data-typed-text="nil的使用"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-27 09:28" pubdate>
-          2023年5月27日 上午
+        <time datetime="2023-05-28 15:24" pubdate>
+          2023年5月28日 下午
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          287 字
+          481 字
         
       </span>
     
@@ -268,7 +268,7 @@
         
         
         
-          3 分钟
+          5 分钟
         
       </span>
     
@@ -314,27 +314,23 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">iota</h1>
+            <h1 style="display: none">nil的使用</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>下面代码能通过编译吗？如果可以，输出什么内容？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">const</span> (<br>	x = <span class="hljs-literal">iota</span><br>	_<br>	y<br>	z = <span class="hljs-string">&quot;zz&quot;</span><br>	k <br>	p = <span class="hljs-literal">iota</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>  &#123;<br>	fmt.Println(x,y,z,k,p)<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>下面赋值正确的是：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">A. <span class="hljs-keyword">var</span> x = <span class="hljs-literal">nil</span><br>B. <span class="hljs-keyword">var</span> x <span class="hljs-keyword">interface</span>&#123;&#125; = <span class="hljs-literal">nil</span><br>C. <span class="hljs-keyword">var</span> x <span class="hljs-type">string</span> = <span class="hljs-literal">nil</span><br>D. <span class="hljs-keyword">var</span> x <span class="hljs-type">error</span> = <span class="hljs-literal">nil</span><br></code></pre></td></tr></table></figure>
 
 
 
-<h4 id="答案："><a href="#答案：" class="headerlink" title="答案："></a>答案：</h4><p>可以通过编译，输出如下：</p>
-<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">0 </span><span class="hljs-number">2</span> zz zz <span class="hljs-number">5</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="解析："><a href="#解析：" class="headerlink" title="解析："></a>解析：</h4><p>​	这里考察的知识点是<strong>iota</strong></p>
-<p>​	<strong>iota是golang语言的常量计数器,只能在常量的表达式中使用。</strong></p>
-<p>​	iota最初的值为0，并且会随着const的出现，进行自增长。在上述代码中，const表达式中有6个变量，故iota从初始化为0，然后自增到5。</p>
-<p>​	所以输出如上。</p>
-<p>详情可以参考 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/zsy/p/5370052.html">连接</a></p>
-<p>​	</p>
+<h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>​	BD。</p>
+<p>​	在 Go 语言中，nil 是一个预定义的标识符，用于表示空值或空指针。根据不同的类型，可以使用不同的方式来赋值为 nil。在选项 B 中，使用了空接口类型（interface{}），可以将其赋值为 nil。在选项 D 中，使用了 error 类型，也可以将其赋值为 nil。</p>
+<p>​	选项 A 和选项 C 是不正确的。在 Go 语言中，nil 不能直接赋值给变量，而且字符串类型和 nil 之间不存在直接赋值的语义。</p>
+<p>​	因此，选项 B 和选项 D 是正确的方式来将变量赋值为 nil。</p>
+<p>以下解析来自 Go<a target="_blank" rel="noopener" href="https://studygolang.com/interview/question">语言中文网</a></p>
+<p>​	参考答案及解析：BD。这道题考的知识点是 nil。nil 只能赋值给指针、chan、func、interface、map 或 slice 类型的变量。强调下 D 选项的 error 类型，它是一种内置接口类型，看它的源码就知道，所以 D 是对的。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> <span class="hljs-type">error</span> <span class="hljs-keyword">interface</span> &#123;<br>	Error() <span class="hljs-type">string</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -389,8 +385,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>iota</div>
-      <div>http://example.com/2023/05/27/Go每日一题/iota/</div>
+      <div>nil的使用</div>
+      <div>http://example.com/2023/05/28/Go每日一题/nil的使用/</div>
     </div>
     <div class="license-meta">
       
@@ -402,13 +398,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年5月27日</div>
+          <div>2023年5月28日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年5月27日</div>
+          <div>2023年5月28日</div>
         </div>
       
       
@@ -439,18 +435,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/05/28/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/nil%E7%9A%84%E4%BD%BF%E7%94%A8/" title="nil的使用">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">nil的使用</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/25/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%80%BC%E5%BC%95%E7%94%A8%E5%8F%AA%E8%AF%BB/" title="值引用只读">
-                        <span class="hidden-mobile">值引用只读</span>
+                      <a href="/2023/05/27/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/iota/" title="iota">
+                        <span class="hidden-mobile">iota</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

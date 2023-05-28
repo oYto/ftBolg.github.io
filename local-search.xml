@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>nil的使用</title>
+    <link href="/2023/05/28/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/nil%E7%9A%84%E4%BD%BF%E7%94%A8/"/>
+    <url>/2023/05/28/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/nil%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>下面赋值正确的是：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">A. <span class="hljs-keyword">var</span> x = <span class="hljs-literal">nil</span><br>B. <span class="hljs-keyword">var</span> x <span class="hljs-keyword">interface</span>&#123;&#125; = <span class="hljs-literal">nil</span><br>C. <span class="hljs-keyword">var</span> x <span class="hljs-type">string</span> = <span class="hljs-literal">nil</span><br>D. <span class="hljs-keyword">var</span> x <span class="hljs-type">error</span> = <span class="hljs-literal">nil</span><br></code></pre></td></tr></table></figure><h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>​BD。</p><p>​在 Go 语言中，nil 是一个预定义的标识符，用于表示空值或空指针。根据不同的类型，可以使用不同的方式来赋值为 nil。在选项 B 中，使用了空接口类型（interface{}），可以将其赋值为 nil。在选项 D 中，使用了 error 类型，也可以将其赋值为 nil。</p><p>​选项 A 和选项 C 是不正确的。在 Go 语言中，nil 不能直接赋值给变量，而且字符串类型和 nil 之间不存在直接赋值的语义。</p><p>​因此，选项 B 和选项 D 是正确的方式来将变量赋值为 nil。</p><p>以下解析来自 Go<a href="https://studygolang.com/interview/question">语言中文网</a></p><p>​参考答案及解析：BD。这道题考的知识点是 nil。nil 只能赋值给指针、chan、func、interface、map 或 slice 类型的变量。强调下 D 选项的 error 类型，它是一种内置接口类型，看它的源码就知道，所以 D 是对的。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> <span class="hljs-type">error</span> <span class="hljs-keyword">interface</span> &#123;<br>Error() <span class="hljs-type">string</span><br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>Go</category>
+      
+      <category>每日一题</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>GO</tag>
+      
+      <tag>每日一题</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>iota</title>
     <link href="/2023/05/27/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/iota/"/>
     <url>/2023/05/27/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/iota/</url>
