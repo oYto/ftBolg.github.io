@@ -16,24 +16,25 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="阅读本书，请点击：Go程序设计语言">
+    <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《Go程序设计语言》">
-<meta property="og:url" content="http://example.com/2023/05/28/%E9%98%85%E8%AF%BB/%E3%80%8AGo%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80%E3%80%8B/index.html">
+<meta property="og:title" content="继承与多态的特点">
+<meta property="og:url" content="http://example.com/2023/05/29/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%A7%E6%89%BF%E4%B8%8E%E5%A4%9A%E6%80%81%E7%9A%84%E7%89%B9%E7%82%B9/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="阅读本书，请点击：Go程序设计语言">
+<meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/Go%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80.png">
-<meta property="article:published_time" content="2023-05-28T09:05:48.000Z">
-<meta property="article:modified_time" content="2023-05-28T09:14:04.117Z">
+<meta property="og:image" content="http://example.com/images/Golang.png">
+<meta property="article:published_time" content="2023-05-29T04:39:38.000Z">
+<meta property="article:modified_time" content="2023-05-29T04:47:13.998Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="GO">
+<meta property="article:tag" content="每日一题">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/Go%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80.png">
+<meta name="twitter:image" content="http://example.com/images/Golang.png">
   
   
   
-  <title>《Go程序设计语言》 - 胤凯</title>
+  <title>继承与多态的特点 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -233,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="《Go程序设计语言》"></span>
+            <span id="subtitle" data-typed-text="继承与多态的特点"></span>
           
         </div>
 
@@ -244,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-28 17:05" pubdate>
-          2023年5月28日 下午
+        <time datetime="2023-05-29 12:39" pubdate>
+          2023年5月29日 下午
         </time>
       </span>
     
@@ -256,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          17 字
+          1.2k 字
         
       </span>
     
@@ -267,7 +268,7 @@
         
         
         
-          1 分钟
+          10 分钟
         
       </span>
     
@@ -313,12 +314,34 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">《Go程序设计语言》</h1>
+            <h1 style="display: none">继承与多态的特点</h1>
             
             
               <div class="markdown-body">
                 
-                <p>阅读本书，请点击：<a href="/file/Go%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80.pdf">Go程序设计语言</a></p>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>以下代码能通过编译吗？为什么？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>)<br><br><span class="hljs-keyword">type</span> People <span class="hljs-keyword">interface</span> &#123;<br>	Speak(<span class="hljs-type">string</span>) <span class="hljs-type">string</span><br>&#125;<br><br><span class="hljs-keyword">type</span> Student <span class="hljs-keyword">struct</span>&#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(stu *Student)</span></span> Speak(think <span class="hljs-type">string</span>) (talk <span class="hljs-type">string</span>) &#123;<br>	<span class="hljs-keyword">if</span> think == <span class="hljs-string">&quot;love&quot;</span> &#123;<br>		talk = <span class="hljs-string">&quot;You are a good boy&quot;</span><br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		talk = <span class="hljs-string">&quot;hi&quot;</span><br>	&#125;<br>	<span class="hljs-keyword">return</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> peo People = Student&#123;&#125;<br>	think := <span class="hljs-string">&quot;love&quot;</span><br>	fmt.Println(peo.Speak(think))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>​	在接口类型的变量中持有的是对象的指针而不是对象本身，因此对于实现接口的类型，需要使用指针赋值给接口类型的变量。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> peo People = Student&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	将 <code>Student&#123;&#125;</code> 的结构体字面量赋值给 <code>peo</code>，此时会发生编译错误，因为 <code>Student&#123;&#125;</code> 的类型是 <code>Student</code>，而不是 <code>*Student</code>。</p>
+<p>要使代码通过编译，需要将 <code>Student&#123;&#125;</code> 转换为 <code>*Student</code> 类型的指针，如下所示：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> peo People = &amp;Student&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这样，<code>peo</code> 变量持有的是 <code>*Student</code> 类型的指针，可以调用 <code>peo.Speak()</code> 方法。</p>
+<p>以下解析来自 <a target="_blank" rel="noopener" href="https://studygolang.com/interview/question">Go语言中文网</a></p>
+<p>​	继承与多态的特点</p>
+<p>在 golang 中对多态的特点体现从语法上并不是很明显。</p>
+<p>我们知道发生多态的几个要素：</p>
+<p>1、有interface接口，并且有接口定义的方法。</p>
+<p>2、有子类去重写interface的接口。</p>
+<p>3、有父类指针指向子类的具体对象</p>
+<p>那么，满足上述 3 个条件，就可以产生多态效果，就是，父类指针可以调用子类的具体方法。</p>
+<p>所以上述代码报错的地方在 <code>var peo People = Student&#123;&#125;</code> 这条语句， <code>Student&#123;&#125;</code> 已经重写了父类 <code>People&#123;&#125;</code> 中的 <code>Speak(string) string</code> 方法，那么只需要用父类指针指向子类对象即可。（Go 中不叫父类，这里是为了好理解）</p>
+<p>所以应该改成 <code>var peo People = &amp;Student&#123;&#125;</code> 即可编译通过。（People 为 interface 类型，就是指针类型）</p>
 
                 
               </div>
@@ -337,8 +360,15 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E9%98%85%E8%AF%BB/" class="category-chain-item">阅读</a>
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/Go/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/" class="category-chain-item">每日一题</a>
+  
+  
+
   
 
       </span>
@@ -352,7 +382,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/MySQL/">#MySQL</a>
+        <a href="/tags/GO/">#GO</a>
+      
+        <a href="/tags/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">#每日一题</a>
       
     </div>
   
@@ -364,8 +396,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>《Go程序设计语言》</div>
-      <div>http://example.com/2023/05/28/阅读/《Go程序设计语言》/</div>
+      <div>继承与多态的特点</div>
+      <div>http://example.com/2023/05/29/Go每日一题/继承与多态的特点/</div>
     </div>
     <div class="license-meta">
       
@@ -377,13 +409,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年5月28日</div>
+          <div>2023年5月29日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年5月28日</div>
+          <div>2023年5月29日</div>
         </div>
       
       
@@ -414,18 +446,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/05/29/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%A7%E6%89%BF%E4%B8%8E%E5%A4%9A%E6%80%81%E7%9A%84%E7%89%B9%E7%82%B9/" title="继承与多态的特点">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">继承与多态的特点</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/28/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/nil%E7%9A%84%E4%BD%BF%E7%94%A8/" title="nil的使用">
-                        <span class="hidden-mobile">nil的使用</span>
+                      <a href="/2023/05/28/%E9%98%85%E8%AF%BB/%E3%80%8AGo%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80%E3%80%8B/" title="《Go程序设计语言》">
+                        <span class="hidden-mobile">《Go程序设计语言》</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
