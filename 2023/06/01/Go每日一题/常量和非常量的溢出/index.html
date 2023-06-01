@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目:">
+    <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="结构体实例json系列化">
-<meta property="og:url" content="http://example.com/2023/05/31/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E5%AE%9E%E4%BE%8Bjson%E7%B3%BB%E5%88%97%E5%8C%96/index.html">
+<meta property="og:title" content="常量和非常量的溢出">
+<meta property="og:url" content="http://example.com/2023/06/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%B8%B8%E9%87%8F%E5%92%8C%E9%9D%9E%E5%B8%B8%E9%87%8F%E7%9A%84%E6%BA%A2%E5%87%BA/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目:">
+<meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-05-31T10:06:36.000Z">
-<meta property="article:modified_time" content="2023-05-31T10:07:29.547Z">
+<meta property="article:published_time" content="2023-06-01T09:02:02.000Z">
+<meta property="article:modified_time" content="2023-06-01T09:03:15.674Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>结构体实例json系列化 - 胤凯</title>
+  <title>常量和非常量的溢出 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="结构体实例json系列化"></span>
+            <span id="subtitle" data-typed-text="常量和非常量的溢出"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-31 18:06" pubdate>
-          2023年5月31日 晚上
+        <time datetime="2023-06-01 17:02" pubdate>
+          2023年6月1日 下午
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.3k 字
+          2.1k 字
         
       </span>
     
@@ -268,7 +268,7 @@
         
         
         
-          28 分钟
+          18 分钟
         
       </span>
     
@@ -314,49 +314,79 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">结构体实例json系列化</h1>
+            <h1 style="display: none">常量和非常量的溢出</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>以下代码输出什么？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;encoding/json&quot;</span><br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	t := <span class="hljs-keyword">struct</span> &#123;<br>		time.Time<br>		N <span class="hljs-type">int</span><br>	&#125;&#123;<br>		time.Date(<span class="hljs-number">2020</span>, <span class="hljs-number">12</span>, <span class="hljs-number">20</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, time.UTC),<br>		<span class="hljs-number">5</span>,<br>	&#125;<br><br>	m, _ := json.Marshal(t)<br>	fmt.Printf(<span class="hljs-string">&quot;%s&quot;</span>, m)<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>今天给两道类似的题目，注意，有半数以上的人可能会做错！</p>
+<p>题一：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">var</span> a <span class="hljs-type">int8</span> = <span class="hljs-number">-1</span><br>    <span class="hljs-keyword">var</span> b <span class="hljs-type">int8</span> = <span class="hljs-number">-128</span> / a<br><br>    <span class="hljs-built_in">println</span>(b)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>A：<code>&#123;&quot;Time&quot;: &quot;2020-12-20T00:00:00Z&quot;, &quot;N&quot;: 5&#125;</code>；B：<code>&quot;2020-12-20T00:00:00Z&quot;</code>；C：<code>&#123;&quot;N&quot;: 5&#125;</code>；D：<code>&lt;nil&gt;</code></p>
-<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>这是来自<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/oDMSFjjzGbu7kkERM8ilGw">《Go语言爱好者周刊第74期》</a>的题目，正确率 12%。</p>
-<p>大家不用在乎是不是刁钻的题目，通过题目能学到知识才是最重要的。</p>
-<h2 id="01"><a href="#01" class="headerlink" title="01"></a>01</h2><p>对一个结构体实例进行 json 系列化，直觉很容易选 A。但很显然，不可能这么简单，因此需要仔细看代码。至于选 C 和 D 的人，多半是瞎猜的吧，当然选 B 也不排除有瞎猜的。</p>
-<p>为什么选 B 呢？我想借助一个例子讲解。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;encoding/json&quot;</span><br>  <span class="hljs-string">&quot;fmt&quot;</span><br>)<br><br><span class="hljs-keyword">type</span> Person <span class="hljs-keyword">struct</span> &#123;<br>  name  <span class="hljs-type">string</span><br>  hobby <span class="hljs-type">string</span><br>&#125;	<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>  person := Person&#123;name: <span class="hljs-string">&quot;polarisxu&quot;</span>, hobby: <span class="hljs-string">&quot;Golang&quot;</span>&#125;<br>  m, _ := json.Marshal(person)<br>  fmt.Printf(<span class="hljs-string">&quot;%s&quot;</span>, m)<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>题二：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">const</span> a <span class="hljs-type">int8</span> = <span class="hljs-number">-1</span><br>    <span class="hljs-keyword">var</span> b <span class="hljs-type">int8</span> = <span class="hljs-number">-128</span> / a<br><br>    <span class="hljs-built_in">println</span>(b)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>如果你认为输出 <code>&#123;&quot;name&quot;:&quot;polarisxu&quot;,&quot;hobby&quot;:&quot;Golang&quot;&#125;</code>，那你得去补补 encoding&#x2F;json 包的知识了。要想输出 <code>&#123;&quot;name&quot;:&quot;polarisxu&quot;,&quot;hobby&quot;:&quot;Golang”&#125;</code>，一般我们会这么做：将 Person 的字段导出，同时设置上 tag。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Person <span class="hljs-keyword">struct</span> &#123;<br>  Name  <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;name&quot;`</span><br>  Hobby <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;hobby&quot;`</span><br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>但如果我们不想导出 Person 的字段呢？可以通过实现 Marshaler 来做到。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p Person)</span></span> MarshalJSON() ([]<span class="hljs-type">byte</span>, <span class="hljs-type">error</span>) &#123;<br>	<span class="hljs-keyword">return</span> []<span class="hljs-type">byte</span>(<span class="hljs-string">`&#123;&quot;name&quot;:&quot;`</span>+p.name+<span class="hljs-string">`&quot;,&quot;hobby&quot;:&quot;`</span>+p.hobby+<span class="hljs-string">`&quot;&#125;`</span>), <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h2 id="02"><a href="#02" class="headerlink" title="02"></a>02</h2><p>回到题目上，<a target="_blank" rel="noopener" href="https://docs.studygolang.com/pkg/time/#Time">time.Time</a> 是什么类型？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Time <span class="hljs-keyword">struct</span> &#123;<br>    <span class="hljs-comment">// contains filtered or unexported fields</span><br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>这是一个没有导出任何字段的结构体类型，因此它肯定<a target="_blank" rel="noopener" href="https://docs.studygolang.com/src/time/time.go?s=38148:38191#L1230">实现了 Marshaler 接口</a>。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// MarshalJSON implements the json.Marshaler interface.</span><br><span class="hljs-comment">// The time is a quoted string in RFC 3339 format, with sub-second precision added if present.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(t Time)</span></span> MarshalJSON() ([]<span class="hljs-type">byte</span>, <span class="hljs-type">error</span>) &#123;<br>	<span class="hljs-keyword">if</span> y := t.Year(); y &lt; <span class="hljs-number">0</span> || y &gt;= <span class="hljs-number">10000</span> &#123;<br>		<span class="hljs-comment">// RFC 3339 is clear that years are 4 digits exactly.</span><br>		<span class="hljs-comment">// See golang.org/issue/4556#c15 for more discussion.</span><br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, errors.New(<span class="hljs-string">&quot;Time.MarshalJSON: year outside of range [0,9999]&quot;</span>)<br>	&#125;<br><br>	b := <span class="hljs-built_in">make</span>([]<span class="hljs-type">byte</span>, <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(RFC3339Nano)+<span class="hljs-number">2</span>)<br>	b = <span class="hljs-built_in">append</span>(b, <span class="hljs-string">&#x27;&quot;&#x27;</span>)<br>	b = t.AppendFormat(b, RFC3339Nano)<br>	b = <span class="hljs-built_in">append</span>(b, <span class="hljs-string">&#x27;&quot;&#x27;</span>)<br>	<span class="hljs-keyword">return</span> b, <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>这么说，答案不应该就是 A 吗？别急。</p>
-<h2 id="03"><a href="#03" class="headerlink" title="03"></a>03</h2><p>如果 t 是这么定义的：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go">t := <span class="hljs-keyword">struct</span> &#123;<br>  Time time.Time<br>  N <span class="hljs-type">int</span><br>&#125;&#123;<br>  time.Date(<span class="hljs-number">2020</span>, <span class="hljs-number">12</span>, <span class="hljs-number">20</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, time.UTC),<br>  <span class="hljs-number">5</span>,<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>那结果就是 A。而题目中，time.Time 是内嵌的。你学习 Go 时，应该看过通过内嵌来模拟继承的功能吧！</p>
-<p>正是因为内嵌，t 的方法集包括了 time.Time 的方法集，所以，t 自动实现了 Marshaler 接口。因此答案是 B。</p>
-<p>其实这道题的情况，在日常工作中还真有可能遇到。所以，当你内嵌某个类型时，特别这个类型不是你自己定义的，需要留意这种情况。</p>
-<p>一般解决这个问题的方法有两种：1）不内嵌；2）重新实现 MarshalJSON 方法。</p>
-<p>然而这道题无法重新实现 MarshalJSON 方法，因为结构体类型是匿名的。只能通过不内嵌来得到正确的结果。</p>
-<h2 id="04"><a href="#04" class="headerlink" title="04"></a>04</h2><p>最后一起看下 json.Marshal 函数的文档，主要看下面这段：</p>
+<p>它们分别输出什么？请写出你的答案，能解释原因最好。</p>
+<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>这是站长在去年双节期间公众号「polarisxu」上发布的题目。</p>
+<p>答对的人真不多（半数以上答错了），特别是题一，一半以上竟然是 128，难道不知道 int8 能表示的范围吗？[-128, 127]。不过为什么答案是：题一 -128，题二编译错误？</p>
+<p>其实这是一道计算机基础题。</p>
+<p>先看看网友 Jayce 的解释：第一题是 -128（untyped const）&#x2F; -1 (int8 var)，untyped 隐式转换为 int8，刚好在范围内，结果是 128 ，溢出 int8 的范围。因为结果不是常量，允许溢出，最高位为符号位，变成了补码，刚好又是 -128。 第二题 -128 和 -1 都是 const，直接在编译时求值，untyped 的 -128 隐式转 int8，结果为 128，仍然是一个 const。const 转换时不允许溢出，编译错误。 其实差别就是表达式的值，题一不是常量题二是，常量类型转换不允许溢出后 truncate。</p>
+<h2 id="关于补码"><a href="#关于补码" class="headerlink" title="关于补码"></a>关于补码</h2><p>如果你忘了补码（<code>Two&#39;s Complement</code>，2 的补码，一般直接称为补码），这里简单做个说明。</p>
+<p>先问一个问题：在计算机内部 -1 二进制表示是什么（假如为 int8）？</p>
+<p>我们很容易这么想：1 的二进制是 00000001，而最高位是符号位，因此 -1 是 10000001。因为 1 + (-1) &#x3D; 0，但 00000001 + 10000001 &#x3D; 10000010，很显然，这个结果不是 0。这是原码表示。</p>
+<p><img src="https://polarisxu.studygolang.com/posts/basic/imgs/complement01.png" srcset="/img/loading.gif" lazyload alt="原码形式"></p>
+<p>所以，计算机内部采用补码（Two’s Complement）表示负数。补码怎么得到呢？一般分两步：</p>
+<p><img src="https://polarisxu.studygolang.com/posts/basic/imgs/complement02.png" srcset="/img/loading.gif" lazyload alt="-1的补码表示"></p>
+<ul>
+<li>第一步，每一个二进制位都取相反值，0 变成 1，1 变成 0。比如，00000001 的相反值就是 11111110。</li>
+<li>第二步，将上一步得到的值加 1。11111110 就变成 11111111。</li>
+</ul>
+<p><img src="https://polarisxu.studygolang.com/posts/basic/imgs/complement03.png" srcset="/img/loading.gif" lazyload alt="补码形式的加法"></p>
+<p>关于原码、反码和补码，可以看这篇文章：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhangziqiu/archive/2011/03/30/ComputerCode.html%EF%BC%8C%E5%BE%88%E8%AF%A6%E7%BB%86%E3%80%82">https://www.cnblogs.com/zhangziqiu/archive/2011/03/30/ComputerCode.html，很详细。</a></p>
+<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><h3 id="先看题一"><a href="#先看题一" class="headerlink" title="先看题一"></a>先看题一</h3><p>因为 <code>var b int8 = -128 / a</code> 不是常量表达式，因此 untyped 常量 -128 隐式转换为 int8 类型（即和 a 的类型一致），所以 <code>-128 / a</code> 的结果是 int8 类型，值是 128，超出了 int8 的范围。因为结果不是常量，允许溢出，128 的二进制表示是 10000000，正好是 -128 的补码。所以，第一题的结果是 -128。</p>
 <blockquote>
-<p>Marshal traverses the value v recursively. If an encountered value implements the Marshaler interface and is not a nil pointer, Marshal calls its MarshalJSON method to produce JSON. If no MarshalJSON method is present but the value implements encoding.TextMarshaler instead, Marshal calls its MarshalText method and encodes the result as a JSON string. The nil pointer exception is not strictly necessary but mimics a similar, necessary exception in the behavior of UnmarshalJSON.</p>
+<p>关于整数溢出的 Go 语言规范说明：<a target="_blank" rel="noopener" href="https://hao.studygolang.com/golang_spec.html#id158%E3%80%82">https://hao.studygolang.com/golang_spec.html#id158。</a></p>
 </blockquote>
-<p>大意是说，如果值实现了 json.Marshaler 接口并且不是 nil 指针，则 Marshal 函数会调用其 MarshalJSON 方法以生成 JSON。如果不存在 MarshalJSON 方法，但该值实现 encoding.TextMarshaler 接口，则 Marshal 函数调用其 MarshalText 方法并将结果编码为 JSON 字符串。</p>
-<p>可见，json.Marshal 函数优先调用 MarshalJSON，然后是 MarshalText，如果都没有，才会走正常的类型编码逻辑。</p>
-<p>答案解析来自：<a target="_blank" rel="noopener" href="https://polarisxu.studygolang.com/posts/go/action/weekly-question-embed-time/%E3%80%82">https://polarisxu.studygolang.com/posts/go/action/weekly-question-embed-time/。</a></p>
+<p>在 Go 语言规范中关于整数运算有这样的说明：<a target="_blank" rel="noopener" href="https://hao.studygolang.com/golang_spec.html#id327">https://hao.studygolang.com/golang_spec.html#id327</a></p>
+<blockquote>
+<p>对于两个整数值 x 和 y ，其整数商 q &#x3D; x &#x2F; y 和余数 r &#x3D; x % y 满足如下关系：</p>
+<p>x &#x3D; q*y + r 且 |r| &lt; |y|</p>
+<p>这个规则有一个例外，如果对于 x 的整数类型来说，被除数 x 是该类型中最负的那个值，那么，因为 补码 的 整数溢出 ，商 q &#x3D; x &#x2F; -1 等于 x （并且 r &#x3D; 0 ）。</p>
+</blockquote>
+<p>所以例外情况有：</p>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="left">x, q 的值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">int8</td>
+<td align="left">-128</td>
+</tr>
+<tr>
+<td align="left">int16</td>
+<td align="left">-32768</td>
+</tr>
+<tr>
+<td align="left">int32</td>
+<td align="left">-2147483648</td>
+</tr>
+<tr>
+<td align="left">int64</td>
+<td align="left">-9223372036854775808</td>
+</tr>
+</tbody></table>
+<h3 id="再看题二"><a href="#再看题二" class="headerlink" title="再看题二"></a>再看题二</h3><p>对于 <code>var b int8 = -128 / a</code>，因为 a 是 int8 类型常量，所以 <code>-128 / a</code> 是常量表达式，在编译器计算，结果必然也是常量。因为 a 的类型是 int8，因此 -128 也会隐式转为 int8 类型，128 这个结果超过了 int8 的范围，但常量不允许溢出，因此编译报错。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这题并非 Go 独有，而是计算机的基础。比如相应的 C 语言程序，结果和 Go 对应程序是一样的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 对应题一</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">char</span> a = <span class="hljs-number">-1</span>;<br>        <span class="hljs-type">char</span> b = <span class="hljs-number">-128</span> / a;<br><br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, b);<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>结果 -128。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 对应题二</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">const</span> <span class="hljs-type">char</span> a = <span class="hljs-number">-1</span>;<br>        <span class="hljs-type">char</span> b = <span class="hljs-number">-128</span> / a;<br><br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, b);<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>编译报错。</p>
+<p>答案解析来自：<a target="_blank" rel="noopener" href="https://polarisxu.studygolang.com/posts/basic/complement/%E3%80%82">https://polarisxu.studygolang.com/posts/basic/complement/。</a></p>
 
                 
               </div>
@@ -411,8 +441,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>结构体实例json系列化</div>
-      <div>http://example.com/2023/05/31/Go每日一题/结构体实例json系列化/</div>
+      <div>常量和非常量的溢出</div>
+      <div>http://example.com/2023/06/01/Go每日一题/常量和非常量的溢出/</div>
     </div>
     <div class="license-meta">
       
@@ -424,13 +454,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年5月31日</div>
+          <div>2023年6月1日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年5月31日</div>
+          <div>2023年6月1日</div>
         </div>
       
       
@@ -461,18 +491,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/06/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%B8%B8%E9%87%8F%E5%92%8C%E9%9D%9E%E5%B8%B8%E9%87%8F%E7%9A%84%E6%BA%A2%E5%87%BA/" title="常量和非常量的溢出">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">常量和非常量的溢出</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/30/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%A9%BA%E6%8E%A5%E5%8F%A3%E5%92%8C%E9%9D%9E%E7%A9%BA%E6%8E%A5%E5%8F%A3/" title="空接口和非空接口">
-                        <span class="hidden-mobile">空接口和非空接口</span>
+                      <a href="/2023/05/31/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E5%AE%9E%E4%BE%8Bjson%E7%B3%BB%E5%88%97%E5%8C%96/" title="结构体实例json系列化">
+                        <span class="hidden-mobile">结构体实例json系列化</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
