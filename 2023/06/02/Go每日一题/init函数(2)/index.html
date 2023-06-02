@@ -18,14 +18,14 @@
   
     <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="常量和非常量的溢出">
-<meta property="og:url" content="http://example.com/2023/06/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%B8%B8%E9%87%8F%E5%92%8C%E9%9D%9E%E5%B8%B8%E9%87%8F%E7%9A%84%E6%BA%A2%E5%87%BA/index.html">
+<meta property="og:title" content="init函数">
+<meta property="og:url" content="http://example.com/2023/06/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/init%E5%87%BD%E6%95%B0(2)/index.html">
 <meta property="og:site_name" content="胤凯">
 <meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-06-01T09:02:02.000Z">
-<meta property="article:modified_time" content="2023-06-01T09:03:15.674Z">
+<meta property="article:published_time" content="2023-06-02T03:11:34.000Z">
+<meta property="article:modified_time" content="2023-06-02T03:15:34.305Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>常量和非常量的溢出 - 胤凯</title>
+  <title>init函数 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="常量和非常量的溢出"></span>
+            <span id="subtitle" data-typed-text="init函数"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-06-01 17:02" pubdate>
-          2023年6月1日 下午
+        <time datetime="2023-06-02 11:11" pubdate>
+          2023年6月2日 上午
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          417 字
         
       </span>
     
@@ -268,7 +268,7 @@
         
         
         
-          18 分钟
+          4 分钟
         
       </span>
     
@@ -314,79 +314,28 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">常量和非常量的溢出</h1>
+            <h1 style="display: none">init函数</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>今天给两道类似的题目，注意，有半数以上的人可能会做错！</p>
-<p>题一：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">var</span> a <span class="hljs-type">int8</span> = <span class="hljs-number">-1</span><br>    <span class="hljs-keyword">var</span> b <span class="hljs-type">int8</span> = <span class="hljs-number">-128</span> / a<br><br>    <span class="hljs-built_in">println</span>(b)<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>题二：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">const</span> a <span class="hljs-type">int8</span> = <span class="hljs-number">-1</span><br>    <span class="hljs-keyword">var</span> b <span class="hljs-type">int8</span> = <span class="hljs-number">-128</span> / a<br><br>    <span class="hljs-built_in">println</span>(b)<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>它们分别输出什么？请写出你的答案，能解释原因最好。</p>
-<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>这是站长在去年双节期间公众号「polarisxu」上发布的题目。</p>
-<p>答对的人真不多（半数以上答错了），特别是题一，一半以上竟然是 128，难道不知道 int8 能表示的范围吗？[-128, 127]。不过为什么答案是：题一 -128，题二编译错误？</p>
-<p>其实这是一道计算机基础题。</p>
-<p>先看看网友 Jayce 的解释：第一题是 -128（untyped const）&#x2F; -1 (int8 var)，untyped 隐式转换为 int8，刚好在范围内，结果是 128 ，溢出 int8 的范围。因为结果不是常量，允许溢出，最高位为符号位，变成了补码，刚好又是 -128。 第二题 -128 和 -1 都是 const，直接在编译时求值，untyped 的 -128 隐式转 int8，结果为 128，仍然是一个 const。const 转换时不允许溢出，编译错误。 其实差别就是表达式的值，题一不是常量题二是，常量类型转换不允许溢出后 truncate。</p>
-<h2 id="关于补码"><a href="#关于补码" class="headerlink" title="关于补码"></a>关于补码</h2><p>如果你忘了补码（<code>Two&#39;s Complement</code>，2 的补码，一般直接称为补码），这里简单做个说明。</p>
-<p>先问一个问题：在计算机内部 -1 二进制表示是什么（假如为 int8）？</p>
-<p>我们很容易这么想：1 的二进制是 00000001，而最高位是符号位，因此 -1 是 10000001。因为 1 + (-1) &#x3D; 0，但 00000001 + 10000001 &#x3D; 10000010，很显然，这个结果不是 0。这是原码表示。</p>
-<p><img src="https://polarisxu.studygolang.com/posts/basic/imgs/complement01.png" srcset="/img/loading.gif" lazyload alt="原码形式"></p>
-<p>所以，计算机内部采用补码（Two’s Complement）表示负数。补码怎么得到呢？一般分两步：</p>
-<p><img src="https://polarisxu.studygolang.com/posts/basic/imgs/complement02.png" srcset="/img/loading.gif" lazyload alt="-1的补码表示"></p>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>关于 init 函数，下面说法正确的是：</p>
 <ul>
-<li>第一步，每一个二进制位都取相反值，0 变成 1，1 变成 0。比如，00000001 的相反值就是 11111110。</li>
-<li>第二步，将上一步得到的值加 1。11111110 就变成 11111111。</li>
+<li>A. 一个包中，可以包含多个 init 函数；</li>
+<li>B. 程序运行时，先执行依赖包的 init 函数，再执行 main 包内的 init 函数；</li>
+<li>C. main 包中，不能有 init 函数；</li>
+<li>D. init 函数可以被其他函数调用；</li>
 </ul>
-<p><img src="https://polarisxu.studygolang.com/posts/basic/imgs/complement03.png" srcset="/img/loading.gif" lazyload alt="补码形式的加法"></p>
-<p>关于原码、反码和补码，可以看这篇文章：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhangziqiu/archive/2011/03/30/ComputerCode.html%EF%BC%8C%E5%BE%88%E8%AF%A6%E7%BB%86%E3%80%82">https://www.cnblogs.com/zhangziqiu/archive/2011/03/30/ComputerCode.html，很详细。</a></p>
-<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><h3 id="先看题一"><a href="#先看题一" class="headerlink" title="先看题一"></a>先看题一</h3><p>因为 <code>var b int8 = -128 / a</code> 不是常量表达式，因此 untyped 常量 -128 隐式转换为 int8 类型（即和 a 的类型一致），所以 <code>-128 / a</code> 的结果是 int8 类型，值是 128，超出了 int8 的范围。因为结果不是常量，允许溢出，128 的二进制表示是 10000000，正好是 -128 的补码。所以，第一题的结果是 -128。</p>
-<blockquote>
-<p>关于整数溢出的 Go 语言规范说明：<a target="_blank" rel="noopener" href="https://hao.studygolang.com/golang_spec.html#id158%E3%80%82">https://hao.studygolang.com/golang_spec.html#id158。</a></p>
-</blockquote>
-<p>在 Go 语言规范中关于整数运算有这样的说明：<a target="_blank" rel="noopener" href="https://hao.studygolang.com/golang_spec.html#id327">https://hao.studygolang.com/golang_spec.html#id327</a></p>
-<blockquote>
-<p>对于两个整数值 x 和 y ，其整数商 q &#x3D; x &#x2F; y 和余数 r &#x3D; x % y 满足如下关系：</p>
-<p>x &#x3D; q*y + r 且 |r| &lt; |y|</p>
-<p>这个规则有一个例外，如果对于 x 的整数类型来说，被除数 x 是该类型中最负的那个值，那么，因为 补码 的 整数溢出 ，商 q &#x3D; x &#x2F; -1 等于 x （并且 r &#x3D; 0 ）。</p>
-</blockquote>
-<p>所以例外情况有：</p>
-<table>
-<thead>
-<tr>
-<th align="left">类型</th>
-<th align="left">x, q 的值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">int8</td>
-<td align="left">-128</td>
-</tr>
-<tr>
-<td align="left">int16</td>
-<td align="left">-32768</td>
-</tr>
-<tr>
-<td align="left">int32</td>
-<td align="left">-2147483648</td>
-</tr>
-<tr>
-<td align="left">int64</td>
-<td align="left">-9223372036854775808</td>
-</tr>
-</tbody></table>
-<h3 id="再看题二"><a href="#再看题二" class="headerlink" title="再看题二"></a>再看题二</h3><p>对于 <code>var b int8 = -128 / a</code>，因为 a 是 int8 类型常量，所以 <code>-128 / a</code> 是常量表达式，在编译器计算，结果必然也是常量。因为 a 的类型是 int8，因此 -128 也会隐式转为 int8 类型，128 这个结果超过了 int8 的范围，但常量不允许溢出，因此编译报错。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这题并非 Go 独有，而是计算机的基础。比如相应的 C 语言程序，结果和 Go 对应程序是一样的。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 对应题一</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">char</span> a = <span class="hljs-number">-1</span>;<br>        <span class="hljs-type">char</span> b = <span class="hljs-number">-128</span> / a;<br><br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, b);<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>结果 -128。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 对应题二</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">const</span> <span class="hljs-type">char</span> a = <span class="hljs-number">-1</span>;<br>        <span class="hljs-type">char</span> b = <span class="hljs-number">-128</span> / a;<br><br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, b);<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>编译报错。</p>
-<p>答案解析来自：<a target="_blank" rel="noopener" href="https://polarisxu.studygolang.com/posts/basic/complement/%E3%80%82">https://polarisxu.studygolang.com/posts/basic/complement/。</a></p>
+<h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>​	AB。</p>
+<p>关于 init() 函数有几个需要注意的地方：</p>
+<ol>
+<li>init() 函数是用于程序执行前做包的初始化的函数，比如初始化包里的变量等;</li>
+<li>一个包可以出线多个 init() 函数,一个源文件也可以包含多个 init() 函数；</li>
+<li>同一个包中多个 init() 函数的执行顺序没有明确定义，<strong>但是不同包的init函数是根据包导入的依赖关系决定的</strong>;</li>
+<li>init() 函数在代码中不能被显示调用、不能被引用（赋值给函数变量），否则出现编译错误;</li>
+<li>一个包被引用多次，如 A import B,C import B,A import C，B 被引用多次，但 B 包只会初始化一次；</li>
+<li>引入包，不可出现死循坏。即A import B,B import A，这种情况编译失败；</li>
+</ol>
 
                 
               </div>
@@ -441,8 +390,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>常量和非常量的溢出</div>
-      <div>http://example.com/2023/06/01/Go每日一题/常量和非常量的溢出/</div>
+      <div>init函数</div>
+      <div>http://example.com/2023/06/02/Go每日一题/init函数(2)/</div>
     </div>
     <div class="license-meta">
       
@@ -454,13 +403,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年6月1日</div>
+          <div>2023年6月2日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年6月1日</div>
+          <div>2023年6月2日</div>
         </div>
       
       
@@ -491,18 +440,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/06/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/init%E5%87%BD%E6%95%B0(2)/" title="init函数">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">init函数</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/31/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E5%AE%9E%E4%BE%8Bjson%E7%B3%BB%E5%88%97%E5%8C%96/" title="结构体实例json系列化">
-                        <span class="hidden-mobile">结构体实例json系列化</span>
+                      <a href="/2023/06/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%B8%B8%E9%87%8F%E5%92%8C%E9%9D%9E%E5%B8%B8%E9%87%8F%E7%9A%84%E6%BA%A2%E5%87%BA/" title="常量和非常量的溢出">
+                        <span class="hidden-mobile">常量和非常量的溢出</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

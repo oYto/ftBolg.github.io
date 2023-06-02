@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>init函数</title>
+    <link href="/2023/06/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/init%E5%87%BD%E6%95%B0(2)/"/>
+    <url>/2023/06/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/init%E5%87%BD%E6%95%B0(2)/</url>
+    
+    <content type="html"><![CDATA[<h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>关于 init 函数，下面说法正确的是：</p><ul><li>A. 一个包中，可以包含多个 init 函数；</li><li>B. 程序运行时，先执行依赖包的 init 函数，再执行 main 包内的 init 函数；</li><li>C. main 包中，不能有 init 函数；</li><li>D. init 函数可以被其他函数调用；</li></ul><h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>​AB。</p><p>关于 init() 函数有几个需要注意的地方：</p><ol><li>init() 函数是用于程序执行前做包的初始化的函数，比如初始化包里的变量等;</li><li>一个包可以出线多个 init() 函数,一个源文件也可以包含多个 init() 函数；</li><li>同一个包中多个 init() 函数的执行顺序没有明确定义，<strong>但是不同包的init函数是根据包导入的依赖关系决定的</strong>;</li><li>init() 函数在代码中不能被显示调用、不能被引用（赋值给函数变量），否则出现编译错误;</li><li>一个包被引用多次，如 A import B,C import B,A import C，B 被引用多次，但 B 包只会初始化一次；</li><li>引入包，不可出现死循坏。即A import B,B import A，这种情况编译失败；</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>Go</category>
+      
+      <category>每日一题</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>GO</tag>
+      
+      <tag>每日一题</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>常量和非常量的溢出</title>
     <link href="/2023/06/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%B8%B8%E9%87%8F%E5%92%8C%E9%9D%9E%E5%B8%B8%E9%87%8F%E7%9A%84%E6%BA%A2%E5%87%BA/"/>
     <url>/2023/06/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%B8%B8%E9%87%8F%E5%92%8C%E9%9D%9E%E5%B8%B8%E9%87%8F%E7%9A%84%E6%BA%A2%E5%87%BA/</url>
