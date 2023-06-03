@@ -18,14 +18,14 @@
   
     <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="init函数">
-<meta property="og:url" content="http://example.com/2023/06/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/init%E5%87%BD%E6%95%B0(2)/index.html">
+<meta property="og:title" content="函数赋值给变量">
+<meta property="og:url" content="http://example.com/2023/06/03/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%87%BD%E6%95%B0%E8%B5%8B%E5%80%BC%E7%BB%99%E5%8F%98%E9%87%8F/index.html">
 <meta property="og:site_name" content="胤凯">
 <meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-06-02T03:11:34.000Z">
-<meta property="article:modified_time" content="2023-06-02T03:15:34.305Z">
+<meta property="article:published_time" content="2023-06-03T03:34:21.000Z">
+<meta property="article:modified_time" content="2023-06-03T03:36:18.757Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>init函数 - 胤凯</title>
+  <title>函数赋值给变量 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="init函数"></span>
+            <span id="subtitle" data-typed-text="函数赋值给变量"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-06-02 11:11" pubdate>
-          2023年6月2日 上午
+        <time datetime="2023-06-03 11:34" pubdate>
+          2023年6月3日 中午
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          417 字
+          439 字
         
       </span>
     
@@ -314,28 +314,23 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">init函数</h1>
+            <h1 style="display: none">函数赋值给变量</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>关于 init 函数，下面说法正确的是：</p>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>下面这段代码输出什么以及原因？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">hello</span><span class="hljs-params">()</span></span> []<span class="hljs-type">string</span> &#123;  <br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;  <br>    h := hello<br>    <span class="hljs-keyword">if</span> h == <span class="hljs-literal">nil</span> &#123;<br>        fmt.Println(<span class="hljs-string">&quot;nil&quot;</span>)<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        fmt.Println(<span class="hljs-string">&quot;not nil&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <ul>
-<li>A. 一个包中，可以包含多个 init 函数；</li>
-<li>B. 程序运行时，先执行依赖包的 init 函数，再执行 main 包内的 init 函数；</li>
-<li>C. main 包中，不能有 init 函数；</li>
-<li>D. init 函数可以被其他函数调用；</li>
+<li>A. nil</li>
+<li>B. not nil</li>
+<li>C. compilation error</li>
 </ul>
-<h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>​	AB。</p>
-<p>关于 init() 函数有几个需要注意的地方：</p>
-<ol>
-<li>init() 函数是用于程序执行前做包的初始化的函数，比如初始化包里的变量等;</li>
-<li>一个包可以出线多个 init() 函数,一个源文件也可以包含多个 init() 函数；</li>
-<li>同一个包中多个 init() 函数的执行顺序没有明确定义，<strong>但是不同包的init函数是根据包导入的依赖关系决定的</strong>;</li>
-<li>init() 函数在代码中不能被显示调用、不能被引用（赋值给函数变量），否则出现编译错误;</li>
-<li>一个包被引用多次，如 A import B,C import B,A import C，B 被引用多次，但 B 包只会初始化一次；</li>
-<li>引入包，不可出现死循坏。即A import B,B import A，这种情况编译失败；</li>
-</ol>
+<h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>​	B。</p>
+<p>​	在Go语言中，函数变量可以存储函数的地址。在 <code>main</code> 函数中，变量 <code>h</code> 被赋值为 <code>hello</code> 函数的地址。即使 <code>hello</code> 函数返回了一个空切片 <code>nil</code>，它仍然被认为不是 <code>nil</code>。因此，条件 <code>h == nil</code> 不满足，程序会执行 <code>else</code> 分支，输出 “not nil”。</p>
+<p>以下解析来自<a target="_blank" rel="noopener" href="https://studygolang.com/interview/question">Go语言中文网</a></p>
+<p>​	这道题目里面，是将函数 hello 赋值给变量 h，而不是函数的返回值（即不是进行函数调用），所以输出 not nil。注意 Go 中函数是一等公民。</p>
 
                 
               </div>
@@ -390,8 +385,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>init函数</div>
-      <div>http://example.com/2023/06/02/Go每日一题/init函数(2)/</div>
+      <div>函数赋值给变量</div>
+      <div>http://example.com/2023/06/03/Go每日一题/函数赋值给变量/</div>
     </div>
     <div class="license-meta">
       
@@ -403,13 +398,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年6月2日</div>
+          <div>2023年6月3日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年6月2日</div>
+          <div>2023年6月3日</div>
         </div>
       
       
@@ -440,18 +435,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/06/03/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%87%BD%E6%95%B0%E8%B5%8B%E5%80%BC%E7%BB%99%E5%8F%98%E9%87%8F/" title="函数赋值给变量">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">函数赋值给变量</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/06/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%B8%B8%E9%87%8F%E5%92%8C%E9%9D%9E%E5%B8%B8%E9%87%8F%E7%9A%84%E6%BA%A2%E5%87%BA/" title="常量和非常量的溢出">
-                        <span class="hidden-mobile">常量和非常量的溢出</span>
+                      <a href="/2023/06/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/init%E5%87%BD%E6%95%B0(2)/" title="init函数">
+                        <span class="hidden-mobile">init函数</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
