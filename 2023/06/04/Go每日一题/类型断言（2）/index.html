@@ -18,14 +18,14 @@
   
     <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="函数赋值给变量">
-<meta property="og:url" content="http://example.com/2023/06/03/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%87%BD%E6%95%B0%E8%B5%8B%E5%80%BC%E7%BB%99%E5%8F%98%E9%87%8F/index.html">
+<meta property="og:title" content="类型断言">
+<meta property="og:url" content="http://example.com/2023/06/04/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80%EF%BC%882%EF%BC%89/index.html">
 <meta property="og:site_name" content="胤凯">
 <meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-06-03T03:34:21.000Z">
-<meta property="article:modified_time" content="2023-06-03T03:36:18.757Z">
+<meta property="article:published_time" content="2023-06-04T04:09:49.000Z">
+<meta property="article:modified_time" content="2023-06-04T04:29:33.521Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>函数赋值给变量 - 胤凯</title>
+  <title>类型断言 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="函数赋值给变量"></span>
+            <span id="subtitle" data-typed-text="类型断言"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-06-03 11:34" pubdate>
-          2023年6月3日 中午
+        <time datetime="2023-06-04 12:09" pubdate>
+          2023年6月4日 中午
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          439 字
+          843 字
         
       </span>
     
@@ -268,7 +268,7 @@
         
         
         
-          4 分钟
+          8 分钟
         
       </span>
     
@@ -314,23 +314,25 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">函数赋值给变量</h1>
+            <h1 style="display: none">类型断言</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>下面这段代码输出什么以及原因？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">hello</span><span class="hljs-params">()</span></span> []<span class="hljs-type">string</span> &#123;  <br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;  <br>    h := hello<br>    <span class="hljs-keyword">if</span> h == <span class="hljs-literal">nil</span> &#123;<br>        fmt.Println(<span class="hljs-string">&quot;nil&quot;</span>)<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        fmt.Println(<span class="hljs-string">&quot;not nil&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>下面这段代码能否编译通过？如果可以，输出什么？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetValue</span><span class="hljs-params">()</span></span> <span class="hljs-type">int</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">1</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	i := GetValue()<br>	<span class="hljs-keyword">switch</span> i.(<span class="hljs-keyword">type</span>) &#123;<br>	<span class="hljs-keyword">case</span> <span class="hljs-type">int</span>:<br>		<span class="hljs-built_in">println</span>(<span class="hljs-string">&quot;int&quot;</span>)<br>	<span class="hljs-keyword">case</span> <span class="hljs-type">string</span>:<br>		<span class="hljs-built_in">println</span>(<span class="hljs-string">&quot;string&quot;</span>)<br>	<span class="hljs-keyword">case</span> <span class="hljs-keyword">interface</span>&#123;&#125;:<br>		<span class="hljs-built_in">println</span>(<span class="hljs-string">&quot;interface&quot;</span>)<br>	<span class="hljs-keyword">default</span>:<br>		<span class="hljs-built_in">println</span>(<span class="hljs-string">&quot;unknown&quot;</span>)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<ul>
-<li>A. nil</li>
-<li>B. not nil</li>
-<li>C. compilation error</li>
-</ul>
-<h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>​	B。</p>
-<p>​	在Go语言中，函数变量可以存储函数的地址。在 <code>main</code> 函数中，变量 <code>h</code> 被赋值为 <code>hello</code> 函数的地址。即使 <code>hello</code> 函数返回了一个空切片 <code>nil</code>，它仍然被认为不是 <code>nil</code>。因此，条件 <code>h == nil</code> 不满足，程序会执行 <code>else</code> 分支，输出 “not nil”。</p>
-<p>以下解析来自<a target="_blank" rel="noopener" href="https://studygolang.com/interview/question">Go语言中文网</a></p>
-<p>​	这道题目里面，是将函数 hello 赋值给变量 h，而不是函数的返回值（即不是进行函数调用），所以输出 not nil。注意 Go 中函数是一等公民。</p>
+
+
+<h4 id="答案解析"><a href="#答案解析" class="headerlink" title="答案解析"></a>答案解析</h4><p>​	该代码无法编译通过。</p>
+<p>原因是在 <code>switch i.(type)</code> 语句中，<code>i</code> 是一个普通的 <code>int</code> 类型变量，而 <code>i.(type)</code> 只能用于接口类型的断言。因此，编译器会报错。</p>
+<p>​	如果想要判断一个变量的类型，可以使用 <code>reflect</code> 包来实现。以下是修改后的代码示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;reflect&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetValue</span><span class="hljs-params">()</span></span> <span class="hljs-type">int</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">1</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	i := GetValue()<br>	<span class="hljs-keyword">switch</span> reflect.TypeOf(i).Kind() &#123;<br>	<span class="hljs-keyword">case</span> reflect.Int:<br>		fmt.Println(<span class="hljs-string">&quot;int&quot;</span>)<br>	<span class="hljs-keyword">case</span> reflect.String:<br>		fmt.Println(<span class="hljs-string">&quot;string&quot;</span>)<br>	<span class="hljs-keyword">default</span>:<br>		fmt.Println(<span class="hljs-string">&quot;unknown&quot;</span>)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>以下解析来自 <a target="_blank" rel="noopener" href="https://studygolang.com/interview/question">Go语言中文网</a></p>
+<p>​	编译失败。考点：类型断言，类型断言的语法形如：i.(type)，其中 i 是接口，type 是固定关键字，需要注意的是，只有接口类型才可以使用类型断言。</p>
 
                 
               </div>
@@ -385,8 +387,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>函数赋值给变量</div>
-      <div>http://example.com/2023/06/03/Go每日一题/函数赋值给变量/</div>
+      <div>类型断言</div>
+      <div>http://example.com/2023/06/04/Go每日一题/类型断言（2）/</div>
     </div>
     <div class="license-meta">
       
@@ -398,13 +400,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年6月3日</div>
+          <div>2023年6月4日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年6月3日</div>
+          <div>2023年6月4日</div>
         </div>
       
       
@@ -435,18 +437,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/06/04/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80%EF%BC%882%EF%BC%89/" title="类型断言">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">类型断言</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/06/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/init%E5%87%BD%E6%95%B0(2)/" title="init函数">
-                        <span class="hidden-mobile">init函数</span>
+                      <a href="/2023/06/03/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%87%BD%E6%95%B0%E8%B5%8B%E5%80%BC%E7%BB%99%E5%8F%98%E9%87%8F/" title="函数赋值给变量">
+                        <span class="hidden-mobile">函数赋值给变量</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
