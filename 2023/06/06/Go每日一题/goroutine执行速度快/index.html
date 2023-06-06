@@ -18,14 +18,14 @@
   
     <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="channel">
-<meta property="og:url" content="http://example.com/2023/06/05/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/channel/index.html">
+<meta property="og:title" content="goroutine执行速度快">
+<meta property="og:url" content="http://example.com/2023/06/06/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/goroutine%E6%89%A7%E8%A1%8C%E9%80%9F%E5%BA%A6%E5%BF%AB/index.html">
 <meta property="og:site_name" content="胤凯">
 <meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-06-05T01:44:05.000Z">
-<meta property="article:modified_time" content="2023-06-05T01:52:14.180Z">
+<meta property="article:published_time" content="2023-06-06T00:24:48.000Z">
+<meta property="article:modified_time" content="2023-06-06T00:26:49.904Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>channel - 胤凯</title>
+  <title>goroutine执行速度快 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="channel"></span>
+            <span id="subtitle" data-typed-text="goroutine执行速度快"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-06-05 09:44" pubdate>
-          2023年6月5日 上午
+        <time datetime="2023-06-06 08:24" pubdate>
+          2023年6月6日 早上
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          713 字
+          644 字
         
       </span>
     
@@ -314,28 +314,26 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">channel</h1>
+            <h1 style="display: none">goroutine执行速度快</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>执行下面的代码会发生什么？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	ch := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>, <span class="hljs-number">1000</span>)<br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;<br>			ch &lt;- i<br>		&#125;<br>	&#125;()<br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		<span class="hljs-keyword">for</span> &#123;<br>			a, ok := &lt;-ch<br>			<span class="hljs-keyword">if</span> !ok &#123;<br>				fmt.Println(<span class="hljs-string">&quot;close&quot;</span>)<br>				<span class="hljs-keyword">return</span><br>			&#125;<br>			fmt.Println(<span class="hljs-string">&quot;a: &quot;</span>, a)<br>		&#125;<br>	&#125;()<br>	<span class="hljs-built_in">close</span>(ch)<br>	fmt.Println(<span class="hljs-string">&quot;ok&quot;</span>)<br>	time.Sleep(time.Second * <span class="hljs-number">100</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>以下代码有什么问题？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;sync&quot;</span><br>)<br><br><span class="hljs-keyword">const</span> N = <span class="hljs-number">10</span><br><br><span class="hljs-keyword">var</span> wg = &amp;sync.WaitGroup&#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; N; i++ &#123;<br>		<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(i <span class="hljs-type">int</span>)</span></span> &#123;<br>			wg.Add(<span class="hljs-number">1</span>)<br>			<span class="hljs-built_in">println</span>(i)<br>			<span class="hljs-keyword">defer</span> wg.Done()<br>		&#125;(i)<br>	&#125;<br>	wg.Wait()<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>以下解析来自 <a target="_blank" rel="noopener" href="https://studygolang.com/interview/question">Go语言中文网</a></p>
-<p>记住 channel 的一些关键特性：</p>
-<ul>
-<li>给一个 nil channel 发送数据，造成永远阻塞</li>
-<li>从一个 nil channel 接收数据，造成永远阻塞</li>
-<li>给一个已经关闭的 channel 发送数据，引起 panic</li>
-<li>从一个已经关闭的 channel 接收数据，如果缓冲区中为空，则返回一个零值</li>
-<li>无缓冲的channel是同步的，而有缓冲的channel是非同步的</li>
-</ul>
-<p>15字口诀：“空读写阻塞，写关闭异常，读关闭空零”，往已经关闭的 channel 写入数据会 panic。</p>
-<p>本题中，因为 main 在开辟完两个 goroutine 之后，立刻关闭了 ch， 结果就是 panic：</p>
-<blockquote>
-<p>panic: send on closed channel</p>
-</blockquote>
+
+
+
+
+<h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>输出结果不唯一，代码存在风险, 所有 go 语句未必都能执行到。</p>
+<p>这是使用 WaitGroup 经常犯下的错误！请各位同学多次运行就会发现输出都会不同甚至又出现报错的问题。 这是因为 go 执行太快了，导致 wg.Add(1) 还没有执行 main 函数就执行完毕了。wg.Add 的位置放错了。</p>
+<p>改为下面代码试试：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;sync&quot;</span><br>)<br><br><span class="hljs-keyword">const</span> N = <span class="hljs-number">10</span><br><br><span class="hljs-keyword">var</span> wg = &amp;sync.WaitGroup&#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>    <span class="hljs-keyword">for</span> i:= <span class="hljs-number">0</span>; i&lt; N; i++ &#123;<br>        wg.Add(<span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(i <span class="hljs-type">int</span>)</span></span> &#123;<br>            <span class="hljs-built_in">println</span>(i)<br>            <span class="hljs-keyword">defer</span> wg.Done()<br>        &#125;(i)<br>    &#125;<br><br>    wg.Wait()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>以上解析来自<a target="_blank" rel="noopener" href="https://studygolang.com/interview/question">Go语言中文网</a></p>
 
                 
               </div>
@@ -390,8 +388,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>channel</div>
-      <div>http://example.com/2023/06/05/Go每日一题/channel/</div>
+      <div>goroutine执行速度快</div>
+      <div>http://example.com/2023/06/06/Go每日一题/goroutine执行速度快/</div>
     </div>
     <div class="license-meta">
       
@@ -403,13 +401,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年6月5日</div>
+          <div>2023年6月6日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年6月5日</div>
+          <div>2023年6月6日</div>
         </div>
       
       
@@ -440,18 +438,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/06/06/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/goroutine%E6%89%A7%E8%A1%8C%E9%80%9F%E5%BA%A6%E5%BF%AB/" title="goroutine执行速度快">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">goroutine执行速度快</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/06/04/%E7%AE%80%E5%8E%86/" title="简历">
-                        <span class="hidden-mobile">简历</span>
+                      <a href="/2023/06/05/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/channel/" title="channel">
+                        <span class="hidden-mobile">channel</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
