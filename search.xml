@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>两个不同类型的数值能否相加？</title>
+      <link href="/2023/06/10/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E4%B8%A4%E4%B8%AA%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%95%B0%E5%80%BC%E8%83%BD%E5%90%A6%E7%9B%B8%E5%8A%A0%EF%BC%9F/"/>
+      <url>/2023/06/10/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E4%B8%A4%E4%B8%AA%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%95%B0%E5%80%BC%E8%83%BD%E5%90%A6%E7%9B%B8%E5%8A%A0%EF%BC%9F/</url>
+      
+        <content type="html"><![CDATA[<h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>下面这段代码输出什么？</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;  <br>    a := <span class="hljs-number">5</span><br>    b := <span class="hljs-number">8.1</span><br>    fmt.Println(a + b)<br>&#125;<br></code></pre></td></tr></table></figure><ul><li>A.13.1</li><li>B.13</li><li>C.compilation error</li></ul><h4 id="答案："><a href="#答案：" class="headerlink" title="答案："></a>答案：</h4><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">C</span><br></code></pre></td></tr></table></figure><p>​Go语言的类型机制更加严格，没有隐式类型转换，所以不同类型的数据不能直接参与同一个运算。</p><p>​a 的类型是 int，b 的类型是 float，两个不同类型的数值不能相加，编译报错。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Go </category>
+          
+          <category> 每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> GO </tag>
+            
+            <tag> 每日一题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>可变函数参数</title>
       <link href="/2023/06/09/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%8F%AF%E5%8F%98%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0/"/>
       <url>/2023/06/09/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%8F%AF%E5%8F%98%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0/</url>
