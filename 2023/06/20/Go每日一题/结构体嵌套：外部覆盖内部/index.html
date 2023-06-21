@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目">
+    <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="格式化输入%+d">
-<meta property="og:url" content="http://example.com/2023/06/19/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%BE%93%E5%85%A5-d/index.html">
+<meta property="og:title" content="结构体嵌套：外部覆盖内部">
+<meta property="og:url" content="http://example.com/2023/06/20/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E5%B5%8C%E5%A5%97%EF%BC%9A%E5%A4%96%E9%83%A8%E8%A6%86%E7%9B%96%E5%86%85%E9%83%A8/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目">
+<meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-06-19T04:11:10.000Z">
-<meta property="article:modified_time" content="2023-06-19T04:12:26.922Z">
+<meta property="article:published_time" content="2023-06-20T05:32:44.000Z">
+<meta property="article:modified_time" content="2023-06-20T05:35:59.259Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>格式化输入%+d - 胤凯</title>
+  <title>结构体嵌套：外部覆盖内部 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="格式化输入%+d"></span>
+            <span id="subtitle" data-typed-text="结构体嵌套：外部覆盖内部"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-06-19 12:11" pubdate>
-          2023年6月19日 中午
+        <time datetime="2023-06-20 13:32" pubdate>
+          2023年6月20日 下午
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          130 字
+          555 字
         
       </span>
     
@@ -268,7 +268,7 @@
         
         
         
-          2 分钟
+          5 分钟
         
       </span>
     
@@ -314,21 +314,16 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">格式化输入%+d</h1>
+            <h1 style="display: none">结构体嵌套：外部覆盖内部</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目<span id="more"></span></h1><p>下面这段代码输出什么？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;  <br>    i := <span class="hljs-number">-5</span><br>    j := +<span class="hljs-number">5</span><br>    fmt.Printf(<span class="hljs-string">&quot;%+d %+d&quot;</span>, i, j)<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>下面这段代码输出什么？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> People <span class="hljs-keyword">struct</span>&#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *People)</span></span> ShowA() &#123;<br>	fmt.Println(<span class="hljs-string">&quot;showA&quot;</span>)<br>	p.ShowB()<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *People)</span></span> ShowB() &#123;<br>	fmt.Println(<span class="hljs-string">&quot;showB&quot;</span>)<br>&#125;<br><br><span class="hljs-keyword">type</span> Teacher <span class="hljs-keyword">struct</span> &#123;<br>	People<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(t *Teacher)</span></span> ShowB() &#123;<br>	fmt.Println(<span class="hljs-string">&quot;teacher showB&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	t := Teacher&#123;&#125;<br>	t.ShowB()<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<ul>
-<li>A. -5 +5</li>
-<li>B. +5 +5</li>
-<li>C. 0 0</li>
-</ul>
-<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>A.</p>
-<p><code>%d</code>表示输出十进制数字，<code>+</code>表示输出数值的符号。</p>
+<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>参考答案及解析：teacher showB。</p>
+<p>知识点：结构体嵌套。在嵌套结构体中，People 称为内部类型，Teacher 称为外部类型；通过嵌套，内部类型的属性、方法，可以为外部类型所有，就好像是外部类型自己的一样。此外，外部类型还可以定义自己的属性和方法，甚至可以定义与内部相同的方法，这样内部类型的方法就会被“屏蔽”。这个例子中的 ShowB() 就是同名方法。</p>
 
                 
               </div>
@@ -383,8 +378,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>格式化输入%+d</div>
-      <div>http://example.com/2023/06/19/Go每日一题/格式化输入-d/</div>
+      <div>结构体嵌套：外部覆盖内部</div>
+      <div>http://example.com/2023/06/20/Go每日一题/结构体嵌套：外部覆盖内部/</div>
     </div>
     <div class="license-meta">
       
@@ -396,13 +391,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年6月19日</div>
+          <div>2023年6月20日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年6月19日</div>
+          <div>2023年6月20日</div>
         </div>
       
       
@@ -433,9 +428,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/06/20/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E5%B5%8C%E5%A5%97%EF%BC%9A%E5%A4%96%E9%83%A8%E8%A6%86%E7%9B%96%E5%86%85%E9%83%A8/" title="结构体嵌套：外部覆盖内部">
+                      <a href="/2023/06/21/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E/" title="全局变量声明">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">结构体嵌套：外部覆盖内部</span>
+                        <span class="hidden-mobile">全局变量声明</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -443,8 +438,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/06/18/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/delete%E5%88%A0%E9%99%A4map%E9%94%AE%E5%80%BC%E5%AF%B9/" title="delete删除map键值对">
-                        <span class="hidden-mobile">delete删除map键值对</span>
+                      <a href="/2023/06/19/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%BE%93%E5%85%A5-d/" title="格式化输入%+d">
+                        <span class="hidden-mobile">格式化输入%+d</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
