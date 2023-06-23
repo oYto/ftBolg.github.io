@@ -16,24 +16,25 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1、陈凯先院士讲话：">
+    <meta name="description" content="题目">
 <meta property="og:type" content="article">
-<meta property="og:title" content="名言金句">
-<meta property="og:url" content="http://example.com/2023/06/23/%E5%90%8D%E8%A8%80%E9%87%91%E5%8F%A5/index.html">
+<meta property="og:title" content="执行defer会保存一份副本">
+<meta property="og:url" content="http://example.com/2023/06/23/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%89%A7%E8%A1%8Cdefer%E4%BC%9A%E4%BF%9D%E5%AD%98%E4%B8%80%E4%BB%BD%E5%89%AF%E6%9C%AC/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="1、陈凯先院士讲话：">
+<meta property="og:description" content="题目">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/%E7%BB%8F%E5%85%B8.png">
-<meta property="article:published_time" content="2023-06-23T12:54:42.000Z">
-<meta property="article:modified_time" content="2023-06-23T13:02:28.637Z">
+<meta property="og:image" content="http://example.com/images/Golang.png">
+<meta property="article:published_time" content="2023-06-23T13:06:44.000Z">
+<meta property="article:modified_time" content="2023-06-23T13:08:08.429Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="名言">
+<meta property="article:tag" content="GO">
+<meta property="article:tag" content="每日一题">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/%E7%BB%8F%E5%85%B8.png">
+<meta name="twitter:image" content="http://example.com/images/Golang.png">
   
   
   
-  <title>名言金句 - 胤凯</title>
+  <title>执行defer会保存一份副本 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -233,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="名言金句"></span>
+            <span id="subtitle" data-typed-text="执行defer会保存一份副本"></span>
           
         </div>
 
@@ -244,7 +245,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-06-23 20:54" pubdate>
+        <time datetime="2023-06-23 21:06" pubdate>
           2023年6月23日 晚上
         </time>
       </span>
@@ -256,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          194 字
+          176 字
         
       </span>
     
@@ -313,13 +314,19 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">名言金句</h1>
+            <h1 style="display: none">执行defer会保存一份副本</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="1、陈凯先院士讲话："><a href="#1、陈凯先院士讲话：" class="headerlink" title="1、陈凯先院士讲话："></a><strong>1、陈凯先院士讲话：</strong><span id="more"></span></h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go">不是因为有了希望才坚持，而是因为坚持了才有希望。<br><br>不是因为有了机会才去争取，而是因为争取了才有机会。<br><br>不是因为成长了才去承担，而是因为承担了才会成长。<br><br>不是因为会了才去做，而是因为做了才能会。<br><br>不是因为拥有了才去付出，而是因为付出了才会拥有。<br><br>不是因为突破了才去挑战，而是因为挑战了才有突破。<br><br>不是因为有了收获才去感恩，而是因为感恩了才会有收获。<br></code></pre></td></tr></table></figure>
+                <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目<span id="more"></span></h1><p>下面这段代码输出什么?</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">hello</span><span class="hljs-params">(i <span class="hljs-type">int</span>)</span></span> &#123;  <br>    fmt.Println(i)<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;  <br>    i := <span class="hljs-number">5</span><br>    <span class="hljs-keyword">defer</span> hello(i)<br>    i = i + <span class="hljs-number">10</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
+
+
+<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">5。<br></code></pre></td></tr></table></figure>
+
+<p>这个例子中，hello() 函数的参数在执行 defer 语句的时候会保存一份副本，在实际调用 hello() 函数时用，所以是 5.</p>
 
                 
               </div>
@@ -338,8 +345,15 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E9%98%85%E8%AF%BB/" class="category-chain-item">阅读</a>
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/Go/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/" class="category-chain-item">每日一题</a>
+  
+  
+
   
 
       </span>
@@ -353,7 +367,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%90%8D%E8%A8%80/">#名言</a>
+        <a href="/tags/GO/">#GO</a>
+      
+        <a href="/tags/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">#每日一题</a>
       
     </div>
   
@@ -365,8 +381,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>名言金句</div>
-      <div>http://example.com/2023/06/23/名言金句/</div>
+      <div>执行defer会保存一份副本</div>
+      <div>http://example.com/2023/06/23/Go每日一题/执行defer会保存一份副本/</div>
     </div>
     <div class="license-meta">
       
@@ -419,8 +435,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/06/21/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E/" title="全局变量声明">
-                        <span class="hidden-mobile">全局变量声明</span>
+                      <a href="/2023/06/23/%E9%98%85%E8%AF%BB/%E5%90%8D%E8%A8%80%E9%87%91%E5%8F%A5/" title="名言金句">
+                        <span class="hidden-mobile">名言金句</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
