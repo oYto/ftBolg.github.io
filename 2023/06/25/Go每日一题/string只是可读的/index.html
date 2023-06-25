@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目">
+    <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="执行defer会保存一份副本">
-<meta property="og:url" content="http://example.com/2023/06/23/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%89%A7%E8%A1%8Cdefer%E4%BC%9A%E4%BF%9D%E5%AD%98%E4%B8%80%E4%BB%BD%E5%89%AF%E6%9C%AC/index.html">
+<meta property="og:title" content="string只是可读的">
+<meta property="og:url" content="http://example.com/2023/06/25/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/string%E5%8F%AA%E6%98%AF%E5%8F%AF%E8%AF%BB%E7%9A%84/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目">
+<meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-06-23T13:06:44.000Z">
-<meta property="article:modified_time" content="2023-06-23T13:08:08.429Z">
+<meta property="article:published_time" content="2023-06-25T04:23:18.000Z">
+<meta property="article:modified_time" content="2023-06-25T04:29:13.246Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>执行defer会保存一份副本 - 胤凯</title>
+  <title>string只是可读的 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="执行defer会保存一份副本"></span>
+            <span id="subtitle" data-typed-text="string只是可读的"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-06-23 21:06" pubdate>
-          2023年6月23日 晚上
+        <time datetime="2023-06-25 12:23" pubdate>
+          2023年6月25日 中午
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          176 字
+          383 字
         
       </span>
     
@@ -268,7 +268,7 @@
         
         
         
-          2 分钟
+          4 分钟
         
       </span>
     
@@ -314,19 +314,24 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">执行defer会保存一份副本</h1>
+            <h1 style="display: none">string只是可读的</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目<span id="more"></span></h1><p>下面这段代码输出什么?</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">hello</span><span class="hljs-params">(i <span class="hljs-type">int</span>)</span></span> &#123;  <br>    fmt.Println(i)<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;  <br>    i := <span class="hljs-number">5</span><br>    <span class="hljs-keyword">defer</span> hello(i)<br>    i = i + <span class="hljs-number">10</span><br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>下列选项正确的是？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	str := <span class="hljs-string">&quot;hello&quot;</span><br>	str[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;x&#x27;</span><br>	fmt.Println(str)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-
-
-<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">5。<br></code></pre></td></tr></table></figure>
-
-<p>这个例子中，hello() 函数的参数在执行 defer 语句的时候会保存一份副本，在实际调用 hello() 函数时用，所以是 5.</p>
+<ul>
+<li>A. hello</li>
+<li>B. xello</li>
+<li>C. compilation error</li>
+</ul>
+<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>参考代码及解析：C。</p>
+<p>知识点：Go 语言中的字符串是只读的。</p>
+<p>如果想要修改字符串中的某个字符，可以将字符串转换为字节数组 ([]byte)，然后通过索引修改字节数组中的对应位置的值，最后再将字节数组转换回字符串。</p>
+<p>以下是修改字符串的示例代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	str := <span class="hljs-string">&quot;hello&quot;</span><br>	strBytes := []<span class="hljs-type">byte</span>(str)<br>	strBytes[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;x&#x27;</span><br>	str = <span class="hljs-type">string</span>(strBytes)<br>	fmt.Println(str)<br>&#125;<br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -381,8 +386,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>执行defer会保存一份副本</div>
-      <div>http://example.com/2023/06/23/Go每日一题/执行defer会保存一份副本/</div>
+      <div>string只是可读的</div>
+      <div>http://example.com/2023/06/25/Go每日一题/string只是可读的/</div>
     </div>
     <div class="license-meta">
       
@@ -394,13 +399,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年6月23日</div>
+          <div>2023年6月25日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年6月23日</div>
+          <div>2023年6月25日</div>
         </div>
       
       
@@ -431,18 +436,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/06/24/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E5%B5%8C%E5%A5%97/" title="结构体嵌套">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">结构体嵌套</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/06/23/%E9%98%85%E8%AF%BB/%E5%90%8D%E8%A8%80%E9%87%91%E5%8F%A5/" title="名言金句">
-                        <span class="hidden-mobile">名言金句</span>
+                      <a href="/2023/06/24/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E5%B5%8C%E5%A5%97/" title="结构体嵌套">
+                        <span class="hidden-mobile">结构体嵌套</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
