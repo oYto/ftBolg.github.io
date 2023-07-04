@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目">
+    <meta name="description" content="题目:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="接口">
-<meta property="og:url" content="http://example.com/2023/07/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%8E%A5%E5%8F%A3/index.html">
+<meta property="og:title" content="切片的长度和容量">
+<meta property="og:url" content="http://example.com/2023/07/03/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%88%87%E7%89%87%E7%9A%84%E9%95%BF%E5%BA%A6%E5%92%8C%E5%AE%B9%E9%87%8F/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目">
+<meta property="og:description" content="题目:">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-07-02T01:50:45.340Z">
-<meta property="article:modified_time" content="2023-07-02T01:53:39.303Z">
+<meta property="article:published_time" content="2023-07-03T01:34:56.551Z">
+<meta property="article:modified_time" content="2023-07-03T01:53:47.819Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>接口 - 胤凯</title>
+  <title>切片的长度和容量 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -234,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="接口"></span>
+            <span id="subtitle" data-typed-text="切片的长度和容量"></span>
           
         </div>
 
@@ -245,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-07-02 09:50" pubdate>
-          2023年7月2日 上午
+        <time datetime="2023-07-03 09:34" pubdate>
+          2023年7月3日 上午
         </time>
       </span>
     
@@ -257,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          444 字
+          466 字
         
       </span>
     
@@ -314,18 +314,21 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">接口</h1>
+            <h1 style="display: none">切片的长度和容量</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目<span id="more"></span></h1><p>下面这段代码输出什么？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> A <span class="hljs-keyword">interface</span> &#123;<br>	ShowA() <span class="hljs-type">int</span><br>&#125;<br><br><span class="hljs-keyword">type</span> B <span class="hljs-keyword">interface</span> &#123;<br>	ShowB() <span class="hljs-type">int</span><br>&#125;<br><br><span class="hljs-keyword">type</span> Work <span class="hljs-keyword">struct</span> &#123;<br>	i <span class="hljs-type">int</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(w Work)</span></span> ShowA() <span class="hljs-type">int</span> &#123;<br>	<span class="hljs-keyword">return</span> w.i + <span class="hljs-number">10</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(w Work)</span></span> ShowB() <span class="hljs-type">int</span> &#123;<br>	<span class="hljs-keyword">return</span> w.i + <span class="hljs-number">20</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	c := Work&#123;<span class="hljs-number">3</span>&#125;<br>	<span class="hljs-keyword">var</span> a A = c<br>	<span class="hljs-keyword">var</span> b B = c<br>	fmt.Println(a.ShowA())<br>	fmt.Println(b.ShowB())<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>切片 a、b、c 的长度和容量分别是多少？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	s := [<span class="hljs-number">3</span>]<span class="hljs-type">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;<br>	a := s[:<span class="hljs-number">0</span>]<br>	b := s[:<span class="hljs-number">2</span>]<br>	c := s[<span class="hljs-number">1</span>:<span class="hljs-number">2</span>:<span class="hljs-built_in">cap</span>(s)]<br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 
-<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>参考答案及解析：13 23。</p>
-<p>知识点：接口。一种类型实现多个接口，结构体 Work 分别实现了接口 A、B，所以接口变量 a、b 调用各自的方法 ShowA() 和 ShowB()，输出 13、23。</p>
+<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>a、b、c 的长度和容量分别是 0 3、2 3、1 2。</p>
+<p>知识点：数组或切片的截取操作。截取操作有带 2 个或者 3 个参数，形如：[i:j] 和 [i:j:k]，假设截取对象的底层数组长度为 l。在操作符 [i:j] 中，如果 i 省略，默认 0，如果 j 省略，默认底层数组的长度，截取得到的<strong>切片长度和容量计算方法是 j-i、l-i</strong>。操作符 [i:j:k]，k 主要是用来限制切片的容量，但是不能大于数组的长度 l，截取得到的<strong>切片长度和容量计算方法是 j-i、k-i</strong>。</p>
+<p>a切片截取<code>s[:]</code>相当于<code>s[0:0]</code>，故长度为0，容量为<code>l - i = 3 - 0 = 3；</code></p>
+<p>b切片截取<code>s[:2]</code>相当于<code>s[0:2]</code>,故长度为<code>j - i = 2 - 0 = 2</code>，容量为<code>l - i = 3 - 0 = 3；</code></p>
+<p>c切片截取<code>s[1:2:cap(s)]</code>相当于<code>s[1:2:3]</code>,故长度为<code>j - i = 2 - 1 = 1</code>,容量为<code>l - i = 3 - 1 = 2</code>。</p>
 
                 
               </div>
@@ -380,8 +383,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>接口</div>
-      <div>http://example.com/2023/07/02/Go每日一题/接口/</div>
+      <div>切片的长度和容量</div>
+      <div>http://example.com/2023/07/03/Go每日一题/切片的长度和容量/</div>
     </div>
     <div class="license-meta">
       
@@ -393,13 +396,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年7月2日</div>
+          <div>2023年7月3日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年7月2日</div>
+          <div>2023年7月3日</div>
         </div>
       
       
@@ -430,18 +433,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/07/03/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%88%87%E7%89%87%E7%9A%84%E9%95%BF%E5%BA%A6%E5%92%8C%E5%AE%B9%E9%87%8F/" title="切片的长度和容量">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">切片的长度和容量</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/07/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/int%E7%B1%BB%E5%9E%8B%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2%E4%B8%BAstring%E7%B1%BB%E5%9E%8B/" title="int类型强制转换为string类型">
-                        <span class="hidden-mobile">int类型强制转换为string类型</span>
+                      <a href="/2023/07/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%8E%A5%E5%8F%A3/" title="接口">
+                        <span class="hidden-mobile">接口</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
