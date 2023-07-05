@@ -16,19 +16,21 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="胤凯的个人博客">
+    <meta name="description" content="说明：页面可以展示一些图片和文字说明，且有导航栏            My Page        &#x2F;* CSS 代码 *&#x2F;     body {       font-family: Arial, sans-serif;       margin: 0;       padding: 0;     }  .navbar &amp;#123;   background-color: #f2f2f2;">
 <meta property="og:type" content="website">
-<meta property="og:title" content="归档">
-<meta property="og:url" content="http://example.com/archives/2023/06/page/4/index.html">
+<meta property="og:title" content="example">
+<meta property="og:url" content="http://example.com/example/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="胤凯的个人博客">
+<meta property="og:description" content="说明：页面可以展示一些图片和文字说明，且有导航栏            My Page        &#x2F;* CSS 代码 *&#x2F;     body {       font-family: Arial, sans-serif;       margin: 0;       padding: 0;     }  .navbar &amp;#123;   background-color: #f2f2f2;">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-07-05T17:49:46.000Z">
+<meta property="article:modified_time" content="2023-07-05T18:24:57.438Z">
 <meta property="article:author" content="Feng Tao">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>归档 - 胤凯</title>
+  <title>example - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -193,6 +195,18 @@
             </li>
           
         
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
         
           <li class="nav-item" id="search-btn">
             <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
@@ -222,7 +236,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="归档"></span>
+            <span id="subtitle" data-typed-text="校园生活"></span>
           
         </div>
 
@@ -249,29 +263,144 @@
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 131 篇文章</p>
-  <hr>
-  
-  
-    
-      
-      <p class="h5">2023</p>
-    
-    <a href="/2023/06/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%B8%B8%E9%87%8F%E5%92%8C%E9%9D%9E%E5%B8%B8%E9%87%8F%E7%9A%84%E6%BA%A2%E5%87%BA/" class="list-group-item list-group-item-action">
-      <time>06-01</time>
-      <div class="list-group-item-title">常量和非常量的溢出</div>
-    </a>
-  
+<article class="page-content">
+  <p>说明：页面可以展示一些图片和文字说明，且有导航栏</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Page</title>
+  <style>
+    /* CSS 代码 */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+<pre><code class="hljs">.navbar &#123;
+  background-color: #f2f2f2;
+  padding: 20px;
+&#125;
+
+.navbar ul &#123;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+&#125;
+
+.navbar ul li &#123;
+  display: inline-block;
+  margin-right: 10px;
+&#125;
+
+.navbar ul li a &#123;
+  text-decoration: none;
+  color: #333;
+&#125;
+
+.navbar ul li ul &#123;
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  background-color: #f2f2f2;
+  padding: 10px;
+  border-radius: 4px;
+&#125;
+
+.navbar ul li:hover ul &#123;
+  display: block;
+&#125;
+
+.article-section &#123;
+  padding: 20px;
+&#125;
+
+.article-section h2 &#123;
+  margin-top: 0;
+&#125;
+</code></pre>
+<p>  </style><br>  <script><br>    // JavaScript 代码<br>    window.onload = function() {<br>      var navbarLinks = document.querySelectorAll('.navbar a');<br>      for (var i = 0; i < navbarLinks.length; i++) {<br>        navbarLinks[i].addEventListener('click', function(event) {<br>          event.preventDefault();<br>          var targetId = this.getAttribute('href').substring(1);<br>          var targetElement = document.getElementById(targetId);<br>          window.scrollTo({<br>            top: targetElement.offsetTop,<br>            behavior: 'smooth'<br>          });<br>        });<br>      }<br>    };<br>  </script></p>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <ul>
+        <li><a href="#section1">个人介绍</a></li>
+        <li>
+          <a href="#section2">关于自己</a>
+          <ul>
+            <li><a href="#section2-1">Introduction</a></li>
+            <li><a href="#section2-2">Mission</a></li>
+            <li><a href="#section2-3">Team</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#section3">Services</a>
+          <ul>
+            <li><a href="#section3-1">Service 1</a></li>
+            <li><a href="#section3-2">Service 2</a></li>
+            <li><a href="#section3-3">Service 3</a></li>
+          </ul>
+        </li>
+        <li><a href="#section4">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div id="section1" class="article-section">
+    <h2>个人介绍</h2>
+    <p>Welcome to my website!</p>
+  </div>
+
+  <div id="section2" class="article-section">
+    <h2>关于自己</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+  </div>
+
+  <div id="section2-1" class="article-section">
+    <h2>Introduction</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut justo non nulla lacinia consectetur. Maecenas gravida quam a enim commodo, eu congue elit efficitur. Curabitur ac purus quis tellus ultrices congue. Mauris vitae nisl semper, rutrum odio non, viverra elit. Suspendisse fermentum semper odio id pharetra. Aliquam hendrerit urna eu purus commodo finibus. Phasellus tincidunt tristique enim, ac consequat nunc vestibulum eget. Curabitur sed sagittis mi.</p>
 </div>
+<div id="section2-2" class="article-section">
+    <h2>Mission</h2>
+    <p>Nulla facilisi. In ut orci justo. Nunc ut metus in massa vehicula commodo. Praesent ut sapien non justo laoreet sollicitudin. Vestibulum eget sapien id nulla lacinia accumsan. Nulla et nisi malesuada, finibus odio nec, varius mi. Integer sollicitudin libero in dui rutrum, ut rutrum urna semper. Donec ullamcorper pellentesque dapibus. Morbi et iaculis sem, et laoreet nisl.</p>
+</div>
+<div id="section2-3" class="article-section">
+    <h2>Team</h2>
+    <p>Integer euismod interdum ex, eu commodo sem vehicula ac. Suspendisse ut tortor in massa interdum ultrices. Suspendisse potenti. Sed varius risus vel ex vestibulum tristique. Praesent ullamcorper lorem vel est finibus, a cursus nunc fermentum. Ut eget lacus pharetra, iaculis mi nec, volutpat quam. Proin venenatis consequat ipsum, ac luctus sem tempor eu. Praesent tristique leo ac velit tincidunt, ut hendrerit ligula dignissim.</p>
+</div>
+<div id="section3" class="article-section">
+    <h2>Services</h2>
+    <p>Curabitur vel semper purus, vitae hendrerit mauris. Nullam consectetur dui ut ante congue congue. Integer hendrerit ante et elit venenatis efficitur. Nunc ultricies congue eros, at volutpat ipsum tincidunt sed. Sed id odio arcu. Vestibulum dapibus euismod metus, id tristique nisi gravida in. Proin a metus quis mi efficitur tempor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nullam suscipit tempus ultrices.</p>
+</div>
+<div id="section3-1" class="article-section">
+    <h2>Service 1</h2>
+    <p>Aliquam et lobortis metus, eget elementum ipsum. Duis id magna mi. Sed cursus laoreet massa. Mauris vel nibh gravida, eleifend nunc sit amet, aliquam tortor. Ut sit amet viverra arcu. Sed ac fermentum urna. Donec sollicitudin metus tellus, id congue nunc lobortis ac. Suspendisse potenti. Fusce pharetra tempor lectus, eu suscipit sem ultricies non.</p>
+</div>
+<divid="section3-2" class="article-section">
+<h2>Service 2</h2>
+<p>Curabitur at urna sit amet tortor ullamcorper ullamcorper. Nulla varius lectus eu gravida finibus. Suspendisse vitae vulputate urna. In et eros eu orci condimentum commodo. Nullam feugiat est eu metus suscipit, nec placerat nunc facilisis. Sed ullamcorper velit a posuere pretium. Mauris consectetur dolor vel fermentum accumsan. Nullam id volutpat enim. Donec efficitur, purus ut tempor interdum, arcu risus pellentesque lectus, nec feugiat velit mi non nisi.</p>
+</div>
+<div id="section3-3" class="article-section">
+<h2>Service 3</h2>
+<p>Sed consequat velit eu mi feugiat suscipit. Nullam gravida nunc sit amet neque vestibulum, eu viverra massa volutpat. Integer ultricies, dolor in tempus volutpat, sapien nibh fringilla nisi, at convallis lorem lectus ac arcu. Mauris cursus, sapien vitae dapibus sollicitudin, orci arcu venenatis nisi, ac ultricies mi odio vitae turpis. Donec malesuada lobortis metus, ut dapibus risus posuere et. Vestibulum congue dui id felis varius egestas. Donec sed sem et velit ultrices pellentesque a ac mauris. Sed eu dui nec lectus laoreet varius.</p>
+</div>
+<div id="section4" class="article-section">
+    <h2>Contact</h2>
+    <p>Etiam hendrerit arcu nec erat suscipit, a fermentum felis facilisis. Nunc elementum condimentum neque, ut gravida quam. Integer sem erat, suscipit ut lobortis at, dignissim vel urna. Morbi vestibulum, mauris eget fermentum tincidunt, odio tortor luctus tellus, in aliquet nunc justo a enim. In eget velit vitae lectus rhoncus eleifend. Morbi commodo mauris quis sapien gravida, eu vestibulum nisi feugiat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;</p>
+</div>
+</body>
+</html>
 
 
-  <nav aria-label="navigation">
-    <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/archives/2023/06/page/3/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/archives/2023/06/">1</a><a class="page-number" href="/archives/2023/06/page/2/#board">2</a><a class="page-number" href="/archives/2023/06/page/3/#board">3</a><span class="page-number current">4</span>
-    </span>
-  </nav>
 
+
+
+  
+
+</article>
 
 
 
