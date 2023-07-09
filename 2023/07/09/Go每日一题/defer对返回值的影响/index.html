@@ -18,14 +18,14 @@
   
     <meta name="description" content="题目:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="短变量声明">
-<meta property="og:url" content="http://example.com/2023/07/08/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%9F%AD%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E%E5%88%A4%E6%96%AD/index.html">
+<meta property="og:title" content="defer对返回值的影响">
+<meta property="og:url" content="http://example.com/2023/07/09/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/defer%E5%AF%B9%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E5%BD%B1%E5%93%8D/index.html">
 <meta property="og:site_name" content="胤凯">
 <meta property="og:description" content="题目:">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-07-08T00:52:35.000Z">
-<meta property="article:modified_time" content="2023-07-08T01:01:15.119Z">
+<meta property="article:published_time" content="2023-07-09T00:44:49.000Z">
+<meta property="article:modified_time" content="2023-07-09T00:56:12.211Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>短变量声明 - 胤凯</title>
+  <title>defer对返回值的影响 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -246,7 +246,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="短变量声明"></span>
+            <span id="subtitle" data-typed-text="defer对返回值的影响"></span>
           
         </div>
 
@@ -257,8 +257,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-07-08 08:52" pubdate>
-          2023年7月8日 早上
+        <time datetime="2023-07-09 08:44" pubdate>
+          2023年7月9日 早上
         </time>
       </span>
     
@@ -269,7 +269,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          174 字
+          566 字
         
       </span>
     
@@ -280,7 +280,7 @@
         
         
         
-          2 分钟
+          5 分钟
         
       </span>
     
@@ -326,23 +326,24 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">短变量声明</h1>
+            <h1 style="display: none">defer对返回值的影响</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面代码中，x 已声明，y 没有声明，判断每条语句的对错。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-number">1.</span> x, _ := f()<br><span class="hljs-number">2.</span> x, _ = f()<br><span class="hljs-number">3.</span> x, y := f()<br><span class="hljs-number">4.</span> x, y = f()<br></code></pre></td></tr></table></figure>
+                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面代码输出什么？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">increaseA</span><span class="hljs-params">()</span></span> <span class="hljs-type">int</span> &#123;<br>	<span class="hljs-keyword">var</span> i <span class="hljs-type">int</span><br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		i++<br>	&#125;()<br>	<span class="hljs-keyword">return</span> i<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">increaseB</span><span class="hljs-params">()</span></span> (r <span class="hljs-type">int</span>) &#123;<br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		r++<br>	&#125;()<br>	<span class="hljs-keyword">return</span> r<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(increaseA())<br>	fmt.Println(increaseB())<br>&#125;<br></code></pre></td></tr></table></figure>
 
-
-
-<h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>错、对、对、错。</p>
-<ol>
-<li>x 已经声明了，且后面是 <code>_</code> 空标识符，故不能再使用 <code>:=</code></li>
-<li>x 已经声明，故可以使用 <code>=</code>重新赋值</li>
-<li>虽然 x 已经声明，但 y 没有声明，只要有一个未声明的变量，就可以使用 <code>:=</code></li>
-<li>y 未声明，不能使用赋值符号 <code>=</code></li>
-</ol>
+<ul>
+<li>A. 1 1</li>
+<li>B. 0 1</li>
+<li>C. 1 0</li>
+<li>D. 0 0</li>
+</ul>
+<h4 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h4><p>B。</p>
+<p>​	在Go语言的函数中的<code>return</code>语句在底层并不是原子操作，它分为 <strong>返回值赋值</strong> 和 <strong>RET指令</strong>两部分，而 <strong>defer</strong>的执行时机就在返回值赋值操作后，RET指令执行前。</p>
+<p>​	对于 <code>increaseA()</code>来说，先进行返回值赋值，即 返回i的值赋值给一个临时变量，值为0（待执行RET指令后，再将该变量返回到调用该函数的地方）；再调用defer语句，将 i++，此时并不会影响到返回值，故输出为0</p>
+<p>​	对于<code>increaseB()</code>来说，不同的是，它的返回值参数是具名返回值，这样系统就不会为它创建一个新变量，而是直接将返回值赋值该具名返回值上，然后调用defer语句后的函数，将返回值 r++，故此时的返回值变为1.</p>
 
                 
               </div>
@@ -397,8 +398,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>短变量声明</div>
-      <div>http://example.com/2023/07/08/Go每日一题/短变量声明判断/</div>
+      <div>defer对返回值的影响</div>
+      <div>http://example.com/2023/07/09/Go每日一题/defer对返回值的影响/</div>
     </div>
     <div class="license-meta">
       
@@ -410,13 +411,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年7月8日</div>
+          <div>2023年7月9日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年7月8日</div>
+          <div>2023年7月9日</div>
         </div>
       
       
@@ -447,18 +448,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/07/09/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/defer%E5%AF%B9%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E5%BD%B1%E5%93%8D/" title="defer对返回值的影响">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">defer对返回值的影响</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/07/07/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/Go%E4%B8%AD%E4%B8%8D%E6%94%AF%E6%8C%81%E9%9A%90%E5%BC%8F%E8%BD%AC%E6%8D%A2/" title="Go中不支持隐式转换">
-                        <span class="hidden-mobile">Go中不支持隐式转换</span>
+                      <a href="/2023/07/08/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%9F%AD%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E%E5%88%A4%E6%96%AD/" title="短变量声明">
+                        <span class="hidden-mobile">短变量声明</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
