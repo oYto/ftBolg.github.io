@@ -1,0 +1,869 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="题目:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入了解闭包">
+<meta property="og:url" content="http://example.com/2023/07/12/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E9%97%AD%E5%8C%85/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="题目:">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/Golang.png">
+<meta property="article:published_time" content="2023-07-12T01:14:59.000Z">
+<meta property="article:modified_time" content="2023-07-12T01:22:16.274Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="GO">
+<meta property="article:tag" content="每日一题">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/Golang.png">
+  
+  
+  
+  <title>深入了解闭包 - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/test/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="深入了解闭包"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-07-12 09:14" pubdate>
+          2023年7月12日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          60 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">深入了解闭包</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">app</span><span class="hljs-params">()</span></span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(<span class="hljs-type">string</span>)</span></span> <span class="hljs-type">string</span> &#123;<br>	t := <span class="hljs-string">&quot;Hi&quot;</span><br>	c := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(b <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">string</span> &#123;<br>		t = t + <span class="hljs-string">&quot; &quot;</span> + b<br>		<span class="hljs-keyword">return</span> t<br>	&#125;<br>	<span class="hljs-keyword">return</span> c<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	a := app()<br>	b := app()<br>	a(<span class="hljs-string">&quot;go&quot;</span>)<br>	fmt.Println(b(<span class="hljs-string">&quot;All&quot;</span>))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>A：Hi All；B：Hi go All；C：Hi；D：go All</p>
+<p>这道题目答对的人蛮多的：60%。不管你是答对还是答错，如果最后再加一行代码：fmt.Println(a(“All”))，它输出什么？想看看你是不是蒙对了。（提示：你可以输出 t 的地址，看看是什么情况。）</p>
+<h4 id="答案："><a href="#答案：" class="headerlink" title="答案："></a>答案：</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">Hi All<br>Hi <span class="hljs-keyword">go</span> All<br></code></pre></td></tr></table></figure>
+
+<pre><code class="hljs"> 闭包通过一个结构体来实现，它存储一个函数和一个关联的上下文环境。
+</code></pre>
+<p>​	因此每一个闭包都有自己的上下文环境，所以a与b两个闭包的内容是互不干涉的。</p>
+<p>​	第一次调用<code>a(&quot;go&quot;)</code>时，将 “go”添加到 a 闭包的 t 变量中，此时 a 闭包的 t 变量为 “Hi go”。</p>
+<p>​	接着调用 <code>b(&quot;All&quot;)</code>，将 “All” 添加到 b 闭包的 t 变量中，此时 b 闭包的 t 变量为 “Hi All”。</p>
+<p>​	最后我们再次调用 <code>a(&quot;All&quot;)</code>，将 “All” 添加到 a 闭包的 t 变量中，此时 a 闭包的 t 变量为 “Hi go All” 。</p>
+<p>​	所以最后的答案为 <code>fmt.Println(b(&quot;All&quot;))</code>输出 <code>&quot;Hi All&quot;</code>，<code>fmt.Println(a(&quot;All&quot;))</code>输出<code>Hi go All</code>。</p>
+<p>以下解析来自 <a target="_blank" rel="noopener" href="https://studygolang.com/interview/question">Go语言中文网</a></p>
+<h2 id="01-什么是闭包"><a href="#01-什么是闭包" class="headerlink" title="01 什么是闭包"></a>01 什么是闭包</h2><p>维基百科对<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%97%AD%E5%8C%85_(%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6)">闭包的定义</a>：</p>
+<blockquote>
+<p>在计算机科学中，闭包（英语：Closure），又称词法闭包（Lexical Closure）或函数闭包（function closures），是在支持头等函数的编程语言中实现词法绑定的一种技术。闭包在实现上是一个结构体，它存储了一个函数（通常是其入口地址）和一个关联的环境（相当于一个符号查找表）。环境里是若干对符号和值的对应关系，它既要包括约束变量（该函数内部绑定的符号），也要包括自由变量（在函数外部定义但在函数内被引用），有些函数也可能没有自由变量。闭包跟函数最大的不同在于，当捕捉闭包的时候，它的自由变量会在捕捉时被确定，这样即便脱离了捕捉时的上下文，它也能照常运行。捕捉时对于值的处理可以是值拷贝，也可以是名称引用，这通常由语言设计者决定，也可能由用户自行指定（如 C++）。</p>
+</blockquote>
+<p>关于（函数）闭包，有几个关键点：</p>
+<ul>
+<li>函数是一等公民；</li>
+<li>闭包所处环境，可以引用环境里的值；</li>
+</ul>
+<p>问到什么是闭包时，网上一般这么回答的：</p>
+<blockquote>
+<p>在支持函数是一等公民的语言中，一个函数的返回值是另一个函数，被返回的函数可以访问父函数内的变量，当这个被返回的函数在外部执行时，就产生了闭包。</p>
+</blockquote>
+<p>所以，上面题目中，函数 app 的返回值是另一个函数，因此产生了闭包。</p>
+<h2 id="02-Go-中的闭包"><a href="#02-Go-中的闭包" class="headerlink" title="02 Go 中的闭包"></a>02 Go 中的闭包</h2><p>Go 中的函数是一等公民，之前写过一篇文章：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/H3iuhkvQWonZbi7AzmokSA">函数是一等公民，这到底在说什么？</a></p>
+<p>日常开发中，闭包是很常见的。举几个例子。</p>
+<h3 id="标准库"><a href="#标准库" class="headerlink" title="标准库"></a>标准库</h3><p>在 net&#x2F;http 包中的函数 ProxyURL，实现如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// ProxyURL returns a proxy function (for use in a Transport)</span><br><span class="hljs-comment">// that always returns the same URL.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">ProxyURL</span><span class="hljs-params">(fixedURL *url.URL)</span></span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(*Request)</span></span> (*url.URL, <span class="hljs-type">error</span>) &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(*Request)</span></span> (*url.URL, <span class="hljs-type">error</span>) &#123;<br>		<span class="hljs-keyword">return</span> fixedURL, <span class="hljs-literal">nil</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>它的返回值是另一个函数，签名是：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(*Request)</span></span> (*url.URL, <span class="hljs-type">error</span>)<br></code></pre></td></tr></table></figure>
+
+<p>在返回的函数中，引用了父函数（ProxyURL）的参数 fixedURL，因此这是闭包。</p>
+<h3 id="Web-中间件"><a href="#Web-中间件" class="headerlink" title="Web 中间件"></a>Web 中间件</h3><p>在 Web 开发中，中间件一般都会使用闭包。比如 Echo 框架中的一个中间件：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// BasicAuthWithConfig returns an BasicAuth middleware with config.</span><br><span class="hljs-comment">// See `BasicAuth()`.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">BasicAuthWithConfig</span><span class="hljs-params">(config BasicAuthConfig)</span></span> echo.MiddlewareFunc &#123;<br>	<span class="hljs-comment">// Defaults</span><br>	<span class="hljs-keyword">if</span> config.Validator == <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;echo: basic-auth middleware requires a validator function&quot;</span>)<br>	&#125;<br>  ...<br>	<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(next echo.HandlerFunc)</span></span> echo.HandlerFunc &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c echo.Context)</span></span> <span class="hljs-type">error</span> &#123;<br>			<span class="hljs-comment">/// 省略很多代码</span><br>      ...<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>首先，echo.MiddlewareFunc 是一个函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> MiddlewareFunc <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(HandlerFunc)</span></span> HandlerFunc<br></code></pre></td></tr></table></figure>
+
+<p>而 echo.HandlerFunc 也是一个函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> HandlerFunc <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(Context)</span></span> <span class="hljs-type">error</span><br></code></pre></td></tr></table></figure>
+
+<p>所以，上面的函数嵌套了几层，是典型的闭包。</p>
+<h3 id="这是闭包吗？"><a href="#这是闭包吗？" class="headerlink" title="这是闭包吗？"></a>这是闭包吗？</h3><p>在 Go 中不支持函数嵌套定义，函数内嵌套函数，必须通过匿名函数的形式。匿名函数在 Go 中是很常见的，比如开启一个 goroutine，通常通过匿名函数。</p>
+<p>现在有一个问题，以下代码是闭包吗？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (  <br>    <span class="hljs-string">&quot;fmt&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;  <br>    a := <span class="hljs-number">5</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>        fmt.Println(<span class="hljs-string">&quot;a =&quot;</span>, a)<br>    &#125;()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果按照上面网上一般的回答，这不是闭包，因为并没有返回函数。但按照维基百科的定义，这个属于闭包。有没有其他证据呢？</p>
+<p>在 Go 语言规范中，关于函数字面值（匿名函数）有这么一句话：</p>
+<blockquote>
+<p>Function literals are <em>closures</em>: they may refer to variables defined in a surrounding function. Those variables are then shared between the surrounding function and the function literal, and they survive as long as they are accessible.</p>
+</blockquote>
+<p>也就是说，函数字面值（匿名函数）是闭包，它们可以引用外层函数定义的变量。</p>
+<p>此外，在官方 FAQ 中有这样的说明：</p>
+<p><a target="_blank" rel="noopener" href="https://docs.studygolang.com/doc/faq#closures_and_goroutines">What happens with closures running as goroutines?</a></p>
+<p>例子是：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    done := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-type">bool</span>)<br><br>    values := []<span class="hljs-type">string</span>&#123;<span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-string">&quot;b&quot;</span>, <span class="hljs-string">&quot;c&quot;</span>&#125;<br>    <span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> values &#123;<br>        <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>            fmt.Println(v)<br>            done &lt;- <span class="hljs-literal">true</span><br>        &#125;()<br>    &#125;<br><br>    <span class="hljs-comment">// wait for all goroutines to complete before exiting</span><br>    <span class="hljs-keyword">for</span> _ = <span class="hljs-keyword">range</span> values &#123;<br>        &lt;-done<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这是 Go 中很常见的代码（很容易写错的），FAQ 称开启 goroutine 的那个匿名函数是一个闭包。</p>
+<h2 id="03-汇编看看实现"><a href="#03-汇编看看实现" class="headerlink" title="03 汇编看看实现"></a>03 汇编看看实现</h2><p>回到开始的题目，我们通过汇编看看，Go 闭包的实现，是不是按照维基百科说的，「闭包在实现上是一个结构体，它存储了一个函数（通常是其入口地址）和一个关联的环境（相当于一个符号查找表）」。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ go tool compile -S main.go<br></code></pre></td></tr></table></figure>
+
+<p>看关键代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-number">0x0000</span> <span class="hljs-number">00000</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">5</span>)	TEXT	<span class="hljs-string">&quot;&quot;</span>.app(SB), ABIInternal, $<span class="hljs-number">24</span><span class="hljs-number">-8</span><br><span class="hljs-number">0x0000</span> <span class="hljs-number">00000</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">5</span>)	MOVQ	(TLS), CX<br><span class="hljs-number">0x0009</span> <span class="hljs-number">00009</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">5</span>)	CMPQ	SP, <span class="hljs-number">16</span>(CX)<br><span class="hljs-number">0x000d</span> <span class="hljs-number">00013</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">5</span>)	PCDATA	$<span class="hljs-number">0</span>, $<span class="hljs-number">-2</span><br><span class="hljs-number">0x000d</span> <span class="hljs-number">00013</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">5</span>)	JLS	<span class="hljs-number">96</span><br><span class="hljs-number">0x000f</span> <span class="hljs-number">00015</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">5</span>)	PCDATA	$<span class="hljs-number">0</span>, $<span class="hljs-number">-1</span><br><span class="hljs-number">0x000f</span> <span class="hljs-number">00015</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">5</span>)	SUBQ	$<span class="hljs-number">24</span>, SP<br><span class="hljs-number">0x0013</span> <span class="hljs-number">00019</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">5</span>)	MOVQ	BP, <span class="hljs-number">16</span>(SP)<br><span class="hljs-number">0x0018</span> <span class="hljs-number">00024</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">5</span>)	LEAQ	<span class="hljs-number">16</span>(SP), BP<br><span class="hljs-number">0x001d</span> <span class="hljs-number">00029</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">5</span>)	FUNCDATA	$<span class="hljs-number">0</span>, gclocals·<span class="hljs-number">2</span>a5305abe05176240e61b8620e19a815(SB)<br><span class="hljs-number">0x001d</span> <span class="hljs-number">00029</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">5</span>)	FUNCDATA	$<span class="hljs-number">1</span>, gclocals·<span class="hljs-number">33</span>cdeccccebe80329f1fdbee7f5874cb(SB)<br><span class="hljs-number">0x001d</span> <span class="hljs-number">00029</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">7</span>)	LEAQ	<span class="hljs-keyword">type</span>.noalg.<span class="hljs-keyword">struct</span> &#123; F <span class="hljs-type">uintptr</span>; <span class="hljs-string">&quot;&quot;</span>.t <span class="hljs-type">string</span> &#125;(SB), AX<br><span class="hljs-number">0x0024</span> <span class="hljs-number">00036</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">7</span>)	MOVQ	AX, (SP)<br><span class="hljs-number">0x0028</span> <span class="hljs-number">00040</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">7</span>)	PCDATA	$<span class="hljs-number">1</span>, $<span class="hljs-number">0</span><br><span class="hljs-number">0x0028</span> <span class="hljs-number">00040</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">7</span>)	CALL	runtime.newobject(SB)<br><span class="hljs-number">0x002d</span> <span class="hljs-number">00045</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">7</span>)	MOVQ	<span class="hljs-number">8</span>(SP), AX<br><span class="hljs-number">0x0032</span> <span class="hljs-number">00050</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">7</span>)	LEAQ	<span class="hljs-string">&quot;&quot;</span>.app.func1(SB), CX<br><span class="hljs-number">0x0039</span> <span class="hljs-number">00057</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">7</span>)	MOVQ	CX, (AX)<br><span class="hljs-number">0x003c</span> <span class="hljs-number">00060</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">7</span>)	MOVQ	$<span class="hljs-number">2</span>, <span class="hljs-number">16</span>(AX)<br><span class="hljs-number">0x0044</span> <span class="hljs-number">00068</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">7</span>)	LEAQ	<span class="hljs-keyword">go</span>.<span class="hljs-type">string</span>.<span class="hljs-string">&quot;Hi&quot;</span>(SB), CX<br><span class="hljs-number">0x004b</span> <span class="hljs-number">00075</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">7</span>)	MOVQ	CX, <span class="hljs-number">8</span>(AX)<br><span class="hljs-number">0x004f</span> <span class="hljs-number">00079</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">10</span>)	MOVQ	AX, <span class="hljs-string">&quot;&quot;</span>.~r0+<span class="hljs-number">32</span>(SP)<br><span class="hljs-number">0x0054</span> <span class="hljs-number">00084</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">10</span>)	MOVQ	<span class="hljs-number">16</span>(SP), BP<br><span class="hljs-number">0x0059</span> <span class="hljs-number">00089</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">10</span>)	ADDQ	$<span class="hljs-number">24</span>, SP<br><span class="hljs-number">0x005d</span> <span class="hljs-number">00093</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">10</span>)	RET<br><span class="hljs-number">0x005e</span> <span class="hljs-number">00094</span> (main.<span class="hljs-keyword">go</span>:<span class="hljs-number">10</span>)	NOP<br></code></pre></td></tr></table></figure>
+
+<p>其中 <code>LEAQ type.noalg.struct &#123; F uintptr; &quot;&quot;.t string &#125;(SB), AX</code> 这行表明 Go 对闭包的实现和维基百科说的类似。</p>
+<p>现在看看下面这种是不是这么实现的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (  <br>    <span class="hljs-string">&quot;fmt&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;  <br>    a := <span class="hljs-number">5</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>        fmt.Println(<span class="hljs-string">&quot;a =&quot;</span>, a)<br>    &#125;()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>看看汇编</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ go tool compile -S test.go<br><span class="hljs-string">&quot;&quot;</span>.main.func1 STEXT size=215 args=0x8 locals=0x50 funcid=0x0<br>  0x0000 00000 (test.go:9)	TEXT	<span class="hljs-string">&quot;&quot;</span>.main.func1(SB), ABIInternal, <span class="hljs-variable">$80</span>-8<br>  0x0000 00000 (test.go:9)	MOVQ	(TLS), CX<br>  0x0009 00009 (test.go:9)	CMPQ	SP, 16(CX)<br>  0x000d 00013 (test.go:9)	PCDATA	<span class="hljs-variable">$0</span>, $-2<br>  0x000d 00013 (test.go:9)	JLS	205<br>  0x0013 00019 (test.go:9)	PCDATA	<span class="hljs-variable">$0</span>, $-1<br>  0x0013 00019 (test.go:9)	SUBQ	<span class="hljs-variable">$80</span>, SP<br>  0x0017 00023 (test.go:9)	MOVQ	BP, 72(SP)<br>  0x001c 00028 (test.go:9)	LEAQ	72(SP), BP<br>  0x0021 00033 (test.go:9)	FUNCDATA	<span class="hljs-variable">$0</span>, gclocals·69c1753bd5f81501d95132d08af04464(SB)<br>  0x0021 00033 (test.go:9)	FUNCDATA	<span class="hljs-variable">$1</span>, gclocals·9fb7f0986f647f17cb53dda1484e0f7a(SB)<br>  0x0021 00033 (test.go:10)	MOVQ	<span class="hljs-string">&quot;&quot;</span>.a+88(SP), AX<br>  0x0026 00038 (test.go:10)	MOVQ	AX, (SP)<br>  0x002a 00042 (test.go:10)	PCDATA	<span class="hljs-variable">$1</span>, <span class="hljs-variable">$0</span><br>  0x002a 00042 (test.go:10)	CALL	runtime.convT64(SB)<br>  0x002f 00047 (test.go:10)	MOVQ	8(SP), AX<br>  0x0034 00052 (test.go:10)	MOVQ	AX, <span class="hljs-string">&quot;&quot;</span>..autotmp_21+64(SP)<br>  0x0039 00057 (test.go:10)	LEAQ	<span class="hljs-built_in">type</span>.[2]interface &#123;&#125;(SB), CX<br>  0x0040 00064 (test.go:10)	MOVQ	CX, (SP)<br>  0x0044 00068 (test.go:10)	PCDATA	<span class="hljs-variable">$1</span>, <span class="hljs-variable">$1</span><br>  0x0044 00068 (test.go:10)	CALL	runtime.newobject(SB)<br>  0x0049 00073 (test.go:10)	MOVQ	8(SP), AX<br>  0x004e 00078 (test.go:10)	LEAQ	type.string(SB), CX<br>  0x0055 00085 (test.go:10)	MOVQ	CX, (AX)<br>  0x0058 00088 (test.go:10)	LEAQ	<span class="hljs-string">&quot;&quot;</span>..stmp_1(SB), CX<br>  0x005f 00095 (test.go:10)	MOVQ	CX, 8(AX)<br>  0x0063 00099 (test.go:10)	LEAQ	type.int(SB), CX<br>  0x006a 00106 (test.go:10)	MOVQ	CX, 16(AX)<br>  0x006e 00110 (test.go:10)	PCDATA	<span class="hljs-variable">$0</span>, $-2<br>  0x006e 00110 (test.go:10)	CMPL	runtime.writeBarrier(SB), <span class="hljs-variable">$0</span><br>  0x0075 00117 (test.go:10)	JNE	189<br>  0x0077 00119 (test.go:10)	MOVQ	<span class="hljs-string">&quot;&quot;</span>..autotmp_21+64(SP), CX<br>  0x007c 00124 (test.go:10)	MOVQ	CX, 24(AX)<br>  0x0080 00128 (test.go:10)	PCDATA	<span class="hljs-variable">$0</span>, $-1<br>  0x0080 00128 (test.go:10)	PCDATA	<span class="hljs-variable">$1</span>, $-1<br></code></pre></td></tr></table></figure>
+
+<p>发现并没有这样的结构体，可见 Go 对这种情况做了特殊处理，因为它不是重复使用的匿名函数。</p>
+<h2 id="04-总结"><a href="#04-总结" class="headerlink" title="04 总结"></a>04 总结</h2><p>通过以上的讲解，对闭包应该有了更清晰的认识。如果面试中再被问到闭包，你可以这么回答：</p>
+<blockquote>
+<p>对闭包来说，函数在该语言中得是一等公民。一般来说，一个函数返回另外一个函数，这个被返回的函数可以引用外层函数的局部变量，这形成了一个闭包。通常，闭包通过一个结构体来实现，它存储一个函数和一个关联的上下文环境。但 Go 语言中，匿名函数就是一个闭包，它可以直接引用外部函数的局部变量，因为 Go 规范和 FAQ 都这么说了。</p>
+</blockquote>
+<p>面试官会不会被你惊到：原来如此，后一种说法我之前没有注意过。</p>
+<blockquote>
+<p>4 月 14 日更新：</p>
+<p>来自<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/gfyW0pBIHsf2oYluQNbP8A">微信公众号</a>的读者 **gopher **留言：</p>
+<p>noalg 代表不会生成 equal 和 hash 函数，因为闭包的 struct 是匿名的，不存在比较或者作为 key 的场景。<br>F uintptr 更准确的说应该是 .F uintptr，编译器生成的符号大部分都是.开头的。<br>“”.t string 表示捕获了一个 string 类型的变量 t，而且是 by value 而不是 by reference，因为”We use value capturing for values &lt;&#x3D; 128 bytes that are never reassigned after capturing (effectively constant).”。<br>通过 (func)(*struct) 的类型转换，即可通过 .F 找到对应的函数。<br>题外话：closure 通过 struct 实现只是为了 GC 更友好，另外匿名 struct 是为了不同的 package 共用 struct 的可能性。</p>
+</blockquote>
+<p>答案解析来自：<a target="_blank" rel="noopener" href="https://polarisxu.studygolang.com/posts/go/action/go-closure/">https://polarisxu.studygolang.com/posts/go/action/go-closure/</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Go/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/" class="category-chain-item">每日一题</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/GO/">#GO</a>
+      
+        <a href="/tags/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">#每日一题</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>深入了解闭包</div>
+      <div>http://example.com/2023/07/12/Go每日一题/深入了解闭包/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年7月12日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年7月12日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/07/11/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/defer%EF%BC%883%EF%BC%89/" title="defer（3）">
+                        <span class="hidden-mobile">defer（3）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>
