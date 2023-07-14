@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目:">
+    <meta name="description" content="题目">
 <meta property="og:type" content="article">
-<meta property="og:title" content="defer(4)">
-<meta property="og:url" content="http://example.com/2023/07/13/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/defer-4/index.html">
+<meta property="og:title" content="简单的defer">
+<meta property="og:url" content="http://example.com/2023/07/14/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%AE%80%E5%8D%95%E7%9A%84defer/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目:">
+<meta property="og:description" content="题目">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-07-13T01:18:25.000Z">
-<meta property="article:modified_time" content="2023-07-13T01:20:03.954Z">
+<meta property="article:published_time" content="2023-07-14T01:00:11.000Z">
+<meta property="article:modified_time" content="2023-07-14T01:01:01.462Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>defer(4) - 胤凯</title>
+  <title>简单的defer - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -246,7 +246,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="defer(4)"></span>
+            <span id="subtitle" data-typed-text="简单的defer"></span>
           
         </div>
 
@@ -257,8 +257,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-07-13 09:18" pubdate>
-          2023年7月13日 上午
+        <time datetime="2023-07-14 09:00" pubdate>
+          2023年7月14日 上午
         </time>
       </span>
     
@@ -269,7 +269,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          556 字
+          211 字
         
       </span>
     
@@ -280,7 +280,7 @@
         
         
         
-          5 分钟
+          2 分钟
         
       </span>
     
@@ -326,20 +326,21 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">defer(4)</h1>
+            <h1 style="display: none">简单的defer</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面代码段输出什么？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Person <span class="hljs-keyword">struct</span> &#123;<br>	age <span class="hljs-type">int</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	person := &amp;Person&#123;<span class="hljs-number">28</span>&#125;<br><br>	<span class="hljs-comment">// 1. </span><br>	<span class="hljs-keyword">defer</span> fmt.Println(person.age)<br><br>	<span class="hljs-comment">// 2.</span><br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(p *Person)</span></span> &#123;<br>		fmt.Println(p.age)<br>	&#125;(person)  <br><br>	<span class="hljs-comment">// 3.</span><br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		fmt.Println(person.age)<br>	&#125;()<br><br>	person.age = <span class="hljs-number">29</span><br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目<span id="more"></span></h1><p>下面这段代码正确的输出是什么？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">f</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">defer</span> fmt.Println(<span class="hljs-string">&quot;D&quot;</span>)<br>	fmt.Println(<span class="hljs-string">&quot;F&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	f()<br>	fmt.Println(<span class="hljs-string">&quot;M&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>一下解析来自 <a target="_blank" rel="noopener" href="https://studygolang.com/interview/question">Go语言中文网</a></p>
-<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>参考答案及解析：29 29 28。变量 person 是一个指针变量 。</p>
-<p>1.person.age 此时是将 28 当做 defer 函数的参数，会把 28 缓存在栈中，等到最后执行该 defer 语句的时候取出，即输出 28；</p>
-<p>2.defer 缓存的是结构体 Person{28} 的地址，最终 Person{28} 的 age 被重新赋值为 29，所以 defer 语句最后执行的时候，依靠缓存的地址取出的 age 便是 29，即输出 29；</p>
-<p>3.很简单，闭包引用，输出 29；</p>
-<p>又由于 defer 的执行顺序为先进后出，即 3 2 1，所以输出 29 29 28。</p>
+<ul>
+<li>A. F M D</li>
+<li>B. D F M</li>
+<li>C. F D M</li>
+</ul>
+<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>C。</p>
+<p> 被调用函数里的 defer 语句在返回之前就会被执行，所以输出顺序是 F D M。</p>
 
                 
               </div>
@@ -394,8 +395,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>defer(4)</div>
-      <div>http://example.com/2023/07/13/Go每日一题/defer-4/</div>
+      <div>简单的defer</div>
+      <div>http://example.com/2023/07/14/Go每日一题/简单的defer/</div>
     </div>
     <div class="license-meta">
       
@@ -407,13 +408,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年7月13日</div>
+          <div>2023年7月14日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年7月13日</div>
+          <div>2023年7月14日</div>
         </div>
       
       
@@ -444,18 +445,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/07/14/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%AE%80%E5%8D%95%E7%9A%84defer/" title="简单的defer">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">简单的defer</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/07/12/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E9%97%AD%E5%8C%85/" title="深入了解闭包">
-                        <span class="hidden-mobile">深入了解闭包</span>
+                      <a href="/2023/07/13/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/defer-4/" title="defer(4)">
+                        <span class="hidden-mobile">defer(4)</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
