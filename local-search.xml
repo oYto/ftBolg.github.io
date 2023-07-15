@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>defer(4)</title>
+    <link href="/2023/07/15/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/defer-5/"/>
+    <url>/2023/07/15/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/defer-5/</url>
+    
+    <content type="html"><![CDATA[<p>下面代码输出什么？</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Person <span class="hljs-keyword">struct</span> &#123;<br>age <span class="hljs-type">int</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>person := &amp;Person&#123;<span class="hljs-number">28</span>&#125;<br><br><span class="hljs-comment">// 1.</span><br><span class="hljs-keyword">defer</span> fmt.Println(person.age)<br><br><span class="hljs-comment">// 2.</span><br><span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(p *Person)</span></span> &#123;<br>fmt.Println(p.age)<br>&#125;(person)<br><br><span class="hljs-comment">// 3.</span><br><span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>fmt.Println(person.age)<br>&#125;()<br><br>person = &amp;Person&#123;<span class="hljs-number">29</span>&#125;<br>&#125;<br></code></pre></td></tr></table></figure><h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>29 28 28。</p><p>这道题之前题目的基础上做了一点点小改动，前一题最后一行代码 <code>person.age = 29</code> 是修改引用对象的成员 age，这题最后一行代码 <code>person = &amp;Person&#123;29&#125;</code> 是修改引用对象本身，来看看有什么区别。</p><p>1.person.age 这一行代码跟之前含义是一样的，此时是将 28 当做 defer 函数的参数，会把 28 缓存在栈中，等到最后执行该 defer 语句的时候取出，即输出 28；</p><p>2.defer 缓存的是结构体 Person{28} 的地址，这个地址指向的结构体没有被改变，最后 defer 语句后面的函数执行的时候取出仍是 28；</p><p>3.闭包引用，person 的值已经被改变，指向结构体 <code>Person&#123;29&#125;</code>，所以输出 29.</p><p>由于 defer 的执行顺序为先进后出，即 3 2 1，所以输出 29 28 28。</p><p>以上解析来自 <a href="https://studygolang.com/interview/question">Go语言中文网</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Go</category>
+      
+      <category>每日一题</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>GO</tag>
+      
+      <tag>每日一题</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>简单的defer</title>
     <link href="/2023/07/14/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%AE%80%E5%8D%95%E7%9A%84defer/"/>
     <url>/2023/07/14/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%AE%80%E5%8D%95%E7%9A%84defer/</url>
