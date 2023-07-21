@@ -18,14 +18,14 @@
   
     <meta name="description" content="题目:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="string的使用">
-<meta property="og:url" content="http://example.com/2023/07/20/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/string%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:title" content="defer函数需要先注册">
+<meta property="og:url" content="http://example.com/2023/07/21/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/defer%E5%87%BD%E6%95%B0%E9%9C%80%E8%A6%81%E5%85%88%E6%B3%A8%E5%86%8C/index.html">
 <meta property="og:site_name" content="胤凯">
 <meta property="og:description" content="题目:">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-07-20T01:25:46.000Z">
-<meta property="article:modified_time" content="2023-07-21T05:23:25.522Z">
+<meta property="article:published_time" content="2023-07-21T05:22:02.000Z">
+<meta property="article:modified_time" content="2023-07-21T05:23:03.729Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>string的使用 - 胤凯</title>
+  <title>defer函数需要先注册 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -246,7 +246,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="string的使用"></span>
+            <span id="subtitle" data-typed-text="defer函数需要先注册"></span>
           
         </div>
 
@@ -257,8 +257,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-07-20 09:25" pubdate>
-          2023年7月20日 上午
+        <time datetime="2023-07-21 13:22" pubdate>
+          2023年7月21日 下午
         </time>
       </span>
     
@@ -269,7 +269,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          212 字
+          282 字
         
       </span>
     
@@ -280,7 +280,7 @@
         
         
         
-          2 分钟
+          3 分钟
         
       </span>
     
@@ -326,18 +326,16 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">string的使用</h1>
+            <h1 style="display: none">defer函数需要先注册</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面的代码有几处语法问题，各是什么？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><span class="hljs-keyword">import</span> (<br>    <span class="hljs-string">&quot;fmt&quot;</span><br>)<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">var</span> x <span class="hljs-type">string</span> = <span class="hljs-literal">nil</span><br>    <span class="hljs-keyword">if</span> x == <span class="hljs-literal">nil</span> &#123;<br>        x = <span class="hljs-string">&quot;default&quot;</span><br>    &#125;<br>    fmt.Println(x)<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> a <span class="hljs-type">bool</span> = <span class="hljs-literal">true</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>		fmt.Println(<span class="hljs-string">&quot;1&quot;</span>)<br>	&#125;()<br>	<span class="hljs-keyword">if</span> a == <span class="hljs-literal">true</span> &#123;<br>		fmt.Println(<span class="hljs-string">&quot;2&quot;</span>)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>		fmt.Println(<span class="hljs-string">&quot;3&quot;</span>)<br>	&#125;()<br>&#125;<br></code></pre></td></tr></table></figure>
 
+<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs">2<br>1<br></code></pre></td></tr></table></figure>
 
-
-<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>参考答案及解析：2 处有语法问题。</p>
-<p>golang 的字符串类型是不能赋值 nil 的，也不能跟 nil 比较。</p>
+<p>defer 关键字后面的函数或者方法想要执行必须先注册，return 之后的 defer 是不能注册的， 也就不能执行后面的函数或方法。</p>
 
                 
               </div>
@@ -392,8 +390,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>string的使用</div>
-      <div>http://example.com/2023/07/20/Go每日一题/string的使用/</div>
+      <div>defer函数需要先注册</div>
+      <div>http://example.com/2023/07/21/Go每日一题/defer函数需要先注册/</div>
     </div>
     <div class="license-meta">
       
@@ -405,7 +403,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年7月20日</div>
+          <div>2023年7月21日</div>
         </div>
       
       
@@ -442,18 +440,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/07/21/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/defer%E5%87%BD%E6%95%B0%E9%9C%80%E8%A6%81%E5%85%88%E6%B3%A8%E5%86%8C/" title="defer函数需要先注册">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">defer函数需要先注册</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/07/15/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/defer-5/" title="defer(4)">
-                        <span class="hidden-mobile">defer(4)</span>
+                      <a href="/2023/07/20/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/string%E7%9A%84%E4%BD%BF%E7%94%A8/" title="string的使用">
+                        <span class="hidden-mobile">string的使用</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
