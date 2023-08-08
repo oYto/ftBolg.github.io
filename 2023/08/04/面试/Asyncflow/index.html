@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/go.png">
 <meta property="article:published_time" content="2023-08-04T03:05:31.000Z">
-<meta property="article:modified_time" content="2023-08-06T08:05:14.260Z">
+<meta property="article:modified_time" content="2023-08-08T12:52:59.146Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="面试">
 <meta name="twitter:card" content="summary_large_image">
@@ -377,8 +377,9 @@
 <p>HandleProcess：用户得自己定义一种任务类型的真正处理逻辑</p>
 <p>HandleFinish：用于处理任务完成后的逻辑，也就是在任务成功或失败后，需要执行的一些后续操作。例如可以在这个方法中发送任务完成的通知，记录任务的执行日志等等。具体的逻辑根据业务需要而定</p>
 </blockquote>
-<pre><code class="hljs">2. 第二部，就是部署 worker，消费任务
-</code></pre>
+<ol start="2">
+<li>第二部，就是部署 worker，消费任务</li>
+</ol>
 <p>​	说是部署，其实就是启动这个 worker 程序，然后 worker 安装用户定义的逻辑去执行</p>
 <h4 id="2、你的框架怎么部署呢？"><a href="#2、你的框架怎么部署呢？" class="headerlink" title="2、你的框架怎么部署呢？"></a>2、你的框架怎么部署呢？</h4><p><strong>分析：</strong> 检验你的框架实际有没有使用过</p>
 <p><strong>回答：</strong> 我们是提供框架，业务方可以根据自己的需要部署，一般我们推荐 flower 和 worker 都是多机部署，MySQL 或 Reids 使用主从模式即可</p>
@@ -738,7 +739,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年8月6日</div>
+          <div>2023年8月8日</div>
         </div>
       
       

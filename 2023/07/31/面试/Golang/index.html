@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/go.png">
 <meta property="article:published_time" content="2023-07-31T07:48:05.000Z">
-<meta property="article:modified_time" content="2023-08-07T14:35:30.766Z">
+<meta property="article:modified_time" content="2023-08-08T13:35:21.189Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="面试">
 <meta name="twitter:card" content="summary_large_image">
@@ -268,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          36k 字
+          41k 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
         
-          298 分钟
+          339 分钟
         
       </span>
     
@@ -1345,21 +1345,107 @@
 <li>Goroutine内的业务逻辑进入死循环，资源一直无法释放</li>
 <li>Goroutine内的业务逻辑进入长时间等待，有不断新增的 Goroutine 进入等待</li>
 </ul>
-<h5 id="1-3-常见的-goroutine-泄漏场景"><a href="#1-3-常见的-goroutine-泄漏场景" class="headerlink" title="1.3 常见的 goroutine 泄漏场景"></a>1.3 常见的 goroutine 泄漏场景</h5><ul>
-<li>channel 如果忘记初始化，无论是读还是写操作，都会阻塞</li>
-<li>channel 发送数量超过 channel 接收数量，就会造成阻塞</li>
-<li>channel 接收数量超过 channel 发送数量，也会造成阻塞</li>
-<li>http request body 未关闭，goroutine 不会退出</li>
-<li>互斥锁忘记解锁</li>
-<li>sync.WaitGroup 使用不当</li>
-<li>time.Ticker 是每个指定时间就会向通道内写数据。作为循环触发器，必须调用 stop 方法才会停止，从而被 GC 掉，否则会一直占用内存空间</li>
+<h5 id="1-3-常见的-goroutine-泄漏场景"><a href="#1-3-常见的-goroutine-泄漏场景" class="headerlink" title="1.3 常见的 goroutine 泄漏场景"></a>1.3 常见的 goroutine 泄漏场景</h5><p><strong>回答：</strong></p>
+<ul>
+<li><p>channel 如果忘记初始化，无论是读还是写操作，都会阻塞</p>
+</li>
+<li><p>channel 发送数量超过 channel 接收数量，就会造成阻塞</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    ch1 := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>)<br>    ch2 := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>)<br>    ch3 := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>)<br>    <span class="hljs-keyword">go</span> Getdata(<span class="hljs-string">&quot;https://www.baidu.com&quot;</span>,ch1)<br>    <span class="hljs-keyword">go</span> Getdata(<span class="hljs-string">&quot;https://www.baidu.com&quot;</span>,ch2)<br>    <span class="hljs-keyword">go</span> Getdata(<span class="hljs-string">&quot;https://www.baidu.com&quot;</span>,ch3)<br>    <span class="hljs-keyword">select</span>&#123;<br>        <span class="hljs-keyword">case</span> v:=&lt;- ch1:<br>            fmt.Println(v)<br>        <span class="hljs-keyword">case</span> v:=&lt;- ch2:<br>            fmt.Println(v)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>channel 接收数量超过 channel 发送数量，也会造成阻塞</p>
+</li>
+<li><p>http request body 未关闭，goroutine 不会退出</p>
+</li>
+<li><p>互斥锁忘记解锁</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//协程拿到锁未释放，其他协程获取锁会阻塞</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">mutexTest</span><span class="hljs-params">()</span></span> &#123;<br>    mutex := sync.Mutex&#123;&#125;<br>    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;<br>        <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>            mutex.Lock()<br>            fmt.Printf(<span class="hljs-string">&quot;%d goroutine get mutex&quot;</span>, i)<br>      			<span class="hljs-comment">//模拟实际开发中的操作耗时</span><br>            time.Sleep(<span class="hljs-number">100</span> * time.Millisecond)<br>        &#125;()<br>    &#125;<br>    time.Sleep(<span class="hljs-number">10</span> * time.Second)<br>&#125;	<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>sync.WaitGroup 使用不当</p>
+</li>
+<li><p>time.NewTicker 是每个指定时间就会向通道内写数据。作为循环触发器，必须调用 stop 方法才会停止，从而被 GC 掉，否则会一直占用内存空间</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go">timer := time.NewTicker(time.Duration(<span class="hljs-number">2</span>) * time.Second)<br><span class="hljs-comment">// defer timer.Stop()</span><br><span class="hljs-keyword">for</span> <span class="hljs-literal">true</span> &#123;<br>	<span class="hljs-keyword">select</span> &#123;<br>	<span class="hljs-keyword">case</span> &lt;-timer.C:<br>		<span class="hljs-comment">// do something</span><br>	<span class="hljs-keyword">default</span>:<br>		time.Sleep(time.Duration(<span class="hljs-number">1</span>) * time.Second)<br>	&#125;<br>&#125;		<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h5 id="1-4-如何排查"><a href="#1-4-如何排查" class="headerlink" title="1.4 如何排查"></a>1.4 如何排查</h5><p><strong>分析：</strong></p>
 <p>​	go 语言的性能分析，比如 CPU，内存一般使用 pprof 工具进行分析</p>
 <p><strong>回答：</strong>	</p>
 <p>​	单个函数：调用 runtime.NumGoroutine 方法打印 执行代码前后的 Goroutine 的运行数量，进行前后对比，就能知道有没有泄漏了。</p>
 <p>​	生产&#x2F;测试环境：使用 PProf 实时监测 Goroutine 的数量</p>
-<h1 id="未完成，可以查看该题的链接，进行深入学习"><a href="#未完成，可以查看该题的链接，进行深入学习" class="headerlink" title="未完成，可以查看该题的链接，进行深入学习"></a>未完成，可以查看该题的链接，进行深入学习</h1>
+<h4 id="2、知道-golang-的内存逃逸吗？什么情况下会发生内存逃逸？"><a href="#2、知道-golang-的内存逃逸吗？什么情况下会发生内存逃逸？" class="headerlink" title="2、知道 golang 的内存逃逸吗？什么情况下会发生内存逃逸？"></a>2、知道 golang 的内存逃逸吗？什么情况下会发生内存逃逸？</h4><h5 id="2-1-什么是内存逃逸？"><a href="#2-1-什么是内存逃逸？" class="headerlink" title="2.1 什么是内存逃逸？"></a>2.1 什么是内存逃逸？</h5><p><strong>分析：</strong></p>
+<p>​	go 语言的内存逃逸分析是在编译期决定对象分配方式的一种策略，决定对象时分配在堆上还是分配在栈上。就是优先本来可以分配到栈上的对象被分配到堆上了，这个时候就发生了逃逸。</p>
+<p>​	具体的逃逸分析有：</p>
+<ol>
+<li>如果函数外部没有引用，则优先放到栈中</li>
+<li>如果函数外部存在引用，则必定放到堆中</li>
+<li>如果栈上放不下，则必定放到堆上</li>
+</ol>
+<p>​	前两种主要考虑对象的生命周期，当这个对象的生命周期不能被确定，不能跟随当前函数结束而结束，就会发送逃逸，被分配到堆上。</p>
+<p><strong>回答：</strong></p>
+<p>​	内存逃逸是编译器在程序编译时期根据逃逸分析策略，将原本应该分配到栈上的对象分配到堆上的一个过程。</p>
+<h5 id="2-2-什么情况下会发生内存逃逸"><a href="#2-2-什么情况下会发生内存逃逸" class="headerlink" title="2.2 什么情况下会发生内存逃逸"></a>2.2 什么情况下会发生内存逃逸</h5><p>​	以下场景会发生内存逃逸：</p>
+<ul>
+<li>方法内返回局部变量指针</li>
+<li>向 channel 发送指针数据</li>
+<li>在闭包中引用包外的值</li>
+<li>在 slice 或 map 中存储指针</li>
+<li>切片（扩容后）长度太大</li>
+<li>在 interface 类型上调用方法</li>
+</ul>
+<h5 id="2-3-内存逃逸有什么影响"><a href="#2-3-内存逃逸有什么影响" class="headerlink" title="2.3 内存逃逸有什么影响"></a>2.3 内存逃逸有什么影响</h5><p><strong>分析：</strong></p>
+<p>​	从栈对象和堆对象的区别来说，堆对象需要垃圾回收机制来释放内存，栈对象会跟随函数结束被编译器回收</p>
+<p><strong>回答：</strong></p>
+<p>​	大量的内存逃逸会给 gc 带来压力。</p>
+<h4 id="3、简述-Go-是如何分配内存的？"><a href="#3、简述-Go-是如何分配内存的？" class="headerlink" title="3、简述 Go 是如何分配内存的？"></a>3、简述 Go 是如何分配内存的？</h4><p><strong>分析：</strong></p>
+<p>​	Go 的内存分配借鉴了 Google 的 TCMalloc 分配算法，其核心思想是内存池 + 多级对象管理。内存池主要预先分配内存，减少向系统申请的频率；多级对象有：mheap、mspan（跨度）、mcentral、mcache、arenas（内存分配器）。它们以 mspan 作为基本分配单位</p>
+<p><img src="C:\Users\ft\AppData\Roaming\Typora\typora-user-images\image-20230808193919445.png" srcset="/img/loading.gif" lazyload alt="image-20230808193919445"></p>
+<p><strong>回答：</strong></p>
+<p>​	go 语言对象的分配根据对象大小的不同申请策略也不同：</p>
+<ul>
+<li>当要分配大于 32K 的对象时，从 mheap（堆） 分配。</li>
+<li>当要分配的对象小于等于 32k 大于 16B 时，从 P 上的 mcache（线程缓存） 分配，如果 mcache 没有内存，则从 mcentral（中心缓冲） 获取，如果 mcentral 也没有，则向 mheap 申请，如果 mheap 也没有，则向操作系统申请</li>
+<li>当要分配的对象小于等于 16B（微小对象），从 mcache 的微型分配器上分配。</li>
+</ul>
+<h4 id="4、Channel-分配在栈上还是堆上？哪些对象分配在堆上，哪些对象分配在栈上？"><a href="#4、Channel-分配在栈上还是堆上？哪些对象分配在堆上，哪些对象分配在栈上？" class="headerlink" title="4、Channel 分配在栈上还是堆上？哪些对象分配在堆上，哪些对象分配在栈上？"></a>4、Channel 分配在栈上还是堆上？哪些对象分配在堆上，哪些对象分配在栈上？</h4><h5 id="4-1-channel-分配在栈上还是堆上？"><a href="#4-1-channel-分配在栈上还是堆上？" class="headerlink" title="4.1 channel 分配在栈上还是堆上？"></a>4.1 channel 分配在栈上还是堆上？</h5><p><strong>分析：</strong></p>
+<p>​	这个题可以看作是对上一个颗理解程度的考察，可以用内存逃逸的思想来分析这个题，因为 channel 的作用就是用做两个 goroutine 之间的通信，所以在很大程度上它的生命周期并不会局限在一个函数内部，所以大概率会发生内存逃逸，就很容易得出结论，channel 大概率会分配到堆上</p>
+<p><strong>回答：</strong></p>
+<p>​	channel 分配在堆上，channel 被设计用来实现协程间通信的组件，其作用和生命周期不可能仅局限于某个函数内部，所以 golang 直接将其分配在堆上。</p>
+<h5 id="4-2-哪些对象分配在堆上，哪些对象分配在栈上？"><a href="#4-2-哪些对象分配在堆上，哪些对象分配在栈上？" class="headerlink" title="4.2 哪些对象分配在堆上，哪些对象分配在栈上？"></a>4.2 哪些对象分配在堆上，哪些对象分配在栈上？</h5><p><strong>分析：</strong></p>
+<p>​	对象是分配在栈上还是对上跟 go 语言的语法没有关系，需要在编译期由编译器进行逃逸分析而决定。根据逃逸分析策略来思考</p>
+<p><strong>回答：</strong></p>
+<p>​	一般来说，大的对象直接分配在堆上，如果一个局部变量会被外部引用，生命周期不稳定，也会分配到堆上，其他小的对象优先分配在栈上。</p>
+<h4 id="5、介绍一下大对象、小对象，什么情况下会导致-GC-压力大？"><a href="#5、介绍一下大对象、小对象，什么情况下会导致-GC-压力大？" class="headerlink" title="5、介绍一下大对象、小对象，什么情况下会导致 GC 压力大？"></a>5、介绍一下大对象、小对象，什么情况下会导致 GC 压力大？</h4><p><strong>分析：</strong></p>
+<p>​	首先压力大指的是我们 GC 的时候，需要占用比较高的 CPU  时间和内存带宽资源，这就会影响我们用户 goroutine的执行。<br>​	而当大量小对象 逃逸到堆上，就意味着这些小对象是需要被 GC 回收的(可能是在某一次 GC)，因为栈上的对象<br>可以 随着栈帧的释放而回收，而堆上的对象只能由 GC 来进行内存管理</p>
+<p>​	同样巨大的 map 和 slice 也就意味着 GC 需要处理更多的数据</p>
+<p><strong>回答：</strong></p>
+<ul>
+<li>go 语言中小于等于 32K 的对象就是小对象，其中小于 16K 的是微小对象（而且是不含指针的对象），其它都是大对象</li>
+<li>当有大量小对象逃逸到堆上，或者有巨大的 map 和 slice 的情况下（原本在栈上的话，会随着栈帧的释放而回收，逃逸到堆上，只能由 GC 处理）， GC 压力会较大</li>
+</ul>
+<h1 id="Go-代码性能优化"><a href="#Go-代码性能优化" class="headerlink" title="Go 代码性能优化"></a>Go 代码性能优化</h1><h4 id="1、你知道-Go-的哪些性能优化手段？"><a href="#1、你知道-Go-的哪些性能优化手段？" class="headerlink" title="1、你知道 Go 的哪些性能优化手段？"></a>1、你知道 Go 的哪些性能优化手段？</h4><p><strong>分析：</strong></p>
+<p>​	Go 代码性能优化就两个：内存分配优化 和 并发优化，其余不值一提</p>
+<p>​	一般建议是，用过对象池，知道内存逃逸大概怎么定位，就可以在里面写 Go 程序性能优化了，并发优化都是看场景的，不强求。</p>
+<p><strong>回答：</strong></p>
+<ul>
+<li><p>Go 内存分配优化：核心就是内存逃逸和对象池</p>
+<ul>
+<li><p>内存逃逸优化：属于那种听上去逼格很高，但是实际上效果非常有限的，将 SQL 优化一下，几十几百毫秒省出来了，但是 Go 内存分配优化来优化，可能也就优化了 1 毫秒</p>
+<p>一般是使用 <code>go build -gcflags &#39;-m&#39;</code> 命令来看哪里发生了逃逸，然后尝试优化掉</p>
+</li>
+<li><p>对象池：可以使用 Go 官方提供的 sync.Pool，一般来说，如果你有什么接口是要处理比较大批数据的，就是可以考虑这种方案</p>
+</li>
+</ul>
+</li>
+<li><p>并发优化：主要思路就是 有锁改无锁；写锁改读写锁；原子操作（CAS 也可以看作是乐观锁）；全局锁</p>
+<ul>
+<li>并发优化这个在业务开发里面比较少用</li>
+</ul>
+</li>
+</ul>
+<h1 id="代码题相关"><a href="#代码题相关" class="headerlink" title="代码题相关"></a>代码题相关</h1><h4 id="1、使用三个协程，每秒钟打印-cat-dog-fish-（要求顺序不能变换，协程-1-打印-cat，协程-2-打印-dog，-协程-3-打印-fish）"><a href="#1、使用三个协程，每秒钟打印-cat-dog-fish-（要求顺序不能变换，协程-1-打印-cat，协程-2-打印-dog，-协程-3-打印-fish）" class="headerlink" title="1、使用三个协程，每秒钟打印 cat dog fish （要求顺序不能变换，协程 1 打印 cat，协程 2 打印 dog， 协程 3 打印 fish）"></a>1、使用三个协程，每秒钟打印 cat dog fish （要求顺序不能变换，协程 1 打印 cat，协程 2 打印 dog， 协程 3 打印 fish）</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;sync&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	wg := sync.WaitGroup&#123;&#125;<br>	wg.Add(<span class="hljs-number">3</span>)<br>	chcat := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>)<br>	chdog := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>)<br>	chfish := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>)<br>	<span class="hljs-keyword">go</span> printCat(&amp;wg, chcat, chfish)<br>	<span class="hljs-keyword">go</span> printDog(&amp;wg, chdog, chcat)<br>	<span class="hljs-keyword">go</span> printFish(&amp;wg, chfish, chdog)<br>	wg.Wait()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">printCat</span><span class="hljs-params">(wg *sync.WaitGroup, cat <span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>, fish <span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>)</span></span> &#123;<br>	<span class="hljs-keyword">defer</span> wg.Done()<br>	<span class="hljs-keyword">for</span> &#123;<br>		cat &lt;- <span class="hljs-number">1</span><br>		fmt.Println(<span class="hljs-string">&quot;cat&quot;</span>)<br>		time.Sleep(time.Second)<br>		&lt;-fish<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">printDog</span><span class="hljs-params">(wg *sync.WaitGroup, dog <span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>, cat <span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>)</span></span> &#123;<br>	<span class="hljs-keyword">defer</span> wg.Done()<br>	<span class="hljs-keyword">for</span> &#123;<br>		&lt;-cat<br>		time.Sleep(time.Second)<br>		fmt.Println(<span class="hljs-string">&quot;dog&quot;</span>)<br>		dog &lt;- <span class="hljs-number">1</span><br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">printFish</span><span class="hljs-params">(wg *sync.WaitGroup, fish <span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>, dog <span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>)</span></span> &#123;<br>	<span class="hljs-keyword">defer</span> wg.Done()<br>	<span class="hljs-keyword">for</span> &#123;<br>		&lt;-dog<br>		time.Sleep(time.Second)<br>		fmt.Println(<span class="hljs-string">&quot;fish&quot;</span>)<br>		time.Sleep(time.Second)<br>		fish &lt;- <span class="hljs-number">1</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="2、实现两个协程轮流输出-A-1-B-2-C-3-…-Z-26"><a href="#2、实现两个协程轮流输出-A-1-B-2-C-3-…-Z-26" class="headerlink" title="2、实现两个协程轮流输出 A 1 B 2 C 3 … Z 26"></a>2、实现两个协程轮流输出 A 1 B 2 C 3 … Z 26</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;sync&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> w sync.WaitGroup<br>	w.Add(<span class="hljs-number">52</span>)<br>	strChan := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>, <span class="hljs-number">1</span>)<br>	numChan := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>, <span class="hljs-number">1</span>)<br><br>	strChan &lt;- <span class="hljs-number">0</span><br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		<span class="hljs-keyword">for</span> i := <span class="hljs-string">&#x27;a&#x27;</span>; i &lt;= <span class="hljs-string">&#x27;z&#x27;</span>; i++ &#123;<br>			&lt;-strChan<br>			fmt.Printf(<span class="hljs-string">&quot;%v \n&quot;</span>, <span class="hljs-type">string</span>(i))<br>			w.Done()<br>			numChan &lt;- <span class="hljs-number">1</span><br>		&#125;<br>	&#125;()<br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		<span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">26</span>; i++ &#123;<br>			&lt;-numChan<br>			fmt.Printf(<span class="hljs-string">&quot;%v \n&quot;</span>, i)<br>			w.Done()<br>			strChan &lt;- <span class="hljs-number">0</span><br>		&#125;<br>	&#125;()<br>	w.Wait()<br>	fmt.Println()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="3、N-个-goroutine-循环打印数字-min-max"><a href="#3、N-个-goroutine-循环打印数字-min-max" class="headerlink" title="3、N 个 goroutine 循环打印数字 min - max"></a>3、N 个 goroutine 循环打印数字 min - max</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;sync&quot;</span><br>)<br><br><span class="hljs-keyword">var</span> wg = sync.WaitGroup&#123;&#125;<br><span class="hljs-keyword">var</span> n = <span class="hljs-number">5</span><br><span class="hljs-keyword">var</span> min = <span class="hljs-number">1</span><br><span class="hljs-keyword">var</span> max = <span class="hljs-number">100</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	wg.Add(n)<br>	<span class="hljs-keyword">var</span> chanArray = <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>, n)<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; n; i++ &#123;<br>		chanArray[i] = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>)<br>	&#125;<br><br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; n; i++ &#123;<br>		<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(i <span class="hljs-type">int</span>)</span></span> &#123;<br>			<span class="hljs-keyword">defer</span> wg.Done()<br>			<span class="hljs-keyword">defer</span> <span class="hljs-built_in">close</span>(chanArray[(i+<span class="hljs-number">1</span>)%n])<br>			<span class="hljs-keyword">for</span> num := <span class="hljs-keyword">range</span> chanArray[i] &#123;<br>				<span class="hljs-keyword">if</span> num &gt; max &#123;<br>					<span class="hljs-keyword">return</span><br>				&#125;<br><br>				fmt.Printf(<span class="hljs-string">&quot;g %d 进行打印 %d \n&quot;</span>, i, num)<br>				chanArray[(i+<span class="hljs-number">1</span>)%n] &lt;- num + <span class="hljs-number">1</span><br>			&#125;<br>		&#125;(i)<br>	&#125;<br><br>	chanArray[<span class="hljs-number">0</span>] &lt;- min<br>	wg.Wait()<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
                 
               </div>
             
@@ -1423,7 +1509,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年8月7日</div>
+          <div>2023年8月8日</div>
         </div>
       
       
