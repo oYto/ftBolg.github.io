@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/net.jpg">
 <meta property="article:published_time" content="2023-08-09T06:03:06.000Z">
-<meta property="article:modified_time" content="2023-08-10T12:24:14.608Z">
+<meta property="article:modified_time" content="2023-08-10T14:19:45.642Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary_large_image">
@@ -268,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          9.3k 字
+          14k 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
         
-          78 分钟
+          114 分钟
         
       </span>
     
@@ -549,7 +549,7 @@
 <li>登录受信任网站 A，并在本地生成 Cookie（如果用户没有登录网站 A，那么网站 B 在诱导的时候，请求网站 A 的 api 接口时，会提示你登录）</li>
 <li>在不登出 A 的情况下，访问危险网站 B（其实就是利用了网站 A 的漏洞）</li>
 </ul>
-<p><img src="C:\Users\ft\Downloads\download_image.jpeg" srcset="/img/loading.gif" lazyload alt="download_image"></p>
+<p><img src="C:\hexo-blog\source\images\2.png" srcset="/img/loading.gif" lazyload alt="download_image"></p>
 <h5 id="防范-1"><a href="#防范-1" class="headerlink" title="防范"></a>防范</h5><p><strong>Token 验证</strong></p>
 <p>​	服务器发送给客户端一个 token，客户端提交的表单中带着这个 token，如果这个 token 不合法，那么服务器拒绝这个请求。</p>
 <p><strong>隐藏令牌</strong></p>
@@ -557,7 +557,100 @@
 <p><strong>Referer 验证</strong></p>
 <p>​	只接受本站的请求，服务器才做响应；如果不是，就拦截</p>
 <h4 id="中间人攻击以及如何防范？"><a href="#中间人攻击以及如何防范？" class="headerlink" title="中间人攻击以及如何防范？"></a>中间人攻击以及如何防范？</h4><h5 id="概念-2"><a href="#概念-2" class="headerlink" title="概念"></a>概念</h5><p>​	指攻击者与通信的两段分别创建独立的联系，并交换其所收到的数据，使通讯的两端认为他们正在通过一个私密的连接方式与对方直接对话，但事实上整个会话都被攻击者完全控制。</p>
-<h1 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h1><h1 id="IP"><a href="#IP" class="headerlink" title="IP"></a>IP</h1>
+<p><img src="C:\hexo-blog\source\images\1.png" srcset="/img/loading.gif" lazyload alt="download_image"></p>
+<p><strong>嗅探：</strong> 嗅探或数据包嗅探 是一种用于捕获流进和流出系统&#x2F;网络的数据包的技术。网络中的数据包嗅探就好像电话中的监听。</p>
+<p><strong>数据包注入：</strong> 攻击者会将恶意数据包注入常规数据中。这样用户便不会注意到文件&#x2F;恶意软件，因为它们是合法通讯流的一部分。在中间人攻击和拒绝攻击中，这些文件是很常见的。</p>
+<p><strong>会话劫持：</strong> 当客户端和服务器端在进行一个会话时，会话中包含了很多重要信息，一些黑客会潜伏在这个会话中，最终控制这个会话，这就是会话劫持。</p>
+<p><strong>SSL 剥离：</strong> SSL&#x2F;TLS 证书通过加密保护着的通讯安全。在 SSL 剥离攻击中，攻击者使 SSL&#x2F;TLS 连接剥离，随之协议便从安全的 HTTPS 变成了不安全的 HTTP。</p>
+<h5 id="防范-2"><a href="#防范-2" class="headerlink" title="防范"></a>防范</h5><p>​	使用 HTTPS 协议，禁用不安全的 SSL 协议，启用虚拟专用网（VPN）</p>
+<p>​	使用 <strong>HTTPS 双向认证</strong> 来避免这种问题：一般 HTTPS 是单向认证，客户端只会验证服务器的身份，但是服务器并不会验证客户端的身份。如果用了双向认证方式，不仅客户端会验证服务端的身份，而且服务端也会验证客户端的身份。服务器一旦验证到请求自己的客户端为不可信任的，服务端就拒绝继续通信，客户端如果发现服务端是不可信任的，那么也中止通信。</p>
+<h1 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h1><h4 id="1、TCP-的头部结构体？"><a href="#1、TCP-的头部结构体？" class="headerlink" title="1、TCP  的头部结构体？"></a>1、TCP  的头部结构体？</h4><p>![download_image (1)](C:\hexo-blog\source\images\download_image (1).jpeg)</p>
+<ul>
+<li><p><strong>源端口：</strong> 16 位，标识报文的返回地址。</p>
+</li>
+<li><p><strong>目的端口：</strong> 16 位，指明接收方计算机上的应用程序接口。</p>
+</li>
+<li><p><strong>序列号：</strong> 32 位，在建立连接时，由计算机生成的随机数作为初始值，通过 SYN 包传给接收端主机，每发送一次数据，就累加一次该数据字节数的大小。用来解决网络包乱序问题。</p>
+</li>
+<li><p><strong>确认号：</strong> 32 位，指下一次期望收到的数据的序列号，发送端收到这个确认应答以后可以认为在这个序号以前的数据都已正常接收。用来解决丢包问题</p>
+</li>
+<li><p><strong>数据偏移 &#x2F; 首部字长：</strong>4 位，TCP 首部可能含有可选项内容，所以 TCP 报头的长度是不确定的，包头不包含任何任选字段则长度为 20 字节，4 位首部长度所能表示最大长度为 60 字节。首部长度也叫数据偏移，因为首部长度实际上指示了数据区在报文段中的起始偏移值。</p>
+</li>
+<li><p><strong>保留：</strong> 6 位，为将来定义新的用途保留，现在一般置 0</p>
+</li>
+<li><p><strong>校验和：</strong> 16 位，由发送端填充，接收端对 TCP 报文段执行 CRC 算法以检验 TCP 报文段在传输过程中是否损坏，这个校验不仅包括 TCP 头部，也包括数据部分。这是 TCP 实现可靠传输的一个重要保障。</p>
+</li>
+<li><p><strong>窗口：</strong> 16 位，是 TCP流量控制的一个手段。通过窗口告诉对方本端的 TCP 接收缓冲区还能容纳多少字节的数据，这样对方可以控制发送数据的速度，从而达到流量控制。窗口大小位 16 bit 字段，因而窗口大小最大为 65535</p>
+</li>
+<li><p><strong>紧急指针：</strong> 16 位，只有当 URG 标志置 1 时，紧急指针是一个正的偏移量，和顺序号字段中的值相加表示紧急数据最后一个字段的序号。使用紧急指针是发送端向另一端发送紧急数据的一种方式。</p>
+</li>
+<li><p><strong>选项和填充</strong>： TCP 头部的最后一个选项字段是可变长的可选信息。这部分最多包含 40 字节，因为 TCP 头部最长是 60 字节。</p>
+<p>最常见的可选字段是最长报文大小 MSS，每个连接方通常都在通信的第一个报文段中指明这个选项，它表示本端所能接收的最大报文段的长度。</p>
+</li>
+<li><p><strong>数据部分</strong>： TCP 报文段中的数据部分是可选的。在连接建立或者终止时，双方交换的报文段仅有 TCP 首部；如果一方没有数据要发送，也会使用没有任何数据的首部来确认收到的数据；在处理超时的许多情况，也会发送不带任何数据的报文段。</p>
+</li>
+</ul>
+<p>还包括控制位：</p>
+<ul>
+<li><strong>URG：</strong>紧急指针标志，为 1 时表示紧急指针有效，该报文应该优先传送，为 0 则忽略该紧急指针</li>
+<li><strong>ACK：</strong> 确认序列标志，为 1 时 表示确认号有效，为 0 表示报文中不包含确认信息。携带 ACK 标识的 TCP 报文段被称为<strong>确认报文段</strong>。</li>
+<li><strong>RST：</strong> 重置连接标志，用于重置由于主机崩溃或者其他原因而出现错误的连接，或者用于拒绝非法的报文段和拒绝连接请求。称携带 RST 标志的报文段为 <strong>复位报文段</strong></li>
+<li><strong>SYN：</strong> 表示请求建立一个连接。携带 SYN 标志的 TCP 报文段为<strong>同步报文段</strong>。</li>
+<li><strong>FIN：</strong> finish 标志，用于释放连接，为 1 时表示发送方已经没有数据发送了，即关闭本方数据流。称 携带 FIN 标志的 TCP 报文为<strong>结束报文段</strong></li>
+<li><strong>PSH：</strong> push 标志，为 1 表示是带有 push 标志的数据，指示接收方在接收到该报文段以后，应优先将这个报文段交给应用程序，而不是在缓冲区排队。</li>
+</ul>
+<h4 id="2、TCP-如何保证可靠传输"><a href="#2、TCP-如何保证可靠传输" class="headerlink" title="2、TCP 如何保证可靠传输"></a>2、TCP 如何保证可靠传输</h4><h5 id="校验和"><a href="#校验和" class="headerlink" title="校验和"></a>校验和</h5><p>​	TCP 的端到端的传输，由发送方计算校验和，接收方进行验证，目的是为了校验 TCP 首部和数据在发送过程中没有任何改动，一旦发现校验和有差错，直接丢弃 TCP 段并重新发送</p>
+<h5 id="序列号-x2F-确认应答"><a href="#序列号-x2F-确认应答" class="headerlink" title="序列号&#x2F;确认应答"></a>序列号&#x2F;确认应答</h5><p>​	TCP传输时发送方对每一个发送的消息都会编号，也就是序列号 seq。接收方在每次接收到消息后回复确认应答 ACK，不仅告诉接收到哪些数据，还包括下一次消息从哪里发送。只要发送方没有接收到确认应答号ACK，都会重新发送数据</p>
+<h5 id="超时重传"><a href="#超时重传" class="headerlink" title="超时重传"></a>超时重传</h5><p>​	发送方发送完数据后会等待一段时间，如果在这个时间内没有接收到 ACK，就会重传数据。如果是发送方发生了丢包，那么接收方在接收到数据后会回复 ACK，如果是接收方回复的 ACK 丢失了导致的重传，那么根据校验和序列号知道该数据已经接收，丢弃该数据并发送 ACK。</p>
+<h5 id="连接管理"><a href="#连接管理" class="headerlink" title="连接管理"></a>连接管理</h5><p>​	三次握手和四次回收得以实现。</p>
+<p><strong>流量控制（滑动窗口控制）</strong></p>
+<p>​	发送方发送数据的快慢取决于接收方的接收能力。TCP 的报文信息中有一个 16 位字段来标识滑动窗口，窗口大小就是接收方剩余缓冲区大小。在回复 ACK时，接收方将自己剩余缓冲区大小填入。发送方根据窗口大小来调整自己的发送速度。如果缓冲区大小为 0 ，那么发送方会停止发送数据。并且发送方定期会发送探测报文，来获取缓冲区大小。</p>
+<h5 id="快速重传"><a href="#快速重传" class="headerlink" title="快速重传"></a>快速重传</h5><p>​	当接收端收到比期望号大的 seq 的时候，就会发送冗余 ACK，在超时重传之前如果接收到三个相同的 冗余 ACK，那么就知道哪段报文发生了丢包，重传该段报文即可，避免了超时重传。</p>
+<p><strong>拥塞控制</strong></p>
+<p>​	网络可能刚开始很拥塞，如果在网络传输过程中开始就发送大量数据的话，会发生丢包和超时重传，所以需要慢启动算法、拥塞避免算法、快速重传和快速恢复。</p>
+<h5 id="慢启动算法"><a href="#慢启动算法" class="headerlink" title="慢启动算法"></a>慢启动算法</h5><p>​	一开始不发送大量数据，而是应该先发送一小部分探测数据，然后由小到大逐渐增大发送窗口。通常在刚刚开始发送报文段时，先把拥塞窗口设置为 1，每次接收到报文之后将窗口大小翻倍。如果指数增长到避免拥塞算法的门限 ssthresh，则改用避免拥塞算法。</p>
+<ul>
+<li>初始化设置 cwnd &#x3D; 1，并开始传输数据</li>
+<li>收到回馈的 ACK，会将 cwnd 加 1</li>
+<li>当发送端一个 RTT 后且未发现有丢包重传，就会将 cwnd &#x3D; cwnd * 2</li>
+<li>当 cwnd &gt;&#x3D; ssthresh 或发生丢包重传时慢启动结束，进入拥塞避免状态</li>
+</ul>
+<h5 id="避免拥塞算法"><a href="#避免拥塞算法" class="headerlink" title="避免拥塞算法"></a>避免拥塞算法</h5><p>​	每当收到一个 ACK 时，cwnd 增加 1&#x2F; cwnd（百分比），变为线性增长。一旦发现有丢包和超时重传，就进入拥塞处理状态。</p>
+<h5 id="拥塞发生（改变-ssthreash-和-cwnd-的目的是为了在不同的情况下，适当降发生速率，避免太快或太慢）"><a href="#拥塞发生（改变-ssthreash-和-cwnd-的目的是为了在不同的情况下，适当降发生速率，避免太快或太慢）" class="headerlink" title="拥塞发生（改变 ssthreash 和 cwnd 的目的是为了在不同的情况下，适当降发生速率，避免太快或太慢）"></a>拥塞发生（改变 ssthreash 和 cwnd 的目的是为了在不同的情况下，适当降发生速率，避免太快或太慢）</h5><p>​	当网络出现拥塞，也就是会发生数据包重传，重传机制主要有两种：超时重传和快速重传 </p>
+<p>​	发生超时重传时，ssthresh 和 cwnd 的值会发生变化</p>
+<ul>
+<li>ssthresh 设置为 cwnd &#x2F; 2</li>
+<li>cwnd 重置为 1</li>
+</ul>
+<p>​	发送三次前一个包的 ACK，于是发送端就会快速重传，不必等待超时再重传。TCP 认为这种情况不严重，因为大部分没丢，只丢了一小部分，则 ssthresh 和 cwnd 变化如下：</p>
+<ul>
+<li>cwnd &#x3D; cwnd &#x2F; 2，也就是设置为原来的一半</li>
+<li>ssthresh &#x3D; cwnd </li>
+<li>进入快速恢复算法</li>
+</ul>
+<h5 id="快速恢复"><a href="#快速恢复" class="headerlink" title="快速恢复"></a>快速恢复</h5><ul>
+<li>拥塞窗口 cwnd &#x3D; ssthresh  + 3（ 3 的意思是确认有 3 个 数据包被收到了）</li>
+<li>重传丢失的数据包</li>
+<li>如果再收到重复的 ACK，那么 cwnd 增加 1</li>
+<li>如果收到新数据的 ACK ，把 cwnd 设置为第一步中的 ssthresh 的值，原因是该 ACK 确认了新的数据，说明从 duplicated ACK 时的数据都已经收到，该恢复过程已经结束，可以回到之前的状态了，也即再次进入拥塞避免状态。</li>
+</ul>
+<h4 id="TCP-的三次握手？"><a href="#TCP-的三次握手？" class="headerlink" title="TCP 的三次握手？"></a>TCP 的三次握手？</h4><p><img src="C:\hexo-blog\source\images\4.jpeg" srcset="/img/loading.gif" lazyload alt="download_image (1)"></p>
+<p><strong>第一次握手</strong></p>
+<p>​	客户端请求<strong>建立连接</strong>，将首部的 SYN 标识位置为 1，初始化<strong>序列号</strong> seq &#x3D; x，发送给服务器，并进入 SYN_SENT 状态，等待服务器确认。</p>
+<p><strong>第二次握手</strong></p>
+<p>​	服务器收到 SYN 后，将首部的 SYN 和 ACK 都标识为 1，回复确认 ack 的值（<strong>确认号</strong>）为客户端发送的序列号 x + 1，同时自己也要初始化一个序列号 seq &#x3D; y，并和ACK 和 SYN 一起发送给客户端，进入 SYN_RECV 状态。</p>
+<p><strong>第三次握手</strong></p>
+<p>​	客户端收到服务器的 SYN 和 ACK 包后，向服务器发送确认包 ack，值为服务器的序列号 y + 1，并且自己的 seq 为 x + 1，此包发送完毕，客户端和服务器进入 <strong>ESTABLISHED</strong>（TCP连接成功）状态。</p>
+<h4 id="TCP-为什么要三次握手"><a href="#TCP-为什么要三次握手" class="headerlink" title="TCP 为什么要三次握手"></a>TCP 为什么要三次握手</h4><p>​	只有三次握手才能证明服务端和客户端的收发能力都是正常的。</p>
+<p>​	第一次握手：客户端发送数据服务端接收，服务端可以知道客户端发送消息的能力是正常的，自己接收消息的能力是正常的。</p>
+<p>​	第二次握手：服务端发消息客户端收，客户端可以知道自己发送、接收消息的能力和服务器发送、接收消息的能力是正常的。</p>
+<p>​	第三次握手：客户端再发送消息服务端接收，服务端可以知道自己发送消息的能力是正常的，客户端接收消息的能力是正常的。</p>
+<p>​	由此经过三次握手之后，双方就可以都知道自己以及对方的发送和接收消息能力是正常的。</p>
+<h4 id="TCP-为什么不是两次握手？"><a href="#TCP-为什么不是两次握手？" class="headerlink" title="TCP 为什么不是两次握手？"></a>TCP 为什么不是两次握手？</h4><h5 id="避免历史连接"><a href="#避免历史连接" class="headerlink" title="避免历史连接"></a>避免历史连接</h5><p>​	首要原因是为了防止旧的重复连接初始化造成混乱</p>
+<p>​	如果使用的是两次握手建立连接，可能客户端发送的第一个请求连接并没有丢失，只是因为在网络中滞留的时间太长了，由于 TCP 客户端迟迟没有收到确认报文，以为服务器没有收到，此时重新向服务器发送该条报文，此后客户端和服务器经过两次握手就完成连接，传输数据，然后关闭连接。之前滞留的那次请求连接，因为网络通畅了，到达了服务器，这个报文本应该是失效的，但是两次握手的机制会让客户端和服务器再次建立连接，浙江导致不必要的错误和资源的浪费。</p>
+<p>​	如果采用的是三次握手，就算那次失效的报文传送过来了，服务端接收到了那条失效报文并回复了确认报文，但是客户端不会再次发出确认。由于服务器收不到确认，就知道客户端并没有请求连接。</p>
+<h5 id="同步双方初始化序列号"><a href="#同步双方初始化序列号" class="headerlink" title="同步双方初始化序列号"></a>同步双方初始化序列号</h5><p>​	为了实现可靠的数据传输，TCP 协议的通信双方都必须维护一个序列号，以标识发送出去的数据包中，哪些是已经被对方收到的。三次握手的过程即是通信双方互相告知序列号起始值，并确认对方已经收到了序列号起始值的必经步骤。如果只是两次握手，至多只有连接发起方的起始序列号能被确认，另一方选择的序列号则得不到确认。</p>
+<h1 id="IP"><a href="#IP" class="headerlink" title="IP"></a>IP</h1>
                 
               </div>
             
