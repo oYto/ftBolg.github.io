@@ -1,0 +1,885 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="系统篇1、什么是内核？​	计算机是由各种外部硬件设置组成的，比如内存、CPU、硬盘等，如果每个应用都要和这些硬件设备对接通信协议，那这样太累了，所以由【内核】作为中间人，让内核作为应用连接硬件设备的桥梁，应用程序只需关心内核交互，不用关心硬件的细节  现代操作系统，内核一般会提供 4 个基本能力：  管理进程、线程，决定哪个进程、线程使用 CPU，也就是进程调度的能力；  管理内存，决定内存的分配">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统">
+<meta property="og:url" content="http://example.com/2023/08/12/%E9%9D%A2%E8%AF%95/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="系统篇1、什么是内核？​	计算机是由各种外部硬件设置组成的，比如内存、CPU、硬盘等，如果每个应用都要和这些硬件设备对接通信协议，那这样太累了，所以由【内核】作为中间人，让内核作为应用连接硬件设备的桥梁，应用程序只需关心内核交互，不用关心硬件的细节  现代操作系统，内核一般会提供 4 个基本能力：  管理进程、线程，决定哪个进程、线程使用 CPU，也就是进程调度的能力；  管理内存，决定内存的分配">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/os.png">
+<meta property="article:published_time" content="2023-08-12T12:59:01.000Z">
+<meta property="article:modified_time" content="2023-08-12T13:55:59.904Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/os.png">
+  
+  
+  
+  <title>操作系统 - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/test/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="操作系统"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-12 20:59" pubdate>
+          2023年8月12日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          42 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">操作系统</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="系统篇"><a href="#系统篇" class="headerlink" title="系统篇"></a>系统篇</h1><h4 id="1、什么是内核？"><a href="#1、什么是内核？" class="headerlink" title="1、什么是内核？"></a>1、什么是内核？</h4><p>​	计算机是由各种外部硬件设置组成的，比如内存、CPU、硬盘等，如果每个应用都要和这些硬件设备对接通信协议，那这样太累了，所以由【内核】作为中间人，让<strong>内核作为应用连接硬件设备的桥梁</strong>，应用程序只需关心内核交互，不用关心硬件的细节</p>
+<p><img src="C:\hexo-blog\source\images\os1.png" srcset="/img/loading.gif" lazyload alt="download_image (1)"></p>
+<p>现代操作系统，内核一般会提供 4 个基本能力：</p>
+<ul>
+<li><p>管理进程、线程，决定哪个进程、线程使用 CPU，也就是进程调度的能力；</p>
+</li>
+<li><p>管理内存，决定内存的分配和回收，也就是内存管理的能力；</p>
+</li>
+<li><p>管理硬件设备，为进程与硬件设备之间提供通信能力，也就是硬件通信能力；</p>
+</li>
+<li><p>提供系统调用，如果应用程序要运行更高权限运行的服务，那么就需要有系统调用，它是用户程序与操作系统之间的接口。</p>
+</li>
+</ul>
+<h4 id="2、什么是用户天和内核态？"><a href="#2、什么是用户天和内核态？" class="headerlink" title="2、什么是用户天和内核态？"></a>2、什么是用户天和内核态？</h4><p>​	在 CPU 的所有指令中，有一些指令是非常危险的，如果错用，将导致整个系统崩溃，比如：清空内存，修改时钟等。如果所有的程序代码都能够直接使用这些指令，那么很有可能我们的系统一天将会死 n 次。</p>
+<p>​	所以，CPU 将指令分为 特权指令 和 非特权指令，相对较为危险的指令，只允许操作系统本身及其相关模块进行调用，普通的、用户自行编写的应用程序只能使用那些不会造成危险的指令。</p>
+<p>​	基于安全的考虑，CPU 提供了特权分级机制，把区域分成了四个 Ring，越往里权限越高，越往外，权限越低。</p>
+<p><img src="C:\hexo-blog\source\images\image.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p>​	操作系统根据 CPU 的特权分级机制，把进程的运行空间分为【内核空间】和【用户空间】，分别对应着上图中，CPU 特权等级的 Ring 0 和 Ring 3.</p>
+<p><img src="C:\hexo-blog\source\images\os-2.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<ul>
+<li>内核空间（Ring 0）具有最高权限，可以直接访问所有硬件资源，比如硬盘、网卡、内存等</li>
+<li>用户空间（RIng 3）只能访问受限资源，不能直接访问内存等硬件设备，不能直接访问内存等硬件设备，必须通过【系统调用】陷入到内核中，才能访问这些特权资源</li>
+</ul>
+<p>​	进程既可以在用户空间中运行，又可以在内核空间中运行</p>
+<ul>
+<li>当 CPU 运行在 Ring 3 等级上时，进行就是运行在用户态，只能访问用户空间地址的内存</li>
+<li>当 CPU 运行在 Ring 0 等级上时，进程就是运行在内核态，有对硬件的所有操作权限，可以执行所有 CPU 指令集，访问任意地址的内存。</li>
+</ul>
+<h4 id="3、什么时候会从用户态陷入内核态？"><a href="#3、什么时候会从用户态陷入内核态？" class="headerlink" title="3、什么时候会从用户态陷入内核态？"></a>3、什么时候会从用户态陷入内核态？</h4><p>​	有三种方式程序会从用户态陷入内核态：</p>
+<ul>
+<li><strong>系统调用</strong>：这是用户态进程主动要求切换到内核态的一种方式，用户态进程通过系统调用申请使用操作系统提供的服务程序完成工作。</li>
+<li><strong>异常</strong>：当 CPU 在执行运行在用户态下的程序时，发生了某些事先不可知的异常，这时会触发由当前进行切换到处理此异常的内核相关程序中，也就转到了内核太，比如缺页异常。</li>
+<li><strong>外围设备的中断</strong>：当外围设备完成用户请求的操作后，会向 CPU 发送相应的中断信号，这时 CPU 会暂停执行下一条即将要执行的指令转而去执行与中断信号对应的处理程序，如果先前执行的指令是用户态下的程序，那么这个转换的过程自然也就发生了用户态到内核态的转换。比如硬盘读写操作完成，系统会切换到硬盘读写的中断处理程序中执行后续操作等。</li>
+</ul>
+<p>​	这三种方式是系统在运行时由用户态转到内核态的最主要方式，其中<strong>系统调用可以认为是用户进程【主动】发起的，异常和外围设备中断则是【被动】的</strong></p>
+<h4 id="4、什么是系统调用？过程是怎么样的？"><a href="#4、什么是系统调用？过程是怎么样的？" class="headerlink" title="4、什么是系统调用？过程是怎么样的？"></a>4、什么是系统调用？过程是怎么样的？</h4><p>​	当程序需要访问硬件资源的时候，比如内存、硬盘等，就需要通过【系统调用】陷入到内核中，才能访问这些特权资源。系统调用可以理解为内核实现的函数，比如应用程序要通过网卡接收数据，会调用 Socket 的 read 函数。</p>
+<p><img src="C:\hexo-blog\source\images\os-4.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p>​	程序在执行系统调用的过程中，会从用户态切换到内核态，再从内核态切换到用户态，过程如下：</p>
+<p><img src="C:\hexo-blog\source\images\os-5.png" srcset="/img/loading.gif" lazyload alt="download_image (1)"></p>
+<p>系统调用的过程：</p>
+<ul>
+<li><strong>从用户态到内核态</strong>：当应用程序使用系统调用时，先将系统调用名称转换为系统调用号，接着将「系统调用号」和「请求参数」放到寄存器里，然后执行中断指令（int $0x80 指令），产生一个<strong>中断</strong>，CPU 陷入到内核态。</li>
+<li><strong>执行内核态逻辑：</strong>CPU 跳转到中断处理程序，先将当前用户态的寄存器（用户态的代码段、数据段、保存参数的寄存器）保存到内核数据结构，接着将系统调用号从寄存器里面取出来，最后根据系统调用号，在「系统调用表」中找到相应的系统调用函数进行调用，并将寄存器中保存的参数取出来，作为函数参数。</li>
+<li><strong>从内核态到用户态：</strong>执行完系统调用后，执行中断返回指令（iret 指令），将原来用户态保存的现场恢复回来，包含代码段、指令指针寄存器等。这时候 CPU 恢复到用户态，用户态进程恢复执行。</li>
+</ul>
+<p> <strong>一次系统调用过程中的，会发生两次「 CPU 上下文切换」（所谓的 CPU 上下文就是 CPU 寄存器和程序计数器）：</strong></p>
+<ul>
+<li><strong>第一次</strong> CPU 上下文切换是从用户态切换到内核态：CPU 寄存器里原来用户态的指令位置，需要先保存起来。接着，为了执行内核态代码，CPU 寄存器需要更新为内核态指令的新位置。最后才是跳转到内核态运行内核任务。</li>
+<li><strong>第二次</strong> CPU 上下文切换是从内核态切换到用户态： CPU 寄存器需要恢复原来保存的用户态，然后再切换到用户空间，继续运行进程。</li>
+</ul>
+<h4 id="5、用户态和内核态是如何切换的？"><a href="#5、用户态和内核态是如何切换的？" class="headerlink" title="5、用户态和内核态是如何切换的？"></a>5、用户态和内核态是如何切换的？</h4><p>​	Linux 系统中每个进程都有两个栈，分别是 **用户栈 和 内核栈 **，当应用程序运行在用户态的时候，就会使用用户栈，当应用程序运行在内核态的时候，就会使用内核栈。</p>
+<p>​	内核态与用户态的相互切换，其中最重要的一个步骤就是 <strong>用户栈 和 内核栈 的切换</strong>。</p>
+<p><strong>1、用户栈到内核栈：</strong></p>
+<ul>
+<li>执行中断指令（int $0x80 指令），中断发生时，CPU 去一个特定的结构（比如 TSS）中，<strong>获取该进程的内核栈的地址信息</strong>，也就是内核栈的段选择子和栈顶指针（这两个东西是描述内核栈在内存的哪个地址空间），<strong>并分别送入 ss 寄存器和 rsp 寄存器，这时候 CPU 就指向了该进程的内核栈的栈顶位置了，这就完成了用户态到内核态的一次栈的切换</strong>。（<em>PS：如果不明白 ss 和 rsp 寄存器是干嘛的，可以看这篇文章：</em>*<a target="_blank" rel="noopener" href="http://liupzmin.com/2021/06/27/theory/stack-insight-01-md/">一个学渣对于stack的顿悟（1）：从CPU的视角说起</a>*）</li>
+<li>然后，IP 寄存器（指令指针寄存器）跳入中断服务程序开始执行，中断服务程序会<strong>把用户态的所有寄存器压入到内核栈中</strong>，如下图，CPU 自动地将用户态栈的段选择子 ss3，和栈顶指针 rsp3 都放到内核态栈里了。<strong>这里的数字 3 代表了 CPU 特权级，内核态是 0，用户态是 3。</strong></li>
+</ul>
+<p><img src="C:\hexo-blog\source\images\os-6.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p><strong>2、内核栈到用户栈</strong></p>
+<ul>
+<li>当中断结束时，中断服务程序会从内核栈里将 CPU 寄存器的值全部恢复，最后再执行”iret”指令，返回到用户态。</li>
+<li><strong>将 ss3&#x2F;rsp3 都弹出栈，并且将这个值分别送到 ss 和 rsp 寄存器中，这时候</strong> <strong>CPU</strong> <strong>就指向了该进程的用户栈的栈顶位置了</strong>，这样就完成了从内核栈到用户栈的一次切换。</li>
+<li>内核栈的 ss0 和 rsp0 也会被保存到前面所说的 CPU 的一个特定的结构（比如 TSS）中，以供下次切换时使用。</li>
+</ul>
+<h4 id="6、什么是中断？为什么要有中断？"><a href="#6、什么是中断？为什么要有中断？" class="headerlink" title="6、什么是中断？为什么要有中断？"></a>6、什么是中断？为什么要有中断？</h4><p>​	在计算机中，<strong>中断是系统用来响应硬件设备请求的一种机制，操作系统收到硬件的中断请求，会打断正在执行的进程，然后调用内核中的中断处理程序来响应请求</strong>。</p>
+<p>​	简单来说，中断会让 CPU 停止正在执行的程序，转而让 CPU 去执行中断处理函数程序，执行完再返回原程序。</p>
+<p>​	例如，我们敲击键盘的时候，键盘的控制器就会向 CPU 发起一个中断请求。CPU 在接到请求以后，就会停下正在做的工作，把当前的寄存器状态全部保存好，然后去调用中断服务程序。</p>
+<p><strong>为什么需要中断？</strong>我举个生活中取外卖的例子，对比一下有中断和没有中断的场景：</p>
+<ul>
+<li>如果没有中断机制（外卖员不会打电话给我），我需要一直一直傻傻地盯着看外卖配送员的进度，没办法去干其他事情，直到外卖到了，我才能做其他事情。</li>
+<li>如果有中断机制（外卖员会打电话给我），我就不需要盯着外卖配送员的进度，我可以做其他事情，等外卖到了，外卖员会打电话给我（中断发生），我才会停下手中地事情，去拿外卖。</li>
+</ul>
+<p>​	这里的打电话，其实就是对应计算机里的中断，没接到电话的时候，我可以做其他的事情，只有接到了电话，也就是发生中断，我才会停下当前的事情，去进行另一个事情，也就是拿外卖。</p>
+<p>​	从这个例子，我们可以知道，<strong>中断是一种异步的事件处理机制，可以提高系统的并发处理能力。</strong></p>
+<p>​	<strong>中断机制的好处是化主动为被动，避免 CPU 轮询等待某条件成立。</strong>如果没有中断机制，那么“某个条件成立”就需要 CPU 轮询判断，这样就会增加系统的开销。而使用中断机制，就可以在条件成立之后，向 CPU 发送中断事件，强制中断 CPU 执行程序，转而去执行中断处理程序。</p>
+<h4 id="7、什么是硬件中断和软件中断？"><a href="#7、什么是硬件中断和软件中断？" class="headerlink" title="7、什么是硬件中断和软件中断？"></a>7、什么是硬件中断和软件中断？</h4><p>​	先来说说中断的分类，以 Intel CPU 作为例子，Intel CPU 提供了三种「中断（动词）」程序执行的机制，分别是：</p>
+<p><img src="C:\hexo-blog\source\images\os-7.png" srcset="/img/loading.gif" lazyload alt="image-20230812214413127"></p>
+<ul>
+<li><strong>中断（interrupt）</strong>：由硬件设备触发，比如点击一下鼠标、敲一下键盘，这时候外部设备会给 CPU 发送一个中断号，属于异步事件；</li>
+<li><strong>异常（exception）</strong>：CPU 在执行指令时检测到的反常条件，比如除法异常、错误指令异常，缺页异常等，然后CPU 自己给自己一个中断号，无需外界给，属于同步事件；</li>
+<li><strong>INT 指令</strong>：INT 指令后面跟一个数字，就相当于直接用指令的形式，告诉 CPU 一个中断号。比如 INT 0x80，就是告诉 CPU 中断号是 0x80。Linux 内核提供的系统调用，就是用了 INT 0x80 这种指令。</li>
+</ul>
+<p>根据触发的方式不同，将这三个机制分成两类：</p>
+<ul>
+<li><strong>中断和异常属于「硬件中断」</strong>，因为他们都是硬件自动触发的，中断是由外部设备触发的，异常是由 CPU 触发的。</li>
+<li><strong>INT 指令属于「软件中断」</strong>，因为他是由软件程序主动触发的。</li>
+</ul>
+<p>​	但是注意，中断、异常、INT指令都是属于「硬中断」，没有“件”字。为什么都属于硬中断呢？因为这是 Intel CPU 这个<strong>硬件实现的中断机制</strong>，注意这里是实现机制，并不是触发机制，因为触发可以通过外部硬件，也可以通过软件的 INT 指令。</p>
+<p><img src="C:\Users\ft\AppData\Roaming\Typora\typora-user-images\0s-8.png" srcset="/img/loading.gif" lazyload alt="image-20230812214620298"></p>
+<h4 id="8、什么是硬中断和软中断？"><a href="#8、什么是硬中断和软中断？" class="headerlink" title="8、什么是硬中断和软中断？"></a>8、什么是硬中断和软中断？</h4><p>根据实现的方式的不同，分为了硬中断和软中断：</p>
+<ul>
+<li><strong>由</strong> <strong>CPU</strong> <strong>硬件实现的中断机制，就属于硬中断</strong>，比如中断、异常、INT指令都是由 CPU 实现的中断机制。</li>
+<li><strong>由软件实现实现的中断机制，就属于软中断</strong>。比如 Linux 实现的软中断守护进程。</li>
+</ul>
+<p>​	硬中断和软中断的中断效果是一样的，都是<strong>打断当前正在运行的程序，转而去执行中断处理程序，执行完之后再返回原程序</strong>。</p>
+<p>硬中断和软中断区别在于，谁去检测中断事件：</p>
+<ul>
+<li>硬中断就是 CPU 在每一个指令周期的最后，都会<strong>留一个 CPU 周期去查看是否有中断</strong>，如果有，就把中断号取出，去「中断向量表」中寻找中断处理程序，然后跳过去执行中断处理程序。</li>
+<li>软中断就是有一个<strong>单独的守护进程</strong>，不断轮询一组标志位，如果哪个标志位有值了，那去这个标志位对应的「软中断向量表数组」的相应位置，找到软中断处理函数，然后跳过去执行软中断处理函数。</li>
+</ul>
+<h4 id="9、为什么要有软中断？"><a href="#9、为什么要有软中断？" class="headerlink" title="9、为什么要有软中断？"></a>9、<strong>为什么要有软中断？</strong></h4><p>​	Linux 某网卡接收了一个数据包，此时会触发一个硬中断，由于处理数据包的过程比较耗时，而硬中断资源又非常宝贵，如果占着硬中断函数不返回，会影响到其他硬中断的响应速度，比如点击鼠标、按下键盘等。</p>
+<p>​	而且，中断处理程序在响应中断时，可能还会「临时关闭中断」，这意味着，如果当前中断处理程序没有执行完之前，系统中其他的中断请求都无法被响应，也就说中断有可能会丢失，所以中断处理程序要短且快。</p>
+<p>​	Linux 系统为了<strong>解决中断处理程序执行过长和中断丢失的问题</strong>，将中断过程分成了两个阶段，分别是「上半部和下半部分」。</p>
+<ul>
+<li>上半部用来快速处理中断，主要负责处理跟硬件紧密相关或者时间敏感的事情。</li>
+<li>下半部用来延迟处理上半部未完成的工作，一般由「内核守护进程」来完成，相当于将中断处理程序比较复杂的逻辑解耦出来了，并通过异步的方式来处理这些复杂的逻辑。</li>
+</ul>
+<p>​	以常见的网卡接收网络包的例子。</p>
+<p>​	网卡收到网络包后，通过 DMA 方式将接收到的数据写入内存，将网络包的数据写入到内存后，下一步就需要通知内核来处理，于是网卡会触发一个硬中断，内核就会调用网卡的中断处理程序来处理该事件，这个事件的处理会分成上半部和下半部：</p>
+<ul>
+<li>上部分由硬中断处理程序处理，要做的事情很少，做完后就会发起了一次<strong>软中断</strong>，然后就结束了。这里发起的软中断，并不是向 CPU 发送中断信号，而是将软中断标记数组中的某一个位置标记一下。</li>
+<li>下半部由软中断处理程序处理，内核守护进程会不断轮询软中断标记数组，看哪个位置被标记为 1 了，接着就去软中断向量表里，寻找这个标志位对应的处理程序，然后执行软中断处理程序处理，其主要是需要从内存中找到网络数据，再按照网络协议栈，对网络数据进行逐层解析和处理，最后把数据送给应用程序。</li>
+</ul>
+<p>​	所以，<strong>软中断的作用就是承接原本硬中断处理程序比较复杂且耗时的工作，让硬中断的中断处理函数的逻辑尽可能的简单，从而提高系统的中断响应速度</strong>。</p>
+<h1 id="进程篇"><a href="#进程篇" class="headerlink" title="进程篇"></a>进程篇</h1>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E9%9D%A2%E8%AF%95/" class="category-chain-item">面试</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">#操作系统</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>操作系统</div>
+      <div>http://example.com/2023/08/12/面试/操作系统/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年8月12日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年8月12日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/12/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/for-range%E9%81%8D%E5%8E%86map%E6%98%AF%E6%97%A0%E5%BA%8F%E7%9A%84/" title="for-range遍历map是无序的">
+                        <span class="hidden-mobile">for-range遍历map是无序的</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>
