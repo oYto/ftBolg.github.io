@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/os.png">
 <meta property="article:published_time" content="2023-08-12T12:59:01.000Z">
-<meta property="article:modified_time" content="2023-08-12T13:55:59.904Z">
+<meta property="article:modified_time" content="2023-08-13T14:20:38.043Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="操作系统">
 <meta name="twitter:card" content="summary_large_image">
@@ -268,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5k 字
+          16k 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
         
-          42 分钟
+          131 分钟
         
       </span>
     
@@ -444,7 +444,304 @@
 <li>下半部由软中断处理程序处理，内核守护进程会不断轮询软中断标记数组，看哪个位置被标记为 1 了，接着就去软中断向量表里，寻找这个标志位对应的处理程序，然后执行软中断处理程序处理，其主要是需要从内存中找到网络数据，再按照网络协议栈，对网络数据进行逐层解析和处理，最后把数据送给应用程序。</li>
 </ul>
 <p>​	所以，<strong>软中断的作用就是承接原本硬中断处理程序比较复杂且耗时的工作，让硬中断的中断处理函数的逻辑尽可能的简单，从而提高系统的中断响应速度</strong>。</p>
-<h1 id="进程篇"><a href="#进程篇" class="headerlink" title="进程篇"></a>进程篇</h1>
+<h1 id="进程篇"><a href="#进程篇" class="headerlink" title="进程篇"></a>进程篇</h1><h4 id="1、进程、线程、协程有什么区别？"><a href="#1、进程、线程、协程有什么区别？" class="headerlink" title="1、进程、线程、协程有什么区别？"></a>1、进程、线程、协程有什么区别？</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>进程</th>
+<th>线程</th>
+<th>协程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>定义</td>
+<td>资源（包括内存、打开的文件等）分配的单位</td>
+<td>CPU 调度的基本单位</td>
+<td>用户态轻量级线程，线程内部调度的基本单位</td>
+</tr>
+<tr>
+<td>切换情况</td>
+<td>进程 CPU 环境（栈、寄存器、页表和文件句柄等）的保存以及新调度进程环境的设置</td>
+<td>保存和设置程序计数器，少量寄存器和栈的内容</td>
+<td>先将寄存器 上下文 和 栈 保存，等切换回来再进行恢复</td>
+</tr>
+<tr>
+<td>切换过程</td>
+<td>用户态 &#x3D;&#x3D;&gt; 内核态 &#x3D;&#x3D;&gt; 用户态</td>
+<td>用户态 &#x3D;&#x3D;&gt; 内核态 &#x3D;&#x3D;&gt; 用户态</td>
+<td>用户态</td>
+</tr>
+<tr>
+<td>调用栈</td>
+<td>内核栈</td>
+<td>内核栈</td>
+<td>用户栈</td>
+</tr>
+<tr>
+<td>并发性</td>
+<td>不同进程之间实现并发，各自占有 CPU 时间片</td>
+<td>一个进行内部多个线程并发执行</td>
+<td>同一时间只能一个协程，而其他的协程处于休眠状态，适合对任务分时处理</td>
+</tr>
+<tr>
+<td>系统开销</td>
+<td>切换虚拟地址空间，切换内核栈 和 硬件上下文， CPU 高速缓存失效、页表切换，开销很大</td>
+<td>切换时只需要保存和设置少量寄存器内容，有一定的开销</td>
+<td>直接操作栈是基本没有内核切换的开销，可以不加锁访问全局变量，开销最小</td>
+</tr>
+<tr>
+<td>通信</td>
+<td>进行之间的通信需要借助操作系统</td>
+<td>线程时间可以直接读写进程数据段（如全局变量），来进行通信</td>
+<td>共享内存，消息队列</td>
+</tr>
+<tr>
+<td>占用内存</td>
+<td>依据所调用的资源的大小</td>
+<td>固定不变，由编译器决定</td>
+<td>初始一般较小，可以自动扩展</td>
+</tr>
+</tbody></table>
+<h4 id="2、进程与线程的区别？"><a href="#2、进程与线程的区别？" class="headerlink" title="2、进程与线程的区别？"></a>2、进程与线程的区别？</h4><ul>
+<li>进程就是运行起来的可执行程序，当我们运行一个可执行程序的时候，就会创建一个或多个进程，创建进程的时候需要分配空间，比如：栈区、文件映射区、堆区、静态区、常量区、代码段，因此也会说<strong>进程是资源分配的最小单位</strong>；<strong>线程则是程序执行的基本单位</strong>，每个进程中都有唯一的主线程，且只能有一个，主线程和进程是相互依存的关系，主线程结束进程也会结束。</li>
+<li>每个进程有自己的独立地址空间，不与其他进程分享；一个进程里可以有多个线程，彼此共享同一个地址空间。堆内存、文件、套接字等资源都归进程管理，同一个进程里的多个线程可以共享使用。每个进程占用的内存和其他资源，会在进程退出或被杀死时返回给操作系统。</li>
+<li>并发应用开发可以用多进程或多线程的方式。多线程由于可以共享资源，效率较高；反之，多进程（默认）不共享地址空间和资源，开发较为麻烦，在需要共享数据时效率也较低。但多进程安全性较好，在某一个进程出问题时，其他进程一般不受影响；而在多线程的情况下，一个线程执行了非法操作会导致整个进程退出。</li>
+</ul>
+<h4 id="3、为什么创建进程的开销比线程大？"><a href="#3、为什么创建进程的开销比线程大？" class="headerlink" title="3、为什么创建进程的开销比线程大？"></a>3、为什么创建进程的开销比线程大？</h4><p>​	Linux 中创建一个进程自然会创建一个线程，也就是主线程。创建进程需要为进程划分出一块完整的内存空间，有大量的初始化操作，比如要把内存分段（堆栈、正文区等）。创建线程则简单得多，只需要确定 PC 指针和寄存器的值，并且给线程分配一个栈用于执行程序，同一个进程的多个线程间可以复用进程的虚拟内存空间。因此，创建进程比创建线程慢，而且进程的内存开销更大。</p>
+<h4 id="4、进程与线程的切换流程？"><a href="#4、进程与线程的切换流程？" class="headerlink" title="4、进程与线程的切换流程？"></a>4、进程与线程的切换流程？</h4><p>进程切换分两步：</p>
+<ol>
+<li>切换「页表」以使用新的地址空间，一旦去切换上下文，CPU 中所有已经缓存的内存地址就失效了。</li>
+<li>切换内核栈和 CPU 上下文。</li>
+</ol>
+<p>线程和进程的最大区别就在于地址空间，对于线程切换，第1步是不需要做的，第2步是进程和线程切换都要做的。因为每个进程都有自己的虚拟地址空间，而线程是共享所在进程的虚拟地址空间的，因此同一个进程中的线程进行线程切换时不涉及虚拟地址空间的转换。</p>
+<h4 id="5、为什么虚拟地址空间切换会比较耗时？"><a href="#5、为什么虚拟地址空间切换会比较耗时？" class="headerlink" title="5、为什么虚拟地址空间切换会比较耗时？"></a>5、为什么虚拟地址空间切换会比较耗时？</h4><p>​	进程都有自己的虚拟地址空间，把虚拟地址转换为物理地址需要查找页表，页表查找是一个很慢的过程，因此通常使用 Cache 来缓存常用的地址映射，这样可以加速页表查找，这个 Cache 就是TLB（translation Lookaside Buffer，TLB本质上就是一个Cache，是用来加速页表查找的）。</p>
+<p><img src="C:\hexo-blog\source\images\os-8.png" srcset="/img/loading.gif" lazyload alt="image (1)"></p>
+<p>​	由于每个进程都有自己的虚拟地址空间，那么显然每个进程都有自己的页表，那么<strong>当进程切换后页表也要进行切换，页表切换后 TLB 就失效了，Cache失效导致命中率降低，那么虚拟地址转换为物理地址就会变慢，表现出来的就是程序运行会变慢</strong>，而线程切换则不会导致TLB失效，因为线程无需切换地址空间，因此我们通常说线程切换要比较进程切换快，原因就在这里。</p>
+<h4 id="6、什么是协程？"><a href="#6、什么是协程？" class="headerlink" title="6、什么是协程？"></a>6、什么是协程？</h4><ol>
+<li>协程是比线程更小的一种执行单元，可以认为是轻量级的线程，<strong>之所以说轻：</strong>其中一方面的原因是协程所持有的栈比线程要小很多，java 当中会为每个线程分配 1M 左右的栈空间，而协程可能只有几十或者几百K，栈主要用来保存函数参数、局部变量和返回地址等信息。</li>
+<li>协程的调度是协作式调度，而不像进程和线程是抢占式调度；</li>
+<li>协程的切换本质依赖栈的切换，每个协程的上下文保持在自己的栈上；</li>
+<li>协程可以实现高性能的同步 IO；</li>
+</ol>
+<h4 id="7、线程和协程的区别到底在哪里？"><a href="#7、线程和协程的区别到底在哪里？" class="headerlink" title="7、线程和协程的区别到底在哪里？"></a>7、线程和协程的区别到底在哪里？</h4><ol>
+<li>协程的调度是协作式调度（主动放弃执行，并不会被其他协程打断），当一个协程处理完自己的任务后，可以主动将执行权限让给其他协程。这意味着协程能更好地在规定时间内完成自己的工作，而不会被任意抢占。当一个协作式运行的时间过长，Go 语言调度器才会强制抢占其执行。线程是抢占式调度，当发生中断或者i&#x2F;o的时候，cpu就会自动切换别的线程，也就是线程的切换的主动权不再线程自己身上。</li>
+<li>协程的切换要快于线程，因为协程的切换不用经过操作系统用户态与内核态的切换，并且 Go 语言中协程的切换只需要保留极少的状态和寄存器变量值（SP&#x2F;BP&#x2F;PC），而线程的切换会保留额外的寄存器变量值（例如浮点寄存器）。在 Go 语言中，上下文切换速度的一个可参考量化指标是，线程大约为 1~2 微秒，协程大约是 0.2 微秒，比线程快数倍。</li>
+<li>线程的栈比协程的栈大很多，线程的栈大小一般是在创建时指定，为了避免出现栈溢出（Stack Overflow）的错误，默认的栈大小会相对较大（例如 8M），这意味着创建 1000 个线程就需要消耗 2G 的虚拟内存，这大大限制了线程创建的数量（虽然今天 64 位的虚拟内存地址空间已经让这种限制变得不太严重）。而 Go 语言中的协程栈默认为 2KB，在实践中，我们经常会看成千上万的协程存在。另外，线程的栈在运行时栈不能够更改，而协程栈在 Go 运行时的帮助下可以动态检测栈的大小，进行扩容和收缩。由于协程栈很小，在实践中，协程常被看作是一种轻量级的资源。</li>
+</ol>
+<h4 id="8、进程有哪些状态？"><a href="#8、进程有哪些状态？" class="headerlink" title="8、进程有哪些状态？"></a>8、进程有哪些状态？</h4><p><img src="C:\hexo-blog\source\images\os-1-.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>进程共共五种状态：</p>
+<ul>
+<li>创建状态：进程准备状态；</li>
+<li>就绪状态：进程做好了准备，准备执⾏，等待 cpu 运行；</li>
+<li>运行状态：该进程正在执⾏；</li>
+<li>阻塞状态：等待某事件发⽣才能执⾏，如等待I&#x2F;O完成；</li>
+<li>结束状态：该进程已经结束</li>
+</ul>
+<p>再来详细说明一下进程的状态变迁：</p>
+<ul>
+<li><em>NULL -&gt; 创建状态</em>：一个新进程被创建时的第一个状态；</li>
+<li><em>创建状态 -&gt; 就绪状态</em>：当进程被创建完成并初始化后，一切就绪准备运行时，变为就绪状态，这个过程是很快的；</li>
+<li><em>就绪状态 -&gt; 运行状态</em>：处于就绪状态的进程被操作系统的进程调度器选中后，就分配给 CPU 正式运行该进程；</li>
+<li><em>运行状态 -&gt; 结束状态</em>：当进程已经运行完成或出错时，会被操作系统作结束状态处理；</li>
+<li><em>运行状态 -&gt; 就绪状态</em>：处于运行状态的进程在运行过程中，由于分配给它的运行时间片用完，操作系统会把该进程变为就绪态，接着从就绪态选中另外一个进程运行；</li>
+<li><em>运行状态 -&gt; 阻塞状态</em>：当进程请求某个事件且必须等待时，例如请求 I&#x2F;O 事件；</li>
+<li><em>阻塞状态 -&gt; 就绪状态</em>：当进程要等待的事件完成时，它从阻塞状态变到就绪状态；</li>
+</ul>
+<h4 id="9、进程间通信有哪些方式？"><a href="#9、进程间通信有哪些方式？" class="headerlink" title="9、进程间通信有哪些方式？"></a>9、进程间通信有哪些方式？</h4><p>​	由于每个进程的用户空间都是独立的，不能相互访问，这时就需要借助内核空间来实现进程间通信，原因很简单，每个进程都是共享一个内核空间。	</p>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=NjM0MTkzZmZiN2UwZmU2YzM0ZTI1MjljNDM2MzcwODVfWTd3UlUxWlJlbVA0TXZFUlNKY2lrM0sweG1KdUV5QTdfVG9rZW46Ym94Y25EQnFxTldjWDRBa1Q2TEVwUUhsYk1kXzE2OTE5Mjk3MjI6MTY5MTkzMzMyMl9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>Linux 内核提供了不少进程间通信的方式：</p>
+<ul>
+<li>管道</li>
+<li>消息队列</li>
+<li>共享内存</li>
+<li>信号</li>
+<li>信号量</li>
+<li>socket</li>
+</ul>
+<p>最简单的方式就是<strong>管道</strong>，管道分为「匿名管道」和「命名管道」。</p>
+<ul>
+<li><strong>匿名管道</strong>顾名思义，它没有名字标识，匿名管道是特殊文件只存在于内存，没有存在于文件系统中，shell 命令中的「<code>|</code>」竖线就是匿名管道，通信的数据是无格式的流并且大小受限，通信的方式是单向的，数据只能在一个方向上流动，如果要双向通信，需要创建两个管道，匿名管道是只能用于存在父子关系的进程间通信，匿名管道的生命周期随着进程创建而建立，随着进程终止而消失。</li>
+<li><strong>命名管道</strong>突破了匿名管道只能在亲缘关系进程间的通信限制，因为使用命名管道的前提，需要在文件系统创建一个类型为 p 的设备文件，那么毫无关系的进程就可以通过这个设备文件进行通信。另外，不管是匿名管道还是命名管道，进程写入的数据都是缓存在内核中，另一个进程读取数据时候自然也是从内核中获取，同时通信数据都遵循先进先出原则。</li>
+</ul>
+<p>​	<strong>消息队列</strong>克服了管道通信的数据是无格式的字节流的问题，消息队列实际上是保存在内核的「消息链表」，消息队列的消息体是可以用户自定义的数据类型，发送数据时，会被分成一个一个独立的消息体，当然接收数据时，也要与发送方发送的消息体的数据类型保持一致，这样才能保证读取的数据是正确的。消息队列通信的速度不是最及时的，毕竟每次数据的写入和读取都需要经过用户态与内核态之间的拷贝过程。</p>
+<p>​	<strong>共享内存</strong>可以解决消息队列通信中用户态与内核态之间数据拷贝过程带来的开销，它直接分配一个共享空间，每个进程都可以直接访问，就像访问进程自己的空间一样快捷方便，不需要陷入内核态或者系统调用，大大提高了通信的速度，享有<strong>最快的进程间通信方式之名</strong>。但是便捷高效的共享内存通信，带来新的问题，多进程竞争同个共享资源会造成数据的错乱。</p>
+<pre><code class="hljs"> 那么，就需要**信号量**来保护共享资源，以确保任何时刻只能有一个进程访问共享资源，这种方式就是互斥访问。信号量不仅可以实现访问的互斥性，还可以实现进程间的同步，信号量其实是一个计数器，表示的是资源个数，其值可以通过两个原子操作来控制，分别是 P 操作和 V 操作。
+</code></pre>
+<p>​	与信号量名字很相似的叫<strong>信号</strong>，它俩名字虽然相似，但功能一点儿都不一样。信号可以在应用进程和内核之间直接交互，内核也可以利用信号来通知用户空间的进程发生了哪些系统事件，信号事件的来源主要有硬件来源（如键盘 Cltr+C ）和软件来源（如 kill 命令），一旦有信号发生，进程有三种方式响应信号 1. 执行默认操作、2. 捕捉信号、3. 忽略信号。有两个信号是应用进程无法捕捉和忽略的，即 <code>SIGKILL</code> 和 <code>SIGSTOP</code>，这是为了方便我们能在任何时候结束或停止某个进程。</p>
+<p>​	前面说到的通信机制，都是工作于同一台主机，如果要与不同主机的进程间通信，那么就需要 <strong>Socket 通信</strong>了。Socket 实际上不仅用于不同的主机进程间通信，还可以用于本地主机进程间通信，可根据创建 Socket 的类型不同，分为三种常见的通信方式，一个是基于 TCP 协议的通信方式，一个是基于 UDP 协议的通信方式，一个是本地进程间通信方式。</p>
+<p>扩展阅读：<a target="_blank" rel="noopener" href="https://xiaolincoding.com/os/4_process/process_commu.html">进程间有哪些通信方式？</a></p>
+<h4 id="10、线程间的同步有哪些方式？"><a href="#10、线程间的同步有哪些方式？" class="headerlink" title="10、线程间的同步有哪些方式？"></a>10、线程间的同步有哪些方式？</h4><p>Linux 系统提供了五种用于线程间同步的方式：<strong>互斥量</strong>、<strong>读写锁</strong>、<strong>条件变量</strong>、<strong>自旋锁</strong>、<strong>信号量</strong>。</p>
+<ul>
+<li><strong>互斥锁（mutex）</strong>：主要用于保护共享数据，确保同一时间只有一个线程访问数据。互斥量从本质上来说是一把锁，在访问共享资源前对互斥量进行加锁，访问完成后释放互斥量（解锁）。对互斥量进行加锁之后，任何其他试图再次对互斥量加锁的线程都会被阻塞直到当前线程释放该互斥锁。这样就可以保证每次只有一个线程可以向前执行。</li>
+</ul>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MzAzNjk2OTI2YjNiZTNkNGE4ZDE0YjMxOGM2ZTRhZjJfcXVtQXhuVUFrZ1pFOTVvTFpzS2ZYWlJTSGppS0VqYndfVG9rZW46Ym94Y25HQ1pQTGNHSDNlTThPa1hiT2NsemVKXzE2OTE5MzAxMTg6MTY5MTkzMzcxOF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li><strong>读写锁（reader-writer lock）</strong>：读写锁也叫做共享互斥锁（shared-exclusive lock），它有三种状态：读模式下加锁状态、写模式下加锁状态、不加锁状态。一次只能有一个线程可以占有写模式的读写锁，但是多个线程可以同时占有读模式的读写锁。因此与互斥量相比，读写锁允许更高的并行性。<strong>读写锁非常适合对数据结构读的次数远大于写的情况</strong>。</li>
+</ul>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MWFmMjk1NmZjOWNhNWVmNzk0ZjRlZjJkZmE1MWZkZDlfOXNTWlZBZER4bUlFM1JyblFuT25jdmVNMWpUU29ORjBfVG9rZW46Ym94Y25sekhPNjltUzJqUEJBZkt2UTBSemU1XzE2OTE5MzAxMTg6MTY5MTkzMzcxOF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li><strong>信号量</strong>：线程的信号和进程的信号量类似，使用线程的信号量可以高效地完成基于线程的资源计数。信号量实际上是一个非负的整数计数器，用来实现对公共资源的控制。在公共资源增加的时候，信号量就增加；公共资源减少的时候，信号量就减少；只有当信号量的值大于0的时候，才能访问信号量所代表的公共资源。</li>
+</ul>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MDc1Y2Y0NWY4YzIwNDMyMjk5NWQ5NGZlNTBkYzZjNTFfeXhJMmJmQ2NvelJGeTA4VklnUUxENFNBVGNrTFVKbUpfVG9rZW46Ym94Y25OWFVaNXVoWkdZZUlWT1l0SmJWVk1kXzE2OTE5MzAxMTg6MTY5MTkzMzcxOF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li><p><strong>条件变量：</strong>是线程可用的另一种同步机制。条件变量给多个线程提供了一个会合的场所。<strong>条件变量与互斥量一起使用时，允许线程以无竞争的方式等待特定的条件发生</strong>。条件本身是由互斥量保护的。线程在改变条件状态之前必须首先锁住互斥量。其他线程在获得互斥量之前不会察觉到这种改变，因此互斥量必须在锁住以后才能计算条件。推荐阅读：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/01ad36b91d39">有了互斥锁，为什么还要条件变量？</a></p>
+</li>
+<li><p><strong>自旋锁：</strong>自旋锁是一种忙等待锁，不是通过休眠使进程阻塞，而是在获取所之前一直处于忙等（自旋）阻塞状态。自旋锁可用于以下情况：<strong>锁被持有的时间短，而且线程并不希望在重新调度上花费太多的成本</strong>。自旋锁用在非抢占式内核中时是非常有用的，除了提供互斥机制以外，还可以阻塞中断，这样中断处理程序就不会陷入死锁状态。</p>
+</li>
+</ul>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=NjAxMzM2OGE3YzgyNGNkZDI5YmQ2MWRkODg3YTU3OTlfcFBmNGc2YXlCdVRyMzZ1dzh4R1huVFRrcmowdVY0bDBfVG9rZW46Ym94Y254c0Z2dHEzNjY3YlVkbHdDSmZGYVJjXzE2OTE5MzAxMTg6MTY5MTkzMzcxOF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>扩展阅读：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://xiaolincoding.com/os/4_process/multithread_sync.html"> 多线程冲突了怎么办？</a></li>
+<li><a target="_blank" rel="noopener" href="https://xiaolincoding.com/os/4_process/pessim_and_optimi_lock.html">什么是悲观锁、乐观锁？</a></li>
+</ul>
+<h4 id="11、什么是死锁？死锁产生的条件？怎么避免死锁？"><a href="#11、什么是死锁？死锁产生的条件？怎么避免死锁？" class="headerlink" title="11、什么是死锁？死锁产生的条件？怎么避免死锁？"></a>11、什么是死锁？死锁产生的条件？怎么避免死锁？</h4><p>​	当两个或者以上线程并行执行的时候，争夺资源而造成<strong>相互等待</strong>的现象，这时候就是发生了<strong>死锁</strong>。</p>
+<p><strong>死锁产生的四个必要条件</strong>：</p>
+<ul>
+<li>互斥条件：一个资源一次只能被一个进程使用</li>
+<li>持有并等待条件：一个进程因请求资源而阻塞时，对已获得资源保持不放</li>
+<li>不剥夺条件：进程获得的资源，在未完全使用完之前，不能强行剥夺</li>
+<li>环路等待条件：若干进程之间形成一种头尾相接的环形等待资源关系</li>
+</ul>
+<p>​	要避免死锁问题，就是要破坏其中一个条件即可，最常用的方法就是<strong>使用资源有序分配法来破坏环路等待条件。</strong></p>
+<p>扩展阅读：<a target="_blank" rel="noopener" href="https://xiaolincoding.com/os/4_process/deadlock.html#%E6%AD%BB%E9%94%81%E7%9A%84%E6%A6%82%E5%BF%B5">怎么避免死锁？</a></p>
+<h4 id="12、进程的调度策略有哪些？"><a href="#12、进程的调度策略有哪些？" class="headerlink" title="12、进程的调度策略有哪些？"></a>12、进程的调度策略有哪些？</h4><p>为了确定首先执行哪个进程以及最后执行哪个进程以实现最大 CPU 利用率，计算机科学家已经定义了一些算法，它们是：</p>
+<ol>
+<li><strong>先来先服务（FCFS）</strong>：按照进程到达的先后顺序进行调度，先到达的进程先执行，后到达的进程后执行。</li>
+</ol>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MzQwMDI1ZGZjY2EzOTg0Yzc0ODA3MDEyYjg5OTk3YTBfODhLQjR2NW5wSndrVXQ1RG5ja2xIbUpsbnFYRjRwNDBfVG9rZW46Ym94Y25SY2RNdGRIOFJIbXhpaXhFZE5ndzJjXzE2OTE5MzE5OTA6MTY5MTkzNTU5MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol>
+<li><strong>最短作业优先（SJF）</strong>：按照进程的执行时间进行排序，执行时间短的进程优先执行，以减少平均等待时间。</li>
+</ol>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MjhkNmZiZGRiNGMzYTdhZGFjNzE2Mjc4YTAwNzIyYTFfRTdqZlpGQTVJQWFoSVM0NklRR28xek5GS091WDFacFFfVG9rZW46Ym94Y25KMTVuZU9nNjJsc1JXaHVvTE1uNXNkXzE2OTE5MzE5OTA6MTY5MTkzNTU5MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol>
+<li><strong>优先级调度</strong>：为每个进程分配一个优先级，根据优先级高低进行调度，优先级高的进程先执行。</li>
+</ol>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=NjZmOTkwZWE2MDdjYWM0MmViYmUwNTljZDE3YmZmNzRfUkJ6QkJ2WUpoM012MFJFNjFyVGxUeDdqUzFGWlh0U0ZfVG9rZW46Ym94Y25CQ2xWWTN6UkZXcEIwcnVGZEFDM1hiXzE2OTE5MzE5OTA6MTY5MTkzNTU5MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol>
+<li><strong>时间片轮转（RR）</strong>：将CPU时间分成多个时间片，每个进程轮流占用一个时间片，如果一个进程在该时间片结束时还没有完成，则将其移到队列的末尾，等待下一次调度。</li>
+</ol>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MjExNTI0ZjI1Y2U0OTg4NTc0NzQyNzI3NTI0ZDUwMzFfdldwTUJUcHI5RnIwS1oya2pLWGJiM2dqUEdjUzdrZmdfVG9rZW46Ym94Y256eEFzZnJMOVlXZzdYSWRjYW5ET2JmXzE2OTE5MzE5OTA6MTY5MTkzNTU5MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol>
+<li><strong>多级反馈队列调度（MFQS）</strong>：根据进程的优先级和执行时间将其放入不同的队列中，每个队列采用不同的调度算法，进程在队列中等待的时间超过一定阈值时会被移到更高优先级的队列中。</li>
+</ol>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTc4MTMwZTFjNmFmN2ZhOGVkYTAwYmJkYmRjNGQxZTlfUjdja1VZTFRrb0xXYlhTR1JXVm54c25oVDIxd243cUxfVG9rZW46Ym94Y25VTVpmdEU4MkE1d0xMTzV6bGlvbnNkXzE2OTE5MzE5OTA6MTY5MTkzNTU5MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="13、什么是僵尸进程？孤儿进程？"><a href="#13、什么是僵尸进程？孤儿进程？" class="headerlink" title="13、什么是僵尸进程？孤儿进程？"></a>13、什么是僵尸进程？孤儿进程？</h4><p>⼀般情况下，⼦进程是由⽗进程创建，⽽<strong>⼦进程和⽗进程的退出是⽆顺序</strong>的，两者之间都不知道谁先退出。</p>
+<ul>
+<li>如果父进程先退出， ⽗进程没有调⽤ wait 或者 waitpid 函数等待⼦进程完成再退出，则剩下的⼦进程会被init(pid&#x3D;1)进程接收，成为<strong>孤⼉进程</strong>（记忆点：爸爸没了，就是孤儿）；</li>
+<li>如果⼦进程先退出了，⽗进程还未结束并且没有调⽤ wait 或者 waitpid 函数获取⼦进程的状态信息，则⼦进程残留的状态信息（ task_struct 结构和少量资源信息）会变成<strong>僵⼫进程（记忆点：儿子死了，爸爸没有收尸，儿子就成僵尸了）</strong></li>
+</ul>
+<h4 id="14、僵尸进程有什么危害？"><a href="#14、僵尸进程有什么危害？" class="headerlink" title="14、僵尸进程有什么危害？"></a>14、僵尸进程有什么危害？</h4><ol>
+<li>僵死进程的PID还占据着，意味着海量的子进程会占据满进程表项，会使后来的进程无法 fork；</li>
+<li>僵死进程的内核栈无法被释放掉（1K 或者 2K大小），为啥会留着它的内核栈，因为在内核栈的最低端，有着 thread_info 结构，它包含着 struct_task 结构，这里面包含着一些退出信息。</li>
+</ol>
+<h4 id="15、怎么避免僵尸进程？"><a href="#15、怎么避免僵尸进程？" class="headerlink" title="15、怎么避免僵尸进程？"></a>15、怎么避免僵尸进程？</h4><p>在 Linux 系统中，避免僵尸进程的方法包括：</p>
+<ol>
+<li>使用 wait() 或 waitpid() 函数：在父进程中调用 wait() 或 waitpid() 函数，等待子进程结束并返回状态码，这样可以确保子进程退出后，其资源能够被正常回收，避免产生僵尸进程。</li>
+<li>使用信号处理程序：在父进程中注册 SIGCHLD 信号处理程序，当子进程结束时会向父进程发送该信号，父进程可以在信号处理程序中调用 wait() 或 waitpid() 函数回收子进程资源。</li>
+<li>fork（创建新进程的系统调用） 两次：第一次 fork 的子进程在 fork 完成后直接退出，这样第二次 fork 得到的子进程就没有爸爸了，它会自动被老祖宗 init 进程收养，init 会负责释放它的资源，这样就不会有“僵尸”产生了；</li>
+</ol>
+<h1 id="内存篇"><a href="#内存篇" class="headerlink" title="内存篇"></a>内存篇</h1><h4 id="1、为什么需要有虚拟内存地址？"><a href="#1、为什么需要有虚拟内存地址？" class="headerlink" title="1、为什么需要有虚拟内存地址？"></a>1、为什么需要有虚拟内存地址？</h4><p>先从没有虚拟地址空间的时候说起吧！没有虚拟地址空间的时候，<strong>程序直接访问和操作的都是物理内存</strong> 。</p>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MGJjOGQ0YTdjZGY0ZjAzYzkzZDQ1ZTgxYzI1YjZjNzFfSVhSVE53eFd2MVhDb0RLOXh1N3k3ekJVcjlnaHdtaG1fVG9rZW46Ym94Y241UUNhUXpxdU1XM2lZSGl4RDVqdnFkXzE2OTE5MzI5MzM6MTY5MTkzNjUzM19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>但是这样有什么问题呢？</p>
+<ol>
+<li>用户程序可以访问任意内存，寻址内存的每个字节，这样就很容易（有意或者无意）破坏操作系统，造成操作系统崩溃。</li>
+<li>想要同时运行多个程序特别困难，比如你想同时运行一个微信和一个 QQ 音乐都不行。为什么呢？举个简单的例子：微信在运行的时候给内存地址 1xxx 赋值后，QQ 音乐也同样给内存地址 1xxx 赋值，那么 QQ 音乐对内存的赋值就会覆盖微信之前所赋的值，这就造成微信这个程序会崩溃。</li>
+</ol>
+<p><strong>总结来说：如果直接把物理地址暴露出来的话会带来严重问题，比如可能对操作系统造成伤害以及给同时运行多个程序造成困难。</strong></p>
+<p>我们可以把进程所使用的地址「隔离」开来，即让操作系统为每个进程分配独立的一套「<strong>虚拟地址</strong>」，人人都有，大家自己玩自己的地址就行，互不干涉。</p>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=YTZhZGNjZmM4NjBiNjAxNzgzODVlODdiMjE5NmYyMDZfaTFUVGQ1V2Y3Vng4VHZqVDBSNlkwbzdMY0libk5ob05fVG9rZW46Ym94Y25zUGVCYlk2RTN6Nms5NXJ1SG4zTGhmXzE2OTE5MzI5MzM6MTY5MTkzNjUzM19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>操作系统会提供一种机制，将不同进程的虚拟地址和不同内存的物理地址映射起来。</p>
+<p><strong>程序在访问相同虚拟地址的时候，由操作系统转换成不同的物理地址，这样不同的进程运行的时候，写入的是不同的物理地址，这样就不会冲突了</strong>。</p>
+<ul>
+<li>我们程序所使用的内存地址叫做「虚拟内存地址」；</li>
+<li>实际存在硬件里面的空间地址叫「物理内存地址」；</li>
+</ul>
+<p>​	操作系统引入了虚拟内存，进程持有的虚拟地址会通过 CPU 芯片中的内存管理单元（MMU）的映射关系，来转换变成物理地址，然后再通过物理地址访问内存，如下图所示：</p>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGQ3YTA5ZjU5YWYyMDJmM2UwNWZlODgyZTU0MTlhYTFfQjFrZVBweDlLWVVuTXh4QVFiQXlxSGZ6R2pNYngzbDlfVG9rZW46Ym94Y25UTTVLcjJQczZ5Rzl1OU14UkUyVGViXzE2OTE5MzI5MzM6MTY5MTkzNjUzM19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="2、虚拟内存有什么作用？"><a href="#2、虚拟内存有什么作用？" class="headerlink" title="2、虚拟内存有什么作用？"></a>2、虚拟内存有什么作用？</h4><ul>
+<li>第一，<strong>虚拟内存可以使得进程对运行内存超过物理内存大小</strong>，因为程序运行符合局部性原理，CPU 访问内存会有很明显的重复访问的倾向性，对于那些没有被经常使用到的内存，我们可以把它换出到物理内存之外，比如硬盘上的 swap 区域。</li>
+<li>第二，由于每个进程都有自己的页表，所以每个进程的虚拟内存空间就是相互独立的。进程也没有办法访问其他进程的页表，所以这些页表是私有的，这就<strong>解决了多进程之间地址冲突的问题</strong>。</li>
+<li>第三，页表里的页表项中除了物理地址之外，还有一些标记属性的比特，比如控制一个页的读写权限，标记该页是否存在等。<strong>在内存访问方面，操作系统提供了更好的安全性</strong>。</li>
+</ul>
+<h4 id="3、什么是内存分段？"><a href="#3、什么是内存分段？" class="headerlink" title="3、什么是内存分段？"></a>3、什么是内存分段？</h4><p>​	分段是为了满足程序员在编写代码的时候的一些逻辑需求(比如数据共享，数据保护，动态链接等)。</p>
+<p>​	分段内存管理当中，地址是二维的，一维是段号，二维是段内地址；其中每个段的长度是不一样的，而且每个段内部都是从0开始编址的。由于分段管理中，每个段内部是连续内存分配，但是段和段之间是离散分配的，因此也存在一个逻辑地址到物理地址的映射关系，相应的就是段表机制。</p>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=YTBmM2Q1ZTA4NGFiMWIzNDcwZjgxODNhNTg1MGExMDVfU2tVQ3pkMHIyUjM1QUE4R2hka2JRck9kMVVvQjRGRzJfVG9rZW46Ym94Y25wUVA1SlJqWk9jOWVMZEI4V2tuaGZnXzE2OTE5MzMxOTI6MTY5MTkzNjc5Ml9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="4、什么是内存分页？"><a href="#4、什么是内存分页？" class="headerlink" title="4、什么是内存分页？"></a>4、什么是内存分页？</h4><p>​	把内存空间<strong>划分为大小相等且固定的块</strong>，作为主存的基本单位。因为程序数据存储在不同的页面中，而页面又离散的分布在内存中，因此需要一个<strong>页表</strong>来记录映射关系，以实现从页号到物理块号的映射。</p>
+<p>​	访问分页系统中内存数据需要两次的内存访问 (一次是从内存中访问页表，从中找到指定的物理块号，加上页内偏移得到实际物理地址；第二次就是根据第一次得到的物理地址访问内存取出数据)。</p>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MGI5MmVlZWNlZjY1NWFhZTQ0MTA2NjM4MGE0ZTc1NDBfSklNaTh6akQ4TVhjNUxyT0MxcDFoVVRNR0dmQlY0REVfVG9rZW46Ym94Y25JTUY1UkFvS0xIcnZWQXkycUszWHNmXzE2OTE5MzMzNDA6MTY5MTkzNjk0MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="5、段式管理和页式管理会出现内存碎片吗？"><a href="#5、段式管理和页式管理会出现内存碎片吗？" class="headerlink" title="5、段式管理和页式管理会出现内存碎片吗？"></a>5、段式管理和页式管理会出现内存碎片吗？</h4><p>​	段式管理可以做到根据段根据实际需求分配空间，所以有多少需求就分配多大的段，那么在段的内部就不会产生空间浪费，也就是没有碎片，但是<strong>由于每个段的长度不是固定的，所以段与段之间会产生碎片，这种称为外部碎片。</strong></p>
+<p>​	而页则是固定大小的，通常是 4k，假设我们要为代码准备空间，即使这一段机器码不足4k，我们也要为它分配 4k，因为一个页的大小就是 4k，我们最少只能分配一个页，所以页式管理，页与页之间紧密排列，但是<strong>页内出现内存浪费，也就是内存碎片，这种称为内部碎片。</strong></p>
+<h4 id="6、讲一讲-mmap-的原理？有什么应用？"><a href="#6、讲一讲-mmap-的原理？有什么应用？" class="headerlink" title="6、讲一讲 mmap 的原理？有什么应用？"></a>6、讲一讲 mmap 的原理？有什么应用？</h4><p>​	mmap 用于将文件或者其他对象映射到进程的地址空间中，从而允许进程通过访问内存来操作文件内容，而不必在每次读写时进行系统调用。</p>
+<p>​	mmap 共有四种模式，每种模式的应用场景不同：</p>
+<ul>
+<li>私有匿名映射，用于分配堆空间；</li>
+<li>共享匿名映射，用于父子进程之间通讯；</li>
+<li>私有文件映射，用于加载动态链接库；</li>
+<li>共享文件映射，用于多进程之间通讯。</li>
+</ul>
+<p>​	一般我们比较常用的是<strong>共享文件映射</strong>模式，mmap 的共享文件映射模式是这样实现的，mmap 系统调用会在内核创建一个虚拟内存的结构，指向虚拟内存中某个内存区，然后<strong>应用程序访问这个虚拟内存地址的时候，会产生缺页异常，然后缺页异常的处理函数，会读取文件数据到物理内存，并将这块物理内存与刚才mmap创建的虚拟内存进行映射</strong>。</p>
+<p>如下图所示：</p>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=ZWZiMjZhNDY5NzE4YjY1ZjVjZjEzM2UxNDI2NGZlMjlfY05OSXA4N0tZc0RhZkoycHF0VVl1SWRoMW5YV29mZURfVG9rZW46Ym94Y25idmVTVWxVUnBZZFVTOEZkSVBVcWxlXzE2OTE5MzM2OTI6MTY5MTkzNzI5Ml9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>​	实现这样的映射关系后，进程不仅能像访问内存一样读写文件，多个进程映射同一文件，还能保证虚拟空间映射到同一块物理内存，达到<strong>共享内存</strong>的作用。共享内存其实是<strong>把同一块物理内存映射到不同进程的虚拟地址空间当中</strong>，不同的进程直接通过修改各自虚拟地址空间当中的内容，就可以完成通信。<strong>共享内存几乎不需要进行内存数据拷贝就能实现，即数据从进程 A 的虚拟内存空间中写入数据，立即就能被进程 B 感知</strong>。其它的进程间通信机制，需要经过 Linux 内核这种中转站进行多次的数据拷贝操作才可以。因此，使用共享内存通信比较高效。</p>
+<h5 id="传统传输文件的不足"><a href="#传统传输文件的不足" class="headerlink" title="传统传输文件的不足"></a>传统传输文件的不足</h5><p>​	如果服务端要提供文件传输的功能，我们能想到的最简单的方式是：将磁盘上的文件读取出来，然后通过网络协议发送给客户端。</p>
+<p>​	传统 I&#x2F;O 的工作方式是，数据读取和写入是从用户空间到内核空间来回复制，而内核空间的数据是通过操作系统层面的 I&#x2F;O 接口从磁盘读取或写入。</p>
+<p>代码通常如下，一般会需要两个系统调用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C">read(file, tmp_buf, len);write(socket, tmp_buf, len);<br></code></pre></td></tr></table></figure>
+
+<p>代码很简单，虽然就两行代码，但是这里面发生了不少的事情。</p>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MDEyZmFiMWFkODhkYmRlNzRiMWI1YWNjNGUzM2UzMGVfTk11U1hLcUVyZVlaU1NyWHlVNDNtYk16OVJ3Qms0MEJfVG9rZW46Ym94Y25HN0RORGhFejc2Z3ZjWGo1SUtZaVllXzE2OTE5MzM2OTI6MTY5MTkzNzI5Ml9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>​	首先，期间共发生了 4 次用户态与内核态的上下文切换，因为发生了两次系统调用，一次是 <code>read()</code> ，一次是 <code>write()</code>，每次系统调用都得先从用户态切换到内核态，等内核完成任务后，再从内核态切换回用户态。</p>
+<p>​	上下文切换到成本并不小，一次切换需要耗时几十纳秒到几微秒，虽然时间看上去很短，但是在高并发的场景下，这类时间容易被累积和放大，从而影响系统的性能。</p>
+<p>​	其次，还发生了 4 次数据拷贝，其中两次是 DMA 的拷贝，另外两次则是通过 CPU 拷贝的，下面说一下这个过程：</p>
+<ul>
+<li><em>第一次拷贝</em>，把磁盘上的数据拷贝到操作系统内核的缓冲区里，这个拷贝的过程是通过 DMA 搬运的。</li>
+<li><em>第二次拷贝</em>，把内核缓冲区的数据拷贝到用户的缓冲区里，于是我们应用程序就可以使用这部分数据了，这个拷贝到过程是由 CPU 完成的。</li>
+<li><em>第三次拷贝</em>，把刚才拷贝到用户的缓冲区里的数据，再拷贝到内核的 socket 的缓冲区里，这个过程依然还是由 CPU 搬运的。</li>
+<li><em>第四次拷贝</em>，把内核的 socket 缓冲区里的数据，拷贝到网卡的缓冲区里，这个过程又是由 DMA 搬运的。</li>
+</ul>
+<p>​	我们回过头看这个文件传输的过程，我们只是搬运一份数据，结果却搬运了 4 次，过多的数据拷贝无疑会消耗 CPU 资源，大大降低了系统性能。</p>
+<h5 id="mmap-write"><a href="#mmap-write" class="headerlink" title="mmap + write"></a>mmap + write</h5><p>​	在前面我们知道，<code>read()</code> 系统调用的过程中会把内核缓冲区的数据拷贝到用户的缓冲区里，于是为了减少这一步开销，我们可以用 <code>mmap()</code> 替换 <code>read()</code> 系统调用函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C">buf = mmap(file, len);write(sockfd, buf, len);<br></code></pre></td></tr></table></figure>
+
+<p>​	<code>mmap()</code> 系统调用函数会直接把内核缓冲区里的数据「映射」到用户空间，这样，操作系统内核与用户空间就不需要再进行任何的数据拷贝操作。</p>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MTViYzE0M2Y3MjlmNGViZjczODRlNGVkYWNlM2RmZGVfRlpmMjRVcXp4bm94SzI2Smo1NWNVUU5rRG5kd3owSlpfVG9rZW46Ym94Y25BWnhydFljY25lekZLQ3lKWHowa2VnXzE2OTE5MzM2OTI6MTY5MTkzNzI5Ml9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>具体过程如下：</p>
+<ul>
+<li>应用进程调用了 <code>mmap()</code> 后，DMA 会把磁盘的数据拷贝到内核的缓冲区里。接着，应用进程跟操作系统内核「共享」这个缓冲区；</li>
+<li>应用进程再调用 <code>write()</code>，操作系统直接将内核缓冲区的数据拷贝到 socket 缓冲区中，这一切都发生在内核态，由 CPU 来搬运数据；</li>
+<li>最后，把内核的 socket 缓冲区里的数据，拷贝到网卡的缓冲区里，这个过程是由 DMA 搬运的。</li>
+</ul>
+<p>我们可以得知，通过使用 <code>mmap()</code> 来代替 <code>read()</code>， 可以减少一次数据拷贝的过程。</p>
+<h4 id="7、malloc怎么进行内存分配的？"><a href="#7、malloc怎么进行内存分配的？" class="headerlink" title="7、malloc怎么进行内存分配的？"></a>7、malloc怎么进行内存分配的？</h4><p>malloc() 并不是系统调用，而是 C 库里的函数，用于动态分配内存。</p>
+<p>malloc 申请内存的时候，会有两种方式向操作系统申请堆内存。</p>
+<ul>
+<li>方式一：通过 brk() 系统调用从堆分配内存</li>
+<li>方式二：通过 mmap() 系统调用在文件映射区域分配内存；</li>
+</ul>
+<p>方式一实现的方式很简单，就是通过 brk() 函数将「堆顶」指针向高地址移动，获得新的内存空间。如下图：</p>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MDlhMzIzZjQzYjQzYmFjNGEyYzY1MGJjZmJjYWRiMTRfRWM1c2hPQWhWZ0NMb21McGxqRDA3QnVMNUhnZkt2NURfVG9rZW46WVBvMmJDeDBGbzMyVFd4QnJKZmMyREFWbnF6XzE2OTE5MzM2OTI6MTY5MTkzNzI5Ml9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>​	方式二通过 mmap() 系统调用中「私有匿名映射」的方式，在文件映射区分配一块内存，也就是从文件映射区“偷”了一块内存。如下图：</p>
+<p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MTYzNjVmNDVlNmQ1NjliMGQzMDk0MWY1NGE0NWE0OWZfOWpVajZKaklDRnN4RXVCSGEyNndlcXA1U2NWS1l0S09fVG9rZW46RWlzWWJQMFdkb2FKMUF4dWxlT2NlTnRybktiXzE2OTE5MzM2OTI6MTY5MTkzNzI5Ml9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="Linux-命令篇"><a href="#Linux-命令篇" class="headerlink" title="Linux 命令篇"></a>Linux 命令篇</h1><h4 id="1、top-命令有什么信息？"><a href="#1、top-命令有什么信息？" class="headerlink" title="1、top 命令有什么信息？"></a>1、top 命令有什么信息？</h4><p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MzczNzI5NGJjYWVmNjhiNzQ4OTIyMmJlODllYjYyOGFfVWZSOHFmYjNkckNmYWpmQk9WeWlFd2szd1RTRHZ2ekhfVG9rZW46Ym94Y25MR0tSTldKSFVzU210eEw0VW1JbGhmXzE2OTE5MzM2OTI6MTY5MTkzNzI5Ml9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>这里主要有两块内容：</p>
+<ul>
+<li>汇总的统计信息区域：包含系统任务统计、进程统计、CPU 统计、内存统计、Swap 交换分区统计</li>
+<li>详细的进程信息区域：包含每个进程详细的数据信息</li>
+</ul>
+<h4 id="2、free-命令有什么信息？"><a href="#2、free-命令有什么信息？" class="headerlink" title="2、free 命令有什么信息？"></a>2、free 命令有什么信息？</h4><p><img src="https://ls8sck0zrg.feishu.cn/space/api/box/stream/download/asynccode/?code=MGExMTRhZWQ2ZmY0OGIxZmNjMmQ3MTgwMmRmMTU1NDBfN2d3ZkpXUDVGSndkUlRFWjRHYkk0NUlZMmo5ZGpWMGNfVG9rZW46Ym94Y242YzljdTNONHhsZHYwVmR3cVlGSjJmXzE2OTE5MzM2OTI6MTY5MTkzNzI5Ml9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><strong>第一列</strong> 	<code>Mem</code> 内存的使用信息	 <code>Swap</code> 交换空间的使用信息 </p>
+<p><strong>第一行</strong> </p>
+<p><code>total</code> 系统总的可用物理内存大小 </p>
+<p><code>used</code> 已被使用的物理内存大小 </p>
+<p><code>free</code> 还有多少物理内存可用</p>
+<p> <code>shared</code> 被共享使用的物理内存大小 </p>
+<p><code>buff/cache</code> 被 buffer 和 cache 使用的物理内存大小</p>
+<p> <code>available</code> 还可以被 <em><strong>应用程序</strong></em> 使用的物理内存大小</p>
+<p><strong>free 与 available 的区别</strong></p>
+<p><code>free</code> 是真正尚未被使用的物理内存数量。 <code>available</code> 是应用程序认为可用内存数量，<code>available = free + buffer + cache</code> (注：只是大概的计算方法)</p>
+<p>Linux 为了提升读写性能，会消耗一部分内存资源缓存磁盘数据，对于内核来说，buffer 和 cache 其实都属于已经被使用的内存。但当应用程序申请内存时，如果 free 内存不够，内核就会回收 buffer 和 cache 的内存来满足应用程序的请求。</p>
+
                 
               </div>
             
@@ -508,7 +805,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年8月12日</div>
+          <div>2023年8月13日</div>
         </div>
       
       
@@ -538,6 +835,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/08/13/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%8D%8F%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/" title="协程和线程">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">协程和线程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
