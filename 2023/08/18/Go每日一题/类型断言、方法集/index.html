@@ -18,23 +18,21 @@
   
     <meta name="description" content="题目:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="switch语句">
-<meta property="og:url" content="http://example.com/2023/08/17/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/switch%E8%AF%AD%E5%8F%A5-2/index.html">
+<meta property="og:title" content="类型断言、方法集">
+<meta property="og:url" content="http://example.com/2023/08/18/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80%E3%80%81%E6%96%B9%E6%B3%95%E9%9B%86/index.html">
 <meta property="og:site_name" content="胤凯">
 <meta property="og:description" content="题目:">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-08-17T04:16:00.000Z">
-<meta property="article:modified_time" content="2023-08-17T04:19:53.629Z">
+<meta property="article:published_time" content="2023-08-18T04:19:53.000Z">
+<meta property="article:modified_time" content="2023-08-18T04:32:46.050Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/Golang.png">
   
   
   
-  <title>switch语句 - 胤凯</title>
+  <title>类型断言、方法集 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -246,7 +244,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="switch语句"></span>
+            <span id="subtitle" data-typed-text="类型断言、方法集"></span>
           
         </div>
 
@@ -257,8 +255,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-08-17 12:16" pubdate>
-          2023年8月17日 中午
+        <time datetime="2023-08-18 12:19" pubdate>
+          2023年8月18日 中午
         </time>
       </span>
     
@@ -269,7 +267,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          293 字
+          827 字
         
       </span>
     
@@ -280,7 +278,7 @@
         
         
         
-          3 分钟
+          7 分钟
         
       </span>
     
@@ -326,21 +324,34 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">switch语句</h1>
+            <h1 style="display: none">类型断言、方法集</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>关于switch语句，下面说法正确的有?</p>
-<ul>
-<li>A. 条件表达式必须为常量或者整数；</li>
-<li>B. 单个case中，可以出现多个结果选项；</li>
-<li>C. 需要用break来明确退出一个case；</li>
-<li>D. 只有在case中明确添加fallthrough关键字，才会继续执行紧跟的下一个case；</li>
+                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>如果 Add() 函数的调用代码为：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> a Integer = <span class="hljs-number">1</span><br>	<span class="hljs-keyword">var</span> b Integer = <span class="hljs-number">2</span><br>	<span class="hljs-keyword">var</span> i <span class="hljs-keyword">interface</span>&#123;&#125; = &amp;a<br>	sum := i.(*Integer).Add(b)<br>	fmt.Println(sum)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>则Add函数定义正确的是：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs go">A.<br><span class="hljs-keyword">type</span> Integer <span class="hljs-type">int</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(a Integer)</span></span> Add(b Integer) Integer &#123;<br>        <span class="hljs-keyword">return</span> a + b<br>&#125;<br><br>B.<br><span class="hljs-keyword">type</span> Integer <span class="hljs-type">int</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(a Integer)</span></span> Add(b *Integer) Integer &#123;<br>        <span class="hljs-keyword">return</span> a + *b<br>&#125;<br><br>C.<br><span class="hljs-keyword">type</span> Integer <span class="hljs-type">int</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(a *Integer)</span></span> Add(b Integer) Integer &#123;<br>        <span class="hljs-keyword">return</span> *a + b<br>&#125;<br><br>D.<br><span class="hljs-keyword">type</span> Integer <span class="hljs-type">int</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(a *Integer)</span></span> Add(b *Integer) Integer &#123;<br>        <span class="hljs-keyword">return</span> *a + *b<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>​	AC。</p>
+<p>当涉及到方法调用时，Go 语言对于接收者的类型转换会有两种情况：</p>
+<ol>
+<li>非指针类型的接收者调用方法：<ul>
+<li>如果方法的接收者类型是指针类型 <code>*T</code>，而你使用非指针类型的变量 <code>v</code> 调用该方法，则编译器会自动将 <code>v</code> 转换为 <code>*T</code> 类型的指针，并调用相应的方法。</li>
+<li>示例：<code>user.GetName()</code>，其中 <code>GetName()</code> 的接收者类型是 <code>*Student</code>，但你可以使用 <code>Student</code> 类型的变量 <code>user</code> 进行调用。</li>
 </ul>
-<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>参考答案及解析：BD。</p>
-<p>A. 条件表达式可以是任何可以被求值的表达式，不仅限于常量或整数。例如，条件表达式可以是字符串、枚举类型、布尔值或其他数据类型。</p>
-<p>C. Go 语言中不需要用 break 来退出，会在执行一条 case 语句后默认直接退出（只有在case中明确添加fallthrough关键字，才会继续执行紧跟的下一个case；）</p>
+</li>
+<li>指针类型的接收者调用方法：<ul>
+<li>如果方法的接收者类型是非指针类型 <code>T</code>，而你使用指针类型的变量 <code>p</code> 调用该方法，则编译器会自动将 <code>p</code> 解引用为 <code>*T</code> 类型，并调用相应的方法。</li>
+<li>示例：<code>user.GetId()</code>，其中 <code>GetId()</code> 的接收者类型是 <code>Student</code>，但你可以使用 <code>*Student</code> 类型的指针变量 <code>user</code> 进行调用。</li>
+</ul>
+</li>
+</ol>
+<p>​	</p>
 
                 
               </div>
@@ -395,8 +406,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>switch语句</div>
-      <div>http://example.com/2023/08/17/Go每日一题/switch语句-2/</div>
+      <div>类型断言、方法集</div>
+      <div>http://example.com/2023/08/18/Go每日一题/类型断言、方法集/</div>
     </div>
     <div class="license-meta">
       
@@ -408,13 +419,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年8月17日</div>
+          <div>2023年8月18日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年8月17日</div>
+          <div>2023年8月18日</div>
         </div>
       
       
@@ -445,18 +456,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/08/18/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80%E3%80%81%E6%96%B9%E6%B3%95%E9%9B%86/" title="类型断言、方法集">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">类型断言、方法集</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/08/16/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" title="类型转换">
-                        <span class="hidden-mobile">类型转换</span>
+                      <a href="/2023/08/17/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/switch%E8%AF%AD%E5%8F%A5-2/" title="switch语句">
+                        <span class="hidden-mobile">switch语句</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
