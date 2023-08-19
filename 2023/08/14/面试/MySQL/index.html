@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/MySQL.png">
 <meta property="article:published_time" content="2023-08-14T10:46:43.000Z">
-<meta property="article:modified_time" content="2023-08-18T12:24:54.109Z">
+<meta property="article:modified_time" content="2023-08-19T11:34:53.213Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary_large_image">
@@ -268,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          22k 字
+          38k 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
         
-          186 分钟
+          314 分钟
         
       </span>
     
@@ -920,6 +920,463 @@
 </ul>
 <p><strong>回答</strong></p>
 <p>​	如果前后两次查询都是快照读，就是普通的 select 的话，那就不会产生不可重复读的问题的。但是如果第一次查询是快照读，第二次查询是当前读，那么就可能发生不可重复读的问题。</p>
+<h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><h4 id="1、详细说一下-MySQL-数据库中锁的分布"><a href="#1、详细说一下-MySQL-数据库中锁的分布" class="headerlink" title="1、详细说一下 MySQL 数据库中锁的分布"></a>1、详细说一下 MySQL 数据库中锁的分布</h4><p><strong>分析</strong></p>
+<p>​	不一定要把每个锁都说出来，重点表达自己用过或者熟悉哪些锁，也要强调只有 InnoDB 存储引擎实现了行级锁，不过行级锁有哪些还是要说出来</p>
+<p><strong>回答</strong></p>
+<p>​	根据锁的粒度不同，MySQL 的锁可以分为 全局锁、表级锁、行级锁。</p>
+<p>​	我比较熟悉的是表级锁和行级锁，比如我们对一张表结果进行修改的时候，MySQL 就会对这张表加一个元数据锁，元数据锁属于表级锁的。</p>
+<p>​	行级锁目前只有 InnoDB 存储引擎实现了，MyISAM 存储引擎是不支持行级锁的，只有表锁。InnoDB 存储引擎实现的行级锁主要有记录锁、间隙锁、临键锁、插入意向锁这些，当我们对表记录进行 select for update，或者增删改的时候，都会对记录加行级锁。</p>
+<h4 id="2、MySQL-怎么实现乐观锁？"><a href="#2、MySQL-怎么实现乐观锁？" class="headerlink" title="2、MySQL 怎么实现乐观锁？"></a>2、MySQL 怎么实现乐观锁？</h4><p><strong>分析</strong></p>
+<p>​	可以基于版本号来实现乐观锁，修改数据的时候带上版本号（或者时间戳）：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">select</span> version from items where id=<span class="hljs-number">1</span>; <span class="hljs-comment">// 先查找数版本号</span><br>UPDATE student SET name = <span class="hljs-string">&#x27;小李&#x27;</span>, version = <span class="hljs-number">2</span> WHERE id = <span class="hljs-number">100</span> AND version = <span class="hljs-number">1</span> <span class="hljs-comment">// 再修改</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\ft\AppData\Roaming\Typora\typora-user-images\MySQL乐观锁.png" srcset="/img/loading.gif" lazyload alt="image-20230819110426249"></p>
+<p><strong>回答</strong></p>
+<p>​	可以在数据库表增加一个版本号字段，利用这个版本号字段在数据库中实现乐观锁。</p>
+<p>​	具体的实现，每次更新数据的时候，都要带上这个版本号，同时将版本 + 1，比如现在要更新 id &#x3D; 1，版本号 为 2 的记录。这时候先要获取 id &#x3D; 1 的版本号，然后更新语句写成 update table set name &#x3D; ‘xiaoming’, version &#x3D; version + 1 where id &#x3D; 1 and version &#x3D; 2。</p>
+<p>​	如果这个版本号与表记录中的版本号一致的话，就能更新成功；如果不相等则不进行更新，然后需要重新获取该记录的最新版本号，然后再尝试更新数据。</p>
+<h4 id="3、在线上修改表结构，会发生什么？"><a href="#3、在线上修改表结构，会发生什么？" class="headerlink" title="3、在线上修改表结构，会发生什么？"></a>3、在线上修改表结构，会发生什么？</h4><p><strong>分析</strong></p>
+<p>​	考察表级锁：元数据锁</p>
+<p><strong>回答</strong></p>
+<p>​	线上环境可能存在很多事务都在读写这张表，如果对这张表进行了表结构修改，就会发生阻塞，原因是有事务对这张表进行读写操作的时候，会生成元数据读锁；而修改表结构的时候，会生成元数据写锁，这时候就产生了读写冲突。所以修改表结构的操作会造成阻塞，并且后续事务的增删改操作都会阻塞。</p>
+<h4 id="4、InnoDB-存储引擎中的行级锁有哪些？"><a href="#4、InnoDB-存储引擎中的行级锁有哪些？" class="headerlink" title="4、InnoDB 存储引擎中的行级锁有哪些？"></a>4、InnoDB 存储引擎中的行级锁有哪些？</h4><p><strong>分析</strong></p>
+<p>​	记录锁、间隙锁、临键锁、插入意向锁</p>
+<p><strong>回答</strong></p>
+<p>​	InnoDB 实现的行级锁、间隙锁、临键锁、插入意向锁。我们在使用增删改或者锁定读语句的时候，都会对记录加行级锁。</p>
+<blockquote>
+<p>​	在 InnoDB 存储引擎中，锁定读是通过在查询语句中使用 <code>FOR SHARE</code> 或 <code>FOR UPDATE</code> 子句来实现的。这两个子句用于在读取数据的同时设置锁，以控制其他事务的访问权限。</p>
+<p>​	<strong>共享锁（S锁）：</strong> <code>FOR SHARE</code> 子句用于在查询语句中获取共享锁，允许多个事务同时获取共享锁，以便在读取数据时其他事务也可以读取相同的数据，但是阻止其他事务获取排他锁或修改数据。</p>
+<p>​	<strong>排他锁（X锁）：</strong> <code>FOR UPDATE</code> 子句用于在查询语句中获取排他锁，只允许一个事务获取排他锁，以确保在读取或修改数据时其他事务不能同时读取或修改相同的数据。</p>
+</blockquote>
+<h4 id="5、一条-Update-语句没有带-where-条件，加的是什么锁？"><a href="#5、一条-Update-语句没有带-where-条件，加的是什么锁？" class="headerlink" title="5、一条 Update 语句没有带 where 条件，加的是什么锁？"></a>5、一条 Update 语句没有带 where 条件，加的是什么锁？</h4><p><strong>分析</strong></p>
+<p>​	InnoDB 加锁是索引加锁，可重复读级别下，加锁的基本单位是 next-key 锁。</p>
+<p>​	更新没有带 where 条件，会全表扫描，会对每一条记录都加锁。</p>
+<blockquote>
+<p>Next-Key 锁的特点如下：</p>
+<ol>
+<li><strong>记录锁</strong>：Next-Key 锁实际上是记录级别的锁。对于查询的每一条记录，都会设置一个 Next-Key 锁，以防止其他事务在同一时间内修改或插入这条记录。</li>
+<li><strong>间隙锁</strong>：Next-Key 锁不仅锁定了记录本身，还锁定了两个记录之间的间隙（范围）。这样可以防止其他事务在同一时间内插入符合范围条件的记录，以避免幻读问题。</li>
+<li><strong>临键锁</strong>：Next-Key 锁还会锁定下一个可能的键，以防止其他事务在同一时间内插入刚好在范围内的记录，同样也是为了防止幻读问题。</li>
+</ol>
+</blockquote>
+<p><strong>回答</strong></p>
+<ul>
+<li>可重复读级别下，更新没有带 where 条件，会全表扫描，会对每一条记录都加 next-key 锁，相当于锁住了全表。</li>
+<li>读已提交隔离级别下，没有间隙锁，更新没有带 where 条件，是全表扫描，那么会对每一条记录都加记录锁。</li>
+</ul>
+<h4 id="6、带了-where-条件没有命中索引，加的是-什么锁？"><a href="#6、带了-where-条件没有命中索引，加的是-什么锁？" class="headerlink" title="6、带了 where 条件没有命中索引，加的是 什么锁？"></a>6、带了 where 条件没有命中索引，加的是 什么锁？</h4><p><strong>分析</strong></p>
+<p>​	同上</p>
+<p><strong>回答</strong></p>
+<p>​	没有命中索引，是全表扫描，那么：</p>
+<ul>
+<li>可重复读级别下，更新没有带 where 条件，会全表扫描，会对每一条记录都加 next-key 锁，相当于锁住了全表。</li>
+<li>读已提交隔离级别下，没有间隙锁，更新没有带 where 条件，是全表扫描，那么会对每一条记录都加记录锁。</li>
+</ul>
+<h4 id="7、两条更新语句更新同一条记录，加的是什么锁？"><a href="#7、两条更新语句更新同一条记录，加的是什么锁？" class="headerlink" title="7、两条更新语句更新同一条记录，加的是什么锁？"></a>7、两条更新语句更新同一条记录，加的是什么锁？</h4><p><strong>分析</strong></p>
+<p>​	在可重复读级别下，加锁的基本单位是 next-key 锁，但是在一些场景下，会退出成记录锁或者间隙锁。</p>
+<p>​	这个题目更新同一条记录，就认为是等值查询的场景。要考虑这几种情况：</p>
+<ul>
+<li>第一种情况：如果更新条件的字段是唯一索引，加什么锁？<ul>
+<li>当我们用唯一索引进行等值查询的时候，查询的记录存不存在，加锁的规则也会不同：<ul>
+<li>当查询的记录是「存在的」，在索引树上定位到这一条记录后，将该记录的索引中的 next-key lock 会退化成「记录锁」。因为唯一索引保证了记录的唯一性，不会有其他记录需要锁定。</li>
+<li>当查询的记录是「不存在的」，在索引树找到第一条大于该查询记录的记录后，将该记录的索引中难度 next-key lock 退化成「间隙锁」。以阻止其他事务在该记录和下一个记录之间插入新记录，从而保护了查询范围的一致性。假设更新的是 x，则锁定这个区间(x-1, x+1]。x-1 和 x+1 是指表中 x 前后的数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第二种情况：如果更新条件的字段是非唯一索引，加什么锁？<ul>
+<li>当我们用非唯一索引进行等值查询的时候，因为存在两个索引，一个是主键索引，一个是非唯一索引（二级索引），所以在加锁时，同时会对这两个所以都加锁，但是对主键索引加锁的时候，只有满足查询条件的记录才会对它们的主键索引加锁。</li>
+<li>针对非唯一索引等值查询时，查询的记录是存不存在，加锁的规则也不会不同：<ul>
+<li>当查询的记录「存在」时，由于不是唯一索引，所以肯定存在索引值相同的记录，于是非唯一索引等值查询的过程是一个扫描的过程，直到扫描到第一个不符合条件的二级索引记录就停止扫描。然后在扫描的过程中，对扫描的二级索引记录加的是 next-key 锁，而对于第一个不符合条件的二级索引记录，该二级索引的 next-key 锁会退化成间隙锁。同时，在符合查询条件的记录的主键索引上加记录锁。</li>
+<li>当查询的记录「不存在」时，扫描到第一条不符合条件的二级索引记录，该二级索引的 next-key 锁会退化成间隙锁。因为不存在满足查询条件的记录，所以不会对主键索引加锁。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第三种情况：如果更新条件的字段是没有索引的，加什么锁？<ul>
+<li>没有加索引的查询：前面的案例，我们的查询语句都是由使用索引查询，也就是查询记录的时候，是通过索引扫描的方式查询的，然后对扫描出来的记录进行加锁。</li>
+<li>如果锁定读查询语句，没有使用索引列作为查询条件，或者查询语句没有走索引查询，导致扫描是全表扫描。那么每一条记录的索引上都会加 next-key 锁，这样就相当于锁住的全表，这时如果其他事务对该表进行增、删、改操作的时候，都会被阻塞。</li>
+</ul>
+</li>
+</ul>
+<p><strong>回答</strong></p>
+<p>​	在可重复读级别下，可能有这些情况：</p>
+<ul>
+<li>如果更新条件的字段是唯一索引，还要看更新的记录是否存在：<ul>
+<li>如果存在，那么这条记录加的记录锁，只锁住该记录；</li>
+<li>如果这条记录不存在，则加间隙锁。</li>
+</ul>
+</li>
+<li>如果更新条件的字段是非唯一索引，还要看更新的记录是否存在：<ul>
+<li>如果存在，由于非唯一索引会存在相同值的记录，所以非唯一索引等值查询，实际上是一个扫描的过程，那么会针对符合更新条件的二级索引记录，加 next-key 锁，最后扫描到第一个不符合更新条件的二级索引记录就会停止扫描。然后对第一个不符合更新条件的记录加间隙锁，同时，在符合更新条件的记录的主键索引上加记录锁。</li>
+<li>如果不存在，会对第一个不符合更新条件的二级索引记录加间隙锁</li>
+</ul>
+</li>
+<li>如果更新条件的字段是没有索引或者没有命中索引，那么就是全表扫描，会对每一条记录都加 next-key 锁。</li>
+</ul>
+<h4 id="8、两条更新语句更新同一条记录的不同字段，加的是什么锁？"><a href="#8、两条更新语句更新同一条记录的不同字段，加的是什么锁？" class="headerlink" title="8、两条更新语句更新同一条记录的不同字段，加的是什么锁？"></a>8、两条更新语句更新同一条记录的不同字段，加的是什么锁？</h4><p><strong>分析</strong></p>
+<p>​	Innodb 加锁是加在行记录索引上的，不是针对更新的字段加锁。所以是不是更新同一个字段，没有关系。只要在这条记录上有更新操作，就会对这条记录加锁。所以这题的加锁的情况，也跟上一题样。</p>
+<p><strong>回答</strong></p>
+<p>​	在可重复读级别下，可能有这些情况：</p>
+<ul>
+<li>如果更新条件的字段是唯一索引，还要看更新的记录是否存在<ul>
+<li>如果存在，那么这条记录加的记录锁，只锁住该条记录，</li>
+<li>如果这条记录不存在，则加间隙锁。</li>
+</ul>
+</li>
+<li>如果更新条件的字段是非唯一索引，还要看更新的记录是否存在:<ul>
+<li>如果存在，由于非唯一索引会存在相同值的记录，所以非唯一索引等值查询，实际上是一个扫描的过程，那么会针对符合更新条件的二级索引记录，加 next-key 锁，最后扫描到第一个不符合更新条件的二级索引记录就会停止扫描，然后对第一个不符合更新条件的记录加间隙锁，同时，在符合更新条件的记录的主键索引上加记录锁。</li>
+<li>如果不存在，会对第一个不符合更新条件的二级索引记录加间隙锁</li>
+</ul>
+</li>
+<li>如果更新条件的字段是没有索引或者没有命中索引，那么就是全表扫描，会对每一条记录都加 next-key 锁。</li>
+</ul>
+<h4 id="9、可重复读场景，下面的场景会发生什么？"><a href="#9、可重复读场景，下面的场景会发生什么？" class="headerlink" title="9、可重复读场景，下面的场景会发生什么？"></a>9、可重复读场景，下面的场景会发生什么？</h4><p><img src="C:\Users\ft\AppData\Roaming\Typora\typora-user-images\场景.png" srcset="/img/loading.gif" lazyload alt="image-20230819121435931"></p>
+<p><strong>分析</strong></p>
+<p>​	这题要注意的是事务 A 和事务 B 更新语句，都是更新不存在 id，这时候会加间隙锁，有了间隙锁就会阻塞插入操作。</p>
+<p>​	事务 A 和 事务 B 都在执行 insert 语句后，陷入了等待状态，都在互相等待对方释放间隙锁，于是就发生了死锁。</p>
+<p><img src="C:\Users\ft\AppData\Roaming\Typora\typora-user-images\死锁-1.png" srcset="/img/loading.gif" lazyload alt="image-20230819121952659"></p>
+<p><strong>回答</strong></p>
+<p>​	事务 A 和事务 B 在执行完后 update 语后都持有范围为 (20，30) 的<strong>间隙锁</strong>，而接下来的插入操作为了获取<br>到插入意向锁，<strong>都在等待对方事务的间隙锁释放，于是就造成了循环等待，</strong>满足了死锁的四个条件: 互斥、占有<br>目等待、不可强占用、循环等待，因此发生了<strong>死锁。</strong></p>
+<h4 id="10、了解过-MySQL-死锁问题吗？"><a href="#10、了解过-MySQL-死锁问题吗？" class="headerlink" title="10、了解过 MySQL 死锁问题吗？"></a>10、了解过 MySQL 死锁问题吗？</h4><p><strong>分析</strong></p>
+<p>​	解释 MySQL 死锁是如何发生的。</p>
+<p><strong>回答</strong></p>
+<p>​	了解过，在并发事务中，当两个事务出现<strong>循环资源依赖</strong>，这两个事务<strong>都在等待别的事务释放资源</strong>时，就会导致两个事务都进入<strong>无限等待的状态</strong>，这时候就发生了死锁。</p>
+<h4 id="11、MySQL-怎么排查死锁问题？"><a href="#11、MySQL-怎么排查死锁问题？" class="headerlink" title="11、MySQL 怎么排查死锁问题？"></a>11、MySQL 怎么排查死锁问题？</h4><p><strong>分析</strong></p>
+<p>​	获取死锁日志，分析死锁日志</p>
+<p><strong>回答</strong></p>
+<p>​	在遇到线上死锁问题时，我们应该第一时间获取相关的死锁日志。我们可以通过 <code>show engine innodb status</code> 命令来获取死锁信息。</p>
+<p>​	然后就分析死锁日志。死锁日志通常分为两部分，上半部分说明了事务 1 在等待什么锁，下半部分说明了事务 2</p>
+<p>当前持有的锁和等待的锁。</p>
+<p>​	通过阅读死锁日志，我们可以清楚地知道两个事务形成了怎样的循环等待，然后根据当前各个事务执行的 SQL 分析出加锁类型以及顺序，逆序推断出如何形成循环等待，这样就能找到死锁产生的原因了。</p>
+<h4 id="12、MySQL-怎么避免死锁？"><a href="#12、MySQL-怎么避免死锁？" class="headerlink" title="12、MySQL 怎么避免死锁？"></a>12、MySQL 怎么避免死锁？</h4><p><strong>分析</strong></p>
+<p>​	要明确 MySQL 死锁是不能完全避免的，只能通过一些手段降低死锁的该列</p>
+<ul>
+<li>缩短锁持久的时间，来降低死锁的概率</li>
+<li>通过减少间隙锁，来降低死锁的概率</li>
+<li>通过减少加锁范围，来降低死锁的概率</li>
+<li>通过 MySQL 参数设置，来降低死锁的概率<ul>
+<li>设置锁等待超时参数：<code>innodb_lock_wait_timeout</code></li>
+<li>开启主动死锁检测：<code>innodb_deadlock_detect</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>回答</strong></p>
+<p>​	实际上死锁是不能完全避免的，只要会加锁，在并发的场景就会发生死锁，但是我们可以通过一些手段，<strong>降低发生死锁的概率。</strong></p>
+<p>​	MySOL 的锁是在事务提交的时候才会释放的，所以可以通过<strong>缩短锁持久的时间，来降低死锁的概率</strong>，比如:</p>
+<ul>
+<li>如果事务中需要锁多个行，要把最可能造成锁冲突的锁的申请时机尽量往后放，这样事务的持久锁的时间就会比较短。</li>
+<li>避免大事务，尽量将大事务拆成多个小事务来处理，因为大事务占用耗时长，意味着占用锁占用时间长，与其他事务冲突的概率也会变高;</li>
+</ul>
+<p>​	<strong>可以通过减少间隙锁，来降低死锁的概率:</strong></p>
+<ul>
+<li>如果能确定幻读和不可重复读对应用的影响不大，可以考康将隔离级别改成 RC（一个事务只能读取已经提交的数据，而无法读取其他事务尚未提交的数据。），因为 RC 隔离级别没有间除锁，可以避免间隙锁导致的死锁:</li>
+</ul>
+<p>​	<strong>可以通过减少加锁范围，来降低死锁的概率:</strong></p>
+<ul>
+<li>给表添加合理的索引，如果不走索引将会为表的每一行记录加行级锁，死锁的概率就会大大增大:</li>
+</ul>
+<p>​	<strong>可以通过MySOL参数设置，来降低死锁的概率:</strong></p>
+<ul>
+<li>设置合适的锁等待超时闻值，当一个事务的等待时间超过该值后，就对这个事务进行回滚，于是锁就释放了。</li>
+<li>开启主动死锁检测，主动死锁检测在发现死锁后，主动回滚死锁链条中的某一个事务，让其他事务得以继续执行。</li>
+</ul>
+<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><h4 id="1、redo-log-和-binlog-的区别和应用场景？"><a href="#1、redo-log-和-binlog-的区别和应用场景？" class="headerlink" title="1、redo log 和 binlog 的区别和应用场景？"></a>1、redo log 和 binlog 的区别和应用场景？</h4><p><strong>分析</strong></p>
+<p>​	redo log 和 binlog 有 4 个区别的地方：</p>
+<p><strong>适用对象不同</strong></p>
+<ul>
+<li>binlog 是 MySQL 的 Server 层实现的日志，所有存储引擎都可以使用；</li>
+<li>redo log 是 InnoDB 存储引擎实现的日志。</li>
+</ul>
+<p><strong>文件格式不同</strong></p>
+<ul>
+<li>binlog 有 3 种格式类型，分别是 STATEMENT（默认格式）、ROW、MIXED，区别如下：<ul>
+<li>STATEMENT：每一条修改数据的 SOL 都会被记录到 binlog 中(相当于记录了逻辑操作，所以针对这种格<br>式，binlog 可以称为逻辑日志)，主从复制中 slave 端再根据 SOL 语句重现。但 STATEMENT 有动态函<br>数的问题，比如你用了 uuid 或者 now 这些函数，你在主库上执行的结果并不是你在从库执行的结果，这<br>种随时在变的函数会导致复制的数据不一致;</li>
+<li>ROW：记录行数据最终被修改成什么样了 (这种格式的日志，就不能称为逻辑日志了)，不会出现<br>STATEMENT 下动态函数的问题。但 ROW 的缺点是每行数据的变化结果都会被记录，比如执行批量<br>update 语句，更新多少行数据就会产生多少条记录，使 binlog 文件过大，而在 STATEMENT 格式下只会<br>记录一个 update 语句而已</li>
+<li>MIXED：包含了 STATEMENT 和 ROW 模式，它会根据不同的情况自动使用 ROW 模式和 STATEMENT 模<br>式;</li>
+</ul>
+</li>
+<li>redo log 是物理日志，记录的是在某个数据页做了什么修改，比如对 XXX 表空间中的 YYY 数据页 XXX 偏移量的地方做了 AAA 更新</li>
+</ul>
+<p><strong>写入方式不同</strong></p>
+<ul>
+<li>binlog 是追加写，写满一个文件，就创建一个新的文件继续写，不会股改以前的日志，保存的是全量的日志</li>
+<li>redo log 是循环写，日志空间大小是固定的，全部写满就从头开始，保存未被刷入磁盘的脏页日志</li>
+</ul>
+<p><strong>用途不同</strong></p>
+<ul>
+<li>binlog 用于备份恢复、主从复制</li>
+<li>redo log 用于掉电等故障恢复</li>
+</ul>
+<p>​	面试的时候，重点说出两个日志的内容和应用场景的区别</p>
+<p><strong>回答</strong></p>
+<ul>
+<li>redo log 是 InnoDB 引擎实现的日志，属于物理日志，记录了 InnoDB 存储引擎对数据页所作的修改操作，主要用于崩溃恢复，比如某个事务提交了，脏页数据还没有刷盘，如果 MySQL 机器断电了，脏页的数据就丢失了，MySQL 重启后可以同通过重做日志，可以将已提交事务的数据恢复回来</li>
+<li>binlog 是 server 层实现的日志，保存了所有对数据库的增删改操作，binlog 有三种日志格式，日志的内容可能是 SQL 语句、数据本身或者两者的结合，主要用于数据库备份和归档，也用于主从复制。</li>
+</ul>
+<h4 id="2、redo-log-和-binlog-在恢复数据库时有什么区别？"><a href="#2、redo-log-和-binlog-在恢复数据库时有什么区别？" class="headerlink" title="2、redo log 和 binlog 在恢复数据库时有什么区别？"></a>2、redo log 和 binlog 在恢复数据库时有什么区别？</h4><p><strong>分析</strong></p>
+<p>​	考察 redo log 和binlog 应用区别</p>
+<p><strong>回答</strong></p>
+<ul>
+<li>binlog 是追加写，写满一个文件，就创建一个新的文件继续写，不会覆盖以前的日志，<strong>保存了所有对数据库的更新操作，可以用来恢复数据库某个时刻的数据或者全量恢复数据库数据。</strong></li>
+<li>redo log 是循环写，日志空间大小是固定，全部写满就从头开始写，<strong>保存的是 InnoDB 存储引擎对数据页所做的修改操作，用来恢复因中途 MySQL 断电丢失的脏页数据。</strong></li>
+</ul>
+<h4 id="3、redo-log-是怎么实现持久化的？"><a href="#3、redo-log-是怎么实现持久化的？" class="headerlink" title="3、redo log 是怎么实现持久化的？"></a>3、redo log 是怎么实现持久化的？</h4><p><strong>分析</strong></p>
+<ul>
+<li>先说明没有 redo log 前，数据库发生宕机时，脏页数据可能会发生丢失的问题</li>
+<li>再说明引入了 redo log 后，是怎么实现持久化的。</li>
+</ul>
+<p><strong>回答</strong></p>
+<p>​	事务执行过程更新的数据，并不是在事务提交的时候，就把修改的数据刷入磁盘的，而是修改 buffer pool 中数据页，并标记为脏页，然后后台再找到合适的时间刷盘。</p>
+<p>​	如果事务提交了，脏页数据没有刷盘时，数据库发生宕机，这就会导致事务修改的数据丢失了。</p>
+<p>​	所以 MySQL 就引入了 redo log，redo log 保存的内容是物理日志，主要是记录 InnoDB 对某个数据页的修改操作，当事务提交的时候，redo log 会先刷入磁盘，因为 redo log 保存了数据页的修改操作，即使脏页数据没有刷盘时数据库发生了宕机，重启后 MySQL 通过重放 redo log，就能恢复为刷盘的脏页，保证了数据的持久化。</p>
+<blockquote>
+<p>单独执行一个更新语句的时候，InnoDB 引擎会自己启动一个事务，在执行更新语句的过程中，生成的 redo log 先写入到 redo log buffer 中，然后等事务提交的时候，再将缓存在 redo log buffer 中的 redo log 按组的方式「顺序写」到磁盘。</p>
+<p>上面这种 redo log 刷盘时机是在事务提交的时候，这个默认的行为。</p>
+<p>除此之外，InnoDB 还提供了另外两种策略，由参数 <code>innodb_flush_log_at_trx_commit</code> 参数控制，可取的值有：0、1、2，默认值为 1，这三个值分别代表的策略如下：</p>
+<ul>
+<li>当设置该<strong>参数为 0 时</strong>，表示每次事务提交时 ，还是<strong>将 redo log 留在 redo log buffer 中</strong> ，该模式下在事务提交时不会主动触发写入磁盘的操作。</li>
+<li>当设置该<strong>参数为 1 时</strong>，表示每次事务提交时，都<strong>将缓存在 redo log buffer 里的 redo log 直接持久化到磁盘</strong>，这样可以保证 MySQL 异常重启之后数据不会丢失。</li>
+<li>当设置该<strong>参数为 2 时</strong>，表示每次事务提交时，都只是缓存在 redo log buffer 里的 redo log <strong>写到 redo log 文件，注意写入到「 redo log 文件」并不意味着写入到了磁盘</strong>，因为操作系统的文件系统中有个 Page Cache（如果你想了解 Page Cache，可以看<a target="_blank" rel="noopener" href="https://xiaolincoding.com/os/6_file_system/pagecache.html">这篇 (opens new window)</a>），Page Cache 是专门用来缓存文件数据的，所以写入「 redo log文件」意味着写入到了操作系统的文件缓存。</li>
+</ul>
+</blockquote>
+<h4 id="4、为什么需要两阶段提交？"><a href="#4、为什么需要两阶段提交？" class="headerlink" title="4、为什么需要两阶段提交？"></a>4、为什么需要两阶段提交？</h4><p><strong>分析</strong></p>
+<p>​	先说结论，再分析没有两阶段提交会有什么问题？</p>
+<p><strong>回答</strong></p>
+<p>​	两阶段提交是为了保证 redo log 和 binlog 逻辑一致，从而保证主从复制的时候不会数据不一致的问题。</p>
+<p>​	事务提交后，redo log 和 binlog 都要持久化到磁盘，但是这是两个独立的逻辑，可能出现半成功的状态。比如在主从复制的场景下，如果在将 redo log 刷入磁盘之后， MySQL 突然宕机了，而 binlog 还没有来得及写入磁盘，这时候主库是最新的数据，而从库是旧数据，这样旧造成了两份日志之间的逻辑不一致。</p>
+<p>​	【有了两阶段提交后，都是先更新 redo log 和 binlog，只有保证redo log 和 binlog 都被成功刷入磁盘后，才会去真正操作数据库，就不会导致主从复制的时候数据不一致的问题。】</p>
+<blockquote>
+<p>在主从复制的场景下，主库和从库之间的数据同步是通过 binlog 和 redo log 来实现的。当一个事务在主库上提交后，相关的 redo log 记录会被刷入磁盘，同时 binlog 记录也会被生成，但并不一定会立即写入磁盘。这样，一旦主库在将 redo log 刷入磁盘之后宕机，binlog 还没有来得及写入磁盘，就会导致数据逻辑不一致的情况。</p>
+<p>原因是在宕机之前，主库可能已经将 redo log 刷入磁盘，因此 redo log 记录已经是持久化的，而 binlog 可能还在内存中，尚未持久化。在从库尝试从主库获取 binlog 来进行数据同步时，如果此时主库发生宕机，binlog 尚未被写入磁盘，就无法获取到最新的 binlog 记录，从而导致从库的数据落后于主库。</p>
+<p>这种情况可能会导致主从数据的逻辑不一致，因为从库无法获得完整的更新操作信息，从而无法正确地进行数据同步。为了避免这种情况，通常需要采取以下措施：</p>
+<ol>
+<li><strong>持久化顺序</strong>：确保在将 redo log 刷入磁盘之前，binlog 已经被写入磁盘。这可以通过数据库配置来实现。</li>
+<li><strong>同步机制</strong>：使用同步复制机制，要求从库确认收到并应用 binlog 后再进行确认提交。这可以确保从库数据和主库数据一致。</li>
+<li><strong>监控和故障处理</strong>：设置监控和故障处理机制，及时检测到主库宕机等情况，进行相应的处理，如切换到备库。</li>
+</ol>
+</blockquote>
+<h4 id="5、两阶段提交的过程？"><a href="#5、两阶段提交的过程？" class="headerlink" title="5、两阶段提交的过程？"></a>5、两阶段提交的过程？</h4><p><strong>分析</strong></p>
+<p>​	<img src="C:\Users\ft\AppData\Roaming\Typora\typora-user-images\两阶段提交.png" srcset="/img/loading.gif" lazyload alt="image-20230819134537907"></p>
+<p><strong>回答</strong></p>
+<p>​	两阶段提交把事务的提交拆分成了 2 个阶段，分别是准备阶段和提交阶段。</p>
+<ul>
+<li>准备阶段会将 redo log 刷入磁盘，并且设置 redo log 状态为 prepare 状态</li>
+<li>提交阶段会将 binlog 刷入磁盘，然后设置 redo log 为 commit 状态，到这里两阶段就已经完成了。</li>
+</ul>
+<p>​	在两阶段提交中，是以 binlog 刷入磁盘时机作为事务提交成功的标志的：</p>
+<ul>
+<li>如果 binlog 还没刷入磁盘的时候，MySQL 就发生了崩溃，MySQL 重启的时候就需要回滚事务</li>
+<li>如果 binlog 刷入磁盘，即使 redo log 没有设置 commit 状态，MySQL 就发生了崩溃，MySQL 重启的时候一条会提交事务</li>
+</ul>
+<h1 id="性能调优"><a href="#性能调优" class="headerlink" title="性能调优"></a>性能调优</h1><h4 id="1、怎么查看一条语句是否走了索引？"><a href="#1、怎么查看一条语句是否走了索引？" class="headerlink" title="1、怎么查看一条语句是否走了索引？"></a>1、怎么查看一条语句是否走了索引？</h4><p><strong>分析</strong></p>
+<p>​	考察 explain 执行计划输出的信息。</p>
+<p><img src="C:\Users\ft\AppData\Roaming\Typora\typora-user-images\explain.png" srcset="/img/loading.gif" lazyload alt="image-20230819135158189"></p>
+<p>​	执行计划，参数有：</p>
+<ul>
+<li>possible_keys 字段表示可能用到的索引</li>
+<li>key 字段表示实际用的索引，如果这一项为 NULL，说明没有使用索引</li>
+<li>key_len 表示索引的长度</li>
+<li>rows 表示扫描的数据行数</li>
+<li>type 表示数据扫描类型，我们需要重点看这个</li>
+</ul>
+<p>​	type 字段就是描述了找到所需数据时使用的扫描方式是什么，常见扫描类型的执行效率从低到高的顺序为：</p>
+<ul>
+<li>All 全表扫描</li>
+<li>index 全索引扫描</li>
+<li>range 索引范围扫描</li>
+<li>ref 非唯一索引扫描</li>
+<li>eq_ref 唯一索引扫描</li>
+<li>const 结果只有一条的主键或唯一索引扫描</li>
+</ul>
+<p><strong>回答</strong></p>
+<p>​	可以通过 explain 查看 SQL 的执行计划，如果输出信息中的 key 字段没有显示 NULL 就代表走了索引。相反，如果显示了 NULL 就代表没有走索引，这种情况，查询方式一般是全表扫描了，也就是 type 为 all。</p>
+<h4 id="2、extra-字段中的-using-index-和-using-where-的区别？"><a href="#2、extra-字段中的-using-index-和-using-where-的区别？" class="headerlink" title="2、extra 字段中的 using index 和 using where 的区别？"></a>2、extra 字段中的 using index 和 using where 的区别？</h4><p><strong>分析</strong></p>
+<p>​	考察 explain 执行计划输出的信息</p>
+<ol>
+<li>Using index：这意味着 MySQL 能够使用覆盖索引（Covering index）来避免访问表的行。覆盖索引是指要给查询的所有列都包含在索引中，因此查询可以仅通过索引获取所需信息，无需再去访问表的行。这通常能提高查询的性能。</li>
+<li>Using where：这意味着 MySQL 服务器将在存储引擎检索后再进行过滤。换句话说，存储引擎返回的行并不一定满足 WHERE 子句的条件，MySQL 服务器需要对这些行进行额外的检测。</li>
+</ol>
+<p>​	这两者并不互斥，可以同时出现在 “Extra” 字段中，这取决于查询的具体情况</p>
+<p><strong>回答</strong></p>
+<p>​	using index 表示查询使用了索引覆盖，不会回表，这个可以提高查询效率</p>
+<p>​	using where 表示 MySQL 的存储引擎返回给 server 层的数据并不一定满足 where 子句的条件，所以 MySQL 从存储引擎拿到数据，还得在 server 层进行了 where 子句的条件判断，来过滤出最终 sql 所需要查询的数据。</p>
+<h4 id="3、怎么找到慢-SQL-？"><a href="#3、怎么找到慢-SQL-？" class="headerlink" title="3、怎么找到慢 SQL ？"></a>3、怎么找到慢 SQL ？</h4><p><strong>分析</strong></p>
+<p>​	考察慢查询日志的应用</p>
+<p><strong>回答</strong></p>
+<p>​	可以开启慢查询日志，MySQL 就会自动将执行比较慢的 SQL 语句记录在慢查询日志中，具体多慢我们可以自己设置的，比如设置 3 秒，那么 MySQL 就会将执行超过 3 秒的 SQL 语句记录在慢查询日志中。</p>
+<h4 id="4、如何优化慢-SQL？"><a href="#4、如何优化慢-SQL？" class="headerlink" title="4、如何优化慢 SQL？"></a>4、如何优化慢 SQL？</h4><p><strong>分析</strong></p>
+<p>​	常见的 SQL 优化的方法。</p>
+<ul>
+<li>优化数据访问：limit 子句缩减数据行数、避免 select *</li>
+<li>拆分查询：分而治之的思想，将一个大查询拆分成多个小查询，每个小查询指只返回一部分查询结果。</li>
+<li>覆盖索引: 当索引中的列包含所有查询中需要使用的列的时候，可以避免回表</li>
+<li>避免索引失效: 检查 SOL 是否为写的不合理，导致索引失效</li>
+<li>分解联表查询: 让业务层分多个查询来聚合，或者增加几余字段减少联表查询</li>
+<li>排序优化：对于有排序场景，如果 extra 显示 file sort，这时候就需要考虑对排序的字段建立索引，避免文件排序</li>
+</ul>
+<p><strong>回答</strong></p>
+<ul>
+<li>优化数据访问：要先确认这条查询语句是否查询了不必要的数据行，可以通过 limit 子句来缩减查询返回的数据行数，如果查询语句用了 select *，需要改进 SQL 语句，只返回需要查询的列。</li>
+<li>切分查询：针对一个大查询可以拆分多个小查询，每个小查询只返回一部分查询数据。比如删除一千万行数据，可以改进成分批删除，每一次只删除一批数据，然后睡眠一下，再删除下一批，这样可以将一次性的压力分散到一个很长的时间段中，不仅可以降低对服务器的性能影响，还可以大大减少删除时锁的持续时间。</li>
+<li>覆盖索引：如果没有索引字段的话，就需要考虑建立索引，或者建立联合索引，通过覆盖索引的查询，这样就避免回表查询，可以提高查询性能。</li>
+<li>避免索引失效：检查 SOL 语句有没有问题，比如对索引进行了计算和函数操作、联合索引没有遵循最左匹配原则等，这些场景都会导致索引失效，这时候就需要修改 SOL 避免索引失效的发生。</li>
+<li>分解联表查询:：针对联表查询的 SOL 语句，可以将联表查询分解成多个单表查询的语句，然后在业务层来聚合数据，或者增加几余字段减少联表查询。</li>
+<li>排序优化：针对 order by 排序操作，如果执行计划的 extra 显示了文件排序，这时候我们可以对排序字段和其他字段建立联合索引，因为索引数据是天然有序的，这样对索引字段进行排序操作的时候，就不需要文件排序了，提高了查询性能</li>
+</ul>
+<h4 id="5、深分页场景如何优化？"><a href="#5、深分页场景如何优化？" class="headerlink" title="5、深分页场景如何优化？"></a>5、深分页场景如何优化？</h4><p><strong>分析</strong></p>
+<p>​	在系统需要实现分页操作的时候，通常都是用 limit 加上偏移量实现的，如果偏移量太大，就存在性能问题，比如 limit 10000,20 这样的查询，这时候 MySQL 最左叶子节点开始向右扫描 10020 条记录，时间复杂度为0(n)，然后只返回 20 条给客户端，前面 10000 条记录都将被抛弃。<br>​	如果是使用了二级索引，这种场景性能损失会加剧，因为对于前10000个不需要的数据，MySOL每次也要回表去查找，这就导致了10000次随机IO，会慢成狗。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select * from t_player order by score desc limit 10000, 20<br></code></pre></td></tr></table></figure>
+
+<p>​	优化方式：</p>
+<ul>
+<li><p>从业务上改进，将 “第几页” 改成 “下一页”，先记录上一页的最后一条记录的 id，然后下次就直接从该记录的位置开始扫描，这样就避免 MySQL 扫描大量不需要的行，然后再抛弃掉的问题。方案如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">-- 记录 score 为 prev_score<br>select score from t_player order by socre desc limit 20<br><br>-- 下一页<br>select score from t_player where score &gt; prev_score order by socre desc limit 20<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>如果要遵循第几页的方案，可以通过 SQL 的拆分，来达到目的，思路如下。这句话是说，先从条件查询中，查找数据对应的数据库唯一 id 值，因为主键在辅助索引上就有，所以不用回归到聚簇索引的磁盘上拉取。如此一来，offset 部分均不回表查聚族索引，只有 limit 出来的 10 个主键 id 会去查询聚簇索引，这样只会 10 次 IO</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT * FROM t_player <br>WHERE id IN (SELECT id FROM t_player ORDER BY score LIMIT 10 OFFSET 10000);<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>回答</strong></p>
+<p>​	分页最简单的实现是使用 limit 子句，比如每页显示 10 条内容的话，第一页就是 limit 10、第二页就是 limit  10,10 、第三页 20,10。但是这种方式，在深分页的场景，存在严重的性能问题，比如 imt 10000,20 这样的查询，这时候 MySOL 最左叶子节点开始向右扫描 10020 条记录，时间复杂度为 0(n)，然后只返回 20 条给客户端，前面 10000 条记录都将被抛弃。如果是使用了二级索引，这种场景性能损失会加剧，因为对于前 10000 个不需要的数据，MySQL 每次也要回表去查找，这就导致了10000 次随机 IO。</p>
+<p>​	我能想到这两种优化方式:</p>
+<ul>
+<li>可以在业务上改进，将”第几页”改成”下一页”，先记录上一页的最后一条记录的id，然后下次就直接从该记录的位置开始扫描，这样就避免 MySQL 扫描大量不需要的行然后再抛弃掉的问题。</li>
+<li>如果要遵循第几页的方案，可以通过覆盖索引+子查询方式改进。子查询语句主要查询分页数据对应的数据库唯id值，因为主键在辅助索引上就有，所以子查询可以不用回表。然后主查询再根据子查询返回的 id，进行索引查询完整的数据行。</li>
+</ul>
+<h4 id="6、如果-SQL-和索引都没有问题，查询还是很慢怎么办？"><a href="#6、如果-SQL-和索引都没有问题，查询还是很慢怎么办？" class="headerlink" title="6、如果 SQL 和索引都没有问题，查询还是很慢怎么办？"></a>6、如果 SQL 和索引都没有问题，查询还是很慢怎么办？</h4><p><strong>分析</strong></p>
+<p>​	需要发散下思维，往架构方向思考</p>
+<p><strong>回答</strong></p>
+<ul>
+<li><p>分批查询：针对一个大查询可以拆分成多个小查询，每个小查询只返回一部分查询数据</p>
+</li>
+<li><p>增加缓存：针对频繁读取的热点数据，我们可以放到 Redis 缓存，避免每次都要请求 MySQL</p>
+</li>
+<li><p>分表：如果表的数据量很大，比如表数据达到千万级别了，这时候可以考虑分表了，通过减少每次查询数据总量来解决数据查询缓慢的问题</p>
+</li>
+<li><p>主从复制：针对读多写少的场景，我们可以搭建 MySQL 主从模式来分摊读请求的流量</p>
+<blockquote>
+<p><strong>优势和用途：</strong></p>
+<ol>
+<li><p><strong>读写分离：</strong> 主从复制将写操作集中在主库上，而将读操作分发到多个从库上，从而有效地分担了主库的负载，提高了整体的读写性能。</p>
+</li>
+<li><p><strong>提高可用性：</strong> 主从复制可以为系统提供冗余备份。如果主库发生故障，可以快速切换到某个从库，从而实现高可用性。</p>
+</li>
+<li><p><strong>灾难恢复：</strong> 在发生数据损坏或误操作时，可以通过从库中的数据进行恢复，从而降低数据丢失的风险。</p>
+</li>
+<li><p><strong>分摊查询压力：</strong> 查询通常占据数据库的大部分负载，通过将查询请求分散到多个从库，可以有效地分摊查询压力，提高响应速度。</p>
+</li>
+</ol>
+<p><strong>适用场景：</strong></p>
+<ol>
+<li><p><strong>读多写少：</strong> 在这种场景下，通过主从复制可以让主库专注于处理写入操作，而从库可以处理大部分读取请求，提高整体的性能。</p>
+</li>
+<li><p><strong>报表查询：</strong> 如果需要频繁地进行复杂查询和报表生成，可以将这些查询请求发送到从库，以避免对主库的干扰。</p>
+</li>
+<li><p><strong>数据分析：</strong> 对于数据分析等任务，主库的写操作往往较少，而读取大量数据。通过使用从库，可以分担主库的负载，确保核心业务的性能。</p>
+</li>
+</ol>
+</blockquote>
+</li>
+<li><p>分库：针对写多读少的场景，单裤的性能无法抗住高并发的流量，就需要进行分库，把并发请求分散到多个实例中去</p>
+</li>
+</ul>
+<h1 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h1><h4 id="1、MySQL-主从复制的过程是怎么样？"><a href="#1、MySQL-主从复制的过程是怎么样？" class="headerlink" title="1、MySQL 主从复制的过程是怎么样？"></a>1、MySQL 主从复制的过程是怎么样？</h4><p><strong>分析</strong></p>
+<p><img src="C:\Users\ft\AppData\Roaming\Typora\typora-user-images\mysql主从复制.png" srcset="/img/loading.gif" lazyload alt="image-20230819183141501"></p>
+<p>​	主从复制过程梳理出 3 个阶段：</p>
+<ul>
+<li>写入 binlog：主库写 binlog 日志，提交事务，并更新本地存储数据。</li>
+<li>同步 binlog：把 binlog 复制到所有从库上，每个从库把 binlog 写到暂存日志中。</li>
+<li>回放 binlog：回放 binlog，并更新存储引擎中的数据</li>
+</ul>
+<p><strong>回答</strong></p>
+<p>​	主从复制主要有三个节点：</p>
+<ul>
+<li>主库修改数据后，会写入 binlog 日志，从库连接到主库之后，主库会创建一个 log dump 线程，用于发送 binlog 的内容。</li>
+<li>从库会创建一个专门的 I&#x2F;O 线程来连接主库的 log dump 线程，来接收主库的 binlog 日志，再把 binlog 信息写入 relay log 的中继日志里，再返回给主库 “复制成功” 的响应。</li>
+<li>接着从库还会创建一个用于回放 binlog 的 SQL 线程，去读 relay log 中继日志，然后回放 binlog 更新存储引擎中的数据，最终实现主从的数据一致性。</li>
+</ul>
+<p>​	</p>
+<h4 id="2、MySQL-提供了几种复制模式？默认的复制模式是什么？"><a href="#2、MySQL-提供了几种复制模式？默认的复制模式是什么？" class="headerlink" title="2、MySQL 提供了几种复制模式？默认的复制模式是什么？"></a>2、MySQL 提供了几种复制模式？默认的复制模式是什么？</h4><p><strong>分析</strong></p>
+<p>​	说出三种同步模式：同步复制、半同步复制、异步复制，然后说一下各个模式的适合场景。</p>
+<p><strong>回答</strong></p>
+<p>​	主要有三种同步复制、半同步复制、异步复制，MySQL 默认的复制模型是异步复制。</p>
+<ul>
+<li>同步复制：MySQL 主库提交事务的线程要等待所有从库的复制成功响应，才返回客户端结果。这种方式是性能最差的复制模式，但是能保证数据的安全性，如果对数据安全性比较高的业务，可以考虑采用同步复制的模式。</li>
+<li>异步复制：MySQL 主库提交事务的线程并不会等待 binlog 同步到各从库，就返回客户端结果，这种模式性能是最高的，但是一旦主库宕机，数据就会发生丢失。</li>
+<li>半同步复制：介于两者之间，事务线程不用等待所有的从库复制成功响应，只要一部分复制成功响应回来就行，比如一主二从的集群，只要数据成功复制到任意一个从库上，主库的事务线程就可以返回客户端。这种半同步复制的方式，兼顾了异步复制和同步复制的优点，即使出现了主库宕机，至少还有一个从库有最新的数据，不存在数据丢失的风险。</li>
+</ul>
+<h4 id="3、MySQL-主从复制的数据延迟怎么解决？"><a href="#3、MySQL-主从复制的数据延迟怎么解决？" class="headerlink" title="3、MySQL 主从复制的数据延迟怎么解决？"></a>3、MySQL 主从复制的数据延迟怎么解决？</h4><p><strong>分析</strong></p>
+<p>​	考察解决主从复制延迟问题的方案设计</p>
+<p><strong>回答</strong></p>
+<ul>
+<li>使用缓存解决：可以在写入数据主库的同时，把数据写道 Redis 缓存里，这样其他线程再获取数据时会优先查询缓存，也可以保证数据的一致性。不过这种方式会带来缓存和数据库的一致性问题</li>
+<li>直接查询主库：对于数据延迟敏感的业务，可以强制读主库。但是我们要提前明确查询的数据量不大，不然会出现主库写请求锁行，最终对主库造成比较大的压力。</li>
+</ul>
+<h4 id="4、MySQL-主从架构中，读写分离怎么实现？"><a href="#4、MySQL-主从架构中，读写分离怎么实现？" class="headerlink" title="4、MySQL 主从架构中，读写分离怎么实现？"></a>4、MySQL 主从架构中，读写分离怎么实现？</h4><p><strong>分析</strong></p>
+<ul>
+<li>一种简单的做法是：提前把所有数据源配置在工程中，每个数据源对应一个主库或者从库，然后改造代码，在代码逻辑中进行判断，将 SQL 语句发送给某一个指定的数据源来处理。这个方案简单易实现，但 SQL 路由规则侵入代码逻辑，在复杂的工程中不利于代码的维护。</li>
+<li>另一个做法是：独立部署的代理中间件，如 MyCat，这一类中间件部署在独立的服务器中，一般使用标准的 MySQL 通信协议，可以代理多个数据库。该方案的优点是隔离底层数据库与上层应用的访问复杂度，比较适合有独立运维团队的公司选型；缺陷是所有的 SQL 语句都要跨两次网络传输，有一定的性能损耗，再就是运维中间件是一个专业且复杂的工作，需要一定的技术沉淀。</li>
+</ul>
+<p><strong>回答</strong></p>
+<p>​	可以独立部署的代理中间件 MyCat 来实现读写分离。</p>
+<h4 id="5、MySQL-主库挂了怎么办？"><a href="#5、MySQL-主库挂了怎么办？" class="headerlink" title="5、MySQL 主库挂了怎么办？"></a>5、MySQL 主库挂了怎么办？</h4><p><strong>分析</strong></p>
+<p>​	MySQL 没有像 Redis 集群有哨兵模式，可以自动将从库升级为主库。</p>
+<p>​	MySQL 的 “发现主服务器宕机” 、“处理故障转移逻辑” 要由数据库高可用套件完成，常用的是 MHA，它是一款开源的 MySQL 高可用程序，它由两大组件所组成，MHA Manger 和 MHA Node</p>
+<ul>
+<li>MHA Manager 通常部署在一台服务器上，用来判断多个 MySQL 高可用组是否可用。当发现由主服务器发生宕机，就发起 failover 操作。MHA Manager 可以看作是 failover 的总控服务器。</li>
+<li>MHA Node 部署在每台 MySQL 服务器上，MHA Manager 通过指向 Node 节点的脚本完成 failover 切换操作</li>
+</ul>
+<p>​	MySQL 的高可用套件用于负责数据库的 Failover 操作，也就是数据库宕机时，MySQL 可以剔除原有主机，选出新的主机，然后对外提供服务，保证业务的连续性。</p>
+<p><strong>回答</strong></p>
+<p>​	MySQL 主从复制没有实现主服务器宕机和处理故障转移的功能，要实现自动主从故障转移的话，我简单了解过，可以使用开源的 MySQL 高可用套件 MHA，MHA 可以在主数据库发生宕机时，可以剔除原有主机，选出新的主机，然后对外提供服务，保证业务的连续性。</p>
+<h4 id="6、什么是分库分表？什么时候需要分表？什么时候需要分库？"><a href="#6、什么是分库分表？什么时候需要分表？什么时候需要分库？" class="headerlink" title="6、什么是分库分表？什么时候需要分表？什么时候需要分库？"></a>6、什么是分库分表？什么时候需要分表？什么时候需要分库？</h4><p><strong>分析</strong></p>
+<p>​	分库分表使用的场景不一样：</p>
+<ul>
+<li>分表是因为数据量比较大，导致事务执行缓慢；</li>
+<li>分库是因为单库的性能无法满足要求</li>
+</ul>
+<p><strong>回答</strong></p>
+<p>​	分库分表的意思是 <strong>把原本存储于单个数据库上的数据拆分到多个数据库，把原来存储在单张数据库表的数据拆分到多张数据表中</strong>，实现数据切分。</p>
+<p>​	分库分表使用的场景不一样：</p>
+<ul>
+<li>当单张数据表的数据量太大的时候，经验值是 500W 以上的数据量，就会影响了事务的执行效率，这时候就要考虑分表了，通过减少每次查询数据总量来解决数据查询缓慢的问题</li>
+<li>当单台 MySQL 扛不住高并发流量的时候，就要考虑分库了，把并发请求分散到多台 MySQL 实例中。</li>
+</ul>
+<h4 id="7、分库分表后，会产生什么问题？怎么解决？"><a href="#7、分库分表后，会产生什么问题？怎么解决？" class="headerlink" title="7、分库分表后，会产生什么问题？怎么解决？"></a>7、分库分表后，会产生什么问题？怎么解决？</h4><p><strong>分析：</strong></p>
+<ul>
+<li>分布式事务问题，解决方式：<ul>
+<li>使用分布式事务中间件实现 TCC 事务模型（强一致性业务，金融类的业务）</li>
+<li>基于本地消息表来实现分布式事务（互联网常用，确保最终一致性）</li>
+</ul>
+</li>
+<li>全局 ID 唯一性问题，解决方式：<ul>
+<li>雪花算法生成 ID、或者美团 leaf 算法生成唯一主键 ID</li>
+</ul>
+</li>
+<li>跨库跨表关联查询问题，解决方式：<ul>
+<li>冗余额外字段避免跨库关联，或者交给数据库分库分表中间件来实现</li>
+<li>将数据全量存储到 ES 中去，通过 ES 进行查询</li>
+</ul>
+</li>
+<li>跨库跨表的排序问题，解决方式：<ul>
+<li>业务代码或者数据库分库分表中间件分别查询每个子表中的数据，然后汇总进行排序。</li>
+<li>将数据全量存储到 ES 中去，通过 ES 进行查询</li>
+</ul>
+</li>
+<li>跨库跨表 COUNT 查询问题，解决方式：<ul>
+<li>将计数的数据单独存储在一张表里</li>
+<li>将聚合查询的数据同步到 ES 中，交给 ES 进行查询</li>
+</ul>
+</li>
+</ul>
+<p><strong>回答</strong></p>
+<ul>
+<li>分布式事务问题：对业务进行分库之后，同一个操作会分散到多个数据库中，涉及跨库执行 SOL 语句，也就出现了分布式事务问题。解决方式，如果对一致性要求比较高的业务，比如金融类的业务，可以使用分布式事务中间件，实现 TCC 事务模型，互联网的业务通常对一致性要求，会使用基于本地消息表来实现分布式事务，达到最终一致性的效果，这个分布式事务的方案性能会好一些。</li>
+<li>全局 ID 唯一性问题：在单库单表时，业务 ID 可以依赖数据库的自增主键实现，进行分库分表之后，如果还是用数据库的自增主键，可能会导致主键重复。我们可以通过雪花算法或者美团 leaf 算法生成唯一主键 ID 跨库</li>
+<li>跨表关联查询问题：分库分表后，跨库和跨表的查询操作实现起来会比较复杂，我们可以通过几余额外字段避免跨库关联，或者交给数据库分库分表中间件来实现，也可以将数据全量存储到ES中去，通过ES进行查询</li>
+<li>跨库跨表的排序问题：分库分表以后，数据分散存储到不同的数据库和表中，如果需要对数据列表进行排序时，就变得异常复杂，我们可以通过业务代码或者数据库分库分表中间件分别查询每个子表中的数据，然后汇总进行排序，也可以将数据全量存储到ES中去，通过ES进行查询。</li>
+<li>跨库跨表 COUNT 查询的问题：分库分表以后，数据分散存储到不同的数据库和表中，如果需要对表进行COUNT 查询就会很复杂，我们可以将计数的数据单独存储在一张表里，或者将聚合查询的数据同步到 ES中，交给ES进行查询。</li>
+</ul>
 
                 
               </div>
@@ -984,7 +1441,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年8月18日</div>
+          <div>2023年8月19日</div>
         </div>
       
       
