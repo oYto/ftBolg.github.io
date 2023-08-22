@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>切片配合append使用</title>
+      <link href="/2023/08/22/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%88%87%E7%89%87%E9%85%8D%E5%90%88append%E4%BD%BF%E7%94%A8/"/>
+      <url>/2023/08/22/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%88%87%E7%89%87%E9%85%8D%E5%90%88append%E4%BD%BF%E7%94%A8/</url>
+      
+        <content type="html"><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面两段代码输出什么。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 1.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    s := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, <span class="hljs-number">5</span>)<br>    s = <span class="hljs-built_in">append</span>(s, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)<br>    fmt.Println(s)<br>&#125;<br><br><span class="hljs-comment">// 2.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>s := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>,<span class="hljs-number">0</span>)<br>s = <span class="hljs-built_in">append</span>(s,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>)<br>fmt.Println(s)<br>&#125;<br></code></pre></td></tr></table></figure><h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs tap">代码<span class="hljs-number"> 1 </span>输出：[0<span class="hljs-number"> 0 </span>0<span class="hljs-number"> 0 </span>0<span class="hljs-number"> 1 </span>2 3]<br>代码<span class="hljs-number"> 2 </span>输出：[1<span class="hljs-number"> 2 </span>3 4]<br></code></pre></td></tr></table></figure><p>参考解析：这道题考的是使用 append 向 slice 添加元素，第一段代码常见的错误是 [1 2 3]，需要注意。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Go </category>
+          
+          <category> 每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> GO </tag>
+            
+            <tag> 每日一题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Redis</title>
       <link href="/2023/08/21/%E9%9D%A2%E8%AF%95/Redis/"/>
       <url>/2023/08/21/%E9%9D%A2%E8%AF%95/Redis/</url>
