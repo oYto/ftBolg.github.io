@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目:">
+    <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="append第二个参数不能直接使用slice">
-<meta property="og:url" content="http://example.com/2023/08/31/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/append%E7%AC%AC%E4%BA%8C%E4%B8%AA%E5%8F%82%E6%95%B0%E4%B8%8D%E8%83%BD%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8slice/index.html">
+<meta property="og:title" content="Go语言操作数的规范">
+<meta property="og:url" content="http://example.com/2023/09/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/Go%E8%AF%AD%E8%A8%80%E6%93%8D%E4%BD%9C%E6%95%B0%E7%9A%84%E8%A7%84%E8%8C%83/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目:">
+<meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-08-31T04:49:20.000Z">
-<meta property="article:modified_time" content="2023-08-31T04:53:04.050Z">
+<meta property="article:published_time" content="2023-09-01T03:06:13.000Z">
+<meta property="article:modified_time" content="2023-09-01T03:07:07.302Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>append第二个参数不能直接使用slice - 胤凯</title>
+  <title>Go语言操作数的规范 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -246,7 +246,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="append第二个参数不能直接使用slice"></span>
+            <span id="subtitle" data-typed-text="Go语言操作数的规范"></span>
           
         </div>
 
@@ -257,8 +257,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-08-31 12:49" pubdate>
-          2023年8月31日 下午
+        <time datetime="2023-09-01 11:06" pubdate>
+          2023年9月1日 上午
         </time>
       </span>
     
@@ -269,7 +269,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          241 字
+          698 字
         
       </span>
     
@@ -280,7 +280,7 @@
         
         
         
-          3 分钟
+          6 分钟
         
       </span>
     
@@ -326,17 +326,21 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">append第二个参数不能直接使用slice</h1>
+            <h1 style="display: none">Go语言操作数的规范</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面这段代码能否通过编译，如果可以，输出什么？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	s1 := []<span class="hljs-type">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;<br>	s2 := []<span class="hljs-type">int</span>&#123;<span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;<br>	s1 = <span class="hljs-built_in">append</span>(s1, s2)<br>	fmt.Println(s1)<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>以下代码输出什么？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> a, b <span class="hljs-type">float64</span> = <span class="hljs-number">1.0</span>, <span class="hljs-number">4.0</span><br>	fmt.Println(a | b)<br>&#125;<br></code></pre></td></tr></table></figure>
 
+<p>A：5；B：+Inf；C：panic；D：不能编译</p>
+<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>正确答案：D</p>
+<p><code>|</code> 操作是按位或操作符，它的操作数只能是整数，而上面这道题的操作数是 float64，因此编译不通过。</p>
+<p>这是 Go 规范的内容 <a target="_blank" rel="noopener" href="https://docs.studygolang.com/ref/spec#Arithmetic_operators%EF%BC%9A">https://docs.studygolang.com/ref/spec#Arithmetic_operators：</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash">+    <span class="hljs-built_in">sum</span>                    integers, floats, complex values, strings<br>-    difference             integers, floats, complex values<br>*    product                integers, floats, complex values<br>/    quotient               integers, floats, complex values<br>%    remainder              integers<br><br>&amp;    bitwise AND            integers<br>|    bitwise OR             integers<br>^    bitwise XOR            integers<br>&amp;^   bit clear (AND NOT)    integers<br><br>&lt;&lt;   <span class="hljs-string">left shift             integer &lt;&lt; integer &gt;= 0</span><br><span class="hljs-string">&gt;&gt;   right shift            integer &gt;&gt; integer &gt;= 0</span><br></code></pre></td></tr></table></figure>
 
-
-<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>​	不能通过编译。append() 的第二个参数不能直接使用 slice，需使用 … 操作符，将一个切片追加到另一个切片上：append(s1,s2…)。或者直接跟上元素，形如：append(s1,1,2,3)。</p>
+<p>可以通过 play 在线编译看看：<a target="_blank" rel="noopener" href="https://play.studygolang.com/p/lLMbGE_ajrg">https://play.studygolang.com/p/lLMbGE_ajrg</a></p>
 
                 
               </div>
@@ -391,8 +395,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>append第二个参数不能直接使用slice</div>
-      <div>http://example.com/2023/08/31/Go每日一题/append第二个参数不能直接使用slice/</div>
+      <div>Go语言操作数的规范</div>
+      <div>http://example.com/2023/09/01/Go每日一题/Go语言操作数的规范/</div>
     </div>
     <div class="license-meta">
       
@@ -404,13 +408,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年8月31日</div>
+          <div>2023年9月1日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年8月31日</div>
+          <div>2023年9月1日</div>
         </div>
       
       
@@ -441,18 +445,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/Go%E8%AF%AD%E8%A8%80%E6%93%8D%E4%BD%9C%E6%95%B0%E7%9A%84%E8%A7%84%E8%8C%83/" title="Go语言操作数的规范">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Go语言操作数的规范</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/08/30/%E9%9D%A2%E8%AF%95/%E6%99%BA%E5%8A%9B%E9%A2%98/" title="智力题">
-                        <span class="hidden-mobile">智力题</span>
+                      <a href="/2023/08/31/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/append%E7%AC%AC%E4%BA%8C%E4%B8%AA%E5%8F%82%E6%95%B0%E4%B8%8D%E8%83%BD%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8slice/" title="append第二个参数不能直接使用slice">
+                        <span class="hidden-mobile">append第二个参数不能直接使用slice</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
