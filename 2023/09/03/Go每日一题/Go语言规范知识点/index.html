@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目:">
+    <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="定义接口会有额外的堆内存分配吗">
-<meta property="og:url" content="http://example.com/2023/09/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%AE%9A%E4%B9%89%E6%8E%A5%E5%8F%A3%E4%BC%9A%E6%9C%89%E9%A2%9D%E5%A4%96%E7%9A%84%E5%A0%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%90%97/index.html">
+<meta property="og:title" content="Go语言规范知识点">
+<meta property="og:url" content="http://example.com/2023/09/03/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/Go%E8%AF%AD%E8%A8%80%E8%A7%84%E8%8C%83%E7%9F%A5%E8%AF%86%E7%82%B9/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目:">
+<meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-09-02T03:41:08.000Z">
-<meta property="article:modified_time" content="2023-09-02T03:43:01.181Z">
+<meta property="article:published_time" content="2023-09-03T03:37:22.000Z">
+<meta property="article:modified_time" content="2023-09-03T03:46:50.784Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>定义接口会有额外的堆内存分配吗 - 胤凯</title>
+  <title>Go语言规范知识点 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -246,7 +246,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="定义接口会有额外的堆内存分配吗"></span>
+            <span id="subtitle" data-typed-text="Go语言规范知识点"></span>
           
         </div>
 
@@ -257,8 +257,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-09-02 11:41" pubdate>
-          2023年9月2日 中午
+        <time datetime="2023-09-03 11:37" pubdate>
+          2023年9月3日 中午
         </time>
       </span>
     
@@ -269,7 +269,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2k 字
+          3.9k 字
         
       </span>
     
@@ -280,7 +280,7 @@
         
         
         
-          18 分钟
+          33 分钟
         
       </span>
     
@@ -326,45 +326,75 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">定义接口会有额外的堆内存分配吗</h1>
+            <h1 style="display: none">Go语言规范知识点</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>Go 1.15 中 var i interface{} &#x3D; a 会有额外堆内存分配吗？</p>
-<p>具体代码是：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> a  <span class="hljs-type">int</span> = <span class="hljs-number">3</span><br><span class="hljs-comment">// 以下有额外内存分配吗？</span><br><span class="hljs-keyword">var</span> i <span class="hljs-keyword">interface</span>&#123;&#125; = a<br></code></pre></td></tr></table></figure>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>Go101 作者发布了一道有意思的题目，这道题主要考察细节点，Go101 这本书也是以抠细节著称。看看这道题，以下程序输出什么？（单选）</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">const</span> s = <span class="hljs-string">&quot;Go101.org&quot;</span><br><br><span class="hljs-comment">// len(s) == 9</span><br><span class="hljs-comment">// 1 &lt;&lt; 9 == 512</span><br><span class="hljs-comment">// 512 / 128 == 4</span><br><br><span class="hljs-keyword">var</span> a <span class="hljs-type">byte</span> = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-built_in">len</span>(s) / <span class="hljs-number">128</span><br><span class="hljs-keyword">var</span> b <span class="hljs-type">byte</span> = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-built_in">len</span>(s[:]) / <span class="hljs-number">128</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-built_in">println</span>(a, b)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-
-
-<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>在 Go 中，接口被实现为一对指针（请参阅 Russ Cox 的 Go 数据结构：<a target="_blank" rel="noopener" href="https://research.swtch.com/interfaces">接口</a>）：指向有关类型信息的指针和指向值的指针。可以简单的表示为：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> iface <span class="hljs-keyword">struct</span> &#123;<br>    tab  *itab<br>    data unsafe.Pointer<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>其中 tab 是指向类型信息的指针；data 是指向值的指针。因此，一般来说接口意味着必须在堆中动态分配该值。</p>
-<p>然而，**<a target="_blank" rel="noopener" href="https://docs.studygolang.com/doc/go1.15">Go 1.15 发行说明</a>**在 runtime 部分中提到了一个有趣的改进：</p>
+<p>A、0 0；B、0 4；C：4 0；D：4 4</p>
+<p>这里涉及到两个知识点，在 Go 语言规范中都有明确的说明，但确实很细节。你答对了吗？原因知晓吗？</p>
+<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>答案是 4 0（即选 C）。</p>
+<p>​	知识点：</p>
+<ul>
+<li>len 函数的参数是字符串字面量和简单的 array 表达式时，len 函数返回值是常量</li>
+<li>如果常量 位移表达式 的左侧操作数是一个无类型常量，那么其结果是一个整数常量；否则就是和左侧操作数同一类型的常量（必须是 整数类型 ）</li>
+<li>对于 <code>var a byte = 1 &lt;&lt; len(s) / 128</code>，因为 <code>1 &lt;&lt; len(s)</code> 是一个常量位移表达式，因此它的结果也是一个整数常量，所以是 512，最后除以 128，最终结果就是 4。</li>
+<li>对于 <code>var b byte = 1 &lt;&lt; len(s[:]) / 128</code>，因为 <code>1 &lt;&lt; len(s[:])</code> 不是一个常量位移表达式，而做操作数是 1，一个无类型常量，根据规范定义它是 byte 类型（根据：如果一个非常量位移表达式的左侧的操作数是一个无类型常量，那么它会先被隐式地转换为假如位移表达式被其左侧操作数单独替换后的类型）。</li>
+<li><code>var b byte = 1 &lt;&lt; len(s[:]) / 128</code> 中，根据规范定义，1 会隐式转换为 byte 类型，因此 <code>1 &lt;&lt; len(s[:])</code> 的结果也是 byte 类型，而 byte 类型最大只能表示 255，很显然 512 溢出了，结果为 0，因此最后 b 的结果也是 0。</li>
+</ul>
+<p>​	<strong>1 会隐式转换为 byte 类型，因此 1 &lt;&lt; len(s[:]) 的结果也是 byte 类型，而 byte 类型最大只能表示 255，很显然 512 溢出了，结果为 0，因此最后 b 的结果也是 0。</strong></p>
+<p>以下解析来自 <a target="_blank" rel="noopener" href="https://studygolang.com/interview/question">Go语言中文网</a></p>
+<p>不少人对这个结果应该很吃惊，因为从答题结果看，不到一半的人答对了。而且，如果只给 <code>var b byte = 1 &lt;&lt; len(s[:]) / 128</code>，没有 a 对比，我想答对的人会更少。因为有对比，很多人虽然直觉是 4 4，但想到一定有陷阱，所以会重新思考。</p>
+<p>好几个群都问，为什么结果会是 4 0，希望我解释下。因此有了此文。</p>
+<p>这个小题涉及到几个知识点。</p>
+<h2 id="len-函数的结果"><a href="#len-函数的结果" class="headerlink" title="len 函数的结果"></a>len 函数的结果</h2><p>要注意，len 是一个内置函数。在官方标准库文档<a target="_blank" rel="noopener" href="https://docs.studygolang.com/pkg/builtin/#len">关于 len 函数</a> 有这么一句：</p>
 <blockquote>
-<p>Converting a small integer value into an interface value no longer causes allocation.</p>
+<p>For some arguments, such as a string literal or a simple array expression, the result can be a constant. See the Go language specification’s “Length and capacity” section for details.</p>
 </blockquote>
-<p>意思是说，将小整数转换为接口值不再需要进行内存分配。小整数是指 0 到 255 之间的数。</p>
-<p>我们实际简单测试一下。</p>
-<p>创建一个包 smallint，在包中创建文件 smallint.go，加上如下代码：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> smallint<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Convert</span><span class="hljs-params">(val <span class="hljs-type">int</span>)</span></span> []<span class="hljs-keyword">interface</span>&#123;&#125; &#123;<br>    <span class="hljs-keyword">var</span> slice = <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-number">100</span>)<br>    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++ &#123;<br>        slice[i] = val<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> slice<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>明确支持，当参数是字符串字面量和简单 array 表达式，len 函数返回值是常量，这很重要。</p>
+<p>上题中，如果 <code>const s = &quot;Go101.org”</code> 改为 <code>var s = &quot;Go101.org&quot;</code> 结果又会是什么呢？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">var</span> s = <span class="hljs-string">&quot;Go101.org&quot;</span><br><br><span class="hljs-keyword">var</span> a <span class="hljs-type">byte</span> = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-built_in">len</span>(s) / <span class="hljs-number">128</span><br><span class="hljs-keyword">var</span> b <span class="hljs-type">byte</span> = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-built_in">len</span>(s[:]) / <span class="hljs-number">128</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-built_in">println</span>(a, b)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>为了更好的看到效果，函数中进行了 100 次 int 到 interface 的转换。写个基准测试 smallint_test.go：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> smallint_test<br><br><span class="hljs-keyword">import</span> (<br>    <span class="hljs-string">&quot;testing&quot;</span><br>    <span class="hljs-string">&quot;test/smallint&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">BenchmarkConvert</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>        result := smallint.Convert(<span class="hljs-number">12</span>)<br>        _ = result<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>结果是 0 0。</p>
+<p>但改为这样：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">var</span> s = [<span class="hljs-number">9</span>]<span class="hljs-type">byte</span>&#123;<span class="hljs-string">&#x27;G&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;g&#x27;</span>&#125;<br><br><span class="hljs-keyword">var</span> a <span class="hljs-type">byte</span> = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-built_in">len</span>(s) / <span class="hljs-number">128</span><br><span class="hljs-keyword">var</span> b <span class="hljs-type">byte</span> = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-built_in">len</span>(s[:]) / <span class="hljs-number">128</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-built_in">println</span>(a, b)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>分别使用 Go1.14 和 Go1.15 版本进行测试：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ go version<br>go version go1.14.7 darwin/amd64<br>$ go <span class="hljs-built_in">test</span> -bench . -benchmem ./...<br>goos: darwin<br>goarch: amd64<br>pkg: <span class="hljs-built_in">test</span>/smallint<br>BenchmarkConvert-8      569830       1966 ns/op     2592 B/op      101 allocs/op<br>PASS<br>ok   <span class="hljs-built_in">test</span>/smallint 1.647s<br>$ go version<br>go version go1.15 darwin/amd64<br>$ go <span class="hljs-built_in">test</span> -bench . -benchmem ./...<br>goos: darwin<br>goarch: amd64<br>pkg: <span class="hljs-built_in">test</span>/smallint<br>BenchmarkConvert-8     1859451        655 ns/op     1792 B/op        1 allocs/op<br>PASS<br>ok   <span class="hljs-built_in">test</span>/smallint 2.178s<br></code></pre></td></tr></table></figure>
+<p>结果又是 4 0。</p>
+<p>接着看文档那句话的后半句，查看 Go 语言规范中<a target="_blank" rel="noopener" href="https://hao.studygolang.com/golang_spec.html#id221">关于长度和容量的说明</a> 。</p>
+<blockquote>
+<p>内置函数 len 和 cap 获取各种类型的实参并返回一个 int 类型结果。实现会保证结果总是一个 int 值。</p>
+<p>如果 s 是一个字符串常量，那么 len(s) 是一个常量 。如果 s 类型是一个数组或到数组的指针且表达式 s 不包含 信道接收 或（非常量的） 函数调用的话， 那么表达式 len(s) 和 cap(s) 是常量；这种情况下， s 是不求值的。否则的话， len 和 cap 的调用结果不是常量且 s 会被求值。</p>
+</blockquote>
+<p>可见题目中：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> a <span class="hljs-type">byte</span> = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-built_in">len</span>(s) / <span class="hljs-number">128</span><br><span class="hljs-keyword">var</span> b <span class="hljs-type">byte</span> = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-built_in">len</span>(s[:]) / <span class="hljs-number">128</span><br></code></pre></td></tr></table></figure>
 
-<p>接着讲 smallint_test.go 中调用 Convert 的参数由 12 改为 256，再次使用 Go1.15 运行，结果如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ go <span class="hljs-built_in">test</span> -bench . -benchmem ./...<br>goos: darwin<br>goarch: amd64<br>pkg: <span class="hljs-built_in">test</span>/smallint<br>BenchmarkConvert-8      551546       2049 ns/op     2592 B/op      101 allocs/op<br>PASS<br>ok   <span class="hljs-built_in">test</span>/smallint 1.502s<br></code></pre></td></tr></table></figure>
+<p>第一句的 len(s) 是常量（因为 s 是字符串常量）；而第二句的 len(s[:]) 不是常量。这是这两条语句的唯一区别：两个 len 的返回结果数值并无差异，都是 9，但一个是常量一个不是。</p>
+<h2 id="关于位移操作"><a href="#关于位移操作" class="headerlink" title="关于位移操作"></a>关于位移操作</h2><p>根据上面的分析，现在问题的关键在于位移运算这里。Go 语言规范中有<a target="_blank" rel="noopener" href="https://docs.studygolang.com/ref/spec#Operators">这么一句</a> ：</p>
+<blockquote>
+<p>The right operand in a shift expression must have integer type or be an untyped constant representable by a value of type uint. If the left operand of a non-constant shift expression is an untyped constant, it is first implicitly converted to the type it would assume if the shift expression were replaced by its left operand alone.</p>
+</blockquote>
+<p>大意是：在位移表达式的右侧的操作数必须为整数类型，或者可以被 uint 类型的值所表示的无类型的常量。如果一个非常量位移表达式的左侧的操作数是一个无类型常量，那么它会先被隐式地转换为假如位移表达式被其左侧操作数单独替换后的类型。</p>
+<p>这里的关键在于常量位移表达式。根据上文的分析，<code>1 &lt;&lt; len(s)</code> 是常量位移表达式，而 <code>1 &lt;&lt; len(s[:])</code> 不是。</p>
+<p>规范上关于常量表达式中，还有<a target="_blank" rel="noopener" href="https://docs.studygolang.com/ref/spec#Constant_expressions">这么一句</a> ：</p>
+<blockquote>
+<p>If the left operand of a constant shift expression is an untyped constant, the result is an integer constant; otherwise it is a constant of the same type as the left operand, which must be of integer type.</p>
+</blockquote>
+<p>大意是：如果常量 位移表达式 的左侧操作数是一个无类型常量，那么其结果是一个整数常量；否则就是和左侧操作数同一类型的常量（必须是 整数类型 ）</p>
+<p>因此对于 <code>var a byte = 1 &lt;&lt; len(s) / 128</code>，因为 <code>1 &lt;&lt; len(s)</code> 是一个常量位移表达式，因此它的结果也是一个整数常量，所以是 512，最后除以 128，最终结果就是 4。</p>
+<p>而对于 <code>var b byte = 1 &lt;&lt; len(s[:]) / 128</code>，因为 <code>1 &lt;&lt; len(s[:])</code> 不是一个常量位移表达式，而做操作数是 1，一个无类型常量，根据规范定义它是 byte 类型（根据：如果一个非常量位移表达式的左侧的操作数是一个无类型常量，那么它会先被隐式地转换为假如位移表达式被其左侧操作数单独替换后的类型）。</p>
+<p>为什么是 byte 类型，大家可能还是有点晕。这要回到关于常量的说明上。</p>
+<h3 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h3><p>常量是在编译的时候进行计算的。在 Go 语言中，常量分两种：无类型和有类型。Go 规范上说，字面值常量， true , false , iota 以及一些仅包含无类型的恒定操作数的 常量表达式 是无类型的。</p>
+<p>那有类型常量是怎么来的呢？一般有两种：显示声明或隐式得到。比如：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">const</span> a <span class="hljs-type">int32</span> = <span class="hljs-number">23</span><br><span class="hljs-keyword">const</span> b <span class="hljs-type">float32</span> = <span class="hljs-number">0.1</span><br></code></pre></td></tr></table></figure>
 
-<p>证明了上面提到的优化点。</p>
-<p>那么，你想过它大概怎么实现的吗？因为上文提到，Go 中接口的实现，使用一个指针字段指向接口值。现在竟然不再额外进行内存分配，说明做了什么特殊的事情。</p>
-<p>其实答案非常简单。如果你对 Python、Java 等语言熟悉，应该知道大概如何实现的。Go 中如何做的，可以在 <strong><a target="_blank" rel="noopener" href="https://go-review.googlesource.com/c/go/+/216401">Go CL 216401</a></strong> 中（合并到**<a target="_blank" rel="noopener" href="https://github.com/golang/go/commit/9828c43288a53d3df75b1f73edad0d037a91dff8">此提交</a>**中了，GitHub 上更易于阅读）找到。具体来说就是 Go 中定义了一个特殊的静态数组，该数组由 256 个整数组成（0 到 255）。当必须分配内存以将整数存储在堆上，并将其转换为接口的一部分时，它首先检查是否它可以只返回指向数组中适当元素的指针。这种经常使用的值的静态分配，是一种很常见的优化手段。例如，Python 对小整数执行类似的操作，Java 也有常量池，进行类似的优化处理。</p>
-<p>实际上，Go 以前有一个优化，如果你将 0 转换为接口值，它将返回一个指向特殊静态零值的指针。这次新的 0-255 优化替代了该值。</p>
-<p>对具体实现细节感兴趣的，可以阅读下上文提到的提交。</p>
-<p>答案解析来自：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/1r0nt8nA3foDRRrbRp4omg">https://mp.weixin.qq.com/s/1r0nt8nA3foDRRrbRp4omg</a></p>
+<p>无类型常量都有一个默认类型（无类型常量的默认类型分别是 bool , rune , int , float64 , complex128 或 string）。当在上下文中需要请求该常量为一个带类型的值时，这个 默认类型 便指向该常量隐式转换后的类型。</p>
+<p>所以 <code>var b byte = 1 &lt;&lt; len(s[:]) / 128</code> 中，根据规范定义，1 会隐式转换为 byte 类型，因此 <code>1 &lt;&lt; len(s[:])</code> 的结果也是 byte 类型，而 byte 类型最大只能表示 255，很显然 512 溢出了，结果为 0，因此最后 b 的结果也是 0。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>一道很具迷惑性的题目引出这么多小知识点。可能有人要喷：讨论这些有什么用？这也太细节了。我想说的是，Go 语言规范，细节点很多，能多掌握一些没坏处，说不定将来实际工作就遇到了类似的问题呢？！以上的知识点，很细节，但我认为也是挺有价值的。</p>
+<p>当然了，你怎么说都行，你都是对的，你开心就好！</p>
+<p>答案来自：<a target="_blank" rel="noopener" href="https://polarisxu.studygolang.com/posts/go/action/interview-len-shift/">https://polarisxu.studygolang.com/posts/go/action/interview-len-shift/</a></p>
 
                 
               </div>
@@ -419,8 +449,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>定义接口会有额外的堆内存分配吗</div>
-      <div>http://example.com/2023/09/02/Go每日一题/定义接口会有额外的堆内存分配吗/</div>
+      <div>Go语言规范知识点</div>
+      <div>http://example.com/2023/09/03/Go每日一题/Go语言规范知识点/</div>
     </div>
     <div class="license-meta">
       
@@ -432,13 +462,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年9月2日</div>
+          <div>2023年9月3日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年9月2日</div>
+          <div>2023年9月3日</div>
         </div>
       
       
@@ -469,18 +499,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/03/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/Go%E8%AF%AD%E8%A8%80%E8%A7%84%E8%8C%83%E7%9F%A5%E8%AF%86%E7%82%B9/" title="Go语言规范知识点">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Go语言规范知识点</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/09/01/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/Go%E8%AF%AD%E8%A8%80%E6%93%8D%E4%BD%9C%E6%95%B0%E7%9A%84%E8%A7%84%E8%8C%83/" title="Go语言操作数的规范">
-                        <span class="hidden-mobile">Go语言操作数的规范</span>
+                      <a href="/2023/09/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%AE%9A%E4%B9%89%E6%8E%A5%E5%8F%A3%E4%BC%9A%E6%9C%89%E9%A2%9D%E5%A4%96%E7%9A%84%E5%A0%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%90%97/" title="定义接口会有额外的堆内存分配吗">
+                        <span class="hidden-mobile">定义接口会有额外的堆内存分配吗</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
