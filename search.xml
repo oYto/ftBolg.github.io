@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>结构体比较</title>
+      <link href="/2023/09/04/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E6%AF%94%E8%BE%83%E7%BB%86%E8%8A%82/"/>
+      <url>/2023/09/04/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E6%AF%94%E8%BE%83%E7%BB%86%E8%8A%82/</url>
+      
+        <content type="html"><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面代码是否可以编译通过？为什么？</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>sn1 := <span class="hljs-keyword">struct</span> &#123;<br>age  <span class="hljs-type">int</span><br>name <span class="hljs-type">string</span><br>&#125;&#123;age: <span class="hljs-number">11</span>, name: <span class="hljs-string">&quot;qq&quot;</span>&#125;<br><br>sn2 := <span class="hljs-keyword">struct</span> &#123;<br>age  <span class="hljs-type">int</span><br>name <span class="hljs-type">string</span><br>&#125;&#123;age: <span class="hljs-number">11</span>, name: <span class="hljs-string">&quot;qq&quot;</span>&#125;<br><br><span class="hljs-keyword">if</span> sn1 == sn2 &#123;<br>fmt.Println(<span class="hljs-string">&quot;sn1 == sn2&quot;</span>)<br>&#125;<br><br>sm1 := <span class="hljs-keyword">struct</span> &#123;<br>age <span class="hljs-type">int</span><br>m   <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">string</span><br>&#125;&#123;age: <span class="hljs-number">11</span>, m: <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">string</span>&#123;<span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>&#125;&#125;<br><br>sm2 := <span class="hljs-keyword">struct</span> &#123;<br>age <span class="hljs-type">int</span><br>m   <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">string</span><br>&#125;&#123;age: <span class="hljs-number">11</span>, m: <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">string</span>&#123;<span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>&#125;&#125;<br><br><span class="hljs-keyword">if</span> sm1 == sm2 &#123;<br>fmt.Println(<span class="hljs-string">&quot;sm1 == sm2&quot;</span>)<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure><h4 id="答案解析"><a href="#答案解析" class="headerlink" title="答案解析"></a>答案解析</h4><p>​编译不通过。</p><p>​关于 Go 语言中的 struct 比较问题，这个需要分情况来讨论：</p><ul><li><p>对于不同类型的 struct 无法进行比较</p></li><li><p>同一个 struct 的两个实例可比较也不可比较，</p><ul><li><p>如果该 strcut 的所有字段都是可比较类型，则可以比较</p></li><li><p>如果包含不可比较字段，如 slice、map、func 时，不可比较，但可以通过如下方式进行比较</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go">可以使用reflect.DeepEqual进行比较<br><br><span class="hljs-keyword">if</span> reflect.DeepEqual(sm1, sm2) &#123;<br>fmt.Println(<span class="hljs-string">&quot;sm1 == sm2&quot;</span>)<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>fmt.Println(<span class="hljs-string">&quot;sm1 != sm2&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure></li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Go </category>
+          
+          <category> 每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> GO </tag>
+            
+            <tag> 每日一题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Go语言规范知识点</title>
       <link href="/2023/09/03/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/Go%E8%AF%AD%E8%A8%80%E8%A7%84%E8%8C%83%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
       <url>/2023/09/03/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/Go%E8%AF%AD%E8%A8%80%E8%A7%84%E8%8C%83%E7%9F%A5%E8%AF%86%E7%82%B9/</url>
