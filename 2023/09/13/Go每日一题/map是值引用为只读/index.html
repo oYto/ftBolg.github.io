@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目:">
+    <meta name="description" content="题目：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="常量没有地址而言">
-<meta property="og:url" content="http://example.com/2023/09/05/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%B8%B8%E9%87%8F%E6%B2%A1%E6%9C%89%E5%9C%B0%E5%9D%80%E8%80%8C%E8%A8%80/index.html">
+<meta property="og:title" content="map是值引用为只读">
+<meta property="og:url" content="http://example.com/2023/09/13/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/map%E6%98%AF%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%BA%E5%8F%AA%E8%AF%BB/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目:">
+<meta property="og:description" content="题目：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-09-05T04:41:35.000Z">
-<meta property="article:modified_time" content="2023-09-05T04:43:08.989Z">
+<meta property="article:published_time" content="2023-09-13T03:04:20.000Z">
+<meta property="article:modified_time" content="2023-09-13T03:05:04.932Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="GO">
 <meta property="article:tag" content="每日一题">
@@ -34,7 +34,7 @@
   
   
   
-  <title>常量没有地址而言 - 胤凯</title>
+  <title>map是值引用为只读 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -246,7 +246,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="常量没有地址而言"></span>
+            <span id="subtitle" data-typed-text="map是值引用为只读"></span>
           
         </div>
 
@@ -257,8 +257,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-09-05 12:41" pubdate>
-          2023年9月5日 下午
+        <time datetime="2023-09-13 11:04" pubdate>
+          2023年9月13日 上午
         </time>
       </span>
     
@@ -269,7 +269,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          776 字
+          1.8k 字
         
       </span>
     
@@ -280,7 +280,7 @@
         
         
         
-          7 分钟
+          16 分钟
         
       </span>
     
@@ -326,42 +326,33 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">常量没有地址而言</h1>
+            <h1 style="display: none">map是值引用为只读</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面代码有什么问题？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">const</span> cl = <span class="hljs-number">100</span><br><br><span class="hljs-keyword">var</span> bl = <span class="hljs-number">123</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>  &#123;<br>    <span class="hljs-built_in">println</span>(&amp;bl,bl)<br>    <span class="hljs-built_in">println</span>(&amp;cl,cl)<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：<span id="more"></span></h1><p>以下代码能否编译？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-keyword">type</span> Student <span class="hljs-keyword">struct</span> &#123;<br>	Name <span class="hljs-type">string</span><br>&#125;<br><br><span class="hljs-keyword">var</span> list <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]Student<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>	list = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]Student)<br><br>	student := Student&#123;<span class="hljs-string">&quot;Aceld&quot;</span>&#125;<br><br>	list[<span class="hljs-string">&quot;student&quot;</span>] = student<br>	list[<span class="hljs-string">&quot;student&quot;</span>].Name = <span class="hljs-string">&quot;LDB&quot;</span><br><br>	fmt.Println(list[<span class="hljs-string">&quot;student&quot;</span>])<br>&#125;<br></code></pre></td></tr></table></figure>
 
+<p>查看答案</p>
+<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p><strong>结果</strong></p>
+<p>编译失败，<code>cannot assign to struct field list[&quot;student&quot;].Name in map</code></p>
+<p><strong>分析</strong></p>
+<p><code>map[string]Student</code> 的 value 是一个 Student 结构值，所以当<code>list[&quot;student&quot;] = student</code>,是一个值拷贝过程。而<code>list[&quot;student&quot;]</code>则是一个值引用。那么值引用的特点是<code>只读</code>。所以对<code>list[&quot;student&quot;].Name = &quot;LDB&quot;</code>的修改是不允许的。</p>
+<p><strong>方法一：</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-keyword">type</span> Student <span class="hljs-keyword">struct</span> &#123;<br>	Name <span class="hljs-type">string</span><br>&#125;<br><br><span class="hljs-keyword">var</span> list <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]Student<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>	list = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]Student)<br><br>	student := Student&#123;<span class="hljs-string">&quot;Aceld&quot;</span>&#125;<br><br>	list[<span class="hljs-string">&quot;student&quot;</span>] = student<br>	<span class="hljs-comment">//list[&quot;student&quot;].Name = &quot;LDB&quot;</span><br><br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">        方法1:</span><br><span class="hljs-comment">    */</span><br>    tmpStudent := list[<span class="hljs-string">&quot;student&quot;</span>]<br>    tmpStudent.Name = <span class="hljs-string">&quot;LDB&quot;</span><br>    list[<span class="hljs-string">&quot;student&quot;</span>] = tmpStudent<br><br>	fmt.Println(list[<span class="hljs-string">&quot;student&quot;</span>])<br>&#125;<br></code></pre></td></tr></table></figure>
 
+<p>其中</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">/**</span><br><span class="hljs-comment">方法1:</span><br><span class="hljs-comment">*/</span><br>tmpStudent := list[<span class="hljs-string">&quot;student&quot;</span>]<br>tmpStudent.Name = <span class="hljs-string">&quot;LDB&quot;</span><br>list[<span class="hljs-string">&quot;student&quot;</span>] = tmpStudent<br></code></pre></td></tr></table></figure>
 
-<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>考点：<strong>常量</strong></p>
-<p>常量不同于变量的在运行期分配内存，常量通常会被编译器在预处理阶段直接展开，作为指令数据使用，</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">cannot take the address of cl<br></code></pre></td></tr></table></figure>
+<p>是先做一次值拷贝，做出一个<code>tmpStudent副本</code>,然后修改该副本，然后再次发生一次值拷贝复制回去，<code>list[&quot;student&quot;] = tmpStudent</code>,但是这种会在整体过程中发生 2 次结构体值拷贝，性能很差。</p>
+<p><strong>方法二</strong>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-keyword">type</span> Student <span class="hljs-keyword">struct</span> &#123;<br>	Name <span class="hljs-type">string</span><br>&#125;<br><br><span class="hljs-keyword">var</span> list <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]*Student<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>	list = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]*Student)<br><br>	student := Student&#123;<span class="hljs-string">&quot;Aceld&quot;</span>&#125;<br><br>	list[<span class="hljs-string">&quot;student&quot;</span>] = &amp;student<br>	list[<span class="hljs-string">&quot;student&quot;</span>].Name = <span class="hljs-string">&quot;LDB&quot;</span><br><br>	fmt.Println(list[<span class="hljs-string">&quot;student&quot;</span>])<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>内存四区概念：</p>
-<h4 id="A-数据类型本质："><a href="#A-数据类型本质：" class="headerlink" title="A.数据类型本质："></a>A.数据类型本质：</h4><p>固定内存大小的别名</p>
-<h4 id="B-数据类型的作用："><a href="#B-数据类型的作用：" class="headerlink" title="B. 数据类型的作用："></a>B. 数据类型的作用：</h4><p>编译器预算对象(变量)分配的内存空间大小。</p>
-<p><img src="https://static.studygolang.com/220123/c9fcb2200f908c3a2ceb887b66e2c0d7.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<h4 id="C-内存四区"><a href="#C-内存四区" class="headerlink" title="C. 内存四区"></a>C. 内存四区</h4><p><img src="https://static.studygolang.com/220123/fbee26e0b998b9967c97cefb112e2293.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p>流程说明</p>
-<p>1、操作系统把物理硬盘代码load到内存</p>
-<p>2、操作系统把c代码分成四个区</p>
-<p>3、操作系统找到main函数入口执行</p>
-<h5 id="栈区-Stack-："><a href="#栈区-Stack-：" class="headerlink" title="栈区(Stack)："></a>栈区(Stack)：</h5><p>空间较小，要求数据读写性能高，数据存放时间较短暂。由编译器自动分配和释放，存放函数的参数值、函数的调用流程方法地址、局部变量等(局部变量如果产生逃逸现象，可能会挂在在堆区)</p>
-<h5 id="堆区-heap"><a href="#堆区-heap" class="headerlink" title="堆区(heap):"></a>堆区(heap):</h5><p>空间充裕，数据存放时间较久。一般由开发者分配及释放(但是Golang中会根据变量的逃逸现象来选择是否分配到栈上或堆上)，启动Golang的GC由GC清除机制自动回收。</p>
-<h5 id="全局区-静态全局变量区"><a href="#全局区-静态全局变量区" class="headerlink" title="全局区-静态全局变量区:"></a>全局区-静态全局变量区:</h5><p>全局变量的开辟是在程序在<code>main</code>之前就已经放在内存中。而且对外完全可见。即作用域在全部代码中，任何同包代码均可随时使用，在变量会搞混淆，而且在局部函数中如果同名称变量使用<code>:=</code>赋值会出现编译错误。</p>
-<p>全局变量最终在进程退出时，由操作系统回收。</p>
-<blockquote>
-<p>我么在开发的时候，尽量减少使用全局变量的设计</p>
-</blockquote>
-<h6 id="全局区-常量区："><a href="#全局区-常量区：" class="headerlink" title="全局区-常量区："></a>全局区-常量区：</h6><p>常量区也归属于全局区，常量为存放数值字面值单位，即不可修改。或者说的有的常量是直接挂钩字面值的。</p>
-<p>比如:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">const</span> cl = <span class="hljs-number">10</span><br></code></pre></td></tr></table></figure>
+<p>我们将 map 的类型的 value 由 Student 值，改成 Student 指针。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> list <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]*Student<br></code></pre></td></tr></table></figure>
 
-<p>cl是字面量10的对等符号。</p>
-<p>所以在golang中，常量是无法取出地址的，因为字面量符号并没有地址而言。</p>
+<p>这样，我们实际上每次修改的都是指针所指向的 Student 空间，指针本身是常指针，不能修改，<code>只读</code>属性，但是指向的 Student 是可以随便修改的，而且这里并不需要值拷贝。只是一个指针的赋值。</p>
 
                 
               </div>
@@ -416,8 +407,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>常量没有地址而言</div>
-      <div>http://example.com/2023/09/05/Go每日一题/常量没有地址而言/</div>
+      <div>map是值引用为只读</div>
+      <div>http://example.com/2023/09/13/Go每日一题/map是值引用为只读/</div>
     </div>
     <div class="license-meta">
       
@@ -429,13 +420,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年9月5日</div>
+          <div>2023年9月13日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年9月5日</div>
+          <div>2023年9月13日</div>
         </div>
       
       
@@ -466,18 +457,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/13/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/map%E6%98%AF%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%BA%E5%8F%AA%E8%AF%BB/" title="map是值引用为只读">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">map是值引用为只读</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/09/04/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E6%AF%94%E8%BE%83%E7%BB%86%E8%8A%82/" title="结构体比较">
-                        <span class="hidden-mobile">结构体比较</span>
+                      <a href="/2023/09/05/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E5%B8%B8%E9%87%8F%E6%B2%A1%E6%9C%89%E5%9C%B0%E5%9D%80%E8%80%8C%E8%A8%80/" title="常量没有地址而言">
+                        <span class="hidden-mobile">常量没有地址而言</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
