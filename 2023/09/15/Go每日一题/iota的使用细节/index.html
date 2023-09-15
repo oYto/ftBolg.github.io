@@ -16,23 +16,25 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="冯涛">
+    <meta name="description" content="题目:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="简历">
-<meta property="og:url" content="http://example.com/2023/06/04/%E9%9D%A2%E8%AF%95/%E7%AE%80%E5%8E%86/index.html">
+<meta property="og:title" content="iota的使用细节">
+<meta property="og:url" content="http://example.com/2023/09/15/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/iota%E7%9A%84%E4%BD%BF%E7%94%A8%E7%BB%86%E8%8A%82/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="冯涛">
+<meta property="og:description" content="题目:">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/%E7%AE%80%E5%8E%86.png">
-<meta property="article:published_time" content="2023-06-04T08:43:20.000Z">
-<meta property="article:modified_time" content="2023-09-14T07:43:04.632Z">
+<meta property="og:image" content="http://example.com/images/Golang.png">
+<meta property="article:published_time" content="2023-09-15T01:52:50.000Z">
+<meta property="article:modified_time" content="2023-09-15T02:01:00.193Z">
 <meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="GO">
+<meta property="article:tag" content="每日一题">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/%E7%AE%80%E5%8E%86.png">
+<meta name="twitter:image" content="http://example.com/images/Golang.png">
   
   
   
-  <title>简历 - 胤凯</title>
+  <title>iota的使用细节 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -244,7 +246,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="简历"></span>
+            <span id="subtitle" data-typed-text="iota的使用细节"></span>
           
         </div>
 
@@ -255,8 +257,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-06-04 16:43" pubdate>
-          2023年6月4日 下午
+        <time datetime="2023-09-15 09:52" pubdate>
+          2023年9月15日 上午
         </time>
       </span>
     
@@ -267,7 +269,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          11k 字
+          425 字
         
       </span>
     
@@ -278,7 +280,7 @@
         
         
         
-          95 分钟
+          4 分钟
         
       </span>
     
@@ -324,53 +326,39 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">简历</h1>
+            <h1 style="display: none">iota的使用细节</h1>
             
             
-              
-              <script src=/js/crypto-js.js></script>
-<script>
-function doDecrypt (pwd, onError) {
-	console.log('in doDecrypt');
-	const txt = document.getElementById('enc_content').innerHTML;
-	let plantext;
-	try {
-		const bytes = CryptoJS.AES.decrypt(txt, pwd);
-		var plaintext = bytes.toString(CryptoJS.enc.Utf8);
-	} catch(err) {
-		if(onError) {
-			onError(err);
-		}
-		return;
-	}
-	document.getElementById('enc_content').innerHTML = plaintext;
-	document.getElementById('enc_content').style.display = 'block';
-	document.getElementById('enc_passwd').style.display = 'none';
-	if(typeof MathJax !== 'undefined') {
-		MathJax.Hub.Queue(
-			['resetEquationNumbers', MathJax.InputJax.TeX],
-			['PreProcess', MathJax.Hub],
-			['Reprocess', MathJax.Hub]
-		);
-	}
-}
-</script>
-<div id="enc_content" style="display:none">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</div>
-<div id="enc_passwd"> <input id="enc_pwd_input" type="password" style="border-radius: 5px;border-style: groove;height: 30px;width: 50%;cursor: auto;font-size: 102%;color: currentColor;outline: none;text-overflow: initial;padding-left: 5px;" onkeydown="if (event.keyCode == 13) { decrypt(); return false;}"> <input type="submit" value="解&nbsp;密" onclick="decrypt()" style="width: 58px;height: 34px;border-radius: 5px;background-color: white;border-style: solid;color: currentColor;"><div id="enc_error" style="display: inline-block;color: #d84527;margin-left: 10px"></div>
-<script>
-var onError = function(error) {
-	document.getElementById("enc_error").innerHTML = "password error!"
-};
-function decrypt() {
-var passwd = document.getElementById("enc_pwd_input").value;
-console.log(passwd);
-doDecrypt(passwd, onError);
-}
-</script>
-</div>
-              
+              <div class="markdown-body">
+                
+                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面这段代码能否编译通过？如果可以，输出什么？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">const</span> (<br>	x = <span class="hljs-literal">iota</span><br>	_<br>	y<br>	z = <span class="hljs-string">&quot;zz&quot;</span><br>	k <br>	p = <span class="hljs-literal">iota</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>  &#123;<br>	fmt.Println(x,y,z,k,p)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-              
+
+
+<h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>参考答案：编译通过，输出：0 2 zz zz 5</p>
+<p>知识点：</p>
+<ol>
+<li><p>iota 只能在常量的表达式中使用</p>
+</li>
+<li><p>每次 const 出现时，都会让 iota 初始化为 0【自增长】</p>
+</li>
+<li><p>使用 iota 自定义枚举类型</p>
+</li>
+<li><p>可以用 ‘_’ 线跳过值</p>
+</li>
+<li><p>可用于定义数量级</p>
+</li>
+<li><p>iota 在下一行增长</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">const</span> (<br>    Apple, Banana = <span class="hljs-literal">iota</span> + <span class="hljs-number">1</span>, <span class="hljs-literal">iota</span> + <span class="hljs-number">2</span> <span class="hljs-comment">// 1， 2</span><br>    Cherimoya, Durian <span class="hljs-comment">// 2， 3</span><br>    Elderberry, Fig <span class="hljs-comment">// 3， 4</span><br>)<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>中间允许插队，但增值依旧不变</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">const</span> (<br>    i = <span class="hljs-literal">iota</span>	<span class="hljs-comment">// 0</span><br>    j = <span class="hljs-number">3.14</span> 	<span class="hljs-comment">// 3.14</span><br>    k = <span class="hljs-literal">iota</span>	<span class="hljs-comment">// 2</span><br>    l			<span class="hljs-comment">// 3</span><br>)<br></code></pre></td></tr></table></figure></li>
+</ol>
+<p>参考 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/zsy/p/5370052.html">https://www.cnblogs.com/zsy/p/5370052.html</a></p>
+
+                
+              </div>
             
             <hr/>
             <div>
@@ -386,8 +374,15 @@ doDecrypt(passwd, onError);
     
       <span class="category-chain">
         
-  <a href="/categories/%E9%9D%A2%E8%AF%95/" class="category-chain-item">面试</a>
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/Go/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/" class="category-chain-item">每日一题</a>
+  
+  
+
   
 
       </span>
@@ -398,6 +393,15 @@ doDecrypt(passwd, onError);
     </div>
   
   
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/GO/">#GO</a>
+      
+        <a href="/tags/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">#每日一题</a>
+      
+    </div>
+  
 </div>
 
 
@@ -406,8 +410,8 @@ doDecrypt(passwd, onError);
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>简历</div>
-      <div>http://example.com/2023/06/04/面试/简历/</div>
+      <div>iota的使用细节</div>
+      <div>http://example.com/2023/09/15/Go每日一题/iota的使用细节/</div>
     </div>
     <div class="license-meta">
       
@@ -419,13 +423,13 @@ doDecrypt(passwd, onError);
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年6月4日</div>
+          <div>2023年9月15日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年9月14日</div>
+          <div>2023年9月15日</div>
         </div>
       
       
@@ -456,18 +460,12 @@ doDecrypt(passwd, onError);
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/06/05/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/channel/" title="channel">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">channel</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/06/04/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80%EF%BC%882%EF%BC%89/" title="类型断言">
-                        <span class="hidden-mobile">类型断言</span>
+                      <a href="/2023/09/13/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/map%E6%98%AF%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%BA%E5%8F%AA%E8%AF%BB/" title="map是值引用为只读">
+                        <span class="hidden-mobile">map是值引用为只读</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -680,23 +678,6 @@ doDecrypt(passwd, onError);
   
 
 
-
-
-  
-  <script defer>
-    if (document.getElementById('hbePass')) {
-      Fluid.utils.waitElementLoaded('hbe-prefix', function() {
-        var hbePrefix = document.querySelector('hbe-prefix');
-        hbePrefix.parentElement.classList.add('markdown-body');
-        Fluid.utils.retry(function() {
-          if (Fluid.boot && Fluid.boot.refresh) {
-            Fluid.boot.refresh();
-            return true;
-          }
-        }, 100, 10);
-      })
-    }
-  </script>
 
 
   
