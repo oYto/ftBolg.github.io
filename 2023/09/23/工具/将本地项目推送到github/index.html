@@ -19,18 +19,17 @@
     <meta name="description" content="本地项目上传至 GitHub">
 <meta property="og:type" content="article">
 <meta property="og:title" content="将本地项目推送到github">
-<meta property="og:url" content="http://example.com/2023/09/23/%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E6%8E%A8%E9%80%81%E5%88%B0github/index.html">
+<meta property="og:url" content="http://example.com/2023/09/23/%E5%B7%A5%E5%85%B7/%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E6%8E%A8%E9%80%81%E5%88%B0github/index.html">
 <meta property="og:site_name" content="胤凯">
 <meta property="og:description" content="本地项目上传至 GitHub">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="c:\hexo-blog\source\images\key.png">
-<meta property="og:image" content="c:\hexo-blog\source\images\Gous.png">
+<meta property="og:image" content="http://example.com/images/GitHub-Logo.png">
 <meta property="article:published_time" content="2023-09-23T11:03:22.000Z">
-<meta property="article:modified_time" content="2023-09-23T12:09:21.852Z">
+<meta property="article:modified_time" content="2023-09-23T12:14:58.601Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="Git">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="c:\hexo-blog\source\images\key.png">
+<meta name="twitter:image" content="http://example.com/images/GitHub-Logo.png">
   
   
   
@@ -339,11 +338,11 @@
 
 <h4 id="4、将公钥-id-rsa-pub-内容保存到-GitHub-上"><a href="#4、将公钥-id-rsa-pub-内容保存到-GitHub-上" class="headerlink" title="4、将公钥 id_rsa.pub 内容保存到 GitHub 上"></a>4、将公钥 id_rsa.pub 内容保存到 GitHub 上</h4><figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs arcade">cat id_rsa.<span class="hljs-built_in">push</span> <br><span class="hljs-comment">// 复制文件内容</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="C:\hexo-blog\source\images\key.png" srcset="/img/loading.gif" lazyload alt="key"></p>
+<p><img src="/images/key.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后点击 New SSh key，将 公钥复制到相应位置即可</p>
 <h4 id="5、在-Github-上创建好项目，注意创建时勾选-Add-a-README-file，然后连接-Github-仓库"><a href="#5、在-Github-上创建好项目，注意创建时勾选-Add-a-README-file，然后连接-Github-仓库" class="headerlink" title="5、在 Github 上创建好项目，注意创建时勾选 Add a README file，然后连接 Github 仓库"></a>5、在 Github 上创建好项目，注意创建时勾选 <code>Add a README file</code>，然后连接 Github 仓库</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">git remote add origin https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/XX/</span>XX.git<br></code></pre></td></tr></table></figure>
 
-<p><img src="C:\hexo-blog\source\images\Gous.png" srcset="/img/loading.gif" lazyload alt="Gous.png"></p>
+<p><img src="/images/Gous.png" srcset="/img/loading.gif" lazyload alt="Gous.png"></p>
 <h4 id="6、回到项目根目录，将内容提交直缓存区"><a href="#6、回到项目根目录，将内容提交直缓存区" class="headerlink" title="6、回到项目根目录，将内容提交直缓存区"></a>6、回到项目根目录，将内容提交直缓存区</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs git">git add .<br>// 可以用 git status 查看新提交了哪些文件<br></code></pre></td></tr></table></figure>
 
 <h4 id="7、将缓存区文件提交到本地仓库"><a href="#7、将缓存区文件提交到本地仓库" class="headerlink" title="7、将缓存区文件提交到本地仓库"></a>7、将缓存区文件提交到本地仓库</h4><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">git</span> commit -m <span class="hljs-string">&quot;本次提交的注释&quot;</span><br></code></pre></td></tr></table></figure>
@@ -365,7 +364,7 @@
 <h1 id="Git-常用命令"><a href="#Git-常用命令" class="headerlink" title="Git 常用命令"></a>Git 常用命令</h1><p>git常用命令</p>
 <ol>
 <li>git config –global user.name xxx：设置全局用户名，信息记录在~&#x2F;.gitconfig文件中</li>
-<li>git config –global user.email <a href="mailto:&#120;&#x78;&#120;&#x40;&#x78;&#120;&#x78;&#46;&#99;&#x6f;&#x6d;">&#120;&#x78;&#120;&#x40;&#x78;&#120;&#x78;&#46;&#99;&#x6f;&#x6d;</a>：设置全局邮箱地址，信息记录在~&#x2F;.gitconfig文件中</li>
+<li>git config –global user.email <a href="mailto:&#x78;&#120;&#120;&#64;&#120;&#x78;&#120;&#x2e;&#x63;&#111;&#109;">&#x78;&#120;&#120;&#64;&#120;&#x78;&#120;&#x2e;&#x63;&#111;&#109;</a>：设置全局邮箱地址，信息记录在~&#x2F;.gitconfig文件中</li>
 <li>git init：将当前目录配置成git仓库，信息记录在隐藏的.git文件夹中</li>
 <li>git add XX：将XX文件添加到暂存区</li>
 <li>**git add .**：将所有待加入暂存区的文件加入暂存区</li>
@@ -380,10 +379,10 @@
 <li>git reset –hard HEAD~100：往上回滚100个版本</li>
 <li>git reset –hard 版本号：回滚到某一特定版本</li>
 <li>git checkout — XX或git restore XX：将XX文件尚未加入暂存区的修改全部撤销</li>
-<li>git remote add origin <a href="mailto:&#103;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#46;&#x61;&#99;&#x77;&#x69;&#x6e;&#x67;&#46;&#99;&#x6f;&#x6d;">&#103;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#46;&#x61;&#99;&#x77;&#x69;&#x6e;&#x67;&#46;&#99;&#x6f;&#x6d;</a>:xxx&#x2F;XXX.git：将本地仓库关联到远程仓库</li>
+<li>git remote add origin <a href="mailto:&#103;&#x69;&#x74;&#64;&#x67;&#105;&#116;&#x2e;&#x61;&#99;&#x77;&#x69;&#110;&#x67;&#46;&#99;&#111;&#109;">&#103;&#x69;&#x74;&#64;&#x67;&#105;&#116;&#x2e;&#x61;&#99;&#x77;&#x69;&#110;&#x67;&#46;&#99;&#111;&#109;</a>:xxx&#x2F;XXX.git：将本地仓库关联到远程仓库</li>
 <li><strong>git push -u</strong> (第一次需要-u以后不需要)：将当前分支推送到远程仓库</li>
 <li>git push origin branch_name：将本地的某个分支推送到远程仓库</li>
-<li>git clone <a href="mailto:&#103;&#x69;&#x74;&#64;&#103;&#105;&#x74;&#46;&#x61;&#99;&#119;&#x69;&#x6e;&#103;&#x2e;&#x63;&#x6f;&#x6d;">&#103;&#x69;&#x74;&#64;&#103;&#105;&#x74;&#46;&#x61;&#99;&#119;&#x69;&#x6e;&#103;&#x2e;&#x63;&#x6f;&#x6d;</a>:xxx&#x2F;XXX.git：将远程仓库XXX下载到当前目录下</li>
+<li>git clone <a href="mailto:&#x67;&#x69;&#116;&#x40;&#x67;&#x69;&#x74;&#46;&#97;&#x63;&#119;&#x69;&#110;&#x67;&#46;&#99;&#x6f;&#x6d;">&#x67;&#x69;&#116;&#x40;&#x67;&#x69;&#x74;&#46;&#97;&#x63;&#119;&#x69;&#110;&#x67;&#46;&#99;&#x6f;&#x6d;</a>:xxx&#x2F;XXX.git：将远程仓库XXX下载到当前目录下</li>
 <li>git checkout -b branch_name：创建并切换到branch_name这个分支</li>
 <li>git branch：查看所有分支和当前所处分支</li>
 <li>git checkout branch_name：切换到branch_name这个分支</li>
@@ -448,7 +447,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>将本地项目推送到github</div>
-      <div>http://example.com/2023/09/23/将本地项目推送到github/</div>
+      <div>http://example.com/2023/09/23/工具/将本地项目推送到github/</div>
     </div>
     <div class="license-meta">
       
