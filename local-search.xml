@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>数组是可比较类型</title>
+    <link href="/2023/10/04/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%95%B0%E7%BB%84%E6%98%AF%E5%8F%AF%E6%AF%94%E8%BE%83%E7%B1%BB%E5%9E%8B/"/>
+    <url>/2023/10/04/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%95%B0%E7%BB%84%E6%98%AF%E5%8F%AF%E6%AF%94%E8%BE%83%E7%B1%BB%E5%9E%8B/</url>
+    
+    <content type="html"><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面这段代码输出什么？</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>a := [<span class="hljs-number">2</span>]<span class="hljs-type">int</span>&#123;<span class="hljs-number">5</span>, <span class="hljs-number">6</span>&#125;<br>b := [<span class="hljs-number">3</span>]<span class="hljs-type">int</span>&#123;<span class="hljs-number">5</span>, <span class="hljs-number">6</span>&#125;<br><span class="hljs-keyword">if</span> a == b &#123;<br>fmt.Println(<span class="hljs-string">&quot;equal&quot;</span>)<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>fmt.Println(<span class="hljs-string">&quot;not equal&quot;</span>)<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure><ul><li>A. compilation error</li><li>B. equal</li><li>C. not equal</li></ul><h3 id="答案解析："><a href="#答案解析：" class="headerlink" title="答案解析："></a>答案解析：</h3><p>参考答案及解析：A。</p><p>​Go 中的数组是值类型，可比较，另外一方面，<strong>数组的长度也是数组类型的组成部分</strong>，所以 a 和 b 是不同的类型，是不能比较的，所以编译错误。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Go</category>
+      
+      <category>每日一题</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>GO</tag>
+      
+      <tag>每日一题</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>接口嵌入结构体</title>
     <link href="/2023/10/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%8E%A5%E5%8F%A3%E5%B5%8C%E5%85%A5%E7%BB%93%E6%9E%84%E4%BD%93/"/>
     <url>/2023/10/02/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%8E%A5%E5%8F%A3%E5%B5%8C%E5%85%A5%E7%BB%93%E6%9E%84%E4%BD%93/</url>
