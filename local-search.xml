@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>网络攻击</title>
+    <link href="/2023/10/06/%E5%B7%A5%E5%85%B7/%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB/"/>
+    <url>/2023/10/06/%E5%B7%A5%E5%85%B7/%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB/</url>
+    
+    <content type="html"><![CDATA[<h1 id="网络攻击"><a href="#网络攻击" class="headerlink" title="网络攻击"></a>网络攻击<span id="more"></span></h1><h4 id="1、DNS-劫持"><a href="#1、DNS-劫持" class="headerlink" title="1、DNS 劫持"></a>1、DNS 劫持</h4><h5 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h5><p>​当我们访问网站的时候，实际上会先进行域名解析得到网站服务器的 IP 地址，然后才进行后续的访问。DNS 劫持利用了这个过程追踪的漏洞，攻击者在 DNS 服务器上篡改 DNS 解析结果，将域名解析到攻击者控制的恶意服务器上，这时候我们访问的域名就被重定向到恶意网站上。</p><h5 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h5><p>​手动更换公共 DNS 服务器，绕过被劫持的 DNS 服务器。</p><h4 id="2、DNS-污染"><a href="#2、DNS-污染" class="headerlink" title="2、DNS 污染"></a>2、DNS 污染</h4><h5 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h5><p>​DNS 污染就是用户得到一个虚假的结果，攻击者监听 DNS 查询，一旦发现查询的域名与自己是匹配的，就把自己伪装成目标域名服务器，然后返回虚假的结果给用户，这样用户域名解析的结果就是错误的，无法和正确的目标服务器 IP 进行通信。</p><h5 id="解决办法-1"><a href="#解决办法-1" class="headerlink" title="解决办法"></a>解决办法</h5><ol><li>绕过被污染的非权威 DNS 服务器，直接访问干净的公共服务器。</li><li>在本机直接绑定 hosts，绕过 DNS 解析过程。</li></ol><h4 id="3、简述-DDOS-攻击原理，如何防范它？"><a href="#3、简述-DDOS-攻击原理，如何防范它？" class="headerlink" title="3、简述 DDOS 攻击原理，如何防范它？"></a>3、简述 DDOS 攻击原理，如何防范它？</h4><h5 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h5><p>​DDOS（Distributed Denial of Service） 攻击就是大量的僵尸计算机发送大量的请求，让服务器的带宽、CPU 和内存耗尽，让服务器超载后，无法再对外提供正常的服务。</p><p>​DDOS 攻击大体分为网络层攻击和传输层攻击，攻击应用层的方式比如有 DNS 洪水攻击，攻击传输层的方式比如有 SYN 洪水攻击、UDP 洪水攻击。</p><h5 id="解决办法-2"><a href="#解决办法-2" class="headerlink" title="解决办法"></a>解决办法</h5><ol><li>限制单个 IP 地址的请求频率，并且对异常流量的 IP 地址，拉黑名单、配置防火墙规则，阻止恶意流量请求。</li><li>增加用户验证机制，使用验证码、人脸识别等方式，增加用户验证的难度，减少恶意请求的影响。</li><li>花钱买可靠的 DDOS 防护提供商，他们具备强大的网络基础设施和专业的防护技术，能够识别和过滤掉恶意流量，保证正常服务的运行。</li></ol><h4 id="4、XSS-攻击？"><a href="#4、XSS-攻击？" class="headerlink" title="4、XSS 攻击？"></a>4、XSS 攻击？</h4><h5 id="原理-3"><a href="#原理-3" class="headerlink" title="原理"></a>原理</h5><p>​XSS（Cross-Site Scripting） 攻击，即跨站点脚本攻击，攻击方式是攻击者在一些可以评论或者发帖的网站，发布一些恶意脚本代码，然后被服务端保存了，后面访问的网站的时候，浏览器会执行该恶意脚本，这样攻击者就可以窃取用户的敏感信息了。</p><h5 id="解决办法-3"><a href="#解决办法-3" class="headerlink" title="解决办法"></a>解决办法</h5><ol><li>输入验证和过滤：过滤一些特殊的字符，比如 javaScript 脚本中的 &lt;&gt; 进行转移 &lt;&gt; 再进行存储，这样就能有效的进行 xss 攻击的防护。</li><li>使用 HTTP-only Cookie：将敏感信息存储在 HTTP-only Cookite 中，限制 JavaScript 的访问权限，防止恶意脚本窃取用户的 Cookite 信息。</li></ol><h4 id="5、CSRF-攻击"><a href="#5、CSRF-攻击" class="headerlink" title="5、CSRF 攻击"></a>5、CSRF 攻击</h4><h5 id="原理-4"><a href="#原理-4" class="headerlink" title="原理"></a>原理</h5><p>CSRF（Cross-Site Request Forgery）叫跨站点伪造攻击，攻击形式是，用户先登录银行A 网站，这时候就获得了A 网站的 Cookie，然后不小心访问了一个恶意B 网站，B 网站会让用户向银行A 网站发起一个转账请求，由于用户端有了银行 A网站的 Cookie，这时候有可能就会转账成功，造成并非本人意愿的操作结果。</p><h5 id="解决办法-4"><a href="#解决办法-4" class="headerlink" title="解决办法"></a>解决办法</h5><ol><li>同源检测：在服务器端对请求进行同源检测，只接受来自同一域名下的请求。这可以通过检查请求头中的 Referer 字段或者 Origin 字段来实现。</li><li>使用验证码：对于敏感操作，要求用户输入验证码进行验证，以防止自动化脚本发起的恶意请求。</li><li>使用 CSRF 令牌： 在用户执行敏感操作时，要求用户提交一个 CSRF 令牌。该令牌是一个随机生成的字符串存储在用户的会话中，并且在每个请求中都要验证该令牌的有效性。攻击者无法伪造正确的CSRF 令牌，从而防止 CSRF 攻击。</li></ol><h4 id="6、SQL-注入攻击"><a href="#6、SQL-注入攻击" class="headerlink" title="6、SQL 注入攻击"></a>6、SQL 注入攻击</h4><h5 id="原理-5"><a href="#原理-5" class="headerlink" title="原理"></a>原理</h5><p>​SQL 注入攻击在攻击者在 HTTP 请求中注入恶意 SQL 语句，让服务端构造执行 SQL 语句时，恶意的 SQL 被一起构造了，然后在数据库中，这样就可能对数据库造成全量数据拉取、删除、更小等敏感的操作。</p><h5 id="解决办法-5"><a href="#解决办法-5" class="headerlink" title="解决办法"></a>解决办法</h5><ol><li>参数化查询或预编译语句：使用参数化查询或预编译语句来构造和执行 SQL 查询。这样可以将用户输入的数据作为参数传递给查询，而不是将其直接拼接到 SQL 语句中，参数化查询可以防止恶意代码的注入。</li><li>输入验证和过滤：对用户输入的数据进行验证和过滤，确保只接受合法的输入，可以使用白名单过滤、正则表达式验证或编码转义等技术来防止恶意代码的注入。</li><li>最小权限原则：在数据库中为应用程序使用最小权限的数据库账户，这样即使发生 SQL 注入攻击，攻击者也只能在该账户的权限范围内进行操作，减少损失。</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>工具</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>网络攻击</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>常见状态码</title>
     <link href="/2023/10/06/%E5%B7%A5%E5%85%B7/%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81/"/>
     <url>/2023/10/06/%E5%B7%A5%E5%85%B7/%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81/</url>
