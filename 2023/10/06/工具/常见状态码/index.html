@@ -16,24 +16,24 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="分布式锁">
+    <meta name="description" content="常见状态码">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis分布式锁">
-<meta property="og:url" content="http://example.com/2023/10/05/%E5%B7%A5%E5%85%B7/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/index.html">
+<meta property="og:title" content="常见状态码">
+<meta property="og:url" content="http://example.com/2023/10/06/%E5%B7%A5%E5%85%B7/%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="分布式锁">
+<meta property="og:description" content="常见状态码">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/redismutex.png">
-<meta property="article:published_time" content="2023-10-05T13:09:04.000Z">
-<meta property="article:modified_time" content="2023-10-06T11:01:08.938Z">
+<meta property="og:image" content="http://example.com/images/http%E7%8A%B6%E6%80%81%E7%A0%81.png">
+<meta property="article:published_time" content="2023-10-06T10:51:05.000Z">
+<meta property="article:modified_time" content="2023-10-06T11:01:11.254Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="Redis 分布式锁">
+<meta property="article:tag" content="http 状态码">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/redismutex.png">
+<meta name="twitter:image" content="http://example.com/images/http%E7%8A%B6%E6%80%81%E7%A0%81.png">
   
   
   
-  <title>Redis分布式锁 - 胤凯</title>
+  <title>常见状态码 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -245,7 +245,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Redis分布式锁"></span>
+            <span id="subtitle" data-typed-text="常见状态码"></span>
           
         </div>
 
@@ -256,8 +256,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-10-05 21:09" pubdate>
-          2023年10月5日 晚上
+        <time datetime="2023-10-06 18:51" pubdate>
+          2023年10月6日 晚上
         </time>
       </span>
     
@@ -268,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.2k 字
+          603 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
         
-          19 分钟
+          6 分钟
         
       </span>
     
@@ -325,60 +325,26 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Redis分布式锁</h1>
+            <h1 style="display: none">常见状态码</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁 "></a>分布式锁 <span id="more"></span></h1><h4 id="1、什么是分布式锁？"><a href="#1、什么是分布式锁？" class="headerlink" title="1、什么是分布式锁？"></a>1、什么是分布式锁？</h4><p>​	在分布式场景下的锁，比如在多台不同机器上的进程，去竞争同一项资源，就是分布式锁。</p>
-<h4 id="2、分布式锁有哪些特性？"><a href="#2、分布式锁有哪些特性？" class="headerlink" title="2、分布式锁有哪些特性？"></a>2、分布式锁有哪些特性？</h4><ul>
-<li><strong>互斥性</strong>：只能让一个竞争者持有锁</li>
-<li><strong>安全性</strong>：避免锁因为异常永远不被释放，当一个竞争者在持有锁期间，由于意外崩溃而导致未能主动解锁，其持有的锁也能够被兜底释放，并保证后续其它竞争者也能加锁</li>
-<li><strong>对称性</strong>：同一个锁，加锁和解锁必须是一个竞争者，不能把其他竞争者持有的锁给释放了</li>
-<li><strong>可靠性</strong>：需要有一定程度的异常处理能力、容灾能力。</li>
-</ul>
-<h4 id="3、分布式锁的实现方式"><a href="#3、分布式锁的实现方式" class="headerlink" title="3、分布式锁的实现方式"></a>3、分布式锁的实现方式</h4><h5 id="最简化版本"><a href="#最简化版本" class="headerlink" title="最简化版本"></a>最简化版本</h5><p>​	直接用 Redis 的 setnx 命令，语法：<code>setnx key value</code>，如果 key 不存在，则会将 key 设置为 value，并返回 1；如果 key 存在，不会有任务影响，返回 0。</p>
-<p>​	通过 setnx 加锁，其他服务无法加锁，进而阻塞；用完之后，通过 delete 解锁，其他服务再去竞争锁。</p>
-<h5 id="支持过期时间"><a href="#支持过期时间" class="headerlink" title="支持过期时间"></a>支持过期时间</h5><p>​	最简化版本有一个问题：如果获取锁的服务挂掉了，那么锁就一直得不到释放，就会导致其他服务无法获取到锁，影响到其他服务，所以这里需要一个过期时间来进行兜底。</p>
-<p>​	Redis 中有 expire 命令，用来设置一个 key 的过期时间。但是 setnx 和 expire 不具备原子性，如果 setnx 获取锁之后，服务挂掉，还没来得及设置过期时间，照样石沉大海。</p>
-<p>​	于是使用 set 和 expire 的原子操作：<code>set key value nx ex seconds</code> nx 标识 setnx 特性，ex 标识过期时间，最后一个参数就是过期时间的值。</p>
-<p>​	加上过期时间，基本上这个锁就能用了。但存在一个问题：会存在服务 A 释放掉 服务 B 的锁的可能。</p>
-<h5 id="加上-owner"><a href="#加上-owner" class="headerlink" title="加上 owner"></a><strong>加上 owner</strong></h5><p>​	在特殊的场景：服务 A 获取到了锁，由于业务流程比较长或者网络延迟、GC卡顿等原因，导致锁过期，而业务还会继续进行，这时候，业务 B 已经拿到了锁，准备去执行。这个时候服务 A 恢复过来并做完了任务，就会释放锁，而 B 还在继续，就会导致服务 A 释放掉了 服务 B 的锁。</p>
-<p>​	在真实的分布式场景中，可能存在几十个竞争者，上述情况发生的概率就会很高，导致同一份资源频繁被不同竞争者同时访问，分布式锁也就失去了意义。</p>
-<p>​	发生这个问题的关键在于：竞争者可以释放掉其他竞争者的锁。所以我们可以给出进一步的解决方案：分布式锁需要满足谁申请谁释放原则，不能释放别人的锁，也就是说，分布式锁，是要有归属的。</p>
-<h5 id="引入-lua"><a href="#引入-lua" class="headerlink" title="引入 lua"></a><strong>引入 lua</strong></h5><p>​	加入 owner 后的版本，也还有一点点小问题。完整的流程是：竞争者获取到锁执行任务，执行完毕后检查锁是不是自己的，最后释放。</p>
-<p>​	这些操作都不是原子化的，可能锁获取的时候还是自己的，删除的时候已经是别人的了。</p>
-<p>​	这里就需要引入 Lua。</p>
-<p>​	Redis + Lua，可以说是专门为解决原子问题而生的。 </p>
-<p>​	到了这里，分布式锁的前三个特性已经满足：对称性、安全性、互斥性。可以是一个可以用的分布式锁了，能满足大多数场景。</p>
-<h4 id="4、可靠性如何保证"><a href="#4、可靠性如何保证" class="headerlink" title="4、可靠性如何保证"></a>4、可靠性如何保证</h4><p>​	还剩下可靠性没有解决。</p>
-<p>​	针对一些异常情景，包括 Redis 挂掉、业务执行时间过长、网络波动等情况。</p>
-<p>​	<strong>容灾考虑</strong></p>
-<p>​	前面我们谈及的内容，基本是基于单机考虑的，如果Redis挂掉了，那锁就不能获取了。这个问题该如何解决呢?<br>​	一般来说，有两种方法:主从容灾和多级部署。</p>
-<h5 id="主从容灾"><a href="#主从容灾" class="headerlink" title="主从容灾"></a>主从容灾</h5><p>​	最简单的方式，就是为 Redis 配置从节点，当主节点挂掉了，从节点顶包。</p>
-<p>​	主从切换的话，需要人工参与，会提高人力成本。不过 Redis 已经有成熟的解决方案，也就是哨兵模式，可以灵活自动切换，不再需要人工介入。</p>
-<p>​	虽然一定程度解决了单点的容灾问题，但并不是尽善尽美的由于同步有时延，slave通过增加从节点的方式，可能会损失掉部分数据，分布式锁可能失效，这就会发生短暂的多机获取到执行权限</p>
-<p>​	有没有更可靠的办法呢?</p>
-<p><strong>多机部署</strong></p>
-<p>​	如果对一致性高一些，可以尝试多机部署。比如 Redis 的 RedLock，大概思路就是多个机器，通常是奇数，达到一半以上同意才能算加锁成功，这样可靠性会向 ETCD 靠近。</p>
-<blockquote>
-<p>ETCD：<strong>etcd</strong>：在前面的回答中已经介绍过，etcd是一个分布式键值存储系统，用于配置管理、服务发现和分布式协调。它是一个独立的开源项目，由CNCF维护，具有强一致性和高可用性，用于构建分布式系统的基础设施。</p>
-</blockquote>
-<p>​	现在假设有5个Redis主节点，基本保证它们不会同时宕掉，获取锁和释放锁的过程中客户端会执行以下操作:</p>
-<ol>
-<li>向5个Redis申请加锁;</li>
-<li>只要超过一半，也就是3个Redis返回成功，那么就是获取到了锁。如果超过一半失败，需要向每个Redis发送解锁命令;</li>
-<li>由于向5个Redis发送请求，会有一定时耗，所以锁剩余持有时间，需要减去请求时间。这个可以作为判断依据，如果剩余时间已经为0，那么也是获取锁失败;</li>
-<li>使用完成之后，向5个Redis发送解锁请求。</li>
-</ol>
-<p>​	这种模式的好处在于，如果挂了2台Redis，整个集群还是可用的，给了运维更多时间来修复。</p>
-<p>​	另外，多说一句，单点Redis的所有手段，这种多机模式都可以使用，比如为每个节点配置哨兵模式，由于加锁是一半以上同意就成功，那么如果单个节点进行了主从切换，单个节点数据的丢失，就不会让锁失效了。这样增强了可靠性。</p>
-<h1 id="没有完全可靠的分布式锁"><a href="#没有完全可靠的分布式锁" class="headerlink" title="没有完全可靠的分布式锁"></a>没有完全可靠的分布式锁</h1><p>由于分布式系统中的三大困境，简称 NPC。</p>
-<ol>
-<li>N：Network Delay （网络延迟）网络延迟导致锁过期。</li>
-<li>P：Process Pause（进程暂停）比如发生 GC，导致锁超时。</li>
-<li>C：Clock Drift（时钟漂移）</li>
-</ol>
+                <h1 id="常见状态码"><a href="#常见状态码" class="headerlink" title="常见状态码"></a>常见状态码<span id="more"></span></h1><p><img src="/images/%E7%8A%B6%E6%80%81%E7%A0%81.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="1、200"><a href="#1、200" class="headerlink" title="1、200"></a>1、200</h4><p>200：服务器已经接收了请求，但处理还没有完成。</p>
+<p>204：服务器已经成功处理了请求，但相应中没有任何返回内容。比如 DELETE 请求。</p>
+<p>206：客户端发送了一个带有 Range 头的 GET 请求，并且服务器成功返回了请求的部分内容。比如下载大文件的一部分或者断电续传。</p>
+<h4 id="2、300"><a href="#2、300" class="headerlink" title="2、300"></a>2、300</h4><p>301：永久重定向</p>
+<p>302：临时重定向</p>
+<p>304：表示服务器资源没有被修改。用于访问有缓存的数据，返回 304 表示缓存未失效。</p>
+<h4 id="3、400"><a href="#3、400" class="headerlink" title="3、400"></a>3、400</h4><p>400：客户端发送的请求有错误或者无效，服务器无法理解或处理该请求。通常是由于客户端发送的请求中包含了无效的参数、格式错误的数据、缺失必要的参数等。</p>
+<p>403：客户端请求被服务器拒绝，通常是由于客户端没有足够的权限来访问请求的资源。</p>
+<p>404：表示服务器无法找到请求的资源。通常是由于客户端请求的资源不存在，或者请求的 URL 地址错误。</p>
+<h4 id="4、500"><a href="#4、500" class="headerlink" title="4、500"></a>4、500</h4><p>500：服务器内部发生了错误，但服务器无法提供详细的错误信息。表示服务器遇到了意外情况或者未知错误。</p>
+<p>501：服务器不支持客户端请求的功能或方法。</p>
+<p>502：表示服务器作为网关或代理，从上游服务器接收到一个无效的响应。通常意味着上游服务器出现故障或无法正常工作。</p>
+<p>503：服务器暂时无法提供服务。服务器过载、维护中、临时不可用或其他临时性原因造成的。</p>
+<p>504：服务器作为网关或代理，在等待上游服务器的响应时，超时了。比如出现 sql 慢查询、接口发生死循环、死锁等问题。</p>
 
                 
               </div>
@@ -412,7 +378,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">#Redis 分布式锁</a>
+        <a href="/tags/http-%E7%8A%B6%E6%80%81%E7%A0%81/">#http 状态码</a>
       
     </div>
   
@@ -424,8 +390,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Redis分布式锁</div>
-      <div>http://example.com/2023/10/05/工具/Redis分布式锁/</div>
+      <div>常见状态码</div>
+      <div>http://example.com/2023/10/06/工具/常见状态码/</div>
     </div>
     <div class="license-meta">
       
@@ -437,7 +403,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年10月5日</div>
+          <div>2023年10月6日</div>
         </div>
       
       
@@ -474,18 +440,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/10/06/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%8E%A5%E5%8F%A3%E7%B1%BB%E5%9E%8B%E5%80%BC%E4%B8%BAnil/" title="接口类型值为nil">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">接口类型值为nil</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/10/04/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%95%B0%E7%BB%84%E6%98%AF%E5%8F%AF%E6%AF%94%E8%BE%83%E7%B1%BB%E5%9E%8B/" title="数组是可比较类型">
-                        <span class="hidden-mobile">数组是可比较类型</span>
+                      <a href="/2023/10/06/%E9%98%85%E8%AF%BB/%E3%80%8AGo%E8%AF%AD%E8%A8%80%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%97%85%E3%80%8B/" title="《Go语言编程之旅》">
+                        <span class="hidden-mobile">《Go语言编程之旅》</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
