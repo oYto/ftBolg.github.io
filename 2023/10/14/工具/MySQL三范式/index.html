@@ -16,24 +16,24 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="介绍">
+    <meta name="description" content="简介">
 <meta property="og:type" content="article">
-<meta property="og:title" content="排序算法">
-<meta property="og:url" content="http://example.com/2023/10/14/%E5%B7%A5%E5%85%B7/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:title" content="MySQL三范式">
+<meta property="og:url" content="http://example.com/2023/10/14/%E5%B7%A5%E5%85%B7/MySQL%E4%B8%89%E8%8C%83%E5%BC%8F/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="介绍">
+<meta property="og:description" content="简介">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95.png">
-<meta property="article:published_time" content="2023-10-14T04:10:20.000Z">
-<meta property="article:modified_time" content="2023-10-14T04:48:57.919Z">
+<meta property="og:image" content="http://example.com/images/MySQL.png">
+<meta property="article:published_time" content="2023-10-14T09:09:37.000Z">
+<meta property="article:modified_time" content="2023-10-14T12:58:20.684Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="排序算法">
+<meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95.png">
+<meta name="twitter:image" content="http://example.com/images/MySQL.png">
   
   
   
-  <title>排序算法 - 胤凯</title>
+  <title>MySQL三范式 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -245,7 +245,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="排序算法"></span>
+            <span id="subtitle" data-typed-text="MySQL三范式"></span>
           
         </div>
 
@@ -256,8 +256,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-10-14 12:10" pubdate>
-          2023年10月14日 中午
+        <time datetime="2023-10-14 17:09" pubdate>
+          2023年10月14日 下午
         </time>
       </span>
     
@@ -268,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.7k 字
+          1.5k 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
         
-          14 分钟
+          13 分钟
         
       </span>
     
@@ -325,29 +325,220 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">排序算法</h1>
+            <h1 style="display: none">MySQL三范式</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍<span id="more"></span></h1><p>​	在面试中被问到排序算法，发现不能很好的描述出来，于是写一篇文章总结一下。常见的排序算法有 <strong>冒泡排序</strong>、<strong>插入排序</strong>、<strong>快速排序</strong>、<strong>归并排序</strong>、<strong>堆排序</strong>、<strong>树排序</strong> 等。下面一一介绍。</p>
-<h4 id="1、冒泡排序-O-n-2"><a href="#1、冒泡排序-O-n-2" class="headerlink" title="1、冒泡排序 O(n^2)"></a>1、冒泡排序 O(n^2)</h4><h5 id="算法思想："><a href="#算法思想：" class="headerlink" title="算法思想："></a>算法思想：</h5><p>​	共 n 个元素需要排序，通过比较相邻的两个元素，并将较大的元素放到后面，以此每一轮比较将乱序的元素中的最大的元素放到最后一个有序区间中。<strong>每一次遍历都能确定一个数在有序数组中的位置，且数组最后的一个区间中的数是有序的</strong>，直到所有数的位置都确定了，排序完成。</p>
-<h5 id="核心代码："><a href="#核心代码：" class="headerlink" title="核心代码："></a>核心代码：</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; n<span class="hljs-number">-1</span>; i++ &#123;<br>        <span class="hljs-keyword">for</span> j := <span class="hljs-number">0</span>; j &lt; n-i<span class="hljs-number">-1</span>; j++ &#123;<br>            <span class="hljs-keyword">if</span> arr[j] &gt; arr[j+<span class="hljs-number">1</span>] &#123;<br>                <span class="hljs-comment">// 交换 arr[j] 和 arr[j+1]</span><br>                arr[j], arr[j+<span class="hljs-number">1</span>] = arr[j+<span class="hljs-number">1</span>], arr[j]<br>            &#125;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+                <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介<span id="more"></span></h4><p>​	三大范式是 MySQL 数据库设计表结构所遵循的规范和指导方法，目的是为了减少冗余，建立结构合理的数据库，从而提高数据存储和使用的性能。</p>
+<p>​	三大范式之间是有依赖关系的，比如第二范式是在第一范式的基础上建设的，第三范式是在第二范式的基础上建设的。</p>
+<p>​	简单来说，就是原子性、唯一性、无传递性。</p>
+<h4 id="第一范式-1NF"><a href="#第一范式-1NF" class="headerlink" title="第一范式 - 1NF"></a>第一范式 - 1NF</h4><p>​	遵循原子性。即，<strong>表中字段的数据，不可再分</strong>。例如下述表结构：</p>
+<table>
+<thead>
+<tr>
+<th>员工编号</th>
+<th>姓名</th>
+<th>年龄</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>001</td>
+<td>运营部小明</td>
+<td>19</td>
+</tr>
+<tr>
+<td>002</td>
+<td>技术部小美</td>
+<td>28</td>
+</tr>
+<tr>
+<td>003</td>
+<td>销售部小张</td>
+<td>20</td>
+</tr>
+</tbody></table>
+<p>​	上述表结构中，姓名字段是可以进行再拆分的，因此它不符合第一范式。符合第一范式的表结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>员工编号</th>
+<th>部门</th>
+<th>姓名</th>
+<th>年龄</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>001</td>
+<td>运营部</td>
+<td>小明</td>
+<td>19</td>
+</tr>
+<tr>
+<td>002</td>
+<td>技术部</td>
+<td>小美</td>
+<td>28</td>
+</tr>
+<tr>
+<td>003</td>
+<td>销售部</td>
+<td>小张</td>
+<td>20</td>
+</tr>
+</tbody></table>
+<p>​	但也并不是所有情况，都需要符合第一范式，例如：</p>
+<table>
+<thead>
+<tr>
+<th>员工编码</th>
+<th>姓名</th>
+<th>省</th>
+<th>市</th>
+<th>区</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>001</td>
+<td>小张</td>
+<td>江西省</td>
+<td>南昌市</td>
+<td>东湖区</td>
+</tr>
+<tr>
+<td>002</td>
+<td>小黄</td>
+<td>广东省</td>
+<td>佛山市</td>
+<td>禅城区</td>
+</tr>
+<tr>
+<td>003</td>
+<td>小高</td>
+<td>湖北省</td>
+<td>武汉市</td>
+<td>新洲区</td>
+</tr>
+</tbody></table>
+<p>​	所以，范式只是一个参考，更多的是需要根据实际情况设计表结构。</p>
+<h4 id="第二范式-2NF"><a href="#第二范式-2NF" class="headerlink" title="第二范式 - 2NF"></a>第二范式 - 2NF</h4><p>​	在满足第一范式的情况下，<strong>遵循唯一性</strong>，消除部分依赖。即 <strong>表中任意一个主键或任意一组联合主键，可以确定除该主键外的所有的非主键值。</strong></p>
+<p>​	通俗一点讲就是，<strong>一个表只能描述一件事情，且由该表的主键确定</strong>。</p>
+<p>​	例如，主键为学号，则可以确定姓名、年龄等学生信息。</p>
+<table>
+<thead>
+<tr>
+<th>学号</th>
+<th>姓名</th>
+<th>年龄</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>001</td>
+<td>小美</td>
+<td>18</td>
+</tr>
+<tr>
+<td>002</td>
+<td>小张</td>
+<td>19</td>
+</tr>
+<tr>
+<td>003</td>
+<td>小明</td>
+<td>20</td>
+</tr>
+</tbody></table>
+<p>​	主键为课程名称，就可以确定该课程学分、成绩等信息。</p>
+<table>
+<thead>
+<tr>
+<th>课程名称</th>
+<th>成绩</th>
+<th>学分</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>语文</td>
+<td>90</td>
+<td>3</td>
+</tr>
+<tr>
+<td>数学</td>
+<td>90</td>
+<td>2</td>
+</tr>
+<tr>
+<td>英语</td>
+<td>90</td>
+<td>3</td>
+</tr>
+</tbody></table>
+<p>​	不遵循第二范式，可能会造成下述后果：</p>
+<ol>
+<li>数据冗余：将不同类型的信息存储在同一张表中可能导致数据冗余。例如，在学生表中，如果每个学生都有多个课程，将学生和课程信息合并存储可能导致数据复制。如果有两名学生，每人选修三门课程，表中会包含6条记录，其中的学生信息将重复。</li>
+<li>更新数据不方便：当需要更新特定信息时，如果数据存储在同一张表中，更新可能变得不太方便。举例来说，如果需要更改某门课程的学分，必须在整个表中搜索相关记录并更新，这可能是一个繁琐的过程。但如果将数据拆分到不同的表中，只需在包含相关信息的表中进行更新，更加便捷。</li>
+<li>插入数据不方便或可能导致异常情况：在某些情况下，插入数据可能变得复杂或引发异常。举例如下：<ul>
+<li>假设主键是学号或课程名称，当需要插入新的课程信息时，必须精心规划哪些学生将选择该课程。这可能需要指定为哪些学生插入对应的课程信息。此外，如果还没有相关成绩信息，可能需要将成绩字段置为空，以后再进行更新。</li>
+<li>假设主键是学号和课程名称的联合主键，插入课程信息时，如果没有学生选择该课程，可能会导致学号主键字段缺失，从而无法插入相关信息。</li>
+</ul>
+</li>
+</ol>
+<h4 id="第三范式-3NF"><a href="#第三范式-3NF" class="headerlink" title="第三范式 - 3NF"></a>第三范式 - 3NF</h4><p>​	在满足第二范式的情况下， 消除传递依赖。即，<strong>在任一主键都可以确定所有非主键字段的情况下，不能存在某非主键字段 A 可以获取 某非主键字段 B。</strong></p>
+<p>​	举个例子，如下</p>
+<table>
+<thead>
+<tr>
+<th>学号</th>
+<th>姓名</th>
+<th>班级</th>
+<th>班主任</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>001</td>
+<td>小美</td>
+<td>一年级（3）班</td>
+<td>陈老师</td>
+</tr>
+</tbody></table>
+<p>​	这个表中，学号是主键，它可以唯一确定姓名、班级、班主任，符合第二范式，但是在非主键字段中，我们可以可以通过班级推导出该班级的班主任，所以他不符合第三范式。</p>
+<p>​	上述的表要满足第三范式，可以像下面这样设计：</p>
+<p>1.学生表</p>
+<table>
+<thead>
+<tr>
+<th>学号</th>
+<th>姓名</th>
+<th>班级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>001</td>
+<td>小美</td>
+<td>一年级（3）班</td>
+</tr>
+</tbody></table>
+<p>2.班级表</p>
+<table>
+<thead>
+<tr>
+<th>班级</th>
+<th>班主任</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一年级（3）</td>
+<td>陈老师</td>
+</tr>
+</tbody></table>
+<pre><code class="hljs"> 通过把班主任和班级的映射关系做成另一张表，就可以消除表中的传递依赖。
+</code></pre>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>第一范式（1 NF）：字段不可再拆分</li>
+<li>第二范式（2 NF）：表中任意一个主键或者任意一组联合主键，可以唯一确定除该主键外的所有非主键值。</li>
+<li>第三范式（3 NF）：在任一主键都可以确定所有非主键字段值的情况下，不能存在某非主键字段 A 可以获取 某非主键字段 B。</li>
+</ul>
 
-<h4 id="2、插入排序-O-n-2"><a href="#2、插入排序-O-n-2" class="headerlink" title="2、插入排序 O(n^2)"></a>2、插入排序 O(n^2)</h4><h5 id="算法思想：-1"><a href="#算法思想：-1" class="headerlink" title="算法思想："></a>算法思想：</h5><p>​	遍历一遍整个数组，每次遍历将当前元素放到数组首部的有序序列中的合适位置，每次保证数组首部增加一个数，遍历 n - 1 次后，就可以保证整个数组的有序性。【合适的位置：往前找第一个小于当前数的位置，将其放在该数的后面，就说明当前数前面小于当前数，当前数后面大于当前数】</p>
-<h5 id="核心代码：-1"><a href="#核心代码：-1" class="headerlink" title="核心代码："></a>核心代码：</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt; n; i ++ &#123;<br>        key := q[i] <span class="hljs-comment">// go 中切片使用的注意点</span><br>        j := i - <span class="hljs-number">1</span> <span class="hljs-comment">// 往前找第一个小于当前数的位置，将其放在该数的后面，就说明当前数前面小于当前数，当前数后面大于当前数</span><br>        <span class="hljs-keyword">for</span> j &gt;= <span class="hljs-number">0</span> &amp;&amp; q[j] &gt; key &#123;<br>            q[j + <span class="hljs-number">1</span>] = q[j]<br>            j -- <br>        &#125;<br>        q[j + <span class="hljs-number">1</span>] = key<br>    &#125;<br></code></pre></td></tr></table></figure>
-
-<h4 id="3、快速排序-O-nlogn"><a href="#3、快速排序-O-nlogn" class="headerlink" title="3、快速排序 O(nlogn)"></a>3、快速排序 O(nlogn)</h4><h5 id="算法思想：-2"><a href="#算法思想：-2" class="headerlink" title="算法思想："></a>算法思想：</h5><p>​	分而治之的一个思想，每次将整个数组分为两部分，然后保证左边是小于某个值的，右边是大于某个值的，这样在对两个部分采用同样的思想去划分，最后划分到区间中只有一个数了，就可以保证整个数组是有序的了。</p>
-<h5 id="核心代码：-2"><a href="#核心代码：-2" class="headerlink" title="核心代码："></a>核心代码：</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">quickSort</span><span class="hljs-params">(q []<span class="hljs-type">int</span>, l, r <span class="hljs-type">int</span>)</span></span> &#123;<br>    <span class="hljs-keyword">if</span> l &gt;= r &#123;<br>        <span class="hljs-keyword">return</span> <br>    &#125;<br><br>    mid := (l + r) &gt;&gt; <span class="hljs-number">1</span><br>    x := q[mid]<br>    i, j := l - <span class="hljs-number">1</span>, r + <span class="hljs-number">1</span><br>    <span class="hljs-keyword">for</span> i &lt; j &#123;<br>        <span class="hljs-keyword">for</span> i ++; q[i] &lt; x; i ++&#123;&#125;<br>        <span class="hljs-keyword">for</span> j --; q[j] &gt; x; j --&#123;&#125;<br>        <span class="hljs-keyword">if</span> i &lt; j &#123;<br>            q[i], q[j] = q[j], q[i]<br>        &#125;<br>    &#125;<br>    quickSort(q, l, j)<br>    quickSort(q, j + <span class="hljs-number">1</span>, r)<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h4 id="4、归并排序-O-nlogn"><a href="#4、归并排序-O-nlogn" class="headerlink" title="4、归并排序 O(nlogn)"></a>4、归并排序 O(nlogn)</h4><h5 id="算法思想：-3"><a href="#算法思想：-3" class="headerlink" title="算法思想："></a>算法思想：</h5><p>​	利用递归将整个区间分为足够小的区间，保证小区间中的数是有序的，然后再逐渐回溯，使大区间也变得有序。最终达到整个区间有序的一个状态。</p>
-<h5 id="核心代码：-3"><a href="#核心代码：-3" class="headerlink" title="核心代码："></a>核心代码：</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs go">unc mergeSort(a []<span class="hljs-type">int</span>, l, r <span class="hljs-type">int</span>) &#123;<br>    <span class="hljs-keyword">if</span> l &gt;= r &#123;<br>        <span class="hljs-keyword">return</span><br>    &#125;<br><br>    mid := (l + r) &gt;&gt; <span class="hljs-number">1</span><br>    mergeSort(a, l, mid)<br>    mergeSort(a, mid+<span class="hljs-number">1</span>, r)<br>    i, j, k := l, mid+<span class="hljs-number">1</span>, <span class="hljs-number">0</span><br>    <span class="hljs-keyword">for</span> i &lt;= mid &amp;&amp; j &lt;= r &#123;<br>        <span class="hljs-keyword">if</span> a[i] &lt;= a[j] &#123;<br>            t[k] = a[i]<br>            k++<br>            i++<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            t[k] = a[j]<br>            k++<br>            j++<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> i &lt;= mid &#123;<br>        t[k] = a[i]<br>        k++<br>        i++<br>    &#125;<br>    <span class="hljs-keyword">for</span> j &lt;= r &#123;<br>        t[k] = a[j]<br>        k++<br>        j++<br>    &#125;<br>    <span class="hljs-keyword">for</span> i, j := l, <span class="hljs-number">0</span>; i &lt;= r; i++ &#123;<br>        a[i] = t[j]<br>        j++<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-
-
-
-<h1 id="其余算法慢慢补充。。。。"><a href="#其余算法慢慢补充。。。。" class="headerlink" title="其余算法慢慢补充。。。。"></a>其余算法慢慢补充。。。。</h1>
                 
               </div>
             
@@ -380,7 +571,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">#排序算法</a>
+        <a href="/tags/MySQL/">#MySQL</a>
       
     </div>
   
@@ -392,8 +583,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>排序算法</div>
-      <div>http://example.com/2023/10/14/工具/排序算法/</div>
+      <div>MySQL三范式</div>
+      <div>http://example.com/2023/10/14/工具/MySQL三范式/</div>
     </div>
     <div class="license-meta">
       
@@ -442,18 +633,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/10/14/%E5%B7%A5%E5%85%B7/MySQL%E4%B8%89%E8%8C%83%E5%BC%8F/" title="MySQL三范式">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">MySQL三范式</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/10/09/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E5%B5%8C%E5%A5%973/" title="结构体嵌套3">
-                        <span class="hidden-mobile">结构体嵌套3</span>
+                      <a href="/2023/10/14/%E5%B7%A5%E5%85%B7/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" title="排序算法">
+                        <span class="hidden-mobile">排序算法</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
