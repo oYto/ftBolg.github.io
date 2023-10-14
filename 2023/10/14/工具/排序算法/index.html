@@ -16,25 +16,24 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="题目:">
+    <meta name="description" content="介绍​	在面试中被问到排序算法，发现不能很好的描述出来，于是写一篇文章总结一下。常见的排序算法有 冒泡排序、插入排序、快速排序、归并排序、堆排序、树排序 等。下面一一介绍。 1、冒泡排序 O(n^2)算法思想：​	共 n 个元素需要排序，通过比较相邻的两个元素，并将较大的元素放到后面，以此每一轮比较将乱序的元素中的最大的元素放到最后一个有序区间中。每一次遍历都能确定一个数在有序数组中的位置，且数组">
 <meta property="og:type" content="article">
-<meta property="og:title" content="结构体嵌套3">
-<meta property="og:url" content="http://example.com/2023/10/09/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E5%B5%8C%E5%A5%973/index.html">
+<meta property="og:title" content="排序算法">
+<meta property="og:url" content="http://example.com/2023/10/14/%E5%B7%A5%E5%85%B7/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="题目:">
+<meta property="og:description" content="介绍​	在面试中被问到排序算法，发现不能很好的描述出来，于是写一篇文章总结一下。常见的排序算法有 冒泡排序、插入排序、快速排序、归并排序、堆排序、树排序 等。下面一一介绍。 1、冒泡排序 O(n^2)算法思想：​	共 n 个元素需要排序，通过比较相邻的两个元素，并将较大的元素放到后面，以此每一轮比较将乱序的元素中的最大的元素放到最后一个有序区间中。每一次遍历都能确定一个数在有序数组中的位置，且数组">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/Golang.png">
-<meta property="article:published_time" content="2023-10-09T02:56:25.000Z">
-<meta property="article:modified_time" content="2023-10-09T02:58:42.081Z">
+<meta property="og:image" content="http://example.com/images/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95.png">
+<meta property="article:published_time" content="2023-10-14T04:10:20.000Z">
+<meta property="article:modified_time" content="2023-10-14T04:45:13.766Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="GO">
-<meta property="article:tag" content="每日一题">
+<meta property="article:tag" content="排序算法">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/Golang.png">
+<meta name="twitter:image" content="http://example.com/images/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95.png">
   
   
   
-  <title>结构体嵌套3 - 胤凯</title>
+  <title>排序算法 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -246,7 +245,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="结构体嵌套3"></span>
+            <span id="subtitle" data-typed-text="排序算法"></span>
           
         </div>
 
@@ -257,8 +256,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-10-09 10:56" pubdate>
-          2023年10月9日 上午
+        <time datetime="2023-10-14 12:10" pubdate>
+          2023年10月14日 中午
         </time>
       </span>
     
@@ -269,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          558 字
+          1.7k 字
         
       </span>
     
@@ -280,7 +279,7 @@
         
         
         
-          5 分钟
+          14 分钟
         
       </span>
     
@@ -326,20 +325,29 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">结构体嵌套3</h1>
+            <h1 style="display: none">排序算法</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:<span id="more"></span></h1><p>下面这段代码输出什么？</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> People <span class="hljs-keyword">struct</span>&#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *People)</span></span> ShowA() &#123;<br>	fmt.Println(<span class="hljs-string">&quot;showA&quot;</span>)<br>	p.ShowB()<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *People)</span></span> ShowB() &#123;<br>	fmt.Println(<span class="hljs-string">&quot;showB&quot;</span>)<br>&#125;<br><br><span class="hljs-keyword">type</span> Teacher <span class="hljs-keyword">struct</span> &#123;<br>	People<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(t *Teacher)</span></span> ShowB() &#123;<br>	fmt.Println(<span class="hljs-string">&quot;teacher showB&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	t := Teacher&#123;&#125;<br>	t.ShowB()<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​	在面试中被问到排序算法，发现不能很好的描述出来，于是写一篇文章总结一下。常见的排序算法有 <strong>冒泡排序</strong>、<strong>插入排序</strong>、<strong>快速排序</strong>、<strong>归并排序</strong>、<strong>堆排序</strong>、<strong>树排序</strong> 等。下面一一介绍。</p>
+<h4 id="1、冒泡排序-O-n-2"><a href="#1、冒泡排序-O-n-2" class="headerlink" title="1、冒泡排序 O(n^2)"></a>1、冒泡排序 O(n^2)</h4><h5 id="算法思想："><a href="#算法思想：" class="headerlink" title="算法思想："></a>算法思想：</h5><p>​	共 n 个元素需要排序，通过比较相邻的两个元素，并将较大的元素放到后面，以此每一轮比较将乱序的元素中的最大的元素放到最后一个有序区间中。<strong>每一次遍历都能确定一个数在有序数组中的位置，且数组最后的一个区间中的数是有序的</strong>，直到所有数的位置都确定了，排序完成。</p>
+<h5 id="核心代码："><a href="#核心代码：" class="headerlink" title="核心代码："></a>核心代码：</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; n<span class="hljs-number">-1</span>; i++ &#123;<br>        <span class="hljs-keyword">for</span> j := <span class="hljs-number">0</span>; j &lt; n-i<span class="hljs-number">-1</span>; j++ &#123;<br>            <span class="hljs-keyword">if</span> arr[j] &gt; arr[j+<span class="hljs-number">1</span>] &#123;<br>                <span class="hljs-comment">// 交换 arr[j] 和 arr[j+1]</span><br>                arr[j], arr[j+<span class="hljs-number">1</span>] = arr[j+<span class="hljs-number">1</span>], arr[j]<br>            &#125;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="2、插入排序-O-n-2"><a href="#2、插入排序-O-n-2" class="headerlink" title="2、插入排序 O(n^2)"></a>2、插入排序 O(n^2)</h4><h5 id="算法思想：-1"><a href="#算法思想：-1" class="headerlink" title="算法思想："></a>算法思想：</h5><p>​	遍历一遍整个数组，每次遍历将当前元素放到数组首部的有序序列中的合适位置，每次保证数组首部增加一个数，遍历 n - 1 次后，就可以保证整个数组的有序性。【合适的位置：往前找第一个小于当前数的位置，将其放在该数的后面，就说明当前数前面小于当前数，当前数后面大于当前数】</p>
+<h5 id="核心代码：-1"><a href="#核心代码：-1" class="headerlink" title="核心代码："></a>核心代码：</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt; n; i ++ &#123;<br>        key := q[i] <span class="hljs-comment">// go 中切片使用的注意点</span><br>        j := i - <span class="hljs-number">1</span> <span class="hljs-comment">// 往前找第一个小于当前数的位置，将其放在该数的后面，就说明当前数前面小于当前数，当前数后面大于当前数</span><br>        <span class="hljs-keyword">for</span> j &gt;= <span class="hljs-number">0</span> &amp;&amp; q[j] &gt; key &#123;<br>            q[j + <span class="hljs-number">1</span>] = q[j]<br>            j -- <br>        &#125;<br>        q[j + <span class="hljs-number">1</span>] = key<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="3、快速排序-O-nlogn"><a href="#3、快速排序-O-nlogn" class="headerlink" title="3、快速排序 O(nlogn)"></a>3、快速排序 O(nlogn)</h4><h5 id="算法思想：-2"><a href="#算法思想：-2" class="headerlink" title="算法思想："></a>算法思想：</h5><p>​	分而治之的一个思想，每次将整个数组分为两部分，然后保证左边是小于某个值的，右边是大于某个值的，这样在对两个部分采用同样的思想去划分，最后划分到区间中只有一个数了，就可以保证整个数组是有序的了。</p>
+<h5 id="核心代码：-2"><a href="#核心代码：-2" class="headerlink" title="核心代码："></a>核心代码：</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">quickSort</span><span class="hljs-params">(q []<span class="hljs-type">int</span>, l, r <span class="hljs-type">int</span>)</span></span> &#123;<br>    <span class="hljs-keyword">if</span> l &gt;= r &#123;<br>        <span class="hljs-keyword">return</span> <br>    &#125;<br><br>    mid := (l + r) &gt;&gt; <span class="hljs-number">1</span><br>    x := q[mid]<br>    i, j := l - <span class="hljs-number">1</span>, r + <span class="hljs-number">1</span><br>    <span class="hljs-keyword">for</span> i &lt; j &#123;<br>        <span class="hljs-keyword">for</span> i ++; q[i] &lt; x; i ++&#123;&#125;<br>        <span class="hljs-keyword">for</span> j --; q[j] &gt; x; j --&#123;&#125;<br>        <span class="hljs-keyword">if</span> i &lt; j &#123;<br>            q[i], q[j] = q[j], q[i]<br>        &#125;<br>    &#125;<br>    quickSort(q, l, j)<br>    quickSort(q, j + <span class="hljs-number">1</span>, r)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="4、归并排序-O-nlogn"><a href="#4、归并排序-O-nlogn" class="headerlink" title="4、归并排序 O(nlogn)"></a>4、归并排序 O(nlogn)</h4><h5 id="算法思想：-3"><a href="#算法思想：-3" class="headerlink" title="算法思想："></a>算法思想：</h5><p>​	利用递归将整个区间分为足够小的区间，保证小区间中的数是有序的，然后再逐渐回溯，使大区间也变得有序。最终达到整个区间有序的一个状态。</p>
+<h5 id="核心代码：-3"><a href="#核心代码：-3" class="headerlink" title="核心代码："></a>核心代码：</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs go">unc mergeSort(a []<span class="hljs-type">int</span>, l, r <span class="hljs-type">int</span>) &#123;<br>    <span class="hljs-keyword">if</span> l &gt;= r &#123;<br>        <span class="hljs-keyword">return</span><br>    &#125;<br><br>    mid := (l + r) &gt;&gt; <span class="hljs-number">1</span><br>    mergeSort(a, l, mid)<br>    mergeSort(a, mid+<span class="hljs-number">1</span>, r)<br>    i, j, k := l, mid+<span class="hljs-number">1</span>, <span class="hljs-number">0</span><br>    <span class="hljs-keyword">for</span> i &lt;= mid &amp;&amp; j &lt;= r &#123;<br>        <span class="hljs-keyword">if</span> a[i] &lt;= a[j] &#123;<br>            t[k] = a[i]<br>            k++<br>            i++<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            t[k] = a[j]<br>            k++<br>            j++<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> i &lt;= mid &#123;<br>        t[k] = a[i]<br>        k++<br>        i++<br>    &#125;<br>    <span class="hljs-keyword">for</span> j &lt;= r &#123;<br>        t[k] = a[j]<br>        k++<br>        j++<br>    &#125;<br>    <span class="hljs-keyword">for</span> i, j := l, <span class="hljs-number">0</span>; i &lt;= r; i++ &#123;<br>        a[i] = t[j]<br>        j++<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 
-<h4 id="答案与解析"><a href="#答案与解析" class="headerlink" title="答案与解析"></a>答案与解析</h4><p>​	参考答案及解析：teacher showB。</p>
-<p>​	知识点：结构体嵌套。在嵌套结构体中，People 称为内部类型，Teacher 称为外部类型；通过嵌套，内部类型的属性、方法，可以为外部类型所有，就好像是外部类型自己的一样。</p>
-<p>​	此外，外部类型还可以定义自己的属性和方法，甚至可以定义与内部相同的方法，这样内部类型的方法就会被“屏蔽”。这个例子中的 ShowB() 就是同名方法。</p>
 
+
+<h1 id="其余算法慢慢补充。。。。"><a href="#其余算法慢慢补充。。。。" class="headerlink" title="其余算法慢慢补充。。。。"></a>其余算法慢慢补充。。。。</h1>
                 
               </div>
             
@@ -357,15 +365,8 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  <a href="/categories/%E5%B7%A5%E5%85%B7/" class="category-chain-item">工具</a>
   
-  
-    <span>></span>
-    
-  <a href="/categories/Go/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/" class="category-chain-item">每日一题</a>
-  
-  
-
   
 
       </span>
@@ -379,9 +380,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/GO/">#GO</a>
-      
-        <a href="/tags/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">#每日一题</a>
+        <a href="/tags/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">#排序算法</a>
       
     </div>
   
@@ -393,8 +392,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>结构体嵌套3</div>
-      <div>http://example.com/2023/10/09/Go每日一题/结构体嵌套3/</div>
+      <div>排序算法</div>
+      <div>http://example.com/2023/10/14/工具/排序算法/</div>
     </div>
     <div class="license-meta">
       
@@ -406,13 +405,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年10月9日</div>
+          <div>2023年10月14日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年10月9日</div>
+          <div>2023年10月14日</div>
         </div>
       
       
@@ -443,18 +442,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/10/14/%E5%B7%A5%E5%85%B7/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" title="排序算法">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">排序算法</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/10/06/%E5%B7%A5%E5%85%B7/%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB/" title="网络攻击">
-                        <span class="hidden-mobile">网络攻击</span>
+                      <a href="/2023/10/09/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E7%BB%93%E6%9E%84%E4%BD%93%E5%B5%8C%E5%A5%973/" title="结构体嵌套3">
+                        <span class="hidden-mobile">结构体嵌套3</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
