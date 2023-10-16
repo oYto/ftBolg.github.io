@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95.png">
 <meta property="article:published_time" content="2023-10-14T04:10:20.000Z">
-<meta property="article:modified_time" content="2023-10-14T04:48:57.919Z">
+<meta property="article:modified_time" content="2023-10-16T13:05:46.611Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="排序算法">
 <meta name="twitter:card" content="summary_large_image">
@@ -268,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.7k 字
+          2.4k 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
         
-          14 分钟
+          20 分钟
         
       </span>
     
@@ -330,7 +330,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍<span id="more"></span></h1><p>​	在面试中被问到排序算法，发现不能很好的描述出来，于是写一篇文章总结一下。常见的排序算法有 <strong>冒泡排序</strong>、<strong>插入排序</strong>、<strong>快速排序</strong>、<strong>归并排序</strong>、<strong>堆排序</strong>、<strong>树排序</strong> 等。下面一一介绍。</p>
+                <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍<span id="more"></span></h1><p>​	在面试中被问到排序算法，发现不能很好的描述出来，于是写一篇文章总结一下。常见的排序算法有 <strong>冒泡排序</strong>、<strong>插入排序</strong>、<strong>快速排序</strong>、<strong>归并排序</strong>、<strong>堆排序</strong>等。下面一一介绍。</p>
 <h4 id="1、冒泡排序-O-n-2"><a href="#1、冒泡排序-O-n-2" class="headerlink" title="1、冒泡排序 O(n^2)"></a>1、冒泡排序 O(n^2)</h4><h5 id="算法思想："><a href="#算法思想：" class="headerlink" title="算法思想："></a>算法思想：</h5><p>​	共 n 个元素需要排序，通过比较相邻的两个元素，并将较大的元素放到后面，以此每一轮比较将乱序的元素中的最大的元素放到最后一个有序区间中。<strong>每一次遍历都能确定一个数在有序数组中的位置，且数组最后的一个区间中的数是有序的</strong>，直到所有数的位置都确定了，排序完成。</p>
 <h5 id="核心代码："><a href="#核心代码：" class="headerlink" title="核心代码："></a>核心代码：</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; n<span class="hljs-number">-1</span>; i++ &#123;<br>        <span class="hljs-keyword">for</span> j := <span class="hljs-number">0</span>; j &lt; n-i<span class="hljs-number">-1</span>; j++ &#123;<br>            <span class="hljs-keyword">if</span> arr[j] &gt; arr[j+<span class="hljs-number">1</span>] &#123;<br>                <span class="hljs-comment">// 交换 arr[j] 和 arr[j+1]</span><br>                arr[j], arr[j+<span class="hljs-number">1</span>] = arr[j+<span class="hljs-number">1</span>], arr[j]<br>            &#125;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
 
@@ -343,7 +343,9 @@
 <h4 id="4、归并排序-O-nlogn"><a href="#4、归并排序-O-nlogn" class="headerlink" title="4、归并排序 O(nlogn)"></a>4、归并排序 O(nlogn)</h4><h5 id="算法思想：-3"><a href="#算法思想：-3" class="headerlink" title="算法思想："></a>算法思想：</h5><p>​	利用递归将整个区间分为足够小的区间，保证小区间中的数是有序的，然后再逐渐回溯，使大区间也变得有序。最终达到整个区间有序的一个状态。</p>
 <h5 id="核心代码：-3"><a href="#核心代码：-3" class="headerlink" title="核心代码："></a>核心代码：</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs go">unc mergeSort(a []<span class="hljs-type">int</span>, l, r <span class="hljs-type">int</span>) &#123;<br>    <span class="hljs-keyword">if</span> l &gt;= r &#123;<br>        <span class="hljs-keyword">return</span><br>    &#125;<br><br>    mid := (l + r) &gt;&gt; <span class="hljs-number">1</span><br>    mergeSort(a, l, mid)<br>    mergeSort(a, mid+<span class="hljs-number">1</span>, r)<br>    i, j, k := l, mid+<span class="hljs-number">1</span>, <span class="hljs-number">0</span><br>    <span class="hljs-keyword">for</span> i &lt;= mid &amp;&amp; j &lt;= r &#123;<br>        <span class="hljs-keyword">if</span> a[i] &lt;= a[j] &#123;<br>            t[k] = a[i]<br>            k++<br>            i++<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            t[k] = a[j]<br>            k++<br>            j++<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> i &lt;= mid &#123;<br>        t[k] = a[i]<br>        k++<br>        i++<br>    &#125;<br>    <span class="hljs-keyword">for</span> j &lt;= r &#123;<br>        t[k] = a[j]<br>        k++<br>        j++<br>    &#125;<br>    <span class="hljs-keyword">for</span> i, j := l, <span class="hljs-number">0</span>; i &lt;= r; i++ &#123;<br>        a[i] = t[j]<br>        j++<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-
+<h4 id="5、堆排序"><a href="#5、堆排序" class="headerlink" title="5、堆排序"></a>5、堆排序</h4><h5 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h5><p>​	堆：即一棵完全二叉树，且每一个点小于等于其左右儿子节点【小根堆】。</p>
+<p>​	建堆：从总数的 n&#x2F;2 开始往上建，因为必须保证其有左右儿子节点。建堆的过程，就是把父节点、左右儿子节点中较小的元素放到父节点的位置，<strong>逐步将大的节点往下移的操作。</strong></p>
+<h5 id="核心代码"><a href="#核心代码" class="headerlink" title="核心代码"></a>核心代码</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-keyword">var</span> n, m, cnt <span class="hljs-type">int</span><br><span class="hljs-keyword">var</span> h []<span class="hljs-type">int</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">down</span> <span class="hljs-params">(u <span class="hljs-type">int</span>)</span></span> &#123;<br>    t := u<br>    <span class="hljs-keyword">if</span> u * <span class="hljs-number">2</span> &lt;= cnt &amp;&amp; h[u * <span class="hljs-number">2</span>] &lt; h[t] &#123;<br>        t = u * <span class="hljs-number">2</span><br>    &#125;<br>    <span class="hljs-keyword">if</span> u * <span class="hljs-number">2</span> + <span class="hljs-number">1</span> &lt;= cnt &amp;&amp; h[u * <span class="hljs-number">2</span> + <span class="hljs-number">1</span>] &lt; h[t] &#123;<br>        t = u * <span class="hljs-number">2</span> + <span class="hljs-number">1</span><br>    &#125;<br>    <span class="hljs-keyword">if</span> t != u &#123;<br>        h[t], h[u] = h[u], h[t]<br>        down(t)<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    fmt.Scan(&amp;n, &amp;m)<br>    h = <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, n + <span class="hljs-number">1</span>)<br>    <br>    <span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt;= n; i ++ &#123;<br>        fmt.Scan(&amp;h[i])<br>    &#125;<br>    cnt = n<br>    <br>    <span class="hljs-keyword">for</span> i := n / <span class="hljs-number">2</span>; i &gt; <span class="hljs-number">0</span>; i -- &#123;<br>        down(i)<br>    &#125;<br>    <span class="hljs-keyword">for</span> n &gt; <span class="hljs-number">0</span> &#123;<br>        n --<br>        fmt.Printf(<span class="hljs-string">&quot;%d &quot;</span>, h[<span class="hljs-number">1</span>])<br>        h[<span class="hljs-number">1</span>] = h[cnt]<br>        cnt --<br>        down(<span class="hljs-number">1</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 
@@ -411,7 +413,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年10月14日</div>
+          <div>2023年10月16日</div>
         </div>
       
       
