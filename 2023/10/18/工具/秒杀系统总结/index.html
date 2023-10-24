@@ -16,24 +16,24 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="分布式锁">
+    <meta name="description" content="秒杀：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis分布式锁">
-<meta property="og:url" content="http://example.com/2023/10/05/%E5%B7%A5%E5%85%B7/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/index.html">
+<meta property="og:title" content="秒杀系统总结">
+<meta property="og:url" content="http://example.com/2023/10/18/%E5%B7%A5%E5%85%B7/%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="分布式锁">
+<meta property="og:description" content="秒杀：">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/redismutex.png">
-<meta property="article:published_time" content="2023-10-05T13:09:04.000Z">
-<meta property="article:modified_time" content="2023-10-06T11:01:08.938Z">
+<meta property="og:image" content="http://example.com/images/%E7%A7%92%E6%9D%80.png">
+<meta property="article:published_time" content="2023-10-18T03:22:08.000Z">
+<meta property="article:modified_time" content="2023-10-18T04:35:53.011Z">
 <meta property="article:author" content="Feng Tao">
-<meta property="article:tag" content="Redis 分布式锁">
+<meta property="article:tag" content="系统设计">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/images/redismutex.png">
+<meta name="twitter:image" content="http://example.com/images/%E7%A7%92%E6%9D%80.png">
   
   
   
-  <title>Redis分布式锁 - 胤凯</title>
+  <title>秒杀系统总结 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -245,7 +245,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Redis分布式锁"></span>
+            <span id="subtitle" data-typed-text="秒杀系统总结"></span>
           
         </div>
 
@@ -256,8 +256,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-10-05 21:09" pubdate>
-          2023年10月5日 晚上
+        <time datetime="2023-10-18 11:22" pubdate>
+          2023年10月18日 上午
         </time>
       </span>
     
@@ -268,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.2k 字
+          1.7k 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
         
-          19 分钟
+          15 分钟
         
       </span>
     
@@ -325,61 +325,108 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Redis分布式锁</h1>
+            <h1 style="display: none">秒杀系统总结</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁 "></a>分布式锁 <span id="more"></span></h1><h4 id="1、什么是分布式锁？"><a href="#1、什么是分布式锁？" class="headerlink" title="1、什么是分布式锁？"></a>1、什么是分布式锁？</h4><p>​	在分布式场景下的锁，比如在多台不同机器上的进程，去竞争同一项资源，就是分布式锁。</p>
-<h4 id="2、分布式锁有哪些特性？"><a href="#2、分布式锁有哪些特性？" class="headerlink" title="2、分布式锁有哪些特性？"></a>2、分布式锁有哪些特性？</h4><ul>
-<li><strong>互斥性</strong>：只能让一个竞争者持有锁</li>
-<li><strong>安全性</strong>：避免锁因为异常永远不被释放，当一个竞争者在持有锁期间，由于意外崩溃而导致未能主动解锁，其持有的锁也能够被兜底释放，并保证后续其它竞争者也能加锁</li>
-<li><strong>对称性</strong>：同一个锁，加锁和解锁必须是一个竞争者，不能把其他竞争者持有的锁给释放了</li>
-<li><strong>可靠性</strong>：需要有一定程度的异常处理能力、容灾能力。</li>
+                <h1 id="秒杀："><a href="#秒杀：" class="headerlink" title="秒杀："></a>秒杀：<span id="more"></span></h1><p>​	做一个秒杀系统，我们需要与业务方进行沟通交流，了解清楚，才能设计出一个比较符合业务的系统，一般的流程会在后面进行一个阐述。</p>
+<h4 id="1、需求对齐"><a href="#1、需求对齐" class="headerlink" title="1、需求对齐"></a>1、需求对齐</h4><ul>
+<li>做什么：了解什么时间，秒杀什么，数量是多少，有没有限制<ul>
+<li>比如 2023年10月18日，在淘宝秒杀100台华为手机，原价15000，现价13000，一人限购一台</li>
 </ul>
-<h4 id="3、分布式锁的实现方式"><a href="#3、分布式锁的实现方式" class="headerlink" title="3、分布式锁的实现方式"></a>3、分布式锁的实现方式</h4><h5 id="最简化版本"><a href="#最简化版本" class="headerlink" title="最简化版本"></a>最简化版本</h5><p>​	直接用 Redis 的 setnx 命令，语法：<code>setnx key value</code>，如果 key 不存在，则会将 key 设置为 value，并返回 1；如果 key 存在，不会有任务影响，返回 0。</p>
-<p>​	通过 setnx 加锁，其他服务无法加锁，进而阻塞；用完之后，通过 delete 解锁，其他服务再去竞争锁。</p>
-<h5 id="支持过期时间"><a href="#支持过期时间" class="headerlink" title="支持过期时间"></a>支持过期时间</h5><p>​	最简化版本有一个问题：如果获取锁的服务挂掉了，那么锁就一直得不到释放，就会导致其他服务无法获取到锁，影响到其他服务，所以这里需要一个过期时间来进行兜底。</p>
-<p>​	Redis 中有 expire 命令，用来设置一个 key 的过期时间。但是 setnx 和 expire 不具备原子性，如果 setnx 获取锁之后，服务挂掉，还没来得及设置过期时间，照样石沉大海。</p>
-<p>​	于是使用 set 和 expire 的原子操作：<code>set key value nx ex seconds</code> nx 标识 setnx 特性，ex 标识过期时间，最后一个参数就是过期时间的值。</p>
-<p>​	加上过期时间，基本上这个锁就能用了。但存在一个问题：会存在服务 A 释放掉 服务 B 的锁的可能。</p>
-<h5 id="加上-owner"><a href="#加上-owner" class="headerlink" title="加上 owner"></a><strong>加上 owner</strong></h5><p>​	在特殊的场景：服务 A 获取到了锁，由于业务流程比较长或者网络延迟、GC卡顿等原因，导致锁过期，而业务还会继续进行，这时候，业务 B 已经拿到了锁，准备去执行。这个时候服务 A 恢复过来并做完了任务，就会释放锁，而 B 还在继续，就会导致服务 A 释放掉了 服务 B 的锁。</p>
-<p>​	在真实的分布式场景中，可能存在几十个竞争者，上述情况发生的概率就会很高，导致同一份资源频繁被不同竞争者同时访问，分布式锁也就失去了意义。</p>
-<p>​	发生这个问题的关键在于：竞争者可以释放掉其他竞争者的锁。所以我们可以给出进一步的解决方案：分布式锁需要满足谁申请谁释放原则，不能释放别人的锁，也就是说，分布式锁，是要有归属的。</p>
-<h5 id="引入-lua"><a href="#引入-lua" class="headerlink" title="引入 lua"></a><strong>引入 lua</strong></h5><p>​	加入 owner 后的版本，也还有一点点小问题。完整的流程是：竞争者获取到锁执行任务，执行完毕后检查锁是不是自己的，最后释放。</p>
-<p>​	这些操作都不是原子化的，可能锁获取的时候还是自己的，删除的时候已经是别人的了。</p>
-<p>​	这里就需要引入 Lua。</p>
-<p>​	Redis + Lua，可以说是专门为解决原子问题而生的。 </p>
-<p>​	到了这里，分布式锁的前三个特性已经满足：对称性、安全性、互斥性。可以是一个可以用的分布式锁了，能满足大多数场景。</p>
-<h4 id="4、可靠性如何保证"><a href="#4、可靠性如何保证" class="headerlink" title="4、可靠性如何保证"></a>4、可靠性如何保证</h4><p>​	还剩下可靠性没有解决。</p>
-<p>​	针对一些异常情景，包括 Redis 挂掉、业务执行时间过长、网络波动等情况。</p>
-<p>​	<strong>容灾考虑</strong></p>
-<p>​	前面我们谈及的内容，基本是基于单机考虑的，如果Redis挂掉了，那锁就不能获取了。这个问题该如何解决呢?<br>​	一般来说，有两种方法:主从容灾和多级部署。</p>
-<h5 id="主从容灾"><a href="#主从容灾" class="headerlink" title="主从容灾"></a>主从容灾</h5><p>​	最简单的方式，就是为 Redis 配置从节点，当主节点挂掉了，从节点顶包。</p>
-<p>​	主从切换的话，需要人工参与，会提高人力成本。不过 Redis 已经有成熟的解决方案，也就是哨兵模式，可以灵活自动切换，不再需要人工介入。</p>
-<p>​	虽然一定程度解决了单点的容灾问题，但并不是尽善尽美的由于同步有时延，slave通过增加从节点的方式，可能会损失掉部分数据，分布式锁可能失效，这就会发生短暂的多机获取到执行权限</p>
-<p>​	有没有更可靠的办法呢?</p>
-<p><strong>多机部署</strong></p>
-<p>​	如果对一致性高一些，可以尝试多机部署。比如 Redis 的 RedLock，大概思路就是多个机器，通常是奇数，达到一半以上同意才能算加锁成功，这样可靠性会向 ETCD 靠近。</p>
-<blockquote>
-<p>ETCD：<strong>etcd</strong>：在前面的回答中已经介绍过，etcd是一个分布式键值存储系统，用于配置管理、服务发现和分布式协调。它是一个独立的开源项目，由CNCF维护，具有强一致性和高可用性，用于构建分布式系统的基础设施。</p>
-</blockquote>
-<p>​	现在假设有5个Redis主节点，基本保证它们不会同时宕掉，获取锁和释放锁的过程中客户端会执行以下操作:</p>
+</li>
+<li>业务流程<ul>
+<li>进入商品详情页</li>
+<li>还在倒计时</li>
+<li>倒计时结束，检查是否秒杀结束。秒杀都付完款结束，就没必要继续进行</li>
+<li>检查是否名额还有剩余，没有的话， 就不能再点购买；这时候可能还会有机会，可能有人没付款或者系统原因有少卖的 名额退还，关于少卖，我们后面说原因。</li>
+<li>点购买</li>
+<li>库存抢夺，这里有许多细节，后面讨论</li>
+<li>抢到了，就创建订单</li>
+<li>在时间内支付，过时失效</li>
+<li>购买成功。</li>
+</ul>
+</li>
+</ul>
+<h4 id="2、请求量对齐"><a href="#2、请求量对齐" class="headerlink" title="2、请求量对齐"></a>2、请求量对齐</h4><p>​	不同的请求量的方案是完全不一样的，需要确定两个地方：</p>
 <ol>
-<li>向5个Redis申请加锁;</li>
-<li>只要超过一半，也就是3个Redis返回成功，那么就是获取到了锁。如果超过一半失败，需要向每个Redis发送解锁命令;</li>
-<li>由于向5个Redis发送请求，会有一定时耗，所以锁剩余持有时间，需要减去请求时间。这个可以作为判断依据，如果剩余时间已经为0，那么也是获取锁失败;</li>
-<li>使用完成之后，向5个Redis发送解锁请求。</li>
+<li><p>整体的流量有多大：预估业务到达时的压力</p>
+</li>
+<li><p>后端服务要支持多大的请求量：后端正常服务多少请求量，超过的就限流掉。</p>
+<p>下面是对不同请求量的分析与方案：</p>
+</li>
 </ol>
-<p>​	这种模式的好处在于，如果挂了2台Redis，整个集群还是可用的，给了运维更多时间来修复。</p>
-<p>​	另外，多说一句，单点Redis的所有手段，这种多机模式都可以使用，比如为每个节点配置哨兵模式，由于加锁是一半以上同意就成功，那么如果单个节点进行了主从切换，单个节点数据的丢失，就不会让锁失效了。这样增强了可靠性。</p>
-<h1 id="没有完全可靠的分布式锁"><a href="#没有完全可靠的分布式锁" class="headerlink" title="没有完全可靠的分布式锁"></a>没有完全可靠的分布式锁</h1><p>由于分布式系统中的三大困境，简称 NPC。</p>
-<ol>
-<li>N：Network Delay （网络延迟）网络延迟导致锁过期。</li>
-<li>P：Process Pause（进程暂停）比如发生 GC，导致锁超时。</li>
-<li>C：Clock Drift（时钟漂移）</li>
-</ol>
-
+<ul>
+<li>5k：直接使用 MySQL 抗，上线前需要实际测试。</li>
+<li>1w：可以考虑使用两台 MySQL。</li>
+<li>10w：不能采用 20 台 MySQL，需要考虑成本。可以用一台 Reids 来搞库存，顶 10 台 MySQL，加上本身 Redis 只吃内存，不吃 CPU。</li>
+<li>＞ 10w：Redis 集群，把库存分散到 Redis 不同分片，不同的用户走不同的分片，流量分散，分开抢名额。</li>
+</ul>
+<h4 id="3、精准度对齐"><a href="#3、精准度对齐" class="headerlink" title="3、精准度对齐"></a>3、精准度对齐</h4><ul>
+<li>能否多卖：<ul>
+<li>什么时候会发生：在高并发下用 Redis 管理库存时，如果 Redis 重启则可能丢失已经执行的命令，库存变多；如果 Redis 是主从模式，假设发生切换，也可能丢失一部分命令，库存变多；如果查询库存和扣减库存不是原子性，在高并发下可能超卖</li>
+<li>如何解决：<ul>
+<li>不允许发生：使用一致性更强的 MySQL 来保护，Redis 挂了再恢复可能丢失的数据，主从切换也可能会丢数据。</li>
+<li>允许小概率超卖：库存走 Redis 即可，毕竟发生崩溃刚好丢数据也是小概率事件，Redis 抢到就是成功，根据抢到的结果，创建支付单即可，业务也会变得简单，Redis 名额 和 MySQL 库存的一致性就不存在了。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>能否少卖：<ul>
+<li>什么时候会发生：库存扣减了，但订单没生成；订单生成了，用户没付款，回退可能失败。</li>
+<li>如何解决：<ul>
+<li>不允许：需要一个补偿机制</li>
+<li>允许发生：那就不需要补偿机制</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="4、难点分析"><a href="#4、难点分析" class="headerlink" title="4、难点分析"></a>4、难点分析</h4><ul>
+<li>高并发：海量请求砸下来，可能导致服务直接挂掉，活动 G 了<ul>
+<li>流量削减<ul>
+<li>预约：预知大概的流量，与实际流量相差大概一个量级</li>
+<li>验证码：拉平请求，通过验证码，将大家操作的时间由原本的一秒，拉到 1~10s 之间，相当于将请求平摊了。</li>
+<li>限流：超过的流量就拒绝掉，这个是必须做的，因为不知道会由多大的流量到来，通过限流来兜底。</li>
+<li>削峰：异步化削峰。<ul>
+<li>就是在对请求做完参数检查、频率限制之后，把后续的一整个流程进行异步化处理。可能会导致用户体验差：圈圈转很久，最后提示：商品已抢完。</li>
+<li>其他方案：通常就是通过 Redia 来预扣库存，为了避免混淆，我们把 Redis 中的：成为名额、抢到名额，在绝对部分情况下都能发券成功时，再让用户等待一会是可以接收的。</li>
+<li>业务逻辑：<ul>
+<li>校验请求</li>
+<li>确认并扣减名额</li>
+<li>记录扣减名额信息</li>
+<li>将扣减名额成功的信息直接发给库存服务或者先丢入异步队列。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>风控：购买资格，是否达到购买的条件；风控系统，防止恶意刷单、脚本抢购、多个账户同时抢等。<ul>
+<li>打击黄牛：针对某个用户接口次数过于频繁，可以只针对该用户做限制</li>
+<li>针对 IP 做限制：但容易误杀，因为可能有同一个网络的用户，都是一个出口 IP。所以针对 IP 限流的阈值页不能太低，更多的还是兜底。</li>
+<li>验证码：将 90% 的时间都用在验证码输入上，降低使用脚本点击的影响</li>
+</ul>
+</li>
+<li>限购</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>高精准<ul>
+<li>库存减扣<ul>
+<li>预扣库存：MySQL 扛不住，Redis 不够可靠，按 10w 以上流量来考虑，通过的方案就是 Redis  预扣库存操作，也就是 Redis 中存放的，可以看作名额，真正的库存不在这里。</li>
+<li>MySQL 扣减：MySQL 中存放真正的库存，这里需要通过 MySQL 保证库存可靠的</li>
+<li>减扣记录：MySQL 扣减成功后，就会创建订单，前端会跳到支付页，支付之后，等待支付成功。</li>
+</ul>
+</li>
+<li>库存补偿<ul>
+<li>定时任务：订单超时未支付，额度加载回 MySQL，直接加载 Redis，失败了还有名额加载逻辑兜底。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="更新中。。。"><a href="#更新中。。。" class="headerlink" title="更新中。。。"></a>更新中。。。</h1>
                 
               </div>
             
@@ -412,7 +459,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">#Redis 分布式锁</a>
+        <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">#系统设计</a>
       
     </div>
   
@@ -424,8 +471,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Redis分布式锁</div>
-      <div>http://example.com/2023/10/05/工具/Redis分布式锁/</div>
+      <div>秒杀系统总结</div>
+      <div>http://example.com/2023/10/18/工具/秒杀系统总结/</div>
     </div>
     <div class="license-meta">
       
@@ -437,13 +484,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年10月5日</div>
+          <div>2023年10月18日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年10月6日</div>
+          <div>2023年10月18日</div>
         </div>
       
       
@@ -474,18 +521,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/10/06/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%8E%A5%E5%8F%A3%E7%B1%BB%E5%9E%8B%E5%80%BC%E4%B8%BAnil/" title="接口类型值为nil">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">接口类型值为nil</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/10/04/Go%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/%E6%95%B0%E7%BB%84%E6%98%AF%E5%8F%AF%E6%AF%94%E8%BE%83%E7%B1%BB%E5%9E%8B/" title="数组是可比较类型">
-                        <span class="hidden-mobile">数组是可比较类型</span>
+                      <a href="/2023/10/14/MySQL/MySQL%E4%B8%89%E8%8C%83%E5%BC%8F/" title="MySQL三范式">
+                        <span class="hidden-mobile">MySQL三范式</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
