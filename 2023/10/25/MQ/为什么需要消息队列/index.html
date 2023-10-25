@@ -1,0 +1,851 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="​	这篇文章主要围绕两个话题来叙述：消息队列是什么？主要解决什么问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为什么需要消息队列">
+<meta property="og:url" content="http://example.com/2023/10/25/MQ/%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="​	这篇文章主要围绕两个话题来叙述：消息队列是什么？主要解决什么问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/MQ.png">
+<meta property="article:published_time" content="2023-10-25T06:44:53.000Z">
+<meta property="article:modified_time" content="2023-10-25T07:18:07.087Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="MQ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/MQ.png">
+  
+  
+  
+  <title>为什么需要消息队列 - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/test/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="为什么需要消息队列"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-25 14:44" pubdate>
+          2023年10月25日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">为什么需要消息队列</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>​	这篇文章主要围绕两个话题来叙述：消息队列是什么？主要解决什么问题。<span id="more"></span></p>
+<h1 id="消息队列是什么？"><a href="#消息队列是什么？" class="headerlink" title="消息队列是什么？"></a>消息队列是什么？</h1><p>​	消息队列是最古老的中间件之一，从系统之间有通信需求开始，就自然产生了消息队列。但是给消息队列下一个准确的定义却不太容易。我们知道，消息队列的主要功能就是收发消息，但是它的作用不仅仅只是解决应用之间的通信问题这么简单。</p>
+<p>生活中也存在很多例子可以用来解释消息队列的概念。一个常见的例子是快餐餐厅的点餐系统。让我们来看看这个例子：</p>
+<p>在一个繁忙的快餐餐厅，通常有多个工作人员负责不同的任务，包括点餐、烹饪食物、包装和交付食物给客户。最开始的时候，点餐员会将顾客的订单直接传达给厨师，然后等待食物烹饪完成，然后再将其交付给客户。这种方式存在一些问题：</p>
+<ol>
+<li><p><strong>等待时间</strong>：点餐员可能需要等待一段时间，直到厨师准备好食物。这导致了服务速度较慢。</p>
+</li>
+<li><p><strong>同步问题</strong>：如果厨师繁忙，点餐员必须等待，不能处理新的订单。</p>
+</li>
+<li><p><strong>故障容忍性</strong>：如果点餐员或厨师出现问题，整个点餐过程可能会中断。</p>
+</li>
+</ol>
+<p>为了解决这些问题，餐厅引入了消息队列系统，还是上面的例子。现在的订单处理过程如下：</p>
+<ol>
+<li><p>顾客在点餐柜台上点餐并支付，点餐员将订单信息输入到点餐系统，但订单不再直接传递给厨师。</p>
+</li>
+<li><p>订单信息被放入订单队列中，等待处理。厨师从队列中获取订单并开始烹饪。</p>
+</li>
+<li><p>同时，点餐员可以接受更多订单，将它们加入队列。这意味着点餐员不必等待烹饪完成，而是可以快速处理更多订单。</p>
+</li>
+<li><p>一旦订单完成烹饪，它被放回队列，等待交付。送餐员从队列中获取订单并将其交付给客户。</p>
+</li>
+</ol>
+<p>消息队列系统的作用类似于上述的例子，具有类似的优势：</p>
+<ul>
+<li><p><strong>解耦合</strong>：点餐员和厨师不再需要直接通信，他们通过队列进行互动，各自独立工作。</p>
+</li>
+<li><p><strong>流量调节</strong>：点餐员可以接受更多订单，而不会影响食物的烹饪和交付速度。订单等待在队列中，直到厨师和送餐员准备好接受它们。</p>
+</li>
+<li><p><strong>可伸缩性</strong>：餐厅可以雇佣更多的点餐员、厨师和送餐员来应对繁忙时段，而不必更改整个点餐系统。</p>
+</li>
+<li><p><strong>容错性</strong>：即使点餐员、厨师或送餐员出现问题，队列中的订单仍然安全，等待下一个可用的处理程序。</p>
+</li>
+</ul>
+<h1 id="哪些问题适合使用消息队列来解决？"><a href="#哪些问题适合使用消息队列来解决？" class="headerlink" title="哪些问题适合使用消息队列来解决？"></a>哪些问题适合使用消息队列来解决？</h1><h4 id="1、异步处理"><a href="#1、异步处理" class="headerlink" title="1、异步处理"></a>1、异步处理</h4><p>在一个典型的秒杀系统中，需要解决如何有效处理大量请求的问题。通常，这个过程可以分为五个主要步骤：风险控制、库存锁定、生成订单、短信通知和更新统计数据。其中，风险控制和库存锁定是决定秒杀成功的关键步骤，而其他步骤则可以在稍后异步处理。</p>
+<p>原本的处理流程是，应用将请求发送到网关，然后依次调用这五个步骤，最后将结果返回给应用。但在实际场景中，只有风险控制和库存锁定两个步骤决定了秒杀的结果，其他步骤并不需要即时完成。</p>
+<p>因此，<strong>一种优化方法是，当服务器完成风险控制和库存锁定后，即可立即响应用户请求，同时将请求的相关数据放入消息队列中，以便后续的步骤异步处理。</strong></p>
+<p><strong>在这个场景中，采用消息队列进行异步处理带来了多个好处：</strong></p>
+<ol>
+<li><p>更快的响应速度：用户能够迅速得到秒杀结果，无需等待后续步骤的完成。</p>
+</li>
+<li><p>并发处理：通过异步执行，系统能够在秒杀期间更高效地利用服务器资源，处理更多的秒杀请求。</p>
+</li>
+<li><p>降低系统压力：在秒杀结束后，系统可以有序地处理生成订单、短信通知和更新统计数据等步骤，减少了系统的高峰负载。</p>
+</li>
+</ol>
+<h4 id="2、流量控制"><a href="#2、流量控制" class="headerlink" title="2、流量控制"></a>2、流量控制</h4><p>继续讨论秒杀系统的设计，我们已经引入了消息队列来实现异步处理，但我们还需要解决一个关键问题：如何防止过多的请求压垮系统？</p>
+<p>一个健壮的程序应该具备自我保护的能力，即在面对大规模请求时，它能够在自身承受范围内处理尽可能多的请求，同时拒绝无法处理的请求，以确保系统正常运行。然而，很多现实中的程序并不总是如此”健壮”，而直接拒绝请求会影响用户体验。</p>
+<p>因此，我们需要设计一个强大的架构来保护后端服务。我们的设计思路是通过消息队列来隔离网关和后端服务，以实现流量控制和后端服务的保护。</p>
+<p>引入消息队列后，整个秒杀流程如下：</p>
+<ol>
+<li>网关接收到请求后，将请求放入请求消息队列。</li>
+<li>后端服务从请求消息队列中获取APP请求，执行后续的秒杀处理流程，然后返回结果。</li>
+</ol>
+<p>当秒杀活动开始时，<strong>如果在短时间内涌入大量秒杀请求</strong>，这些请求不会直接冲击到后端秒杀服务。相反，<strong>它们会在消息队列中排队等待处理，后端服务会按照其最大处理能力从消息队列中获取请求并进行处理。</strong></p>
+<p>对于超时的请求，可以直接丢弃，APP可以将没有响应的请求视为秒杀失败。此外，运维人员可以随时增加后端秒杀服务的实例数量以进行水平扩容，而无需对系统的其他部分进行任何更改。</p>
+<p>这种设计的优点在于它可以根据下游处理能力自动调节流量，实现了“削峰填谷”的效果。然而，这种方法也有一些代价：</p>
+<ol>
+<li>增加了系统调用链的环节，从而导致总体响应时间延长。</li>
+<li>需要将同步调用改为异步消息传递，增加了系统的复杂性。</li>
+</ol>
+<h4 id="3、服务解耦"><a href="#3、服务解耦" class="headerlink" title="3、服务解耦"></a>3、服务解耦</h4><p>消息队列的另一个重要作用是实现系统之间的解耦。让我们再以电商领域为例，来说明解耦的重要性和作用。</p>
+<p>在电商系统中，订单数据是核心信息，每当创建一个新订单时，涉及到多个下游系统的操作：</p>
+<ol>
+<li>支付系统需要触发支付过程。</li>
+<li>风险控制系统需要审核订单的合法性。</li>
+<li>客服系统需要通知用户，通常通过短信发送信息。</li>
+<li>经营分析系统需要更新统计数据。</li>
+</ol>
+<p>随着业务的扩大，这些下游系统会不断增加和变化，而且每个系统通常只需要订单数据的某个子集。维护订单服务的开发团队不得不不断投入大量精力来适应这些下游系统的不断增长和变化。每次下游系统的接口发生变更，都要求订单模块进行修改和重新上线。对于电商这类核心服务来说，这种紧密的耦合几乎是不可接受的。</p>
+<p>为了解决这一问题，许多电商选择引入消息队列。<strong>通过引入消息队列，订单服务只需要在订单发生变化时向一个名为”Order”的主题发布一条消息，而所有下游系统都会订阅这个主题</strong>。这使得每个下游系统都可以及时获取到完整的订单数据，而不论下游系统的增加、减少或者具体需求如何变化。</p>
+<p>这种设计带来的好处是，无论下游系统的变动如何，订单服务无需做出任何修改，从而实现了订单服务与下游服务之间的解耦。这种解耦设计使系统更加灵活和可维护，减少了对核心服务的依赖和干预，提高了系统的稳定性和可扩展性。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>上面举例了消息队列最常被使用的三种场景：异步处理、流量限制、服务解耦，消息队列的使用范围肯定不仅仅局限于这些，但这里就不作多的列举了。</p>
+<p>简单的说，我们在单体应用里面需要用队列解决的问题，在分布式系统中大多数都可以用消息队列来解决。</p>
+<p>同时我们也应该明白，引入消息队列可能造成的一些问题和局限性：</p>
+<ul>
+<li>引入消息队列带来的延迟问题</li>
+<li>增加了系统的复杂度</li>
+<li>可能产生数据不一致的问题</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/MQ/" class="category-chain-item">MQ</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MQ/">#MQ</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>为什么需要消息队列</div>
+      <div>http://example.com/2023/10/25/MQ/为什么需要消息队列/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年10月25日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年10月25日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/25/Go/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="数据结构">
+                        <span class="hidden-mobile">数据结构</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>

@@ -1,0 +1,837 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="​	这篇文章带大家一起了解一下 数组、切片、哈希表、字符串四种数据结构。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构">
+<meta property="og:url" content="http://example.com/2023/10/25/Go/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="​	这篇文章带大家一起了解一下 数组、切片、哈希表、字符串四种数据结构。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/Go.png">
+<meta property="article:published_time" content="2023-10-25T04:53:54.000Z">
+<meta property="article:modified_time" content="2023-10-25T06:56:10.510Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="Go">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/Go.png">
+  
+  
+  
+  <title>数据结构 - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/test/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="数据结构"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-25 12:53" pubdate>
+          2023年10月25日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          46 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数据结构</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>​	这篇文章带大家一起了解一下 数组、切片、哈希表、字符串四种数据结构。<span id="more"></span></p>
+<h1 id="一、数组"><a href="#一、数组" class="headerlink" title="一、数组"></a>一、数组</h1><h4 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h4><p>​	数组作为一种基本的数据结构，通过我们会从两个维度去描述它，也就是数组中存储的元素类型和数组最大能存储的元素个数，如下</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">[<span class="hljs-number">10</span>]<span class="hljs-type">int</span><br>[<span class="hljs-number">200</span>]<span class="hljs-keyword">interface</span><br></code></pre></td></tr></table></figure>
+
+<p>​	Go 语言数组在初始化之后，大小就无法改变，只有存储元素类型相同且大小相同的数组类型才是同一类型的数组。</p>
+<p>​	编译期间的数组类型是由 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/types.NewArray"><code>cmd/compile/internal/types.NewArray</code></a>  函数生成的，包含了两个字段：元素类型 elem 和 数组大小 bound，这两个字段共同构成了数组类型。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewArray</span><span class="hljs-params">(elem *Type, bound <span class="hljs-type">int64</span>)</span></span> *Type &#123;<br>	<span class="hljs-comment">// 检查数组的大小是否小于0</span><br>	<span class="hljs-keyword">if</span> bound &lt; <span class="hljs-number">0</span> &#123;<br>		base.Fatalf(<span class="hljs-string">&quot;NewArray: invalid bound %v&quot;</span>, bound)<br>	&#125;<br>	<span class="hljs-comment">// 创建一个新的数组类型对象</span><br>	t := newType(TARRAY)<br>	<span class="hljs-comment">// 设置数组类型的额外信息，包括元素类型和大小</span><br>	t.extra = &amp;Array&#123;Elem: elem, Bound: bound&#125;<br>	<span class="hljs-comment">// 根据元素类型的NotInHeap属性设置数组类型的NotInHeap属性</span><br>	t.SetNotInHeap(elem.NotInHeap())<br>	<span class="hljs-comment">// 返回新创建的数组类型</span><br>	<span class="hljs-keyword">return</span> t<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="2、初始化"><a href="#2、初始化" class="headerlink" title="2、初始化"></a>2、初始化</h4><p>​	Go 语言的数组有两种不同的创建方式，一种是显示地指定数组大小，一种是使用 <code>[...]T</code> 声明数组，Go 语言会在编译期间通过源代码推到数组的大小。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">arr1 := [<span class="hljs-number">3</span>]<span class="hljs-type">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;<br>arr2 := [...]<span class="hljs-type">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这两种声明方式在运行期间得到的结果是完全相同的，后一种声明方式会在编译期间转换成前一种，也就是编译器对数组大小的推导。下面介绍编译器推到的过程。</p>
+<h5 id="上限推导"><a href="#上限推导" class="headerlink" title="上限推导"></a>上限推导</h5><p>​	两种不同的声明方式，会导致编译器做出完全不同的处理。</p>
+<ol>
+<li><p>使用第一种方式 <code>[10] T</code>，那么变量的类型在编译进行到<a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-typecheck/">类型检查</a>阶段就会被提取出来，随后使用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/types.NewArray"><code>cmd/compile/internal/types.NewArray</code></a>创建包含数组大小的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/types.Array"><code>cmd/compile/internal/types.Array</code></a> 结构体。</p>
+</li>
+<li><p>当我们使用 <code>[...]T</code> 的方式声明数组时，编译器会在的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.typecheckcomplit"><code>cmd/compile/internal/gc.typecheckcomplit</code></a> 函数中对该数组的大小进行推导：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">typecheckcomplit</span><span class="hljs-params">(n *Node)</span></span> (res *Node) &#123;<br>	<span class="hljs-comment">// ...</span><br>	<span class="hljs-comment">// 如果数组的类型是切片和字面量 &quot;...&quot; 则处理</span><br>	<span class="hljs-keyword">if</span> n.Right.Op == OTARRAY &amp;&amp; n.Right.Left != <span class="hljs-literal">nil</span> &amp;&amp; n.Right.Left.Op == ODDD &#123;<br>		<span class="hljs-comment">// 对数组中元素的类型进行类型检查</span><br>		n.Right.Right = typecheck(n.Right.Right, ctxType)<br>		<span class="hljs-comment">// 如果元素类型为空，则清除节点类型并返回节点</span><br>		<span class="hljs-keyword">if</span> n.Right.Right.Type == <span class="hljs-literal">nil</span> &#123;<br>			n.Type = <span class="hljs-literal">nil</span><br>			<span class="hljs-keyword">return</span> n<br>		&#125;<br>		<span class="hljs-comment">// 获取元素类型</span><br>		elemType := n.Right.Right.Type<br>		<span class="hljs-comment">// 通过 typecheckarraylit 计算数组中元素的数量</span><br>		length := typecheckarraylit(elemType, <span class="hljs-number">-1</span>, n.List.Slice(), <span class="hljs-string">&quot;array literal&quot;</span>)<br>		<span class="hljs-comment">// 将节点的操作修改为 OARRAYLIT</span><br>		n.Op = OARRAYLIT<br>		<span class="hljs-comment">// 根据元素类型和计算出的长度创建新的数组类型</span><br>		n.Type = types.NewArray(elemType, length)<br>		<span class="hljs-comment">// 清除右子节点</span><br>		n.Right = <span class="hljs-literal">nil</span><br>		<span class="hljs-comment">// 返回修改后的节点</span><br>		<span class="hljs-keyword">return</span> n<br>	&#125;<br>	<span class="hljs-comment">// ...</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>在上面这个函数中，会通过遍历元素的方式来计算数组中元素的数量。</p>
+<p>所以我们可以看出 <code>[...]T&#123;1, 2, 3&#125;</code> 和 <code>[3]T&#123;1, 2, 3&#125;</code> 在运行时是完全等价的</p>
+</li>
+</ol>
+<h5 id="语句转换"><a href="#语句转换" class="headerlink" title="语句转换"></a>语句转换</h5><p>​	对于一个由字面量组成的数组，根据数组元素数量的不同，编译器会在负责初始化字面量的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.anylit"><code>cmd/compile/internal/gc.anylit</code></a> 函数中做两种不同的优化：</p>
+<ol>
+<li>当元素数量小于或者等于 4 个时，会直接将数组中的元素放置在栈上；</li>
+<li>当元素数量大于 4 个时，会将数组中的元素放置到静态区并在运行时取出；</li>
+</ol>
+<p>​	当数组的元素<strong>小于或者等于四个</strong>时，<a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.fixedlit"><code>cmd/compile/internal/gc.fixedlit</code></a> 会负责在函数编译之前将 <code>[3]&#123;1, 2, 3&#125;</code> 转换成更加原始的语句， <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.fixedlit"><code>cmd/compile/internal/gc.fixedlit</code></a> 函数接收的 <code>kind</code> 是 <code>initKindLocalCode</code> 时，上述代码会将原有的初始化语句 <code>[3]int&#123;1, 2, 3&#125;</code> 拆分成一个声明变量的表达式和几个赋值表达式，这些表达式会完成对数组的初始化，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> arr [<span class="hljs-number">3</span>]<span class="hljs-type">int</span><br>arr[<span class="hljs-number">0</span>] = <span class="hljs-number">1</span><br>arr[<span class="hljs-number">1</span>] = <span class="hljs-number">2</span><br>arr[<span class="hljs-number">2</span>] = <span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+
+<p>​	但是如果当前数组的元素大于四个，<a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.anylit"><code>cmd/compile/internal/gc.anylit</code></a> 会先获取一个唯一的 <code>staticname</code>，然后调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.fixedlit"><code>cmd/compile/internal/gc.fixedlit</code></a> 函数在静态存储区初始化数组中的元素并将临时变量赋值给数组，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> arr [<span class="hljs-number">5</span>]<span class="hljs-type">int</span><br>statictmp_0[<span class="hljs-number">0</span>] = <span class="hljs-number">1</span><br>statictmp_0[<span class="hljs-number">1</span>] = <span class="hljs-number">2</span><br>statictmp_0[<span class="hljs-number">2</span>] = <span class="hljs-number">3</span><br>statictmp_0[<span class="hljs-number">3</span>] = <span class="hljs-number">4</span><br>statictmp_0[<span class="hljs-number">4</span>] = <span class="hljs-number">5</span><br>arr = statictmp_0<br></code></pre></td></tr></table></figure>
+
+<p>​	总结一下就是：在不考虑逃逸分析的情况下，如果数组中的元素个数小于或者等于 4 个，那么所有的变量会直接在栈上初始化；否则，变量就会在静态存储区初始化，然后拷贝到栈上。转换后的代码才会继续进入中间代码生成和机器猫生成两个阶段，最后生成可执行的二进制文件。</p>
+<h4 id="3、访问和赋值"><a href="#3、访问和赋值" class="headerlink" title="3、访问和赋值"></a>3、访问和赋值</h4><p>​	无论是在栈上还是静态存储区，数组在内存中都是一连串的内存空间，我们通过指向数组开头的指针、元素的数量以及元素类型占的空间大小表示数组。如果我们不知道数组中元素的数量，访问时可能发生越界；而如果不知道数组中元素类型的大小，就没有办法知道应该一次取出多少字节的数据，无论丢失了哪个信息，我们都无法知道这片连续的内存空间到底存储了什么数据。</p>
+<p>​	数组访问越界是非常严重的错误，Go 语言中可以在编译期间的静态类型检查判断数组越界，<a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.typecheck1"><code>cmd/compile/internal/gc.typecheck1</code></a> 会验证访问数组的索引：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">typecheck1</span><span class="hljs-params">(n *Node, top <span class="hljs-type">int</span>)</span></span> (res *Node) &#123;<br>	<span class="hljs-keyword">switch</span> n.Op &#123;<br>	<span class="hljs-keyword">case</span> OINDEX:<br>		ok |= ctxExpr<br>		l := n.Left  <br>		r := n.Right <br>		<span class="hljs-comment">// 根据左操作数的类型进行不同处理</span><br>		<span class="hljs-keyword">switch</span> n.Left.Type.Etype &#123;<br>		<span class="hljs-comment">// 对于字符串、数组和切片类型</span><br>		<span class="hljs-keyword">case</span> TSTRING, TARRAY, TSLICE:<br>			<span class="hljs-comment">// ...</span><br>			<span class="hljs-comment">// 如果索引类型不是整数，报错并中断处理</span><br>			<span class="hljs-keyword">if</span> n.Right.Type != <span class="hljs-literal">nil</span> &amp;&amp; !n.Right.Type.IsInteger() &#123;<br>				yyerror(<span class="hljs-string">&quot;non-integer array index %v&quot;</span>, n.Right)<br>				<span class="hljs-keyword">break</span><br>			&#125;<br>			<span class="hljs-comment">// 如果索引没有限制且是整数常量</span><br>			<span class="hljs-keyword">if</span> !n.Bounded() &amp;&amp; Isconst(n.Right, CTINT) &#123;<br>				<span class="hljs-comment">// 获取整数值</span><br>				x := n.Right.Int64()<br>				<span class="hljs-comment">// 如果索引小于0，报错（索引必须为非负数）</span><br>				<span class="hljs-keyword">if</span> x &lt; <span class="hljs-number">0</span> &#123;<br>					yyerror(<span class="hljs-string">&quot;invalid array index %v (index must be non-negative)&quot;</span>, n.Right)<br>				&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> n.Left.Type.IsArray() &amp;&amp; x &gt;= n.Left.Type.NumElem() &#123;<br>					<span class="hljs-comment">// 如果是数组类型且索引越界，报错</span><br>					yyerror(<span class="hljs-string">&quot;invalid array index %v (out of bounds for %d-element array)&quot;</span>, n.Right, n.Left.Type.NumElem())<br>					<span class="hljs-comment">// ...</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>访问数组的索引是非整数时，报错 “non-integer array index %v”；</li>
+<li>访问数组的索引是负数时，报错 “invalid array index %v (index must be non-negative)”；</li>
+<li>访问数组的索引越界时，报错 “invalid array index %v (out of bounds for %d-element array)”；</li>
+</ol>
+<p>​	数组和字符串的一些简单越界错误都会在编译期间发现，如：直接使用证书或者常量访问数组；但是如果使用变量去访问数组或者字符串时，编译器无法提前发现错误，就需要 Go 语言运行时阻止不合法的访问：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">arr[<span class="hljs-number">4</span>]: invalid array index <span class="hljs-number">4</span> (out of bounds <span class="hljs-keyword">for</span> <span class="hljs-number">3</span>-element array)<br>arr[i]: <span class="hljs-built_in">panic</span>: runtime <span class="hljs-type">error</span>: index out of <span class="hljs-keyword">range</span> [<span class="hljs-number">4</span>] with length <span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+
+<p>​	Go 语言运行时在发现数组、切片和字符串的越界操作会由运行时的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.panicIndex"><code>runtime.panicIndex</code></a> 和 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.goPanicIndex"><code>runtime.goPanicIndex</code></a> 触发程序的运行时错误并导致崩溃退出：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go">TEXT runtime·panicIndex(SB),NOSPLIT,$<span class="hljs-number">0</span><span class="hljs-number">-8</span><br>	<span class="hljs-comment">// runtime·panicIndex是运行时处理数组越界访问的函数。</span><br>	MOVL	AX, x+<span class="hljs-number">0</span>(FP)      <span class="hljs-comment">// 将寄存器AX中的x参数存储到栈帧的偏移0(FP)位置。</span><br>	MOVL	CX, y+<span class="hljs-number">4</span>(FP)      <span class="hljs-comment">// 将寄存器CX中的y参数存储到栈帧的偏移4(FP)位置。</span><br>	JMP	runtime·goPanicIndex(SB)  <span class="hljs-comment">// 跳转到runtime·goPanicIndex函数进行错误处理。</span><br><br><span class="hljs-comment">// goPanicIndex是用于处理数组越界访问的运行时函数。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">goPanicIndex</span><span class="hljs-params">(x <span class="hljs-type">int</span>, y <span class="hljs-type">int</span>)</span></span> &#123;<br>	<span class="hljs-comment">// 获取调用goPanicIndex函数的调用者的程序计数器（PC）。</span><br>	panicCheck1(getcallerpc(), <span class="hljs-string">&quot;index out of range&quot;</span>)<br>	<span class="hljs-comment">// 创建boundsError结构体，其中包含有关数组越界错误的信息。</span><br>	<span class="hljs-comment">// - x: 数组索引</span><br>	<span class="hljs-comment">// - signed: 是否为有符号整数索引</span><br>	<span class="hljs-comment">// - y: 数组的长度</span><br>	<span class="hljs-comment">// - code: 错误代码（在这里是boundsIndex）</span><br>	<span class="hljs-built_in">panic</span>(boundsError&#123;x: <span class="hljs-type">int64</span>(x), signed: <span class="hljs-literal">true</span>, y: y, code: boundsIndex&#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="4、总结"><a href="#4、总结" class="headerlink" title="4、总结"></a>4、总结</h4><ol>
+<li><strong>数组概述</strong>：数组是一种基本的数据结构，它由两个维度描述：存储的元素类型和数组的最大容量（大小）。例如，<code>[10]int</code> 表示一个包含10个整数的数组，而 <code>[200]interface&#123;&#125;</code> 表示一个包含200个任意类型的元素的数组。</li>
+<li><strong>数组大小不可改变</strong>：在Go语言中，一旦数组被初始化，其大小（容量）无法更改。只有当数组的元素类型和大小完全相同时，它们才被认为是相同类型的数组。</li>
+<li><strong>数组类型生成</strong>：在编译期间，数组的类型由 <code>cmd/compile/internal/types.NewArray</code> 函数生成，它包含两个关键字段：元素类型 <code>elem</code> 和数组大小 <code>bound</code>。</li>
+<li><strong>初始化数组</strong>：Go语言支持两种不同的数组初始化方式。一种是显式指定数组大小，另一种是使用 <code>[...]T</code> 声明数组，编译器将在编译时推断数组大小。这两种方式在运行时具有相同的效果。</li>
+<li><strong>数组大小推导</strong>：数组大小推导是通过编译器进行的。当使用 <code>[10]T</code> 的方式声明数组时，大小在编译期间被提取为类型信息。对于 <code>[...]T</code> 声明，编译器使用 <code>cmd/compile/internal/gc.typecheckcomplit</code> 函数在编译期间计算数组大小。</li>
+<li><strong>数组初始化转换</strong>：编译器进行数组初始化转换，根据元素数量的不同，将数组初始化放在栈上或静态存储区。这可以优化性能，避免过多的栈内存操作。</li>
+<li><strong>数组访问和越界检查</strong>：Go编译器在编译期间执行数组访问的静态类型检查，检查索引是否合法。它检查索引是否为整数、非负数以及是否越界。数组访问越界是一个严重的错误，可以在编译期间或运行时被检测到。</li>
+<li><strong>数组越界运行时处理</strong>：在运行时，Go会使用 <code>runtime.panicIndex</code> 和 <code>runtime.goPanicIndex</code> 处理数组越界访问错误。这会导致程序崩溃，并提供有关越界的信息，如越界索引和数组大小。</li>
+</ol>
+<h1 id="二、切片"><a href="#二、切片" class="headerlink" title="二、切片"></a>二、切片</h1>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Go/">#Go</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>数据结构</div>
+      <div>http://example.com/2023/10/25/Go/数据结构/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年10月25日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年10月25日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/10/25/MQ/%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" title="为什么需要消息队列">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">为什么需要消息队列</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/18/%E5%B7%A5%E5%85%B7/%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F%E6%80%BB%E7%BB%93/" title="秒杀系统总结">
+                        <span class="hidden-mobile">秒杀系统总结</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>
