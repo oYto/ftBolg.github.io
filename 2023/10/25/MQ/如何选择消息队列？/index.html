@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="​	这篇文章主要围绕两个话题来叙述：消息队列是什么？主要解决什么问题。">
+    <meta name="description" content="作为一个程序员，我们必须要认识到，软件工程中是不存在”银弹“的。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="为什么需要消息队列">
-<meta property="og:url" content="http://example.com/2023/10/25/MQ/%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/index.html">
+<meta property="og:title" content="如何选择消息队列？">
+<meta property="og:url" content="http://example.com/2023/10/25/MQ/%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%9F/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="​	这篇文章主要围绕两个话题来叙述：消息队列是什么？主要解决什么问题。">
+<meta property="og:description" content="作为一个程序员，我们必须要认识到，软件工程中是不存在”银弹“的。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/MQ.png">
-<meta property="article:published_time" content="2023-10-25T06:44:53.000Z">
-<meta property="article:modified_time" content="2023-10-25T09:11:32.940Z">
+<meta property="article:published_time" content="2023-10-25T09:12:07.000Z">
+<meta property="article:modified_time" content="2023-10-25T11:34:49.592Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="MQ">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
   
   
   
-  <title>为什么需要消息队列 - 胤凯</title>
+  <title>如何选择消息队列？ - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -245,7 +245,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="为什么需要消息队列"></span>
+            <span id="subtitle" data-typed-text="如何选择消息队列？"></span>
           
         </div>
 
@@ -256,7 +256,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-10-25 14:44" pubdate>
+        <time datetime="2023-10-25 17:12" pubdate>
           2023年10月25日 下午
         </time>
       </span>
@@ -268,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.6k 字
+          3.4k 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
         
-          22 分钟
+          29 分钟
         
       </span>
     
@@ -325,90 +325,60 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">为什么需要消息队列</h1>
+            <h1 style="display: none">如何选择消息队列？</h1>
             
             
               <div class="markdown-body">
                 
-                <p>​	这篇文章主要围绕两个话题来叙述：消息队列是什么？主要解决什么问题。<span id="more"></span></p>
-<h1 id="消息队列是什么？"><a href="#消息队列是什么？" class="headerlink" title="消息队列是什么？"></a>消息队列是什么？</h1><p>​	消息队列是最古老的中间件之一，从系统之间有通信需求开始，就自然产生了消息队列。但是给消息队列下一个准确的定义却不太容易。我们知道，消息队列的主要功能就是收发消息，但是它的作用不仅仅只是解决应用之间的通信问题这么简单。</p>
-<p>生活中也存在很多例子可以用来解释消息队列的概念。一个常见的例子是快餐餐厅的点餐系统。让我们来看看这个例子：</p>
-<p>在一个繁忙的快餐餐厅，通常有多个工作人员负责不同的任务，包括点餐、烹饪食物、包装和交付食物给客户。最开始的时候，点餐员会将顾客的订单直接传达给厨师，然后等待食物烹饪完成，然后再将其交付给客户。这种方式存在一些问题：</p>
+                <p>作为一个程序员，我们必须要认识到，软件工程中是不存在”银弹“的。<span id="more"></span></p>
+<p>在消息队列的选型问题上，也是同样的道理。并不存在哪个消息队列就是最好的，能够解决所有的问题。常用的消息队列有好几个，每一种都有自己的优势和劣势，需要业务方根据自己的系统的情况，选择最适合的产品。</p>
+<h1 id="选择消息队列的基本标准"><a href="#选择消息队列的基本标准" class="headerlink" title="选择消息队列的基本标准"></a>选择消息队列的基本标准</h1><h4 id="1、开源"><a href="#1、开源" class="headerlink" title="1、开源"></a>1、开源</h4><p>​	首先，必须是开源的产品，因为一旦在开发过程中遇到一个系统 Bug，你至少<strong>有机会</strong>通过修改源代码来修复这个 Bug，而不是只能无期限地等待产品的开发者发布新版本解决该问题。</p>
+<h4 id="2、流行"><a href="#2、流行" class="headerlink" title="2、流行"></a>2、流行</h4><p>​	其次，这个产品必须是近年来比较流行并且有一定社区活跃度的产品。流行意味着使用的人很多，只要你的场景不是很冷门，几乎你遇到的 Bug 都有前辈已经踩过坑了，都能找到类似的解决方案。</p>
+<p>​	同时流行的产品与周边生态系统会有一个比较好的集成和兼容，大部分场景下不需要为自己的业务额外地去开发其他中间件。</p>
+<h4 id="3、可靠"><a href="#3、可靠" class="headerlink" title="3、可靠"></a>3、可靠</h4><p>​	需要保证消息传递的可靠，确保消息不会丢失。</p>
+<h4 id="4、支持-Cluster"><a href="#4、支持-Cluster" class="headerlink" title="4、支持 Cluster"></a>4、支持 Cluster</h4><p>​	支持集群，确保不会因为某个节点宕机导致服务不可用的情况，同时也需要保证消息不会丢失</p>
+<h4 id="5、性能"><a href="#5、性能" class="headerlink" title="5、性能"></a>5、性能</h4><p>​	具备足够好的性能，能满足大多数场景的性能要求。</p>
+<h1 id="可供选择的消息队列产品"><a href="#可供选择的消息队列产品" class="headerlink" title="可供选择的消息队列产品"></a>可供选择的消息队列产品</h1><h4 id="1、RabbitMQ"><a href="#1、RabbitMQ" class="headerlink" title="1、RabbitMQ"></a>1、RabbitMQ</h4><p>​	老牌消息队列 RabbitMQ，俗称兔子 MQ。它是用一种比较小众的语言：Erlang 编写的，最早为电信行业系统之间的可靠通信设计的，支持 AMQP 协议。</p>
+<p>​	它的特点是：<strong>轻量级、迅捷</strong>，宣传口号是：”开箱即用的消息队列“，是一个相当轻量级的消息队列，非常容易部署和使用。因此 RabbitMQ 成为了 ”最流行的消息中间件之一“。</p>
+<p>​	RabbitMQ 一个比较有特色的功能是支持非常灵活的路由配置，和其他消息队列不同的是，它在生产者和队列之间增加了一个类似交换机的 Exchange 模块。这个模块根据配置的路由规则将生产者发出的消息分发到不同的队列中。路由的规则也非常灵活，甚至可以自己来实现路由规则。</p>
+<blockquote>
+<p>这里通过一个示例，详细解释一下 Exchange 模块的作用：</p>
+<p><strong>假设你有一个电商网站，你希望根据用户的购买地理位置将订单消息路由到不同的队列，以便分别处理。</strong></p>
 <ol>
-<li><p><strong>等待时间</strong>：点餐员可能需要等待一段时间，直到厨师准备好食物。这导致了服务速度较慢。</p>
-</li>
-<li><p><strong>同步问题</strong>：如果厨师繁忙，点餐员必须等待，不能处理新的订单。</p>
-</li>
-<li><p><strong>故障容忍性</strong>：如果点餐员或厨师出现问题，整个点餐过程可能会中断。</p>
-</li>
+<li><strong>创建 Exchange：</strong> 首先，你会创建一个 Exchange，可以命名为 “OrderExchange”。这是消息的中转站，它会接收生产者发送的订单消息，并负责将这些消息路由到一个或多个队列中。</li>
+<li><strong>创建队列：</strong> 然后，你会创建多个队列，每个队列代表一个不同的地理位置，比如 “USOrders”、”EUOrders” 和 “AsiaOrders”。</li>
+<li><strong>定义绑定规则：</strong> 接下来，你会定义绑定规则。这些规则告诉 Exchange 如何将消息路由到队列。例如，你可以定义规则，将订单消息中的地理位置信息与队列的名称进行匹配。如果订单来自美国，它将被路由到 “USOrders” 队列，如果来自欧洲，它将被路由到 “EUOrders” 队列。</li>
+<li><strong>生产者发送消息：</strong> 当用户在网站上下订单时，订单服务会将订单消息发送到 “OrderExchange”。这个消息会带有订单信息，包括地理位置。</li>
+<li><strong>Exchange 路由消息：</strong> “OrderExchange” 根据你定义的规则，将消息路由到相应的队列。如果订单来自美国，它将被发送到 “USOrders” 队列。</li>
+<li><strong>队列消费消息：</strong> 各个队列中的消费者（可能是不同的处理订单的系统）订阅相应队列并处理订单消息。”USOrders” 队列中的消费者处理来自美国的订单，”EUOrders” 队列中的消费者处理来自欧洲的订单，依此类推。</li>
 </ol>
-<p>为了解决这些问题，餐厅引入了消息队列系统，还是上面的例子。现在的订单处理过程如下：</p>
+</blockquote>
+<p>​	RabbitMQ 的客户端所支持的编程语言是消息队列中最多的，如果你的系统是使用某种冷门语言开发，那你可以尝试找到对应的 RabbitMQ 客户端，不出意外的话，应该是能找到的。</p>
+<p>​	接下来说说 RabbitMQ 的几个问题：</p>
 <ol>
-<li><p>顾客在点餐柜台上点餐并支付，点餐员将订单信息输入到点餐系统，但订单不再直接传递给厨师。</p>
-</li>
-<li><p>订单信息被放入订单队列中，等待处理。厨师从队列中获取订单并开始烹饪。</p>
-</li>
-<li><p>同时，点餐员可以接受更多订单，将它们加入队列。这意味着点餐员不必等待烹饪完成，而是可以快速处理更多订单。</p>
-</li>
-<li><p>一旦订单完成烹饪，它被放回队列，等待交付。送餐员从队列中获取订单并将其交付给客户。</p>
-</li>
+<li><strong>消息堆积</strong>：RabbitMQ 的设计理念是管道，它对消息堆积的支持有限，大量消息堆积可能导致性能下降。因此，它不是最佳选择用于需要大规模消息堆积的应用。</li>
+<li><strong>性能较差：</strong>相对于其他消息队列系统，RabbitMQ 的性能较差。它通常能够处理每秒数万到十几万条消息，性能依赖于硬件配置，虽然大多数的应用场景也够用了，但如果对消息队列的性能要求非常高的话，就不要选择 RabbitMQ。</li>
+<li><strong>二次开发难：</strong>RabbitMQ 使用的 Erlang 语言不仅非常小众，而且这个语言的学习曲线非常陡峭。如果想基于 RabbitMQ 做一些扩展和二次开发，则需要慎重考虑可持续维护的问题。</li>
 </ol>
-<p>消息队列系统的作用类似于上述的例子，具有类似的优势：</p>
+<h4 id="2、RocketMQ"><a href="#2、RocketMQ" class="headerlink" title="2、RocketMQ"></a>2、RocketMQ</h4><p>​	RocketMQ 是阿里巴巴开源的消息队列产品，后捐赠于 Apache 软件基金会，成为其顶级项目。它经历多次 ”双十一“ 的考研，<strong>性能、稳定性和可靠性</strong>都是值得信赖的，是一款优秀的国产消息队列。</p>
+<p>​	RocketMQ 有非常活跃的中文社区，大多数问题都能够找到中文的答案，这或许也是越来越多国内大厂使用的原因。另外，它使用 Java 语言开发，贡献者大多数都是中国人，源代码也相对比较容易读懂，很方便进行扩展或二次开发。</p>
+<p>​	RocketMQ 的好处是，它对于在线业务的相应做了很多的优化，大多数情况下可以做到毫秒级的响应，<strong>如果你的应用场景很在意响应时延，那应该选择使用 RocketMQ。</strong></p>
+<p>​	RocketMQ 的性能比 RabbitMQ 要高一个数量级，每秒钟大概能处理几十万条消息。</p>
+<p>​	RocketMQ 的一个劣势是，<strong>国际知名度比较低</strong>，与<strong>周边生态系统的集成和兼容程度要略逊一筹。</strong></p>
+<h4 id="3、Kafka"><a href="#3、Kafka" class="headerlink" title="3、Kafka"></a>3、Kafka</h4><p>​	Kafka 最早是由 Linkedln 开发，目前也是 Apache 的顶级项目，它<strong>最初的设计目的是用于处理海量的日志</strong>。</p>
+<p>​	在早期的版本中，为了获得极致的性能，在设计方面做了很多牺牲，比如不保证消息的可靠性，可能会丢失消息，也不支持集群，功能上也比较简陋。这些牺牲对于处理海量日志这个特定的场景是可以接收的，但此时的 Kafka 不能被称为一个合格的消息队列。在随后几年 Kafka 逐步补齐了短板，当下的 Kafka 已经发展为一个非常成熟的消息队列产品，无论数据可靠性、稳定性和功能特性等方面都可以满足绝大多数场景了。</p>
+<p>​	<strong>Kafka 与周边生态系统的兼容性是最好的没有之一，尤其在大数据和流计算领域，几乎所有的相关开源软件系统都会优先支持 Kafka。</strong></p>
+<p>​	Kafka 使用 Scala 和 Java 开发，设计上大量使用了批量和异步的思想，这使得 Kafka 能做到超高的性能，尤其是异步收发的性能，是三者中最好的。但与 RocketMQ 并没有量级上的差异，大约每秒可以处理几十万条消息。</p>
+<p>​	然而，Kafka采用的异步批量消息处理设计会引发一个问题，即它的<strong>同步消息传递响应时延较高</strong>。这是因为在客户端发送一条消息后，Kafka不会立即传递消息，而是会等待一段时间以便累积一批消息后再一起处理。这种”批量处理”设计在Kafka的Broker中多次出现。在业务场景中，如果每秒的消息数量相对较低，Kafka的响应时延可能会变得较高。因此，Kafka通常不太适用于需要低延迟的在线业务场景。</p>
+<h1 id="第二梯队的消息队列"><a href="#第二梯队的消息队列" class="headerlink" title="第二梯队的消息队列"></a>第二梯队的消息队列</h1><p>​	除了上述比较常用的消息队列，还有一些不太常用的产品，之所以不太流行肯定是有原因的，所以不推荐使用。下面简单介绍一下：</p>
+<h4 id="1、ActiveMQ"><a href="#1、ActiveMQ" class="headerlink" title="1、ActiveMQ"></a>1、ActiveMQ</h4><p>​	ActiveMQ 的最老牌的开源消息队列，是十年前唯一可供选择的开源消息队列，目前已进入老年期，社区不活跃。无论是功能还是性能方面，与现代的消息队列都存在明显的差异，存在的意义仅限于兼容一些老系统。</p>
+<h4 id="2、ZeroMQ"><a href="#2、ZeroMQ" class="headerlink" title="2、ZeroMQ"></a>2、ZeroMQ</h4><p>​	严格来说 ZeroMQ 并不能称之为一个消息队列，而是一个基于消息队列的多线程网络库，如果你的需求是将消息队列的功能集成到你的系统进程中，可以考虑使用 ZeroMQ。</p>
+<h4 id="3、Pulsar"><a href="#3、Pulsar" class="headerlink" title="3、Pulsar"></a>3、Pulsar</h4><p>​	Pulsar是一个相对较新的开源消息队列系统，最初由Yahoo开发，目前仍处于不断成长和发展的阶段。与其他传统消息队列系统最显著的不同之处在于其采用了存储和计算分离的设计思想。不少人比较喜欢这种设计，它有可能会引领未来消息队列的一个发展方向。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>​	根据上述多种消息队列的讲解，对于消息队列的选择肯定已经心中有数了，下面给出几点意见：</p>
 <ul>
-<li><p><strong>解耦合</strong>：点餐员和厨师不再需要直接通信，他们通过队列进行互动，各自独立工作。</p>
-</li>
-<li><p><strong>流量调节</strong>：点餐员可以接受更多订单，而不会影响食物的烹饪和交付速度。订单等待在队列中，直到厨师和送餐员准备好接受它们。</p>
-</li>
-<li><p><strong>可伸缩性</strong>：餐厅可以雇佣更多的点餐员、厨师和送餐员来应对繁忙时段，而不必更改整个点餐系统。</p>
-</li>
-<li><p><strong>容错性</strong>：即使点餐员、厨师或送餐员出现问题，队列中的订单仍然安全，等待下一个可用的处理程序。</p>
-</li>
-</ul>
-<h1 id="哪些问题适合使用消息队列来解决？"><a href="#哪些问题适合使用消息队列来解决？" class="headerlink" title="哪些问题适合使用消息队列来解决？"></a>哪些问题适合使用消息队列来解决？</h1><h4 id="1、异步处理"><a href="#1、异步处理" class="headerlink" title="1、异步处理"></a>1、异步处理</h4><p>在一个典型的秒杀系统中，需要解决如何有效处理大量请求的问题。通常，这个过程可以分为五个主要步骤：风险控制、库存锁定、生成订单、短信通知和更新统计数据。其中，风险控制和库存锁定是决定秒杀成功的关键步骤，而其他步骤则可以在稍后异步处理。</p>
-<p>原本的处理流程是，应用将请求发送到网关，然后依次调用这五个步骤，最后将结果返回给应用。但在实际场景中，只有风险控制和库存锁定两个步骤决定了秒杀的结果，其他步骤并不需要即时完成。</p>
-<p>因此，<strong>一种优化方法是，当服务器完成风险控制和库存锁定后，即可立即响应用户请求，同时将请求的相关数据放入消息队列中，以便后续的步骤异步处理。</strong></p>
-<p><strong>在这个场景中，采用消息队列进行异步处理带来了多个好处：</strong></p>
-<ol>
-<li><p><strong>更快的响应速度</strong>：用户能够迅速得到秒杀结果，无需等待后续步骤的完成。</p>
-</li>
-<li><p><strong>并发处理</strong>：通过异步执行，系统能够在秒杀期间更高效地利用服务器资源，处理更多的秒杀请求。</p>
-</li>
-<li><p><strong>降低系统压力</strong>：在秒杀结束后，系统可以有序地处理生成订单、短信通知和更新统计数据等步骤，减少了系统的高峰负载。</p>
-</li>
-</ol>
-<h4 id="2、流量控制"><a href="#2、流量控制" class="headerlink" title="2、流量控制"></a>2、流量控制</h4><p>继续讨论秒杀系统的设计，我们已经引入了消息队列来实现异步处理，但我们还需要解决一个关键问题：如何防止过多的请求压垮系统？</p>
-<p>一个健壮的程序应该具备自我保护的能力，即在面对大规模请求时，它能够在自身承受范围内处理尽可能多的请求，同时拒绝无法处理的请求，以确保系统正常运行。然而，很多现实中的程序并不总是如此”健壮”，而直接拒绝请求会影响用户体验。</p>
-<p>因此，我们需要设计一个强大的架构来保护后端服务。我们的设计思路是通过消息队列来隔离网关和后端服务，以实现流量控制和后端服务的保护。</p>
-<p>引入消息队列后，整个秒杀流程如下：</p>
-<ol>
-<li>网关接收到请求后，将请求放入请求消息队列。</li>
-<li>后端服务从请求消息队列中获取APP请求，执行后续的秒杀处理流程，然后返回结果。</li>
-</ol>
-<p>当秒杀活动开始时，<strong>如果在短时间内涌入大量秒杀请求</strong>，这些请求不会直接冲击到后端秒杀服务。相反，<strong>它们会在消息队列中排队等待处理，后端服务会按照其最大处理能力从消息队列中获取请求并进行处理。</strong></p>
-<p>对于超时的请求，可以直接丢弃，APP可以将没有响应的请求视为秒杀失败。此外，运维人员可以随时增加后端秒杀服务的实例数量以进行水平扩容，而无需对系统的其他部分进行任何更改。</p>
-<p>这种<strong>设计的优点</strong>在于它可以根据下游处理能力自动调节流量，实现了“削峰填谷”的效果。然而，这种方法也有一些代价：</p>
-<ol>
-<li>增加了系统调用链的环节，从而导致<strong>总体响应时间延长</strong>。</li>
-<li>需要将同步调用改为异步消息传递，增加了系统的复杂性。</li>
-</ol>
-<h4 id="3、服务解耦"><a href="#3、服务解耦" class="headerlink" title="3、服务解耦"></a>3、服务解耦</h4><p>消息队列的另一个重要作用是实现系统之间的解耦。让我们再以电商领域为例，来说明解耦的重要性和作用。</p>
-<p>在电商系统中，订单数据是核心信息，每当创建一个新订单时，涉及到多个下游系统的操作：</p>
-<ol>
-<li>支付系统需要触发支付过程。</li>
-<li>风险控制系统需要审核订单的合法性。</li>
-<li>客服系统需要通知用户，通常通过短信发送信息。</li>
-<li>经营分析系统需要更新统计数据。</li>
-</ol>
-<p>随着业务的扩大，这些下游系统会不断增加和变化，而且每个系统通常只需要订单数据的某个子集。维护订单服务的开发团队不得不不断投入大量精力来适应这些下游系统的不断增长和变化。每次下游系统的接口发生变更，都要求订单模块进行修改和重新上线。对于电商这类核心服务来说，这种紧密的耦合几乎是不可接受的。</p>
-<p>为了解决这一问题，许多电商选择引入消息队列。<strong>通过引入消息队列，订单服务只需要在订单发生变化时向一个名为”Order”的主题发布一条消息，而所有下游系统都会订阅这个主题</strong>。这使得每个下游系统都可以及时获取到完整的订单数据，而不论下游系统的增加、减少或者具体需求如何变化。</p>
-<p>这种设计<strong>带来的好处</strong>是，无论下游系统的变动如何，订单服务无需做出任何修改，从而实现了订单服务与下游服务之间的解耦。这种解耦设计<strong>使系统更加灵活和可维护</strong>，减少了对核心服务的依赖和干预，提高了系统的稳定性和可扩展性。</p>
-<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>上面举例了消息队列最常被使用的三种场景：异步处理、流量限制、服务解耦，消息队列的使用范围肯定不仅仅局限于这些，但这里就不作多的列举了。</p>
-<p>简单的说，我们在单体应用里面需要用队列解决的问题，在分布式系统中大多数都可以用消息队列来解决。</p>
-<p>同时我们也应该明白，引入消息队列可能造成的一些问题和局限性：</p>
-<ul>
-<li>引入消息队列带来的延迟问题</li>
-<li>增加了系统的复杂度</li>
-<li>可能产生数据不一致的问题</li>
+<li>如果你的系统中消息队列不是主要部分，且对消息队列的功能和性能没有很高的要求，只需要用一个<strong>开箱即用易于维护</strong>的产品，则开源使用 <strong>RabbitMQ</strong></li>
+<li>如果你的系统使用消息队列的场景是处理在线业务，比如交易系统中用消息队列传递订单，那么 <strong>RocketMQ</strong> 的<strong>低延迟和稳定性</strong>是比较推荐的</li>
+<li>如果需要处理海量的消息，像收集日志、监控信息或是你的应用场景使用了大数据、流计算相关的开源产品，那 Kafka 是最适合你的消息队列。</li>
 </ul>
 
                 
@@ -455,8 +425,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>为什么需要消息队列</div>
-      <div>http://example.com/2023/10/25/MQ/为什么需要消息队列/</div>
+      <div>如何选择消息队列？</div>
+      <div>http://example.com/2023/10/25/MQ/如何选择消息队列？/</div>
     </div>
     <div class="license-meta">
       
@@ -505,18 +475,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/10/25/MQ/%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%9F/" title="如何选择消息队列？">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">如何选择消息队列？</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/10/25/Go/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="数据结构">
-                        <span class="hidden-mobile">数据结构</span>
+                      <a href="/2023/10/25/MQ/%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" title="为什么需要消息队列">
+                        <span class="hidden-mobile">为什么需要消息队列</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
