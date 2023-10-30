@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="胤凯的个人博客">
+    <meta name="description" content="​	本文来聊一聊消息队列过程中消息重复怎么办？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何处理消费过程中的重复消息">
-<meta property="og:url" content="http://example.com/2023/10/27/MQ/%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E6%B6%88%E8%B4%B9%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E6%B6%88%E6%81%AF/index.html">
+<meta property="og:title" content="如何利用事务消息实现分布式事务？">
+<meta property="og:url" content="http://example.com/2023/10/26/MQ/%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E6%B6%88%E8%B4%B9%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E6%B6%88%E6%81%AF/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="胤凯的个人博客">
+<meta property="og:description" content="​	本文来聊一聊消息队列过程中消息重复怎么办？">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/MQ.png">
-<meta property="article:published_time" content="2023-10-27T12:20:37.546Z">
-<meta property="article:modified_time" content="2023-10-27T12:24:47.741Z">
+<meta property="article:published_time" content="2023-10-26T10:50:50.000Z">
+<meta property="article:modified_time" content="2023-10-29T11:23:49.642Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="MQ">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
   
   
   
-  <title>如何处理消费过程中的重复消息 - 胤凯</title>
+  <title>如何利用事务消息实现分布式事务？ - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -245,7 +245,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="如何处理消费过程中的重复消息"></span>
+            <span id="subtitle" data-typed-text="如何利用事务消息实现分布式事务？"></span>
           
         </div>
 
@@ -256,8 +256,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-10-27 20:20" pubdate>
-          2023年10月27日 晚上
+        <time datetime="2023-10-26 18:50" pubdate>
+          2023年10月26日 晚上
         </time>
       </span>
     
@@ -268,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          2.9k 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
         
-          1 分钟
+          25 分钟
         
       </span>
     
@@ -325,12 +325,54 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">如何处理消费过程中的重复消息</h1>
+            <h1 style="display: none">如何利用事务消息实现分布式事务？</h1>
             
             
               <div class="markdown-body">
                 
-                
+                <p>​	本文来聊一聊消息队列过程中消息重复怎么办？<span id="more"></span></p>
+<p>​	在消息传递过程中，如果出现消息传递失败，发送方就会进行重试，重试过程中就有可能产生重复的消息。对于使用消息队列的业务系统来说，如果没有对重复消息进行处理，就有可能会导致系统的数据出现错误。</p>
+<p>​	比如一个消费订单的系统，统计下单金额的微服务，如果没有正确处理重复消息，就会出现重复统计，导致结果错误。</p>
+<p>​	处理重复消息可以从两个方面进行考虑：</p>
+<ol>
+<li>消息队列本身保证消息不重复</li>
+<li>业务实现幂等</li>
+</ol>
+<h1 id="消息重复的情况是必然存在的"><a href="#消息重复的情况是必然存在的" class="headerlink" title="消息重复的情况是必然存在的"></a>消息重复的情况是必然存在的</h1><p>​	在 MQTT 协议中，针对传递消息能够提供的服务质量标准，提供了三种不同服务质量的定义，这三种服务质量从低到高依次是：</p>
+<ul>
+<li><strong>At most once：</strong> 至多一次。在消息传递时，最多被送达一次，这意味着无法保证消息可靠性，允许丢数据。适用于对消息可靠性要求不高的监控场景，比如每分钟上报一次机房温度数据，可以接受数据少量丢失。</li>
+<li><strong>At least once：</strong>至少一次。消息在传递时，至少会被送达一次，即不允许丢消息，但允许有少量重复消息出现。例如，金融交易处理系统通常采用至少一次传递，因为在这种场景中，任何一笔交易都不能丢失，但允许某些交易重复。虽然会有一些额外的重复处理工作，但系统必须保证每笔交易都会被处理。</li>
+<li><strong>Exactly once：</strong>恰好一次。消息在传递时，只会被送达一次。这个是最高等级。比如电信行业的通信系统可能采用恰好一次传递标准，以确保不仅数据不会丢失，而且不会发送重复的短信或通话记录。</li>
+</ul>
+<p>​	上述的服务质量标准不仅适用于 MQTT，对所有的消息队列都是适用的。我们常用的消息队列提供的服务都是 At least once，包括 RocketMQ、RabbitMQ 和 Kafka。所以消息队列是很难保证消息不重复的。</p>
+<p>​	因此我们想要保证消息不重复，就需要我们的代码中能接受 “ 消息可能会重复” 这一现状，然后通过一些方法来消除重复消息对业务的影响。</p>
+<blockquote>
+<p>​	有人会说，“Kafka 的文档中说它是支持 Exactly once 的。”，但其实 Kafka 所支持的 “Exactly once” 和我们刚刚提到的服务质量标准 “Exactly once” 是不一样的，它是 Kafka 提供的另一个特性。</p>
+</blockquote>
+<h1 id="用幂等性解决消息重复问题"><a href="#用幂等性解决消息重复问题" class="headerlink" title="用幂等性解决消息重复问题"></a>用幂等性解决消息重复问题</h1><p>​	通常解决重复消息的办法是：在消费端，让消费消息的操作具备幂等性。</p>
+<blockquote>
+<p>幂等性：幂等原本是数学上的一个概念，后来被拓展到计算机领域，被用来描述一个操作、方法或者服务。一个幂等操作的特点是：<strong>其任意执行多次所产生的影响均与执行一次的影响相同。</strong></p>
+</blockquote>
+<p>​	一个幂等的方法，使用同样的参数，对它进行多次调用和一次调用，对系统产生的影响是一样的。</p>
+<p>​	举个例子，在不考虑并发的情况下，“将账户 X 的余额设置为 100 元”，执行一次和多次的最终结果都是 “账户 X 的余额设置为 100 元”。只要提供的参数 100 元不变，这个操作就是一个幂等的操作。</p>
+<p>​	再举一个例子，“将账户 X 的余额加 100 元”，这个操作它就不是幂等的，每执行一次，账户余额就会增加 100 元，执行多次和执行一次对系统的影响（也就是账户的余额）是不一样的。</p>
+<p>​	因此我们只要保证消费消息的逻辑是幂等的，就不用担心重复消息的执行会对系统造成任何改变。</p>
+<p>​	于是我们可以总结出一个 “公式” ：</p>
+<p>​	从对系统的影响结果来说：<strong>At least once + 幂等消费 &#x3D; Exactly once。</strong></p>
+<p>​	由于并不是所有的业务都能设计成天然幂等的，因此需要一些方法和技巧来实现幂等，下面就来介绍几种常用的设计幂等操作的方法：</p>
+<h4 id="1、利用数据库的唯一约束实现幂等"><a href="#1、利用数据库的唯一约束实现幂等" class="headerlink" title="1、利用数据库的唯一约束实现幂等"></a>1、利用数据库的唯一约束实现幂等</h4><p>​	例如上面的那个不具备幂等特性的转账的例子：将账户 X 的余额加  100 元。我们可以通过修改业务逻辑，让它具备幂等性。</p>
+<p>​	我们可以通过限定，每个账单每个用户只能执行一次变更操作。在分布式系统中，这个限制实现的方法非常多，最简单的是我们在数据库中建一张转账流水表，这个表有三个字段：转账单 ID、账户 ID 和变更金额，然后给账单 ID 和账户 ID 这两个字段创建一个联合的唯一约束，这样对于相同的转账单 ID 和账户 ID，表里只能存在一条记录。</p>
+<p>​	这样我们消费信息的逻辑就变成了：” 在流水表中增加一条转账记录，然后根据转账记录，异步更新用户余额即可 。“ 在流水表增加一条记录这个操作，由于存在唯一约束，故对于同一个账单同一个账户 只能插入一条记录，后续重复插入都会失败，这样就实现了幂等的操作。<strong>我们只要写一个 SQL，正确实现它就可以了。</strong></p>
+<h4 id="2、为更新的数据设置前置条件"><a href="#2、为更新的数据设置前置条件" class="headerlink" title="2、为更新的数据设置前置条件"></a>2、为更新的数据设置前置条件</h4><p>​	另一种实现幂等的思路就是，给数据变更设置一个前置条件，如果满足条件就更新数据，否则就拒绝更新，在更新数据的时候，同时变更前置条件中需要判断的数据。后续执行重复操作的时候，由于第一次更新的时候已经修改了前置条件中的判断依据，不满足前置条件，则不会重复执行更新数据操作。</p>
+<p>​	还是上面说的那个例子中，”将账户 X 的余额增加 100 元“ 这个操作不具备幂等性，我们可以给这个操作加上一个前置条件，变为：”如果账户余额为 500 元，就将余额加 100 元“，这下该操作就具备幂等性了。同样对应到消息队列中的使用时，可以在发消息时在消息体中带上当前的余额，在消费的时候进行判断数据库中，当前余额是否满足前置条件，只有满足，才能执行变更操作。</p>
+<p>​	另一种更为通用的方法是，给数据增加一个版本号属性，每次更新数据前，判断当前版本号和消息中的版本号是否一致，如果不一致就拒绝更新数据，更新数据的时候同时将版本号 + 1，这样也可以实现幂等。</p>
+<h4 id="3、记录并检查操作"><a href="#3、记录并检查操作" class="headerlink" title="3、记录并检查操作"></a>3、记录并检查操作</h4><p>​	上面两种方法其实并不是万能的，如果恰好也不适用于你的场景，还有一种通用性最强，适用范围最广的实现幂等方法：<strong>记录并检查操作</strong>，也称 ”Token 机制或 GUID（全局唯一 ID）机制“，实现的思路很简单：在执行数据更新操作之前，先检查一下是否执行过这个更新操作。</p>
+<p>​	具体的实现方法是，在发送消息时，给每条消息指定一个全局唯一 ID，消费时先检查这个 ID 是否被消费过，如果没有被消费过，才更新数据，然后将该 ID 的消费状态设置为已消费。</p>
+<p>​	原理和实现看似都很简单，但在分布式系统中是非常难实现的。首先，需要给每个消息都指定一个全局唯一 ID，这件事本身就不简单，方法有很多，但都不太好同时满足简单、高可用和高性能，或多或少都会有些牺牲。</p>
+<p>​	更麻烦的是，在 ”检查消费状态，然后更新数据并设置消费状态“ 中，三个操作必须为一组且具备原子性，才能真正实现幂等。对于这个问题，当然我们可以用事务来实现，也可以用锁来实现，但是在分布式系统中，无论是分布式事务还是分布式锁都是比较难解决问题。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>​	这篇文章，我们了解到消息队列在使用中可能会出现消息重复的问题，并介绍了几种通过实现幂等的操作来避免消息重复给系统带来的影响，可以利用数据库的唯一约束防止重复更新数据，也可以为数据更新设置一次性的前置条件，来防止重复消息，如果这两种方法都不适用，还可以用 ”记录并检查操作“ 的方式来保证幂等，这种方法适用范围最广，但是实现难度和复杂度也比较高，一般不推荐使用。</p>
+<p>​	这些实现幂等的方法，不仅可以用于解决重复消息的问题，也同样适用于，在其他场景中来解决重复请求或者重复调用的问题。比如，我们可以将 HTTP 服务设计成幂等的，解决前端或者 APP 重复提交表单数据的问题；也可以将一个微服务设计成幂等的，解决 RPC 框架自动重试导致的重复调用问题。</p>
+
                 
               </div>
             
@@ -375,8 +417,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>如何处理消费过程中的重复消息</div>
-      <div>http://example.com/2023/10/27/MQ/如何处理消费过程中的重复消息/</div>
+      <div>如何利用事务消息实现分布式事务？</div>
+      <div>http://example.com/2023/10/26/MQ/如何处理消费过程中的重复消息/</div>
     </div>
     <div class="license-meta">
       
@@ -388,13 +430,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年10月27日</div>
+          <div>2023年10月26日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年10月27日</div>
+          <div>2023年10月29日</div>
         </div>
       
       
@@ -425,12 +467,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2023/10/27/MQ/%E5%A6%82%E4%BD%95%E7%A1%AE%E4%BF%9D%E6%B6%88%E6%81%AF%E4%B8%8D%E4%BC%9A%E4%B8%A2%E5%A4%B1/" title="如何确保消息不会丢失">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">如何确保消息不会丢失</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/10/27/MQ/%E5%A6%82%E4%BD%95%E7%A1%AE%E4%BF%9D%E6%B6%88%E6%81%AF%E4%B8%8D%E4%BC%9A%E4%B8%A2%E5%A4%B1/" title="如何确保消息不会丢失">
-                        <span class="hidden-mobile">如何确保消息不会丢失</span>
+                      <a href="/2023/10/26/MQ/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%9F/" title="如何利用事务消息实现分布式事务？">
+                        <span class="hidden-mobile">如何利用事务消息实现分布式事务？</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
