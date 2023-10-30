@@ -16,17 +16,20 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="胤凯的个人博客">
+    <meta name="description" content="1、概述">
 <meta property="og:type" content="article">
 <meta property="og:title" content="接口">
 <meta property="og:url" content="http://example.com/2023/10/30/Go/%E6%8E%A5%E5%8F%A3/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="胤凯的个人博客">
+<meta property="og:description" content="1、概述">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/go.png">
 <meta property="article:published_time" content="2023-10-30T05:38:51.000Z">
-<meta property="article:modified_time" content="2023-10-30T05:38:51.500Z">
+<meta property="article:modified_time" content="2023-10-30T09:44:08.883Z">
 <meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/go.png">
   
   
   
@@ -265,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          10k 字
         
       </span>
     
@@ -276,7 +279,7 @@
         
         
         
-          1 分钟
+          84 分钟
         
       </span>
     
@@ -327,7 +330,191 @@
             
               <div class="markdown-body">
                 
-                
+                <h4 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h4><h4 id=""><a href="#" class="headerlink" title=""></a><span id="more"></span></h4><p>​	接口是计算机系统中多个组件共享的边界，不同的组件能够在边界上交换信息。接口的本质是引入一个新的中间层，调用方可以通过接口与具体实现分离，解除上下游的耦合，上层的模块不再需要下层的具体模块，只需要依赖一个约定好的接口。</p>
+<p><img src="/images/%E4%B8%8A%E4%B8%8B%E6%B8%B8%E9%80%9A%E8%BF%87%E6%8E%A5%E5%8F%A3%E8%A7%A3%E8%80%A6.png" srcset="/img/loading.gif" lazyload alt="上下游通过接口"></p>
+<blockquote>
+<p>举个例子：我们定义了一个 <code>Shape</code> 接口，它规定了一个 <code>Area()</code> 方法，然后我们创建了两个结构体 <code>Circle</code> 和 <code>Rectangle</code> 分别实现了这个接口的 <code>Area</code> 方法。我们可以实现一个<code>calculateArea</code> 函数计算它们的面积，参数就设置为 <code>Shape</code> 接口，我们就可以通过接口来调用它们的方法获取到面积，而不用关心是什么形状。</p>
+<p>这就是接口的作用：<strong>它定义了一个规范，不同的对象可以根据这个规范来实现自己的功能，而不需要关心其他对象的具体实现，从而降低了代码的耦合度。</strong></p>
+</blockquote>
+<p>​	这种面向接口的编程方式有着非常大的生命力，不论在框架还是操作系统中我们都能够找到接口的身影。</p>
+<p>​	除了解耦有依赖关系的上下游，接口还能够帮助我们隐藏底层实现，减少关注点。</p>
+<p>​	人能够同时处理的信息非常有限，定义良好的接口能够隔离底层的实现，让我们将重点放在当前的代码片段中。SQL 就是接口的一个例子，当我们使用 SQL 语句查询数据的时候，其实不需要关心底层数据库的实现，我们只在乎 SQL 返回的结果是否符合预期。</p>
+<p><img src="/images/SQL%E5%92%8C%E4%B8%8D%E5%90%8C%E6%95%B0%E6%8D%AE%E5%BA%93.png" srcset="/img/loading.gif" lazyload alt="SQL和不同数据库"></p>
+<p>​	计算机科学中的接口是比较抽象的概念，但编程语言中接口的概念就比较具体。Go 语言中的接口是一种内置的类型，它定义了以一组方法的签名，下面介绍几个基本的概念以及常见问题。</p>
+<h5 id="隐式接口"><a href="#隐式接口" class="headerlink" title="隐式接口"></a>隐式接口</h5><p>​	很多面向对象语言都有接口这个概念，例如 Java 和 C#。Java 的接口不仅可以定义方法签名，还可以定义变量，这些定义的变量可以直接在实现接口的类中使用：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">public <span class="hljs-keyword">interface</span> MyInterface &#123;<br>    public String hello = <span class="hljs-string">&quot;Hello&quot;</span>;<br>    public void sayHello();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	上述代码定义了一个必须实现的方法 <code>sayHello</code> 和一个会注入到实现类的变量 <code>hello</code>。在下面的代码中，<code>MyInterfaceImpl</code> 实现了 <code>MyInterface</code> 接口：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go">public class MyInterfaceImpl implements MyInterface &#123;<br>    public void sayHello() &#123;<br>        System.out.<span class="hljs-built_in">println</span>(MyInterface.hello);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	Java 中必须使用这种显示声明接口的方法，但 Go 语言中不需要这样的方式。</p>
+<p>​	Go 语言中定义接口需要使用 <code>interface</code> 关键字，在接口中我们只能定义方法签名，不能包含成员变量，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> <span class="hljs-type">error</span> <span class="hljs-keyword">interface</span> &#123;<br>	Error() <span class="hljs-type">string</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	如果一个类型需要实现 <code>error</code> 接口，那么它只需要实现 <code>Error() string</code> 方法，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> RPCError <span class="hljs-keyword">struct</span> &#123;<br>	Code <span class="hljs-type">int64</span><br>	Message <span class="hljs-type">string</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *RPCError)</span></span> Error() <span class="hljs-type">string</span> &#123;<br>	<span class="hljs-keyword">return</span> fmt.Sprintf(<span class="hljs-string">&quot;%s, code=%d&quot;</span>, e.Message, e.Code)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这段代码中根本没有出现 <code>error</code> 的影子，这就是 Go 语言中实现接口的方法，是隐式的，我们只需要实现  <code>Error() string</code> 方法就实现了 <code>error</code> 接口。这种方式与 Java 实现接口的方法是完全不同的：</p>
+<ul>
+<li>Java：实现接口需要显示地声明接口并实现所有方法</li>
+<li>Go：实现接口的所有方法就隐式地实现了接口</li>
+</ul>
+<p>​	我们使用上述 <code>RPCError</code> 结构体时并不关心它实现了哪些接口，Go 语言只会在传递参数、返回参数以及变量赋值时才会对某个类型是否实现接口进行检查。</p>
+<h5 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h5><p>​	Go 语言中接口也是一种类型，它能够出现在变量的定义、函数的参数和返回值中并对它们做出约束。Go 语言中有两种不同的接口：一种是带有方法的接口，另一种总是不带任何方法的接口：</p>
+<p><img src="/images/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%8E%A5%E5%8F%A3.png" srcset="/img/loading.gif" lazyload alt="Go语言中的两种接口"></p>
+<p>​	Go 语言使用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.iface"><code>runtime.iface</code></a> 表示第一种接口，使用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.eface"><code>runtime.eface</code></a> 表示第二种不包含任何方法的接口 <code>interface&#123;&#125;</code>，两种接口虽然都使用 <code>interface</code> 声明，但是由于后者在 Go 语言中很常见，所以在实现时使用了特殊的类型。</p>
+<p>​	Go 语言中的 <code>interface</code> 与 C 语言中的 <code>void  *</code> 不同，它不是任意类型。如果我们将类型转换成了 <code>interface&#123;&#125;</code> 类型，变量在运行期间也会发生变化，获取变量类型时会得到 <code>interface&#123;&#125;</code>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	v := <span class="hljs-number">1</span><br>	Print(v)<br>	<span class="hljs-built_in">println</span>(v)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Print</span><span class="hljs-params">(v <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;<br>	<span class="hljs-built_in">println</span>(v)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	上述函数只接受 <code>interface</code> 类型的参数，在调用 <code>Print</code> 函数的时候，会对参数 <code>v</code> 进行类型转换，将原来的 <code>Test</code> 类型转换成 <code>interface</code>{} 类型，于是打印出来的结果就是：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">(<span class="hljs-number">0x45e020</span>,<span class="hljs-number">0xc00002a748</span>)<br><span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="接口和指针"><a href="#接口和指针" class="headerlink" title="接口和指针"></a>接口和指针</h5><p>​	在 Go 语言中同时使用指针和接口时会发生一些让人困惑的问题，接口在定义一组方法时没有对实现的接收者做限制，所以我们会看到某个类型实现接口的两种方式：</p>
+<p><img src="/images/%E7%BB%93%E6%9E%84%E4%BD%93%E5%92%8C%E6%8C%87%E9%92%88%E5%AE%9E%E7%8E%B0%E6%8E%A5%E5%8F%A3.png" srcset="/img/loading.gif" lazyload alt="结构体和指针实现接口"></p>
+<p>​	因为结构体类型和指针类型是不同的，就像我们不能向一个接受指针的函数传递结构体一样，在实现接口时这两种类型也不能划等号。虽然两种类型不同，但是上图中的两种实现不可以同时存在，Go 语言的编译器会在结构体类型和指针类型都实现一个方法时报错 “method redeclared”。</p>
+<p>​	对 <code>Cat</code> 结构体来说，它在实现接口时可以选择接受者的类型，即结构体或者结构体指针，在初始化时也可以初始化成结构体或者指针。下面的代码总结了如何使用结构体、结构体指针实现接口，以及如何使用结构体、结构体指针初始化变量。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Cat <span class="hljs-keyword">struct</span> &#123;&#125;<br><span class="hljs-keyword">type</span> Duck <span class="hljs-keyword">interface</span> &#123; ... &#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c  Cat)</span></span> Quack &#123;&#125;  <span class="hljs-comment">// 使用结构体实现接口</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c *Cat)</span></span> Quack &#123;&#125;  <span class="hljs-comment">// 使用结构体指针实现接口</span><br><br><span class="hljs-keyword">var</span> d Duck = Cat&#123;&#125;      <span class="hljs-comment">// 使用结构体初始化变量</span><br><span class="hljs-keyword">var</span> d Duck = &amp;Cat&#123;&#125;     <span class="hljs-comment">// 使用结构体指针初始化变量</span><br></code></pre></td></tr></table></figure>
+
+<p>Go</p>
+<p>实现接口的类型和初始化返回的类型两个维度共组成了四种情况，然而这四种情况不是都能通过编译器的检查：</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">结构体实现接口</th>
+<th align="center">结构体指针实现接口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">结构体初始化变量</td>
+<td align="center">通过</td>
+<td align="center">不通过</td>
+</tr>
+<tr>
+<td align="center">结构体指针初始化变量</td>
+<td align="center">通过</td>
+<td align="center">通过</td>
+</tr>
+</tbody></table>
+<p>四种中只有使用指针实现接口，使用结构体初始化变量无法通过编译，其他的三种情况都可以正常执行。当实现接口的类型和初始化变量时返回的类型时相同时，代码通过编译是理所应当的：</p>
+<ul>
+<li>方法接受者和初始化类型都是结构体；</li>
+<li>方法接受者和初始化类型都是结构体指针；</li>
+</ul>
+<p>​	而剩下的两种方式为什么一种能够通过编译，另一种无法通过编译呢？先说能通过编译的情况：方法的接收者是结构体，而初始化的变量是结构体指针：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Cat <span class="hljs-keyword">struct</span> &#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c Cat)</span></span> Quack() &#123;<br>	fmt.Println(<span class="hljs-string">&quot;neow&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> c Duck = &amp;Cat&#123;&#125;<br>	c.Quack()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	因为指针 <code>&amp;Cat&#123;&#125;</code> 变量能够隐式地获取到指向的结构体，所以能在结构体上调用对应的方法。</p>
+<p>​	而如果方法的接收者是结构体指针，而初始化的变量是结构体，代码就无法通过编译了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Duck <span class="hljs-keyword">interface</span> &#123;<br>	Quack()<br>&#125;<br><br><span class="hljs-keyword">type</span> Cat <span class="hljs-keyword">struct</span>&#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c *Cat)</span></span> Quack() &#123;<br>	fmt.Println(<span class="hljs-string">&quot;meow&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> c Duck = Cat&#123;&#125;<br>	c.Quack()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<pre><code class="hljs"> 编译器会提醒：无法将 &#39;Cat&#123;&#125;&#39; (类型 Cat) 用作类型 Duck 类型未实现 &#39;Duck&#39;，因为 &#39;Quack&#39; 方法有指针接收器。
+</code></pre>
+<p><img src="/images/%E5%AE%9E%E7%8E%B0%E6%8E%A5%E5%8F%A3%E7%9A%84%E6%8E%A5%E6%94%B6%E8%80%85%E7%B1%BB%E5%9E%8B.png" srcset="/img/loading.gif" lazyload alt="实现接口的接收者类型"></p>
+<p>​	如图所示，不论上述代码中初始化的变量 <code>c</code> 是 <code>Cat&#123;&#125;</code> 还是 <code>&amp;Cat&#123;&#125;</code>，使用 <code>c.Quack()</code>方法时都会发生值拷贝：</p>
+<ul>
+<li>上图左侧，对于 <code>&amp;Cat</code> 来说，这意味着拷贝一个新的 <code>&amp;Cat&#123;&#125;</code> 指针，这个指针与原来的指针指向一个相同并且唯一的结构体，所以编译器可以隐式的对变量解引用来获取指针指向的结构体；</li>
+<li>上图右侧，对于 <code>Cat&#123;&#125;</code>来说，这意味着 <code>Quack</code>方法会接受一个全新的 <code>Cat&#123;&#125;</code>，因为方法的参数是 <code>*Cat</code>，编译器不会无中生有创建一个新的指针；即使编译器可以创建新的指针，这个指针也无法指向最初调用该方法的结构体。</li>
+</ul>
+<p>​	因此，当我们使用指针实现接口时，只有指针类型才会实现该接口；当我们使用结构体实现接口时，指针类型和结构体类型都会实现该接口。但这并不意味着我们应该统一使用结构体实现接口，这里只是做一个解释。</p>
+<h5 id="nil-和-non-nil"><a href="#nil-和-non-nil" class="headerlink" title="nil 和 non-nil"></a>nil 和 non-nil</h5><p>​	我们可以通过一个例子理解 <strong>Go  语言的接口类型不是任意类型</strong> 这句话：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">type</span> TestStruct <span class="hljs-keyword">struct</span>&#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NilOrNot</span><span class="hljs-params">(v <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> v == <span class="hljs-literal">nil</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> s *TestStruct<br>	fmt.Println(s == <span class="hljs-literal">nil</span>)      <span class="hljs-comment">// #=&gt; true</span><br>	fmt.Println(NilOrNot(s))   <span class="hljs-comment">// #=&gt; false</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	简单总结一下上述代码：</p>
+<ul>
+<li>将上述变量与 <code>nil</code> 比较会返回 <code>true</code>；</li>
+<li>将上述变量传入 <code>NilOrNot</code> 方法并与 <code>nil</code> 比较会返回 <code>false</code>；</li>
+</ul>
+<p>​	出现上述现象的原因是 —— 调用 <code>NilOrNot</code> 函数时发生了 <strong>隐式类型转换</strong>，除了向方法传入参数之外，变量的赋值也会触发隐式类型转换。在发生类型转换时， <code>*TestStruct</code> 类型转换成了 <code>interface&#123;&#125;</code> 类型，转换后的变量不仅包含转换前的变量值 <code>nil</code>，还包含变量的类型信息 <code>TestStruct</code>，所以转换后的变量与 <code>nil</code> 不相等。</p>
+<h4 id="2、数据结构"><a href="#2、数据结构" class="headerlink" title="2、数据结构"></a>2、数据结构</h4><p>​	从概述中，我们了解到Go 语言根据接口类型是否包含一组方法将接口类型分成了两类：</p>
+<ul>
+<li>使用 <code>runtime.iface</code> 结构体表示包含方法的接口</li>
+<li>使用<code>runtime.eface</code>结构体表示不包含方法的 <code>interface&#123;&#125;</code> 类型</li>
+</ul>
+<p>​	<code>runtime.eface</code> 结构体在 Go 语言中的定义是这样的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> eface <span class="hljs-keyword">struct</span> &#123;<br>	_type *_type<br>	data unsafe.Pointer<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	由于 <code>interface&#123;&#125;</code> 不包含任何方法，所以它的结构体是比较简单的，只包含指向底层数据和结构的两个指针。因此不难看出，—— Go 语言的任意类型都可以转换成 <code>interface&#123;&#125;</code>。</p>
+<p>​	另一个用于表示接口的结构体是 <code>runtime.iface</code>，这个结构体中指向原始数据的指针 <code>data</code>，还有一个 <code>runtime.itab</code> 类型的 <code>tab</code> 字段。</p>
+<p>​	下面我们来分析一个 Go 语言接口中的这两个类型，即<code>runtime._type</code> 和 <code>runtime.itab</code>。</p>
+<h5 id="类型结构体"><a href="#类型结构体" class="headerlink" title="类型结构体"></a>类型结构体</h5><p>​	<code>runtime._type</code> 是 Go 语言类型的运行时表示。它包含很多类型的元信息，例如类型大小、哈希、对齐以及种类等。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> _type <span class="hljs-keyword">struct</span> &#123;<br>	size       <span class="hljs-type">uintptr</span>    <span class="hljs-comment">// 类型的大小（以字节为单位）</span><br>	ptrdata    <span class="hljs-type">uintptr</span>    <span class="hljs-comment">// 指针数据的大小（以字节为单位），通常用于垃圾回收</span><br>	hash       <span class="hljs-type">uint32</span>     <span class="hljs-comment">// 可能用于标识类型的散列值</span><br>	tflag      tflag      <span class="hljs-comment">// 类型的标志（flag），描述类型的属性，例如是否可比较等</span><br>	align      <span class="hljs-type">uint8</span>      <span class="hljs-comment">// 类型的对齐方式（以字节为单位）</span><br>	fieldAlign <span class="hljs-type">uint8</span>      <span class="hljs-comment">// 结构体字段的对齐方式（以字节为单位）</span><br>	kind       <span class="hljs-type">uint8</span>      <span class="hljs-comment">// 类型的种类，例如，不同值可以表示不同的类型，如字符串、整数等</span><br>	equal      <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(unsafe.Pointer, unsafe.Pointer)</span></span> <span class="hljs-type">bool</span> <span class="hljs-comment">// 用于比较两个该类型的值是否相等的函数</span><br>	gcdata     *<span class="hljs-type">byte</span>      <span class="hljs-comment">// 可能与垃圾回收有关的数据</span><br>	str        nameOff    <span class="hljs-comment">// 类型的名称，通常通过字符串表的索引来引用类型名称</span><br>	ptrToThis  typeOff    <span class="hljs-comment">// 用于引用类型自身的偏移</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>size</code> 字段存储了类型占用的内存空间，为内存空间的分配提供信息；</li>
+<li><code>hash</code> 字段能够帮助我们快速确定类型是否相等；</li>
+<li><code>equal</code> 字段用于判断当前类型的多个对象是否相等，该字段是为了减少 Go 语言二进制包大小从 <code>typeAlg</code> 结构体中迁移过来的<a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part2-foundation/ch04-basic/golang-interface/#fn:4">4</a>；</li>
+</ul>
+<p>​	对该结构体中的字段，我们只需要有个大体的概念即可，不用详细理解所有字段的作用和意义。</p>
+<h5 id="itab-结构体"><a href="#itab-结构体" class="headerlink" title="itab 结构体"></a>itab 结构体</h5><p><a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.itab"><code>runtime.itab</code></a> 结构体是接口类型的核心组成部分，每一个 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.itab"><code>runtime.itab</code></a> 都占 32 字节，我们可以将其看成接口类型和具体类型的组合，它们分别用 <code>inter</code> 和 <code>_type</code> 两个字段表示：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> itab <span class="hljs-keyword">struct</span> &#123;<br>	inter *interfacetype  <span class="hljs-comment">// 指向接口类型的指针</span><br>	_type *_type          <span class="hljs-comment">// 指向具体类型的指针</span><br>	hash  <span class="hljs-type">uint32</span>          <span class="hljs-comment">// 散列值，可能用于快速类型检查</span><br>	_     [<span class="hljs-number">4</span>]<span class="hljs-type">byte</span>         <span class="hljs-comment">// 未使用的 4 字节填充</span><br>	fun   [<span class="hljs-number">1</span>]<span class="hljs-type">uintptr</span>      <span class="hljs-comment">// 包含一个指向类型方法的指针的数组</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>hash</code> 是对 <code>_typehash</code> 的拷贝，当我们想将 <code>interface</code> 类型转换成具体类型时，可以使用该字段快速判断目标类型和具体类型<code>runtime._type</code> 是否一致；</li>
+<li><code>fun</code> 是一个动态大小的数组，用于动态派发的虚函数表，存储了一组函数指针。虽然该变量被声明成大小固定的数组，但是在使用时会通过原始指针获取其中的数据，所以 <code>fun</code> 数组中保存的元素数量是不确定的；</li>
+</ul>
+<p>​	后面会对上述两个字段进行深入了解。</p>
+<h4 id="3、类型转换"><a href="#3、类型转换" class="headerlink" title="3、类型转换"></a>3、类型转换</h4><p>​	下面通过几个例子深入理解接口类型是如何初始化和传递的。</p>
+<h5 id="指针类型"><a href="#指针类型" class="headerlink" title="指针类型"></a>指针类型</h5><p>​	首先回到这一节开头提到的 <code>Duck</code> 接口的例子，我们使用 <code>//go:noinline</code> 指令<a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part2-foundation/ch04-basic/golang-interface/#fn:5">5</a>禁止 <code>Quack</code> 方法的内联编译：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">type</span> Duck <span class="hljs-keyword">interface</span> &#123;<br>	Quack()<br>&#125;<br><br><span class="hljs-keyword">type</span> Cat <span class="hljs-keyword">struct</span> &#123;<br>	Name <span class="hljs-type">string</span><br>&#125;<br><br><span class="hljs-comment">//go:noinline</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c *Cat)</span></span> Quack() &#123;<br>	<span class="hljs-built_in">println</span>(c.Name + <span class="hljs-string">&quot; meow&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> c Duck = &amp;Cat&#123;Name: <span class="hljs-string">&quot;draven&quot;</span>&#125;<br>	c.Quack()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	我们使用编译器将上述代码编译成汇编语言、删掉一些对理解接口原理无用的指令并保留与赋值语句相关的代码，拆分成三部分：</p>
+<ol>
+<li>结构体 <code>Cat</code> 的初始化；</li>
+<li>赋值触发的类型转换过程；</li>
+<li>调用接口的方法 <code>Quack()</code>；</li>
+</ol>
+<p>我们先来分析结构体 <code>Cat</code> 的初始化过程：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go">LEAQ	<span class="hljs-keyword">type</span>.<span class="hljs-string">&quot;&quot;</span>.Cat(SB), AX                ;; AX = &amp;<span class="hljs-keyword">type</span>.<span class="hljs-string">&quot;&quot;</span>.Cat<br>MOVQ	AX, (SP)                           ;; SP = &amp;<span class="hljs-keyword">type</span>.<span class="hljs-string">&quot;&quot;</span>.Cat<br>CALL	runtime.newobject(SB)              ;; SP + <span class="hljs-number">8</span> = &amp;Cat&#123;&#125;<br>MOVQ	<span class="hljs-number">8</span>(SP), DI                          ;; DI = &amp;Cat&#123;&#125;<br>MOVQ	$<span class="hljs-number">6</span>, <span class="hljs-number">8</span>(DI)                          ;; StringHeader(DI.Name).Len = <span class="hljs-number">6</span><br>LEAQ	<span class="hljs-keyword">go</span>.<span class="hljs-type">string</span>.<span class="hljs-string">&quot;draven&quot;</span>(SB), AX         ;; AX = &amp;<span class="hljs-string">&quot;draven&quot;</span><br>MOVQ	AX, (DI)                           ;; StringHeader(DI.Name).Data = &amp;<span class="hljs-string">&quot;draven&quot;</span><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>获取 <code>Cat</code> 结构体类型指针并将其作为参数放到栈上；</li>
+<li>通过 <code>CALL</code> 指定调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.newobject"><code>runtime.newobject</code></a> 函数，这个函数会以 <code>Cat</code> 结构体类型指针作为入参，分配一片新的内存空间并将指向这片内存空间的指针返回到 SP+8 上；</li>
+<li>SP+8 现在存储了一个指向 <code>Cat</code> 结构体的指针，我们将栈上的指针拷贝到寄存器 <code>DI</code> 上方便操作；</li>
+<li>由于 <code>Cat</code> 中只包含一个字符串类型的 <code>Name</code> 变量，所以在这里会分别将字符串地址 <code>&amp;&quot;draven&quot;</code> 和字符串长度 6 设置到结构体上，最后三行汇编指令等价于 <code>cat.Name = &quot;draven&quot;</code>；</li>
+</ol>
+<p>​	字符串在运行时的表示是指针加上字符串长度，这里要看一下初始化之后的 <code>Cat</code> 结构体在内存中的表示是什么样的：</p>
+<p><img src="/images/%E7%BB%93%E6%9E%84%E4%BD%93%E6%8C%87%E9%92%88.png" srcset="/img/loading.gif" lazyload alt="结构体指针"></p>
+<p>因为 <code>Cat</code> 结构体的定义中只包含一个字符串，而字符串在 Go 语言中总共占 16 字节，所以每一个 <code>Cat</code> 结构体的大小都是 16 字节。初始化 <code>Cat</code> 结构体之后就进入了将 <code>*Cat</code> 转换成 <code>Duck</code> 类型的过程了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">LEAQ	<span class="hljs-keyword">go</span>.itab.*<span class="hljs-string">&quot;&quot;</span>.Cat,<span class="hljs-string">&quot;&quot;</span>.Duck(SB), AX    ;; AX = *itab(<span class="hljs-keyword">go</span>.itab.*<span class="hljs-string">&quot;&quot;</span>.Cat,<span class="hljs-string">&quot;&quot;</span>.Duck)<br>MOVQ	DI, (SP)                           ;; SP = AX<br></code></pre></td></tr></table></figure>
+
+<p>类型转换的过程比较简单，<code>Duck</code> 作为一个包含方法的接口，它在底层使用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.iface"><code>runtime.iface</code></a> 结构体表示。<a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.iface"><code>runtime.iface</code></a> 结构体包含两个字段，其中一个是指向数据的指针，另一个是表示接口和结构体关系的 <code>tab</code> 字段，我们已经通过上一段代码 SP+8 初始化了 <code>Cat</code> 结构体指针，这段代码只是将编译期间生成的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.itab"><code>runtime.itab</code></a> 结构体指针复制到 SP 上：</p>
+<p><img src="/images/cat%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2.png" srcset="/img/loading.gif" lazyload alt="cat类型转换"></p>
+<p>到这里，我们会发现 SP ~ SP+16 共同组成了 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.iface"><code>runtime.iface</code></a> 结构体，而栈上的这个 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.iface"><code>runtime.iface</code></a> 也是 <code>Quack</code> 方法的第一个入参。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">CALL    <span class="hljs-string">&quot;&quot;</span>.(*Cat).Quack(SB)                ;; SP.Quack()<br></code></pre></td></tr></table></figure>
+
+<p>​	上述代码会直接通过 <code>CALL</code> 指令完成方法的调用，细心的读者可能会发现一个问题 —— 为什么在代码中我们调用的是 <code>Duck.Quack</code> 但生成的汇编是 <code>*Cat.Quack</code> 呢？Go 语言的编译器会在编译期间将一些需要动态派发的方法调用改写成对目标方法的直接调用，以减少性能的额外开销。如果在这里禁用编译器优化，就会看到动态派发的过程，我们会在后面分析接口的动态派发以及性能上的额外开销。</p>
+<h5 id="结构体类型"><a href="#结构体类型" class="headerlink" title="结构体类型"></a>结构体类型</h5><p>在这里我们继续修改上一节中的代码，使用结构体类型实现 <code>Duck</code> 接口并初始化结构体类型的变量：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">type</span> Duck <span class="hljs-keyword">interface</span> &#123;<br>	Quack()<br>&#125;<br><br><span class="hljs-keyword">type</span> Cat <span class="hljs-keyword">struct</span> &#123;<br>	Name <span class="hljs-type">string</span><br>&#125;<br><br><span class="hljs-comment">//go:noinline</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c Cat)</span></span> Quack() &#123;<br>	<span class="hljs-built_in">println</span>(c.Name + <span class="hljs-string">&quot; meow&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> c Duck = Cat&#123;Name: <span class="hljs-string">&quot;draven&quot;</span>&#125;<br>	c.Quack()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>编译上述代码会得到如下所示的汇编指令，需要注意的是为了代码更容易理解和分析，这里的汇编指令依然经过了删减，不过不影响具体的执行过程。与上一节一样，我们将汇编代码的执行过程分成以下几个部分：</p>
+<ol>
+<li>初始化 <code>Cat</code> 结构体；</li>
+<li>完成从 <code>Cat</code> 到 <code>Duck</code> 接口的类型转换；</li>
+<li>调用接口的 <code>Quack</code> 方法；</li>
+</ol>
+<p>我们先来看一下上述汇编代码中用于初始化 <code>Cat</code> 结构体的部分：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go">XORPS   X0, X0                          ;; X0 = <span class="hljs-number">0</span><br>MOVUPS  X0, <span class="hljs-string">&quot;&quot;</span>..autotmp_1+<span class="hljs-number">32</span>(SP)        ;; StringHeader(SP+<span class="hljs-number">32</span>).Data = <span class="hljs-number">0</span><br>LEAQ    <span class="hljs-keyword">go</span>.<span class="hljs-type">string</span>.<span class="hljs-string">&quot;draven&quot;</span>(SB), AX      ;; AX = &amp;<span class="hljs-string">&quot;draven&quot;</span><br>MOVQ    AX, <span class="hljs-string">&quot;&quot;</span>..autotmp_1+<span class="hljs-number">32</span>(SP)        ;; StringHeader(SP+<span class="hljs-number">32</span>).Data = AX<br>MOVQ    $<span class="hljs-number">6</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_1+<span class="hljs-number">40</span>(SP)        ;; StringHeader(SP+<span class="hljs-number">32</span>).Len = <span class="hljs-number">6</span><br></code></pre></td></tr></table></figure>
+
+<p>Go</p>
+<p>这段汇编指令会在栈上初始化 <code>Cat</code> 结构体，而上一节的代码在堆上申请了 16 字节的内存空间，栈上只有一个指向 <code>Cat</code> 的指针。</p>
+<p>初始化结构体后会进入类型转换的阶段，编译器会将 <code>go.itab.&quot;&quot;.Cat,&quot;&quot;.Duck</code> 的地址和指向 <code>Cat</code> 结构体的指针作为参数一并传入 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.convT2I"><code>runtime.convT2I</code></a> 函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go">LEAQ	<span class="hljs-keyword">go</span>.itab.<span class="hljs-string">&quot;&quot;</span>.Cat,<span class="hljs-string">&quot;&quot;</span>.Duck(SB), AX     ;; AX = &amp;(<span class="hljs-keyword">go</span>.itab.<span class="hljs-string">&quot;&quot;</span>.Cat,<span class="hljs-string">&quot;&quot;</span>.Duck)<br>MOVQ	AX, (SP)                           ;; SP = AX<br>LEAQ	<span class="hljs-string">&quot;&quot;</span>..autotmp_1+<span class="hljs-number">32</span>(SP), AX           ;; AX = &amp;(SP+<span class="hljs-number">32</span>) = &amp;Cat&#123;Name: <span class="hljs-string">&quot;draven&quot;</span>&#125;<br>MOVQ	AX, <span class="hljs-number">8</span>(SP)                          ;; SP + <span class="hljs-number">8</span> = AX<br>CALL	runtime.convT2I(SB)                ;; runtime.convT2I(SP, SP+<span class="hljs-number">8</span>)<br></code></pre></td></tr></table></figure>
+
+<p>Go</p>
+<p>这个函数会获取 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.itab"><code>runtime.itab</code></a> 中存储的类型，根据类型的大小申请一片内存空间并将 <code>elem</code> 指针中的内容拷贝到目标的内存中：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">convT2I</span><span class="hljs-params">(tab *itab, elem unsafe.Pointer)</span></span> (i iface) &#123;<br>	t := tab._type<br>	x := mallocgc(t.size, t, <span class="hljs-literal">true</span>)<br>	typedmemmove(t, x, elem)<br>	i.tab = tab<br>	i.data = x<br>	<span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Go</p>
+<p><a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.convT2I"><code>runtime.convT2I</code></a> 会返回一个 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.iface"><code>runtime.iface</code></a>，其中包含 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.itab"><code>runtime.itab</code></a> 指针和 <code>Cat</code> 变量。当前函数返回之后，<code>main</code> 函数的栈上会包含以下数据：</p>
+<p><img src="/images/%E7%BB%93%E6%9E%84%E4%BD%93%E5%88%B0%E6%8C%87%E9%92%88.png" srcset="/img/loading.gif" lazyload alt="结构体到指针"></p>
+<p>SP 和 SP+8 中存储的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.itab"><code>runtime.itab</code></a> 和 <code>Cat</code> 指针是 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.convT2I"><code>runtime.convT2I</code></a> 函数的入参，这个函数的返回值位于 SP+16，是一个占 16 字节内存空间的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.iface"><code>runtime.iface</code></a> 结构体，SP+32 存储的是在栈上的 <code>Cat</code> 结构体，它会在 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.convT2I"><code>runtime.convT2I</code></a> 执行的过程中拷贝到堆上。</p>
+<p>在最后，我们会通过以下的指令调用 <code>Cat</code> 实现的接口方法 <code>Quack()</code>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go">MOVQ	<span class="hljs-number">16</span>(SP), AX ;; AX = &amp;(<span class="hljs-keyword">go</span>.itab.<span class="hljs-string">&quot;&quot;</span>.Cat,<span class="hljs-string">&quot;&quot;</span>.Duck)<br>MOVQ	<span class="hljs-number">24</span>(SP), CX ;; CX = &amp;Cat&#123;Name: <span class="hljs-string">&quot;draven&quot;</span>&#125;<br>MOVQ	<span class="hljs-number">24</span>(AX), AX ;; AX = AX.fun[<span class="hljs-number">0</span>] = Cat.Quack<br>MOVQ	CX, (SP)   ;; SP = CX<br>CALL	AX         ;; CX.Quack()<br></code></pre></td></tr></table></figure>
+
+<p>Go</p>
+<p>这几个汇编指令还是非常好理解的，<code>MOVQ 24(AX), AX</code> 是最关键的指令，它从 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.itab"><code>runtime.itab</code></a> 结构体中取出 <code>Cat.Quack</code> 方法指针作为 <code>CALL</code> 指令调用时的参数。接口变量的第 24 字节是 <code>itab.fun</code> 数组开始的位置，由于 <code>Duck</code> 接口只包含一个方法，所以 <code>itab.fun[0]</code> 中存储的就是指向 <code>Quack</code> 方法的指针了。</p>
+<h4 id="4、类型断言"><a href="#4、类型断言" class="headerlink" title="4、类型断言"></a>4、类型断言</h4><h4 id="5、动态派发"><a href="#5、动态派发" class="headerlink" title="5、动态派发"></a>5、动态派发</h4>
                 
               </div>
             
@@ -335,6 +522,34 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Go/">#Go</a>
+      
+    </div>
   
 </div>
 
@@ -393,6 +608,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/10/30/MQ/%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B%E4%BA%86%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%EF%BC%9F/" title="消息积压了如何处理？">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">消息积压了如何处理？</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
