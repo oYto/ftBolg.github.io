@@ -1,0 +1,845 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="​	这次我们来看一下什么是 Ping 操作，以及它有什么用处，并且我们来动手实现一个简易版的 Ping 工具。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go实现Ping操作">
+<meta property="og:url" content="http://example.com/2023/10/31/Go/Go%E5%AE%9E%E7%8E%B0Ping%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="​	这次我们来看一下什么是 Ping 操作，以及它有什么用处，并且我们来动手实现一个简易版的 Ping 工具。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/Ping.png">
+<meta property="article:published_time" content="2023-10-31T04:20:18.000Z">
+<meta property="article:modified_time" content="2023-10-31T05:25:14.811Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="Ping">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/Ping.png">
+  
+  
+  
+  <title>Go实现Ping操作 - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/test/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Go实现Ping操作"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-31 12:20" pubdate>
+          2023年10月31日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          68 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Go实现Ping操作</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>​	这次我们来看一下什么是 Ping 操作，以及它有什么用处，并且我们来动手实现一个简易版的 Ping 工具。<span id="more"></span></p>
+<h4 id="Ping-是什么？"><a href="#Ping-是什么？" class="headerlink" title="Ping 是什么？"></a>Ping 是什么？</h4><p>​	<code>ping</code> 是一个计算机网络工具，通常用于测试网络连接的可达性和测量往返时间。在大多数操作系统中，<code>ping</code> 命令是一个内置的命令行工具，可以通过命令行终端使用。例如，在 Windows 操作系统中，你可以在命令提示符中运行 <code>ping</code> 命令，而在类 Unix 操作系统（如 Linux 和 macOS）中，你可以在终端中使用 <code>ping</code> 命令。通常，命令的语法是 <code>ping 目标主机或 IP</code>，然后命令将输出与目标主机的通信状态和 RTT 相关的信息。</p>
+<h4 id="Ping-有什么用处？"><a href="#Ping-有什么用处？" class="headerlink" title="Ping 有什么用处？"></a>Ping 有什么用处？</h4><p>​	<code>Ping</code> 工具主要有以下几个主要用途：</p>
+<ol>
+<li><strong>测试主机的可达性</strong>：<code>ping</code> 命令用于检查另一个主机是否可以在网络上访问。它向目标主机发送一个小的数据包（通常是 ICMP Echo Request），如果目标主机正常工作，它将响应一个回复数据包（通常是 ICMP Echo Reply）。如果没有响应，那么目标主机可能无法访问或处于离线状态。</li>
+<li><strong>测量往返时间（RTT）</strong>：<code>ping</code> 命令通常会显示每次请求和响应之间的时间差，这被称为往返时间（RTT）。这个值表示了数据从发送端到接收端的往返延迟，通常以毫秒为单位。测量 RTT 对于评估网络性能和延迟非常有用。</li>
+<li><strong>网络故障排除</strong>：<code>ping</code> 是网络故障排除的有用工具之一。通过检查 <code>ping</code> 的输出，网络管理员可以确定网络连接是否正常，以及延迟是否在可接受范围内。如果 <code>ping</code> 失败，管理员可以进一步调查网络故障的原因。</li>
+<li><strong>监测网络稳定性</strong>：<code>ping</code> 命令还可以用于监测网络的稳定性。通过连续地向目标主机发送 <code>ping</code> 请求，可以了解网络连接的质量和稳定性。如果出现不稳定性，管理员可以及时采取措施。</li>
+</ol>
+<h4 id="动手实现一个-Ping-工具"><a href="#动手实现一个-Ping-工具" class="headerlink" title="动手实现一个 Ping 工具"></a>动手实现一个 Ping 工具</h4><p>​	首先，我们要了解一下 <code>Ping</code> 操作的工作原理：向网络上的另一个主机系统发送 <code>ICMP</code> 报文，如果指定系统得到了报文，它将把回复报文传回给发送者。</p>
+<p>​	先来看看 ICMP 报文长什么样：</p>
+<p><img src="/images/ICMP%E6%8A%A5%E6%96%87.png" srcset="/img/loading.gif" lazyload alt="ICMP报文"></p>
+<p>​	ICMP 报文由 ICMP 报文头 和 数据包组成，其报文头包含 Type、Code、Checksum、ID、SequenceNum 字段。因此，我们需要先在本地主机上定义 ICMP 请求报文结构体：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> ICMP <span class="hljs-keyword">struct</span> &#123;<br>	Type        <span class="hljs-type">uint8</span>  <span class="hljs-comment">// 类型</span><br>	Code        <span class="hljs-type">uint8</span>  <span class="hljs-comment">// 代码</span><br>	CheckSum    <span class="hljs-type">uint16</span> <span class="hljs-comment">// 校验和</span><br>	ID          <span class="hljs-type">uint16</span> <span class="hljs-comment">// ID</span><br>	SequenceNum <span class="hljs-type">uint16</span> <span class="hljs-comment">// 序号</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	上面只是 ICMP 的报文头，我们在后面还需要为这个报文构建请求数据。需要注意的是，定义的顺序不能乱，因为我们发送数据包是按字节发送的，所以获取对应的字段的时候，也是按照对应字段的位置去获取的，如果顺序乱了，获取到的数据就会出错。</p>
+<p>​	在构建数据之前，我们先设置好命令行参数，以获取对应参数和目标 IP，同时需要定义全局变量，将命令行参数绑定到对应的变量中，方便使用：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> (<br>	helpFlag <span class="hljs-type">bool</span><br>	timeout  <span class="hljs-type">int64</span> <span class="hljs-comment">// 耗时</span><br>	size     <span class="hljs-type">int</span>   <span class="hljs-comment">// 大小</span><br>	count    <span class="hljs-type">int</span>   <span class="hljs-comment">// 请求次数</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetCommandArgs</span><span class="hljs-params">()</span></span> &#123;<br>	flag.Int64Var(&amp;timeout, <span class="hljs-string">&quot;w&quot;</span>, <span class="hljs-number">1000</span>, <span class="hljs-string">&quot;请求超时时间&quot;</span>)<br>	flag.IntVar(&amp;size, <span class="hljs-string">&quot;l&quot;</span>, <span class="hljs-number">32</span>, <span class="hljs-string">&quot;发送字节数&quot;</span>)<br>	flag.IntVar(&amp;count, <span class="hljs-string">&quot;n&quot;</span>, <span class="hljs-number">4</span>, <span class="hljs-string">&quot;请求次数&quot;</span>)<br>	flag.BoolVar(&amp;helpFlag, <span class="hljs-string">&quot;h&quot;</span>, <span class="hljs-literal">false</span>, <span class="hljs-string">&quot;显示帮助信息&quot;</span>)<br>	flag.Parse()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	在 <code>main</code> 函数中，启用命令行参数设置：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	GetCommandArgs()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	在发送报文前，我们需要先建立连接，此时需要先获取目标 IP，这个由命令行参数中获取：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 获取目标 IP</span><br>desIP := os.Args[<span class="hljs-built_in">len</span>(os.Args)<span class="hljs-number">-1</span>]<br><span class="hljs-comment">// 构建连接</span><br>conn, err := net.DialTimeout(<span class="hljs-string">&quot;ip:icmp&quot;</span>, desIP, time.Duration(timeout)*time.Millisecond)<br><span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>    log.Println(err.Error())<br>    <span class="hljs-keyword">return</span><br>&#125;<br><span class="hljs-keyword">defer</span> conn.Close()<br><span class="hljs-comment">// 远程地址</span><br>remoteaddr := conn.RemoteAddr()<br></code></pre></td></tr></table></figure>
+
+<p>​	连接建立后，我们需要根据参数中的发送次数 <code>count</code> 去发送对应次数的报文，因此需要用 <code>for</code> 去做：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; count; i ++ &#123;<br>	...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	通过百度百科可以查到，我们要使用的是 Ping 请求，即回显请求，其对应的 Type 和 Code 如下：</p>
+<p><img src="/images/ICMPPing%E8%AF%B7%E6%B1%82.png" srcset="/img/loading.gif" lazyload alt="ICMPPing请求"></p>
+<p>​	同样，我们在全局变量中添加对应的值：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> (<br>	typ      <span class="hljs-type">uint8</span> = <span class="hljs-number">8</span><br>    code     <span class="hljs-type">uint8</span> = <span class="hljs-number">0</span><br>)<br></code></pre></td></tr></table></figure>
+
+<p>​	做好前面的准备工作，我们就可以开始构建我们的 ICMP 请求报文了。我们这里以发送的第几次作为 ID 和序列号：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go">icmp := &amp;ICMP&#123;<br>        Type:        typ,<br>        Code:        code,<br>        CheckSum:    <span class="hljs-type">uint16</span>(<span class="hljs-number">0</span>),<br>        ID:          <span class="hljs-type">uint16</span>(i),<br>        SequenceNum: <span class="hljs-type">uint16</span>(i),<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	由于 ICMP 是使用二进制进行传输的，所以我们需要将信息用二进制表示：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> buffer bytes.Buffer<br>binary.Write(&amp;buffer, binary.BigEndian, icmp)<br></code></pre></td></tr></table></figure>
+
+<p>​	然后根据发送数据的大小 <code>size</code> 构建数据并写在 ICMP 报文后面：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go">data := <span class="hljs-built_in">make</span>([]<span class="hljs-type">byte</span>, size)<br>buffer.Write(data)<br>data = buffer.Bytes()<br></code></pre></td></tr></table></figure>
+
+<p>​	现在，就只差一个校验和字段了，计算 ICMP（Internet Control Message Protocol）报文的校验和字段遵循以下步骤：</p>
+<ol>
+<li>将报文分为 16 位的字（两个字节）。</li>
+<li>对所有字进行按位求和（二进制求和），包括数据部分和报文头。如果有剩余字节（奇数个字节），将其附加到最后一个字节。</li>
+<li>将溢出的进位位（如果有）加回到结果中。</li>
+<li>取结果的二进制反码（按位取反）</li>
+</ol>
+<p>​	代码实现如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">checkSum</span><span class="hljs-params">(data []<span class="hljs-type">byte</span>)</span></span> <span class="hljs-type">uint16</span> &#123;<br>	<span class="hljs-comment">// 第一步：两两拼接并求和</span><br>	length := <span class="hljs-built_in">len</span>(data)<br>	index := <span class="hljs-number">0</span><br>	<span class="hljs-keyword">var</span> sum <span class="hljs-type">uint32</span><br>	<span class="hljs-keyword">for</span> length &gt; <span class="hljs-number">1</span> &#123;<br>		<span class="hljs-comment">// 拼接且求和</span><br>		sum += <span class="hljs-type">uint32</span>(data[index])&lt;&lt;<span class="hljs-number">8</span> + <span class="hljs-type">uint32</span>(data[index+<span class="hljs-number">1</span>])<br>		length -= <span class="hljs-number">2</span><br>		index += <span class="hljs-number">2</span><br>	&#125;<br>	<span class="hljs-comment">// 奇数情况，还剩下一个，直接求和过去</span><br>	<span class="hljs-keyword">if</span> length == <span class="hljs-number">1</span> &#123;<br>		sum += <span class="hljs-type">uint32</span>(data[index])<br>	&#125;<br><br>	<span class="hljs-comment">// 第二部：高 16 位，低 16 位 相加，直至高 16 位为 0</span><br>	hi := sum &gt;&gt; <span class="hljs-number">16</span><br>	<span class="hljs-keyword">for</span> hi != <span class="hljs-number">0</span> &#123;<br>		sum = hi + <span class="hljs-type">uint32</span>(<span class="hljs-type">uint16</span>(sum))<br>		hi = sum &gt;&gt; <span class="hljs-number">16</span><br>	&#125;<br>	<span class="hljs-comment">// 返回 sum 值 取反</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-type">uint16</span>(^sum)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	接着再将算出来的校验和放到报文头对应的位置中去，这里需要计算一下位置。假设我们有以下 ICMP 报文：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-addition">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br>|      Type       |      Code       |<br><span class="hljs-addition">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br>|         Checksum (2 bytes)       |<br><span class="hljs-addition">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br>|           Identifier (2 bytes)   |<br><span class="hljs-addition">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br>|        Sequence Number (2 bytes) |<br><span class="hljs-addition">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br>|           Data (variable length) |<br><span class="hljs-addition">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></code></pre></td></tr></table></figure>
+
+<p>​	校验和属于报文的第3、4个字节，即 data[2] 和 data[3]。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">data[<span class="hljs-number">2</span>] = <span class="hljs-type">byte</span>(checkSum &gt;&gt; <span class="hljs-number">8</span>)<br>data[<span class="hljs-number">3</span>] = <span class="hljs-type">byte</span>(checkSum)<br></code></pre></td></tr></table></figure>
+
+<p>​	最后再设置一下超时时间，就可以将数据 <code>data</code> 写入连接中了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 设置超时时间</span><br>conn.SetDeadline(time.Now().Add(time.Duration(timeout) * time.Millisecond))<br><br><span class="hljs-comment">// 将 data 写入连接中，</span><br>n, err := conn.Write(data)<br><span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>    log.Println(err)<br>    <span class="hljs-keyword">continue</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	发送完成后，再构建缓冲接收响应包，</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go">buf := <span class="hljs-built_in">make</span>([]<span class="hljs-type">byte</span>, <span class="hljs-number">1024</span>)<br>n, err = conn.Read(buf)<br><span class="hljs-comment">//fmt.Println(data)</span><br><span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>    log.Println(err)<br>    <span class="hljs-keyword">continue</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	然后我们就可以从响应包中获取我们需要的数据，比如 IP 地址、TTL等：</p>
+<p><img src="/images/icmp%E5%9B%9E%E5%A4%8D%E6%8A%A5%E6%96%87.png" srcset="/img/loading.gif" lazyload alt="icmp回复报文"></p>
+<p>​	根据抓到的 ICMP 响应包，可以知道 IP 头共 20 个字节，源 IP 和 目标 IP 在我们接收的数据包的倒数 8 个字节里，所以我们可以推算出我们访问的 IP 地址，就可以构建我们的打印信息了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">fmt.Printf(<span class="hljs-string">&quot;来自 %d.%d.%d.%d 的回复：字节=%d 时间=%d TTL=%d\n&quot;</span>, buf[<span class="hljs-number">12</span>], buf[<span class="hljs-number">13</span>], buf[<span class="hljs-number">14</span>], buf[<span class="hljs-number">15</span>], n<span class="hljs-number">-28</span>, t, buf[<span class="hljs-number">8</span>])<br></code></pre></td></tr></table></figure>
+
+<p>​	至此，我们 Ping 工具的核心功能就实现了，还有一些统计信息，就不做具体的讲解了，感兴趣的可以从代码中看具体的实现。</p>
+<p>完整代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;bytes&quot;</span><br>	<span class="hljs-string">&quot;encoding/binary&quot;</span><br>	<span class="hljs-string">&quot;flag&quot;</span><br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;math&quot;</span><br>	<span class="hljs-string">&quot;net&quot;</span><br>	<span class="hljs-string">&quot;os&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-comment">// tcp 报文前20个是报文头，后面的才是 ICMP 的内容。</span><br><span class="hljs-comment">// ICMP：组建 ICMP 首部（8 字节） + 我们要传输的内容</span><br><span class="hljs-comment">// ICMP 首部：type、code、校验和、ID、序号，1 1 2 2 2</span><br><span class="hljs-comment">// 回显应答：type = 0，code = 0</span><br><span class="hljs-comment">// 回显请求：type = 8, code = 0</span><br><br><span class="hljs-keyword">var</span> (<br>	helpFlag <span class="hljs-type">bool</span><br>	timeout  <span class="hljs-type">int64</span> <span class="hljs-comment">// 耗时</span><br>	size     <span class="hljs-type">int</span>   <span class="hljs-comment">// 大小</span><br>	count    <span class="hljs-type">int</span>   <span class="hljs-comment">// 请求次数</span><br>	typ      <span class="hljs-type">uint8</span> = <span class="hljs-number">8</span><br>	code     <span class="hljs-type">uint8</span> = <span class="hljs-number">0</span><br>	SendCnt  <span class="hljs-type">int</span>                   <span class="hljs-comment">// 发送次数</span><br>	RecCnt   <span class="hljs-type">int</span>                   <span class="hljs-comment">// 接收次数</span><br>	MaxTime  <span class="hljs-type">int64</span> = math.MinInt64 <span class="hljs-comment">// 最大耗时</span><br>	MinTime  <span class="hljs-type">int64</span> = math.MaxInt64 <span class="hljs-comment">// 最短耗时</span><br>	SumTime  <span class="hljs-type">int64</span>                 <span class="hljs-comment">// 总计耗时</span><br>)<br><br><span class="hljs-comment">// ICMP 序号不能乱</span><br><span class="hljs-keyword">type</span> ICMP <span class="hljs-keyword">struct</span> &#123;<br>	Type        <span class="hljs-type">uint8</span>  <span class="hljs-comment">// 类型</span><br>	Code        <span class="hljs-type">uint8</span>  <span class="hljs-comment">// 代码</span><br>	CheckSum    <span class="hljs-type">uint16</span> <span class="hljs-comment">// 校验和</span><br>	ID          <span class="hljs-type">uint16</span> <span class="hljs-comment">// ID</span><br>	SequenceNum <span class="hljs-type">uint16</span> <span class="hljs-comment">// 序号</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println()<br>	log.SetFlags(log.Llongfile)<br>	GetCommandArgs()<br><br>	<span class="hljs-comment">// 打印帮助信息</span><br>	<span class="hljs-keyword">if</span> helpFlag &#123;<br>		displayHelp()<br>		os.Exit(<span class="hljs-number">0</span>)<br>	&#125;<br><br>	<span class="hljs-comment">// 获取目标 IP</span><br>	desIP := os.Args[<span class="hljs-built_in">len</span>(os.Args)<span class="hljs-number">-1</span>]<br>	<span class="hljs-comment">//fmt.Println(desIP)</span><br>	<span class="hljs-comment">// 构建连接</span><br>	conn, err := net.DialTimeout(<span class="hljs-string">&quot;ip:icmp&quot;</span>, desIP, time.Duration(timeout)*time.Millisecond)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Println(err.Error())<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	<span class="hljs-keyword">defer</span> conn.Close()<br>	<span class="hljs-comment">// 远程地址</span><br>	remoteaddr := conn.RemoteAddr()<br>	fmt.Printf(<span class="hljs-string">&quot;正在 Ping %s [%s] 具有 %d 字节的数据:\n&quot;</span>, desIP, remoteaddr, size)<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; count; i++ &#123;<br>		<span class="hljs-comment">// 构建请求</span><br>		icmp := &amp;ICMP&#123;<br>			Type:        typ,<br>			Code:        code,<br>			CheckSum:    <span class="hljs-type">uint16</span>(<span class="hljs-number">0</span>),<br>			ID:          <span class="hljs-type">uint16</span>(i),<br>			SequenceNum: <span class="hljs-type">uint16</span>(i),<br>		&#125;<br><br>		<span class="hljs-comment">// 将请求转为二进制流</span><br>		<span class="hljs-keyword">var</span> buffer bytes.Buffer<br>		binary.Write(&amp;buffer, binary.BigEndian, icmp)<br>		<span class="hljs-comment">// 请求的数据</span><br>		data := <span class="hljs-built_in">make</span>([]<span class="hljs-type">byte</span>, size)<br>		<span class="hljs-comment">// 将请求数据写到 icmp 报文头后</span><br>		buffer.Write(data)<br>		data = buffer.Bytes()<br>		<span class="hljs-comment">// ICMP 请求签名（校验和）：相邻两位拼接到一起，拼接成两个字节的数</span><br>		checkSum := checkSum(data)<br>		<span class="hljs-comment">// 签名赋值到 data 里</span><br>		data[<span class="hljs-number">2</span>] = <span class="hljs-type">byte</span>(checkSum &gt;&gt; <span class="hljs-number">8</span>)<br>		data[<span class="hljs-number">3</span>] = <span class="hljs-type">byte</span>(checkSum)<br>		startTime := time.Now()<br><br>		<span class="hljs-comment">// 设置超时时间</span><br>		conn.SetDeadline(time.Now().Add(time.Duration(timeout) * time.Millisecond))<br><br>		<span class="hljs-comment">// 将 data 写入连接中，</span><br>		n, err := conn.Write(data)<br>		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>			log.Println(err)<br>			<span class="hljs-keyword">continue</span><br>		&#125;<br>		<span class="hljs-comment">// 发送数 ++</span><br>		SendCnt++<br>		<span class="hljs-comment">// 接收响应</span><br>		buf := <span class="hljs-built_in">make</span>([]<span class="hljs-type">byte</span>, <span class="hljs-number">1024</span>)<br>		n, err = conn.Read(buf)<br>		<span class="hljs-comment">//fmt.Println(data)</span><br>		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>			log.Println(err)<br>			<span class="hljs-keyword">continue</span><br>		&#125;<br>		<span class="hljs-comment">// 接受数 ++</span><br>		RecCnt++<br>		<span class="hljs-comment">//fmt.Println(n, err) // data：64，ip首部：20，icmp：8个 = 92 个</span><br>		<span class="hljs-comment">// 打印信息</span><br>		t := time.Since(startTime).Milliseconds()<br>		fmt.Printf(<span class="hljs-string">&quot;来自 %d.%d.%d.%d 的回复：字节=%d 时间=%d TTL=%d\n&quot;</span>, buf[<span class="hljs-number">12</span>], buf[<span class="hljs-number">13</span>], buf[<span class="hljs-number">14</span>], buf[<span class="hljs-number">15</span>], n<span class="hljs-number">-28</span>, t, buf[<span class="hljs-number">8</span>])<br>		MaxTime = Max(MaxTime, t)<br>		MinTime = Min(MinTime, t)<br>		SumTime += t<br>		time.Sleep(time.Second)<br>	&#125;<br><br>	fmt.Printf(<span class="hljs-string">&quot;\n%s 的 Ping 统计信息:\n&quot;</span>, remoteaddr)<br>	fmt.Printf(<span class="hljs-string">&quot;    数据包: 已发送 = %d，已接收 = %d，丢失 = %d (%.f%% 丢失)，\n&quot;</span>, SendCnt, RecCnt, count*<span class="hljs-number">2</span>-SendCnt-RecCnt, <span class="hljs-type">float64</span>(count*<span class="hljs-number">2</span>-SendCnt-RecCnt)/<span class="hljs-type">float64</span>(count*<span class="hljs-number">2</span>)*<span class="hljs-number">100</span>)<br>	fmt.Println(<span class="hljs-string">&quot;往返行程的估计时间(以毫秒为单位):&quot;</span>)<br>	fmt.Printf(<span class="hljs-string">&quot;    最短 = %d，最长 = %d，平均 = %d\n&quot;</span>, MinTime, MaxTime, SumTime/<span class="hljs-type">int64</span>(count))<br>&#125;<br><br><span class="hljs-comment">// 求校验和</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">checkSum</span><span class="hljs-params">(data []<span class="hljs-type">byte</span>)</span></span> <span class="hljs-type">uint16</span> &#123;<br>	<span class="hljs-comment">// 第一步：两两拼接并求和</span><br>	length := <span class="hljs-built_in">len</span>(data)<br>	index := <span class="hljs-number">0</span><br>	<span class="hljs-keyword">var</span> sum <span class="hljs-type">uint32</span><br>	<span class="hljs-keyword">for</span> length &gt; <span class="hljs-number">1</span> &#123;<br>		<span class="hljs-comment">// 拼接且求和</span><br>		sum += <span class="hljs-type">uint32</span>(data[index])&lt;&lt;<span class="hljs-number">8</span> + <span class="hljs-type">uint32</span>(data[index+<span class="hljs-number">1</span>])<br>		length -= <span class="hljs-number">2</span><br>		index += <span class="hljs-number">2</span><br>	&#125;<br>	<span class="hljs-comment">// 奇数情况，还剩下一个，直接求和过去</span><br>	<span class="hljs-keyword">if</span> length == <span class="hljs-number">1</span> &#123;<br>		sum += <span class="hljs-type">uint32</span>(data[index])<br>	&#125;<br><br>	<span class="hljs-comment">// 第二部：高 16 位，低 16 位 相加，直至高 16 位为 0</span><br>	hi := sum &gt;&gt; <span class="hljs-number">16</span><br>	<span class="hljs-keyword">for</span> hi != <span class="hljs-number">0</span> &#123;<br>		sum = hi + <span class="hljs-type">uint32</span>(<span class="hljs-type">uint16</span>(sum))<br>		hi = sum &gt;&gt; <span class="hljs-number">16</span><br>	&#125;<br>	<span class="hljs-comment">// 返回 sum 值 取反</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-type">uint16</span>(^sum)<br>&#125;<br><br><span class="hljs-comment">// GetCommandArgs 命令行参数</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetCommandArgs</span><span class="hljs-params">()</span></span> &#123;<br>	flag.Int64Var(&amp;timeout, <span class="hljs-string">&quot;w&quot;</span>, <span class="hljs-number">1000</span>, <span class="hljs-string">&quot;请求超时时间&quot;</span>)<br>	flag.IntVar(&amp;size, <span class="hljs-string">&quot;l&quot;</span>, <span class="hljs-number">32</span>, <span class="hljs-string">&quot;发送字节数&quot;</span>)<br>	flag.IntVar(&amp;count, <span class="hljs-string">&quot;n&quot;</span>, <span class="hljs-number">4</span>, <span class="hljs-string">&quot;请求次数&quot;</span>)<br>	flag.BoolVar(&amp;helpFlag, <span class="hljs-string">&quot;h&quot;</span>, <span class="hljs-literal">false</span>, <span class="hljs-string">&quot;显示帮助信息&quot;</span>)<br>	flag.Parse()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Max</span><span class="hljs-params">(a, b <span class="hljs-type">int64</span>)</span></span> <span class="hljs-type">int64</span> &#123;<br>	<span class="hljs-keyword">if</span> a &gt; b &#123;<br>		<span class="hljs-keyword">return</span> a<br>	&#125;<br>	<span class="hljs-keyword">return</span> b<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Min</span><span class="hljs-params">(a, b <span class="hljs-type">int64</span>)</span></span> <span class="hljs-type">int64</span> &#123;<br>	<span class="hljs-keyword">if</span> a &lt; b &#123;<br>		<span class="hljs-keyword">return</span> a<br>	&#125;<br>	<span class="hljs-keyword">return</span> b<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">displayHelp</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">`选项：</span><br><span class="hljs-string">	-n count       要发送的回显请求数。</span><br><span class="hljs-string">	-l size        发送缓冲区大小。</span><br><span class="hljs-string">	-w timeout     等待每次回复的超时时间(毫秒)。</span><br><span class="hljs-string">	-h 	       帮助选项`</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>​	本文讲解了常用工具 Ping，并且从 ICMP 报文角度手把手教大家实现了一个简易版的 Ping 工具，在这个过程中大家可以收获到很多东西，希望大家能够自己动手实现一下，结果一定不会让你失望。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Ping/">#Ping</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Go实现Ping操作</div>
+      <div>http://example.com/2023/10/31/Go/Go实现Ping操作/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年10月31日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年10月31日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/30/MQ/%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B%E4%BA%86%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%EF%BC%9F/" title="消息积压了如何处理？">
+                        <span class="hidden-mobile">消息积压了如何处理？</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>

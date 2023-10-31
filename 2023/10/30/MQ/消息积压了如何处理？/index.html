@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="​	在系统中使用消息队列的时候，消息积压这个问题也经常遇到，并且这个问题还不太好解决。 ​	消息积压的直接原因通常是，系统中的某个部分出现了性能问题，来不及处理上游发送的消息，才会导致消息积压。 ​	下面我们来分析下，在使用消息队列的时候，如何优化代码的性能，避免出现消息积压，以及遇到了消息积压问题，该如何进行处理，最大程度地避免消息积压对业务的影响。 优化性能来避免消息积压​	对于绝大多数使用消">
+    <meta name="description" content="​	在系统中使用消息队列的时候，消息积压这个问题也经常遇到，并且这个问题还不太好解决。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="消息积压了如何处理？">
 <meta property="og:url" content="http://example.com/2023/10/30/MQ/%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B%E4%BA%86%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%EF%BC%9F/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="​	在系统中使用消息队列的时候，消息积压这个问题也经常遇到，并且这个问题还不太好解决。 ​	消息积压的直接原因通常是，系统中的某个部分出现了性能问题，来不及处理上游发送的消息，才会导致消息积压。 ​	下面我们来分析下，在使用消息队列的时候，如何优化代码的性能，避免出现消息积压，以及遇到了消息积压问题，该如何进行处理，最大程度地避免消息积压对业务的影响。 优化性能来避免消息积压​	对于绝大多数使用消">
+<meta property="og:description" content="​	在系统中使用消息队列的时候，消息积压这个问题也经常遇到，并且这个问题还不太好解决。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/MQ.png">
 <meta property="article:published_time" content="2023-10-30T10:05:49.000Z">
-<meta property="article:modified_time" content="2023-10-30T11:07:10.780Z">
+<meta property="article:modified_time" content="2023-10-31T04:28:17.406Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="MQ">
 <meta name="twitter:card" content="summary_large_image">
@@ -330,7 +330,7 @@
             
               <div class="markdown-body">
                 
-                <p>​	在系统中使用消息队列的时候，消息积压这个问题也经常遇到，并且这个问题还不太好解决。</p>
+                <p>​	在系统中使用消息队列的时候，消息积压这个问题也经常遇到，并且这个问题还不太好解决。<span id="more"></span></p>
 <p>​	消息积压的直接原因通常是，系统中的某个部分出现了性能问题，来不及处理上游发送的消息，才会导致消息积压。</p>
 <p>​	下面我们来分析下，在使用消息队列的时候，如何优化代码的性能，避免出现消息积压，以及遇到了消息积压问题，该如何进行处理，最大程度地避免消息积压对业务的影响。</p>
 <h1 id="优化性能来避免消息积压"><a href="#优化性能来避免消息积压" class="headerlink" title="优化性能来避免消息积压"></a>优化性能来避免消息积压</h1><p>​	对于绝大多数使用消息队列的业务来说，消息队列本身的处理能力要远大于业务能力的处理能力。主流的一些消息队列的单个节点，消息收发的能力可以达到每秒钟处理几万至几十万条消息的水平，还可以通过水平扩展 Broker 的实例数成倍地提升处理能力。</p>
@@ -428,7 +428,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年10月30日</div>
+          <div>2023年10月31日</div>
         </div>
       
       
@@ -458,6 +458,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/10/31/Go/Go%E5%AE%9E%E7%8E%B0Ping%E6%93%8D%E4%BD%9C/" title="Go实现Ping操作">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Go实现Ping操作</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
