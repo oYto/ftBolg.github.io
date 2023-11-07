@@ -1,0 +1,813 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="​	想要深入学习 Kafka 各种功能和特性，首先肯定要先搞清楚 Kafka 世界中很多概念和术语，所以本文带大家来盘点一下 Kafka 的各种术语。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速搞定Kafka术语">
+<meta property="og:url" content="http://example.com/2023/11/07/MQ/Kafka/%E5%BF%AB%E9%80%9F%E6%90%9E%E5%AE%9AKafka%E6%9C%AF%E8%AF%AD/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="​	想要深入学习 Kafka 各种功能和特性，首先肯定要先搞清楚 Kafka 世界中很多概念和术语，所以本文带大家来盘点一下 Kafka 的各种术语。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/Kafka.png">
+<meta property="article:published_time" content="2023-11-07T05:46:23.000Z">
+<meta property="article:modified_time" content="2023-11-07T12:04:51.110Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="Kafka">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/Kafka.png">
+  
+  
+  
+  <title>快速搞定Kafka术语 - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/test/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="快速搞定Kafka术语"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-07 13:46" pubdate>
+          2023年11月7日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          29 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">快速搞定Kafka术语</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>​	想要深入学习 Kafka 各种功能和特性，首先肯定要先搞清楚 Kafka 世界中很多概念和术语，所以本文带大家来盘点一下 Kafka 的各种术语。<span id="more"></span></p>
+<h1 id="Kafka-消息层次的概念"><a href="#Kafka-消息层次的概念" class="headerlink" title="Kafka 消息层次的概念"></a>Kafka 消息层次的概念</h1><p>​	在《消息引擎系统》这篇文章中提到过，Kafka 属于分布式的消息引擎系统，它的主要功能是提供一套完备的消息发布与订阅解决方案。在 Kafka 中，发布订阅的对象是<strong>主题（Topic）</strong>，它可以为每个业务、每个应用甚至是每类数据都创建专属的主题。</p>
+<p>​	向主题发布消息的客户端应用程序成为<strong>生产者（Producer）</strong>，生产者程序通常持续不断地向一个或多个主题发送消息，而订阅这些主题消息的客户端应用程序就被称为<strong>消费者（Consumer）</strong>。</p>
+<p>​	有客户端自然也有服务器端。Kafka 的服务器端又被称为 <strong>Broker 的服务进程</strong>构成，<strong>即一个 Kafka 集群由多个 Broker 组成</strong>，Broker 负责接收和处理客户端发送过来的请求，以及对消息进行持久化。虽然多个 Broker 进程能够运行在同一台机器上，但是常见的做法是将不同的 Broker 分散运行在不同的机器上，这样如果集群中某一台机器宕机，即使在它上面运行的所有 Broker 进程全部挂掉了，其他机器上的 Broker 进程也能继续对外提供服务。<strong>这也是 Kafka 提供高可用的手段之一。</strong></p>
+<p>​	实现高可用的另一个手段就是<strong>备份机制（Replication）</strong>。备份的思想很简单，就是把相同的数据拷贝到多台机器上，而这些相同的数据拷贝在 Kafka 中被称为<strong>副本（Replica）</strong>。副本的数量是可以配置的，这些副本保存着相同的数据，但却有不同的角色和作用。Kafka 定义了两类副本：<strong>领导者副本（Leader Replica）</strong>和<strong>追随者副本（Follower Replica）</strong>。前者对外提供服务，这里的对外指的是与客户端程序进行交互；而后者只是被动地追随领导者副本而已，不能与外界进行交互。</p>
+<p>​	<strong>副本的工作机制</strong>也很简单：生产者总是向领导着副本写消息；而消费者总是从领导者副本读消息。至于追随者副本，它只做一件事：向领导者副本发送请求，请求领导者把最新生产的消息发给它，这样它能保持与领导者的同步。</p>
+<p>​	虽然有了副本机制可以保证数据的持久化或消息不丢失，但没有解决收缩性的问题。什么是<strong>伸缩性</strong>呢？拿副本来说，虽然现在有了领导者副本和追随者副本，但倘若领导者副本积累了太多的数据以至于单台的 Broker 机器都无法容纳了，此时应该怎么办呢？一个很自然的想法就是，能否把数据分割成多份保存在不同的 Broker 上？</p>
+<p>​	答案是肯定的，并且 Kafka 就是这样去设计的。这种机制就是所谓的<strong>分区（Partitioning）</strong>。如果你了解其他分布式系统，你可能听说过分片、分区域等说法，比如MongoDB和Elasticsearch中的Sharding、HBase中的Region，其实它们都是相同的原理，只是Partitioning是最标准的名称。</p>
+<p>​	Kafka 中的<strong>分区机制</strong>指的是将每个主题划分成多个分区（Partition），每个分区是一组有序的消息日志。生产者生产的每条消息只会被发送到一个分区中，也就是说如果向一个双分区的主题发送一条消息，这条消息要么在分区 0 中，要么在分区 1 中。Kafka 的分区编号是从 0 开始的，如果 Topic 有 100 个分区，那么它们的分区号就是从 0 到 99。</p>
+<p>​	再然后就是<strong>分区和副本是如何联系在一起的</strong>？实际上，副本是在分区这个层级定义的。每个分区下面可以配置若干个副本，其中只能有 1 个领导者副本 和 N - 1 个追随者副本。生产者向分区写入消息，每条消息在分区中的位置信息由一个叫位移（Offset）的数据来表征。分区位移总是从 0 开始，假设一个生产者向一个空分区写入了 10 条消息，那么这 10 条消息的位移分别是0、1、2、…、9.</p>
+<p>​	完整的 Kafka 三层消息架构如下：</p>
+<ul>
+<li>第一层是主题层：每个主题可以配置 Ｍ 个分区，而每个分区又可以配置 N 个副本。</li>
+<li>第二层是分区层：每个分区的 N 个副本中只能有一个充当领导者角色，对外提供服务；其他 N - 1 个副本是追随者副本，只是提供数据冗余之用。</li>
+<li>第三层是消息层：分区中包含若干条消息，每条消息的位移从 0 开始，依次递增。</li>
+<li>最后，客户端程序只能与分区的领导者副本进行交互。</li>
+</ul>
+<h1 id="Kafka-Broker-是如何进行持久化的"><a href="#Kafka-Broker-是如何进行持久化的" class="headerlink" title="Kafka Broker 是如何进行持久化的"></a>Kafka Broker 是如何进行持久化的</h1><p>​	讲完了消息层次，再来看看 Kafka Broker 是如何进行持久化的。总的来说，Kafka 使用<strong>消息日志（Log）来保存数据</strong>，一个日志就是磁盘上一个只能追加写（Append-only）消息的物理文件。因为是追加写，故避免了缓慢的随机 I&#x2F;O 操作，改为了性能较好的顺序 I&#x2F;O 写操作，这也是实现 Kafka 高吞吃量特性的一个关键手段。随着你不断向一个日志写入消息，最终也会导致耗尽所有的磁盘空间，因此 Kafka 必然要定期删除消息以回收磁盘。删除的方式简单来说，就是通过<strong>日志段（Log Segment）机制</strong>。在 Kafka 底层，一个日志又进一步细分成多个日志段，消息被追加到当前最新的日志段中，当写满了一个日志段后，Kafka 会自动切分出一个新的日志段，并将老的日志段封存起来。Kafka 在后台还有定时任务会定期地检查老的日志段是否能够被删除，从而实现回收磁盘空间的目的。</p>
+<p>​	这里再重点说说消费者。在专栏的第一期中，我提到过两种消息模型，即<strong>点对点模型（Peer to Peer，P2P）</strong>和<strong>发布订阅模型</strong>。这里的点对点指的是同一条消息只能被下游的一个消费者消费，其他消费者不能染指。在 kafka 中实现这种 P2P 模型的方法是通过引入消费者组（Consumer Group）来实现的。所谓的<strong>消费者组</strong>，指的是多个消费者实例共同组成一个组来消费一组主题。这组主题中的不同分区被不同消费者组订阅，每个分区都只会被组内的一个消费者实例消费，其他消费者实例不能消费它，但一个消费者组可以消费多个分区。<strong>引入消费者组主要是为了提高消费者端的吞吐量，多个消费者实例同时消费，加速整个消费端的吞吐量（TPS）。</strong>这里的消费者实例可以是运行消费者应用的进程，也可以是一个线程，它们都称为一个消费者实例（Consumer Instance）。</p>
+<p>​	消费者组里面的所有消费者实例不仅 “瓜分” 订阅主题的数据，它们还能彼此协助。假设组内某个实例挂掉了，Kafka 能够自动检测到，然后把这个挂掉的实例之前负责的分区转移给其他活着的消费者。这个过程就是Kafka中大名鼎鼎的<strong>“重平衡”（Rebalance）</strong>。嗯，其实<strong>既是大名鼎鼎，也是臭名昭著</strong>，因为由重平衡引发的消费者问题比比皆是。事实上，目前很多重平衡的Bug社区都无力解决。</p>
+<p>​	每个消费者在消费消息的过程中必然需要有个字段记录它当前消费到了分区的哪个位置上，这个字段就是消费者位移（Consumer Offset）。注意，这和上面所说的位移完全不是一个概念。上面的“位移”表征的是分区内的消息位置，它是不变的，即一旦消息被成功写入到一个分区上，它的位移值就是固定的了。而消费者位移则不同，它可能是随时变化的，毕竟它是消费者消费进度的指示器嘛。另外每个消费者有着自己的消费者位移，因此一定要区分这两类位移的区别。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>​	总结一下上述的所有名词术语：</p>
+<ul>
+<li>消息：Record。Kafka 是消息引擎，这里的消息就是指 Kafka 处理的主要对象。</li>
+<li>主题：Topic。主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。</li>
+<li>分区：Partition。一个有序不变的消息队列。每个主题下可以有多个分区。</li>
+<li>消息位移：Offset。表示分区中每条消息的位置信息，是一个单调递增且不变的值。</li>
+<li>副本：Replica。Kafka  中同一条消息能够被拷贝到多个地方以提供数据冗余，这些地方就是所谓的副本。副本还分为领导者副本和追随者副本，各自有不同的角色划分。副本是在分区层级下的，即每个分区可配置多个副本实现高可用。</li>
+<li>生产者：Producer。向主题发布新消息的应用程序。</li>
+<li>消费者：Consumer。从主题订阅新消息的应用程序。</li>
+<li>消费者位移：Consumer Offset。表征消费者消费进度，每个消费者都有自己的消费者位移。</li>
+<li>消费者组：Consumer Group。多个消费者实例组成的一个组，同时消费多个分区以实现高吞吐。</li>
+<li>重平衡：Rebalance。消费者组内某个消费者实例挂掉后，其他消费者实例自动重新分配订阅主题分区的过程。Rebalance 是 Kafka 消费者端实现高可用的重要手段。</li>
+</ul>
+<p><img src="/images/Kafka%E4%B8%89%E5%B1%82%E6%AC%A1%E7%A4%BA%E6%84%8F%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="Kafka三层次示意图"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/MQ/" class="category-chain-item">MQ</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/MQ/Kafka/" class="category-chain-item">Kafka</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Kafka/">#Kafka</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>快速搞定Kafka术语</div>
+      <div>http://example.com/2023/11/07/MQ/Kafka/快速搞定Kafka术语/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年11月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/07/MQ/Kafka/%E6%B6%88%E6%81%AF%E5%BC%95%E6%93%8E%E7%B3%BB%E7%BB%9F/" title="消息引擎系统">
+                        <span class="hidden-mobile">消息引擎系统</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>

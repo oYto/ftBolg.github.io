@@ -1,0 +1,822 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="什么是 Kafka？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="消息引擎系统">
+<meta property="og:url" content="http://example.com/2023/11/07/MQ/Kafka/%E6%B6%88%E6%81%AF%E5%BC%95%E6%93%8E%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="什么是 Kafka？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/Kafka.png">
+<meta property="article:published_time" content="2023-11-07T04:18:47.000Z">
+<meta property="article:modified_time" content="2023-11-07T05:45:24.538Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="Kafka">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/Kafka.png">
+  
+  
+  
+  <title>消息引擎系统 - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/test/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="消息引擎系统"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-07 12:18" pubdate>
+          2023年11月7日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">消息引擎系统</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="什么是-Kafka？"><a href="#什么是-Kafka？" class="headerlink" title="什么是 Kafka？"></a>什么是 Kafka？<span id="more"></span></h1><p>​	<strong>Apache Kafka 是一款开源的消息引擎系统。</strong></p>
+<p>​	这里说的 “消息引擎系统” 其实就是 “消息队列”  “消息中间件”，这里用 “消息引擎系统” 是因为这个称谓更加合适；消息队列会让人误以为是利用队列的方式构建的；而消息中间件有过度夸大 “中间件” 的嫌疑。</p>
+<p>​	像 Kafka 这一类的系统国外有专属的名字叫 Messaging System，国内很多文献简单将其翻译成消息系统。我感觉不太恰当，因为它片面强调了消息主题的作用，而忽视了这类系统引以为豪的消息传递属性，就像引擎一样，具备某种能力转换传输的能力，所以我觉得翻译成消息引擎反而更加贴切。</p>
+<h1 id="这类系统是做什么的呢？"><a href="#这类系统是做什么的呢？" class="headerlink" title="这类系统是做什么的呢？"></a>这类系统是做什么的呢？</h1><p>​	根据维基百科的定义：消息引擎系统是一组规范。企业利用这组规范在不同系统之间传递语义准确的消息，实现松耦合的异步式数据传递。</p>
+<p>​	如果不太能理解，可以试试下面的平民版：</p>
+<p>​	系统 A 发送消息给消息引擎系统，系统 B 从消息引擎系统中读取 A 发送的消息。</p>
+<p>​	最基础的消息引擎都是做这些事的，不论是官方版还是民间版，都提到了两个重要的事实：</p>
+<ul>
+<li>消息引擎传输的对象是消息</li>
+<li>如何传输消息属于消息引擎设计机制的一部分</li>
+</ul>
+<p>​	既然消息引擎是用来传递不同系统之间的消息，那么就肯定要啊考虑如何设计待传输消息的格式。一条消息如何做到信息表达语义无歧义，同时还能最大限度提供可重用性以及通用性呢？</p>
+<p>​	一个比较容易想到的就是使用已有的成熟方案，比如使用 CSV、XML亦或是 JSON；又或者国内外大厂开源的一些序列化框架，比如 Google 的 Protocol Buffer 或者 Facebook 的 Thrift。而 Kafka 使用的确实纯二进制的字节序列。不过消息肯定还是结构化的，只是在使用之前都要将其转换成二进制的字节序列。</p>
+<p>​	消息设计出来之后，还要考虑消息引擎系统采用的具体传输协议，即我用什么方法把消息传递出去。常见的方法有两种：</p>
+<ul>
+<li><strong>点对点模型</strong>：又称消息队列模型。即系统 A 发送的消息只能被系统 B 接收，其他任何系统都不能读取到系统 A 发送的消息。举个例子：同一个客户呼入电话只能被一个客服人员处理，第二个客服人员不能为该客户服务。</li>
+<li><strong>发布&#x2F;订阅模型</strong>：与上面不同的是，它有一个主题（Topic）的概念，可以理解成逻辑语义相近的消息容器。该模型也有接收方和发送方，只不过提法不同。发送方成为发送者（Publisher），接收方成为订阅者（Subscriber）。和点对点模型不同的是，这个模型存在多个发布者向相同的主题发送消息，而订阅者也可能存在多个，它们能接收到相同主题的消息。生活中的报纸订阅就是一种典型的发布&#x2F;订阅模型。</li>
+</ul>
+<p>​	Kafka 同时支持这两种消息引擎模型，在后续文章会再进行讲解。</p>
+<h1 id="为什么要使用它？"><a href="#为什么要使用它？" class="headerlink" title="为什么要使用它？"></a>为什么要使用它？</h1><p>​	目前我们了解了消息引擎系统是做什么的，以及怎么做的，我们还需要知道为什么要使用它？</p>
+<p>​	以上面的 “平民版” 举例，很多初学者会好奇，为什么系统 A 不直接发送消息给系统 B，中间还需要一个引擎系统？</p>
+<p>​	答案是 <strong>”削峰填谷“</strong>。</p>
+<p>​	所谓的 “削峰填谷” 就是指缓冲上下游瞬间突发流量，使其更加平滑。尤其是对于那种发送能力很强的上游系统，如果没有消息引擎的保护，“脆弱” 的下游系统可能会直接被冲垮导致整个服务 “崩溃”。但是，一旦有了消息引擎，它能够更有效地对抗上游的流量冲击，真正做到将上游的 “峰” 填满到 ”谷“ 中，避免了流量的震荡。消息引擎系统的另一大好处在于发送方和接收方的松耦合，这也在一定程度上简化了应用的开发和维护成本，减少了系统不必要的交互。</p>
+<p>​	再举个例子说明一下 ”削峰填谷“ 这个概念吧：在 ”双十一“ 秒杀活动中，上百万的抢购请求打到数据库里，很容易就导致数据库承受不住压力，直接崩掉。解决此类问题的常见做法是我们对上游系统进行限速，但这种常见做法对上游系统而言显然是不合理的，毕竟问题并不出现在它那里。所以更常见的办法是引入像 kafka 这样的消息引擎系统来对抗这种上下游系统 TPS 的错配以及瞬时峰值流量。</p>
+<p>​	还是这个例子，当引入了 Kafka 之后。上游订单服务不再与下游子服务进行交互。当新订单生成后，它仅仅是向 Kafka Broker 发送一条订单消息即可。类似地，下游的各个子服务订阅 Kafka 中的对应主题，从而实现了上游订单服务与下游订单处理的解耦。这样当出现秒杀业务时，Kafka 能够将瞬间增加的订单流量全部以消息的形式保存在对应的主题中，既不影响上游的 TPS，同时也给下游子服务留出了充足的时间去消费它们。这就是 Kafka 这类消息引擎系统的最大意义所在。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><ul>
+<li><p>Apache Kafka 是一款开源的消息引擎系统。根据维基百科的定义，消息引擎系统是一组规范。企业利用这组规范在不同系统之间传递语义准确的消息，实现松耦合的异步式数据传递。通俗来讲，就是系统 A 发送消息给消息引擎系统，系统 B 从消息引擎系统读取系统 A 发送的消息</p>
+</li>
+<li><p>消息引擎系统要设定具体的传输协议，即我用什么方式把消息传输出去。常见的方法有两种：</p>
+<ul>
+<li>点对点模型</li>
+<li>发布&#x2F;订阅模型</li>
+</ul>
+<p>Kafka 这两种同时支持</p>
+</li>
+<li><p>系统 A 不能直接发送消息给系统 B，中间还要隔一个消息引擎，是为了 ”削峰填谷“。</p>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/MQ/" class="category-chain-item">MQ</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/MQ/Kafka/" class="category-chain-item">Kafka</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Kafka/">#Kafka</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>消息引擎系统</div>
+      <div>http://example.com/2023/11/07/MQ/Kafka/消息引擎系统/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年11月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/11/07/MQ/Kafka/%E5%BF%AB%E9%80%9F%E6%90%9E%E5%AE%9AKafka%E6%9C%AF%E8%AF%AD/" title="快速搞定Kafka术语">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">快速搞定Kafka术语</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/07/MQ/Kafka/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AD%A6%E4%B9%A0Kafka%EF%BC%9F/" title="为什么要学习Kafka？">
+                        <span class="hidden-mobile">为什么要学习Kafka？</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>
