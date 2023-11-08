@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="​	想要深入学习 Kafka 各种功能和特性，首先肯定要先搞清楚 Kafka 世界中很多概念和术语，所以本文带大家来盘点一下 Kafka 的各种术语。">
+    <meta name="description" content="​	Kafka 只是消息引擎系统吗？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="快速搞定Kafka术语">
-<meta property="og:url" content="http://example.com/2023/11/07/MQ/Kafka/%E5%BF%AB%E9%80%9F%E6%90%9E%E5%AE%9AKafka%E6%9C%AF%E8%AF%AD/index.html">
+<meta property="og:title" content="Kafka只是消息引擎系统吗">
+<meta property="og:url" content="http://example.com/2023/11/08/MQ/Kafka/Kafka%E5%8F%AA%E6%98%AF%E6%B6%88%E6%81%AF%E5%BC%95%E6%93%8E%E7%B3%BB%E7%BB%9F%E5%90%97/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="​	想要深入学习 Kafka 各种功能和特性，首先肯定要先搞清楚 Kafka 世界中很多概念和术语，所以本文带大家来盘点一下 Kafka 的各种术语。">
+<meta property="og:description" content="​	Kafka 只是消息引擎系统吗？">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Kafka.png">
-<meta property="article:published_time" content="2023-11-07T05:46:23.000Z">
-<meta property="article:modified_time" content="2023-11-07T12:04:51.110Z">
+<meta property="article:published_time" content="2023-11-08T03:31:32.000Z">
+<meta property="article:modified_time" content="2023-11-08T04:50:47.599Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="Kafka">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
   
   
   
-  <title>快速搞定Kafka术语 - 胤凯</title>
+  <title>Kafka只是消息引擎系统吗 - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -245,7 +245,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="快速搞定Kafka术语"></span>
+            <span id="subtitle" data-typed-text="Kafka只是消息引擎系统吗"></span>
           
         </div>
 
@@ -256,8 +256,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-07 13:46" pubdate>
-          2023年11月7日 下午
+        <time datetime="2023-11-08 11:31" pubdate>
+          2023年11月8日 中午
         </time>
       </span>
     
@@ -268,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          2.2k 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
         
-          29 分钟
+          18 分钟
         
       </span>
     
@@ -325,46 +325,53 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">快速搞定Kafka术语</h1>
+            <h1 style="display: none">Kafka只是消息引擎系统吗</h1>
             
             
               <div class="markdown-body">
                 
-                <p>​	想要深入学习 Kafka 各种功能和特性，首先肯定要先搞清楚 Kafka 世界中很多概念和术语，所以本文带大家来盘点一下 Kafka 的各种术语。<span id="more"></span></p>
-<h1 id="Kafka-消息层次的概念"><a href="#Kafka-消息层次的概念" class="headerlink" title="Kafka 消息层次的概念"></a>Kafka 消息层次的概念</h1><p>​	在《消息引擎系统》这篇文章中提到过，Kafka 属于分布式的消息引擎系统，它的主要功能是提供一套完备的消息发布与订阅解决方案。在 Kafka 中，发布订阅的对象是<strong>主题（Topic）</strong>，它可以为每个业务、每个应用甚至是每类数据都创建专属的主题。</p>
-<p>​	向主题发布消息的客户端应用程序成为<strong>生产者（Producer）</strong>，生产者程序通常持续不断地向一个或多个主题发送消息，而订阅这些主题消息的客户端应用程序就被称为<strong>消费者（Consumer）</strong>。</p>
-<p>​	有客户端自然也有服务器端。Kafka 的服务器端又被称为 <strong>Broker 的服务进程</strong>构成，<strong>即一个 Kafka 集群由多个 Broker 组成</strong>，Broker 负责接收和处理客户端发送过来的请求，以及对消息进行持久化。虽然多个 Broker 进程能够运行在同一台机器上，但是常见的做法是将不同的 Broker 分散运行在不同的机器上，这样如果集群中某一台机器宕机，即使在它上面运行的所有 Broker 进程全部挂掉了，其他机器上的 Broker 进程也能继续对外提供服务。<strong>这也是 Kafka 提供高可用的手段之一。</strong></p>
-<p>​	实现高可用的另一个手段就是<strong>备份机制（Replication）</strong>。备份的思想很简单，就是把相同的数据拷贝到多台机器上，而这些相同的数据拷贝在 Kafka 中被称为<strong>副本（Replica）</strong>。副本的数量是可以配置的，这些副本保存着相同的数据，但却有不同的角色和作用。Kafka 定义了两类副本：<strong>领导者副本（Leader Replica）</strong>和<strong>追随者副本（Follower Replica）</strong>。前者对外提供服务，这里的对外指的是与客户端程序进行交互；而后者只是被动地追随领导者副本而已，不能与外界进行交互。</p>
-<p>​	<strong>副本的工作机制</strong>也很简单：生产者总是向领导着副本写消息；而消费者总是从领导者副本读消息。至于追随者副本，它只做一件事：向领导者副本发送请求，请求领导者把最新生产的消息发给它，这样它能保持与领导者的同步。</p>
-<p>​	虽然有了副本机制可以保证数据的持久化或消息不丢失，但没有解决收缩性的问题。什么是<strong>伸缩性</strong>呢？拿副本来说，虽然现在有了领导者副本和追随者副本，但倘若领导者副本积累了太多的数据以至于单台的 Broker 机器都无法容纳了，此时应该怎么办呢？一个很自然的想法就是，能否把数据分割成多份保存在不同的 Broker 上？</p>
-<p>​	答案是肯定的，并且 Kafka 就是这样去设计的。这种机制就是所谓的<strong>分区（Partitioning）</strong>。如果你了解其他分布式系统，你可能听说过分片、分区域等说法，比如MongoDB和Elasticsearch中的Sharding、HBase中的Region，其实它们都是相同的原理，只是Partitioning是最标准的名称。</p>
-<p>​	Kafka 中的<strong>分区机制</strong>指的是将每个主题划分成多个分区（Partition），每个分区是一组有序的消息日志。生产者生产的每条消息只会被发送到一个分区中，也就是说如果向一个双分区的主题发送一条消息，这条消息要么在分区 0 中，要么在分区 1 中。Kafka 的分区编号是从 0 开始的，如果 Topic 有 100 个分区，那么它们的分区号就是从 0 到 99。</p>
-<p>​	再然后就是<strong>分区和副本是如何联系在一起的</strong>？实际上，副本是在分区这个层级定义的。每个分区下面可以配置若干个副本，其中只能有 1 个领导者副本 和 N - 1 个追随者副本。生产者向分区写入消息，每条消息在分区中的位置信息由一个叫位移（Offset）的数据来表征。分区位移总是从 0 开始，假设一个生产者向一个空分区写入了 10 条消息，那么这 10 条消息的位移分别是0、1、2、…、9.</p>
-<p>​	完整的 Kafka 三层消息架构如下：</p>
+                <p>​	Kafka 只是消息引擎系统吗？<span id="more"></span></p>
+<p>​	上面这个问题的答案是：<strong>Apache Kafka 是消息引擎系统，也是一个分布式流处理平台。</strong></p>
+<p>​	Kafka 是 Linkedln 公司内部孵化的项目。他们最开始又强烈的数据强实时处理方面的需求，其内部的诸多子系统要执行多种类型的数据处理与分析，主要包括业务系统和应用程序性能监控，以及用户行为数据处理等。</p>
+<p>​	当时他们碰到的主要问题包括：</p>
 <ul>
-<li>第一层是主题层：每个主题可以配置 Ｍ 个分区，而每个分区又可以配置 N 个副本。</li>
-<li>第二层是分区层：每个分区的 N 个副本中只能有一个充当领导者角色，对外提供服务；其他 N - 1 个副本是追随者副本，只是提供数据冗余之用。</li>
-<li>第三层是消息层：分区中包含若干条消息，每条消息的位移从 0 开始，依次递增。</li>
-<li>最后，客户端程序只能与分区的领导者副本进行交互。</li>
+<li>数据正确性不足。因为数据的收集主要采用轮询的方式，如何确定轮询的时间间隔就变成了一个高度经验化的事情，一旦指定不当，必然会造成较大的数据偏差。</li>
+<li>系统高度定制化，维护成本高。各个业务子系统都需要对接数据收集模块，引入了大量的定制开销和人工成本。</li>
 </ul>
-<h1 id="Kafka-Broker-是如何进行持久化的"><a href="#Kafka-Broker-是如何进行持久化的" class="headerlink" title="Kafka Broker 是如何进行持久化的"></a>Kafka Broker 是如何进行持久化的</h1><p>​	讲完了消息层次，再来看看 Kafka Broker 是如何进行持久化的。总的来说，Kafka 使用<strong>消息日志（Log）来保存数据</strong>，一个日志就是磁盘上一个只能追加写（Append-only）消息的物理文件。因为是追加写，故避免了缓慢的随机 I&#x2F;O 操作，改为了性能较好的顺序 I&#x2F;O 写操作，这也是实现 Kafka 高吞吃量特性的一个关键手段。随着你不断向一个日志写入消息，最终也会导致耗尽所有的磁盘空间，因此 Kafka 必然要定期删除消息以回收磁盘。删除的方式简单来说，就是通过<strong>日志段（Log Segment）机制</strong>。在 Kafka 底层，一个日志又进一步细分成多个日志段，消息被追加到当前最新的日志段中，当写满了一个日志段后，Kafka 会自动切分出一个新的日志段，并将老的日志段封存起来。Kafka 在后台还有定时任务会定期地检查老的日志段是否能够被删除，从而实现回收磁盘空间的目的。</p>
-<p>​	这里再重点说说消费者。在专栏的第一期中，我提到过两种消息模型，即<strong>点对点模型（Peer to Peer，P2P）</strong>和<strong>发布订阅模型</strong>。这里的点对点指的是同一条消息只能被下游的一个消费者消费，其他消费者不能染指。在 kafka 中实现这种 P2P 模型的方法是通过引入消费者组（Consumer Group）来实现的。所谓的<strong>消费者组</strong>，指的是多个消费者实例共同组成一个组来消费一组主题。这组主题中的不同分区被不同消费者组订阅，每个分区都只会被组内的一个消费者实例消费，其他消费者实例不能消费它，但一个消费者组可以消费多个分区。<strong>引入消费者组主要是为了提高消费者端的吞吐量，多个消费者实例同时消费，加速整个消费端的吞吐量（TPS）。</strong>这里的消费者实例可以是运行消费者应用的进程，也可以是一个线程，它们都称为一个消费者实例（Consumer Instance）。</p>
-<p>​	消费者组里面的所有消费者实例不仅 “瓜分” 订阅主题的数据，它们还能彼此协助。假设组内某个实例挂掉了，Kafka 能够自动检测到，然后把这个挂掉的实例之前负责的分区转移给其他活着的消费者。这个过程就是Kafka中大名鼎鼎的<strong>“重平衡”（Rebalance）</strong>。嗯，其实<strong>既是大名鼎鼎，也是臭名昭著</strong>，因为由重平衡引发的消费者问题比比皆是。事实上，目前很多重平衡的Bug社区都无力解决。</p>
-<p>​	每个消费者在消费消息的过程中必然需要有个字段记录它当前消费到了分区的哪个位置上，这个字段就是消费者位移（Consumer Offset）。注意，这和上面所说的位移完全不是一个概念。上面的“位移”表征的是分区内的消息位置，它是不变的，即一旦消息被成功写入到一个分区上，它的位移值就是固定的了。而消费者位移则不同，它可能是随时变化的，毕竟它是消费者消费进度的指示器嘛。另外每个消费者有着自己的消费者位移，因此一定要区分这两类位移的区别。</p>
-<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>​	总结一下上述的所有名词术语：</p>
+<p>​	为了解决上述问题，Linkedln 工程师尝试过使用 ActiveMQ 来解决，但效果并不理想。显示需要一个 “大统一” 的系统来取代现有的工作方式，而这个系统就是 Kafka。</p>
+<p>​	如果翻看0.10.0.0之前的官网说明，你会发现 Kafka 社区将其清晰地定位成一个分布式、分区化且带备份功能的提交日志服务。</p>
+<p>​	Kafka 在设计之初就旨在三个方面的特性：</p>
 <ul>
-<li>消息：Record。Kafka 是消息引擎，这里的消息就是指 Kafka 处理的主要对象。</li>
-<li>主题：Topic。主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。</li>
-<li>分区：Partition。一个有序不变的消息队列。每个主题下可以有多个分区。</li>
-<li>消息位移：Offset。表示分区中每条消息的位置信息，是一个单调递增且不变的值。</li>
-<li>副本：Replica。Kafka  中同一条消息能够被拷贝到多个地方以提供数据冗余，这些地方就是所谓的副本。副本还分为领导者副本和追随者副本，各自有不同的角色划分。副本是在分区层级下的，即每个分区可配置多个副本实现高可用。</li>
-<li>生产者：Producer。向主题发布新消息的应用程序。</li>
-<li>消费者：Consumer。从主题订阅新消息的应用程序。</li>
-<li>消费者位移：Consumer Offset。表征消费者消费进度，每个消费者都有自己的消费者位移。</li>
-<li>消费者组：Consumer Group。多个消费者实例组成的一个组，同时消费多个分区以实现高吞吐。</li>
-<li>重平衡：Rebalance。消费者组内某个消费者实例挂掉后，其他消费者实例自动重新分配订阅主题分区的过程。Rebalance 是 Kafka 消费者端实现高可用的重要手段。</li>
+<li>提供一套 API 实现生产者和消费者</li>
+<li>降低网络传输和磁盘存储开销</li>
+<li>实现高伸缩性架构。</li>
 </ul>
-<p><img src="/images/Kafka%E4%B8%89%E5%B1%82%E6%AC%A1%E7%A4%BA%E6%84%8F%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="Kafka三层次示意图"></p>
+<p>​	后续文章会对这三方面进行讲解。</p>
+<p>​	开源之后的 Kafka 被越来越多的公司应用到它们企业内部的数据管道中，特别是在大数据工程领域，Kafka 在承接上下游、串联数据流管道方面发挥了重要的作用：所有的数据几乎都要从一个系统流入 Kafka 然后再流向下游的另一个系统中。这样的方式引起了 Kafka 社区的思考：与其我把数据从一个系统传递到下一个系统中做处理，我为何不自己实现一套流处理框架呢？基于这个考量，Kafka社区于0.10.0.0版本正式推出了流处理组件Kafka Streams，也正是从这个版本开始，Kafka正式“变身”为<strong>分布式的流处理平台</strong>，而不仅仅是消息引擎系统了。今天Apache Kafka是和Apache Storm、Apache Spark和Apache Flink同等级的实时流处理平台。</p>
+<p>​	作为流处理平台，Kafka 与其他主流大数据流式计算框架相比，优势在哪里？</p>
+<p>​	<strong>第一点是更容易实现端到端的正确性（Correctness）。</strong>有一个大神说过，流处理要最终替代批处理需要具备两点核心优势：<strong>要实现正确性和提供推导时间的工具。实现正确性是流处理能够匹敌批处理的基石。</strong>正确性一直是批处理的强项，而实现正确性的基石则是要求框架能够提供精确一次处理语义，即处理一条消息有且只有一次机会能够影响系统状态。目前主流的大数据流处理框架都宣称实现了精确一次处理语义，但这是有限定条件的，即它们只能实现框架内的精确一次处理语义，无法实现端到端的。</p>
+<p>​	因为当这些框架与外部消息引擎系统结合使用时，它们无法影响到外部系统的处理语义，所以如果你搭建了一套环境使得 Spark 或 Flink 从 Kafka 读取消息之后进行有状态的数据计算，最后再写回 Kafka，那么你只能保证在Spark或Flink内部，这条消息对于状态的影响只有一次。。但是计算结果有可能多次写入到Kafka，因为它们不能控制Kafka的语义处理。相反地，Kafka则不是这样，因为所有的数据流转和计算都在Kafka内部完成，故Kafka可以实现端到端的精确一次处理语义。</p>
+<p>​	<strong>能助力Kafka胜出的第二点是它自己对于流式计算的定位</strong>。官网上明确标识Kafka Streams是一个用于搭建实时流处理的客户端库而非是一个完整的功能系统。这就是说，你不能期望着Kafka提供类似于集群调度、弹性部署等开箱即用的运维特性，你需要自己选择适合的工具或系统来帮助Kafka流处理应用实现这些功能。</p>
+<p>​	准确来说，这应该是算是一把 “双刃剑”的设计，也是Kafka社区“剑走偏锋”不正面PK其他流计算框架的特意考量。大型公司的流处理平台一定是大规模部署的，因此具备集群调度功能以及灵活的部署方案是不可或缺的要素。但毕竟这世界上还存在着很多中小企业，它们的流处理数据量并不巨大，逻辑也并不复杂，部署几台或十几台机器足以应付。在这样的需求之下，搭建重量级的完整性平台实在是“杀鸡焉用牛刀”，而这正是Kafka流处理组件的用武之地。因此从这个角度来说，未来在流处理框架中，Kafka应该是有一席之地的。</p>
+<p>​	除了消息引擎和流处理平台，Kafka 还能够被用作分布式存储系统。但很少见过在实际生产环境中使用，故这里不作多的解释。</p>
+<p>​	说了这么多，我只想阐述这样的一个观点：Apache Kafka从一个优秀的消息引擎系统起家，逐渐演变成现在分布式的流处理平台。你不仅要熟练掌握它作为消息引擎系统的非凡特性及使用技巧，最好还要多了解下其流处理组件的设计与案例应用。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><ul>
+<li><p>Kafka 在设计之初就旨在提供三个方面的特性：</p>
+<ul>
+<li>提供一套 API 实现生产者和消费者</li>
+<li>降低网络传输和磁盘存储开销</li>
+<li>实现高伸缩性架构。</li>
+</ul>
+</li>
+<li><p>作为流处理平台，Kafka与其他主流大数据流式计算框架相比，优势有两点：</p>
+<ul>
+<li>更容易实现端到端的正确性</li>
+<li>它自己对于流式计算的定位。</li>
+</ul>
+</li>
+<li><p>Apache Kafka是消息引擎系统，也是一个分布式流处理平台。除此之外，Kafka还能够被用作分布式存储系统。不过我觉得你姑且了解下就好了，我从没有见过在实际生产环境中，有人把Kafka当作持久化存储来用</p>
+</li>
+</ul>
 
                 
               </div>
@@ -417,8 +424,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>快速搞定Kafka术语</div>
-      <div>http://example.com/2023/11/07/MQ/Kafka/快速搞定Kafka术语/</div>
+      <div>Kafka只是消息引擎系统吗</div>
+      <div>http://example.com/2023/11/08/MQ/Kafka/Kafka只是消息引擎系统吗/</div>
     </div>
     <div class="license-meta">
       
@@ -430,13 +437,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月7日</div>
+          <div>2023年11月8日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年11月7日</div>
+          <div>2023年11月8日</div>
         </div>
       
       
@@ -467,9 +474,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/08/MQ/Kafka/Kafka%E5%8F%AA%E6%98%AF%E6%B6%88%E6%81%AF%E5%BC%95%E6%93%8E%E7%B3%BB%E7%BB%9F%E5%90%97/" title="Kafka只是消息引擎系统吗">
+                      <a href="/2023/11/08/MQ/Kafka/%E6%88%91%E5%BA%94%E8%AF%A5%E9%80%89%E6%8B%A9%E5%93%AA%E7%A7%8DKafka%EF%BC%9F/" title="我应该选择哪种Kafka？">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Kafka只是消息引擎系统吗</span>
+                        <span class="hidden-mobile">我应该选择哪种Kafka？</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -477,8 +484,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/11/07/MQ/Kafka/%E6%B6%88%E6%81%AF%E5%BC%95%E6%93%8E%E7%B3%BB%E7%BB%9F/" title="消息引擎系统">
-                        <span class="hidden-mobile">消息引擎系统</span>
+                      <a href="/2023/11/07/MQ/Kafka/%E5%BF%AB%E9%80%9F%E6%90%9E%E5%AE%9AKafka%E6%9C%AF%E8%AF%AD/" title="快速搞定Kafka术语">
+                        <span class="hidden-mobile">快速搞定Kafka术语</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

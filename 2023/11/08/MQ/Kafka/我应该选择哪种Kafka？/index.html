@@ -16,16 +16,16 @@
   <meta name="author" content="Feng Tao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="​	想要深入学习 Kafka 各种功能和特性，首先肯定要先搞清楚 Kafka 世界中很多概念和术语，所以本文带大家来盘点一下 Kafka 的各种术语。">
+    <meta name="description" content="​	你可能听说过Apache Storm、Apache Spark Streaming抑或是Apache Flink，它们在大规模流处理领域可都是响当当的名字。令人高兴的是，Kafka经过这么长时间的不断迭代，现在已经能够稍稍比肩这些框架了。我在这里使用了“稍稍”这个字眼，一方面想表达Kafka社区对于这些框架心存敬意；另一方面也想表达目前国内鲜有大厂将Kafka用于流处理的尴尬境地，毕竟Kafk">
 <meta property="og:type" content="article">
-<meta property="og:title" content="快速搞定Kafka术语">
-<meta property="og:url" content="http://example.com/2023/11/07/MQ/Kafka/%E5%BF%AB%E9%80%9F%E6%90%9E%E5%AE%9AKafka%E6%9C%AF%E8%AF%AD/index.html">
+<meta property="og:title" content="我应该选择哪种Kafka？">
+<meta property="og:url" content="http://example.com/2023/11/08/MQ/Kafka/%E6%88%91%E5%BA%94%E8%AF%A5%E9%80%89%E6%8B%A9%E5%93%AA%E7%A7%8DKafka%EF%BC%9F/index.html">
 <meta property="og:site_name" content="胤凯">
-<meta property="og:description" content="​	想要深入学习 Kafka 各种功能和特性，首先肯定要先搞清楚 Kafka 世界中很多概念和术语，所以本文带大家来盘点一下 Kafka 的各种术语。">
+<meta property="og:description" content="​	你可能听说过Apache Storm、Apache Spark Streaming抑或是Apache Flink，它们在大规模流处理领域可都是响当当的名字。令人高兴的是，Kafka经过这么长时间的不断迭代，现在已经能够稍稍比肩这些框架了。我在这里使用了“稍稍”这个字眼，一方面想表达Kafka社区对于这些框架心存敬意；另一方面也想表达目前国内鲜有大厂将Kafka用于流处理的尴尬境地，毕竟Kafk">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/Kafka.png">
-<meta property="article:published_time" content="2023-11-07T05:46:23.000Z">
-<meta property="article:modified_time" content="2023-11-07T12:04:51.110Z">
+<meta property="article:published_time" content="2023-11-08T04:51:23.000Z">
+<meta property="article:modified_time" content="2023-11-08T05:48:20.920Z">
 <meta property="article:author" content="Feng Tao">
 <meta property="article:tag" content="Kafka">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
   
   
   
-  <title>快速搞定Kafka术语 - 胤凯</title>
+  <title>我应该选择哪种Kafka？ - 胤凯</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -245,7 +245,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="快速搞定Kafka术语"></span>
+            <span id="subtitle" data-typed-text="我应该选择哪种Kafka？"></span>
           
         </div>
 
@@ -256,8 +256,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-07 13:46" pubdate>
-          2023年11月7日 下午
+        <time datetime="2023-11-08 12:51" pubdate>
+          2023年11月8日 下午
         </time>
       </span>
     
@@ -268,7 +268,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          3k 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
         
-          29 分钟
+          26 分钟
         
       </span>
     
@@ -325,46 +325,37 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">快速搞定Kafka术语</h1>
+            <h1 style="display: none">我应该选择哪种Kafka？</h1>
             
             
               <div class="markdown-body">
                 
-                <p>​	想要深入学习 Kafka 各种功能和特性，首先肯定要先搞清楚 Kafka 世界中很多概念和术语，所以本文带大家来盘点一下 Kafka 的各种术语。<span id="more"></span></p>
-<h1 id="Kafka-消息层次的概念"><a href="#Kafka-消息层次的概念" class="headerlink" title="Kafka 消息层次的概念"></a>Kafka 消息层次的概念</h1><p>​	在《消息引擎系统》这篇文章中提到过，Kafka 属于分布式的消息引擎系统，它的主要功能是提供一套完备的消息发布与订阅解决方案。在 Kafka 中，发布订阅的对象是<strong>主题（Topic）</strong>，它可以为每个业务、每个应用甚至是每类数据都创建专属的主题。</p>
-<p>​	向主题发布消息的客户端应用程序成为<strong>生产者（Producer）</strong>，生产者程序通常持续不断地向一个或多个主题发送消息，而订阅这些主题消息的客户端应用程序就被称为<strong>消费者（Consumer）</strong>。</p>
-<p>​	有客户端自然也有服务器端。Kafka 的服务器端又被称为 <strong>Broker 的服务进程</strong>构成，<strong>即一个 Kafka 集群由多个 Broker 组成</strong>，Broker 负责接收和处理客户端发送过来的请求，以及对消息进行持久化。虽然多个 Broker 进程能够运行在同一台机器上，但是常见的做法是将不同的 Broker 分散运行在不同的机器上，这样如果集群中某一台机器宕机，即使在它上面运行的所有 Broker 进程全部挂掉了，其他机器上的 Broker 进程也能继续对外提供服务。<strong>这也是 Kafka 提供高可用的手段之一。</strong></p>
-<p>​	实现高可用的另一个手段就是<strong>备份机制（Replication）</strong>。备份的思想很简单，就是把相同的数据拷贝到多台机器上，而这些相同的数据拷贝在 Kafka 中被称为<strong>副本（Replica）</strong>。副本的数量是可以配置的，这些副本保存着相同的数据，但却有不同的角色和作用。Kafka 定义了两类副本：<strong>领导者副本（Leader Replica）</strong>和<strong>追随者副本（Follower Replica）</strong>。前者对外提供服务，这里的对外指的是与客户端程序进行交互；而后者只是被动地追随领导者副本而已，不能与外界进行交互。</p>
-<p>​	<strong>副本的工作机制</strong>也很简单：生产者总是向领导着副本写消息；而消费者总是从领导者副本读消息。至于追随者副本，它只做一件事：向领导者副本发送请求，请求领导者把最新生产的消息发给它，这样它能保持与领导者的同步。</p>
-<p>​	虽然有了副本机制可以保证数据的持久化或消息不丢失，但没有解决收缩性的问题。什么是<strong>伸缩性</strong>呢？拿副本来说，虽然现在有了领导者副本和追随者副本，但倘若领导者副本积累了太多的数据以至于单台的 Broker 机器都无法容纳了，此时应该怎么办呢？一个很自然的想法就是，能否把数据分割成多份保存在不同的 Broker 上？</p>
-<p>​	答案是肯定的，并且 Kafka 就是这样去设计的。这种机制就是所谓的<strong>分区（Partitioning）</strong>。如果你了解其他分布式系统，你可能听说过分片、分区域等说法，比如MongoDB和Elasticsearch中的Sharding、HBase中的Region，其实它们都是相同的原理，只是Partitioning是最标准的名称。</p>
-<p>​	Kafka 中的<strong>分区机制</strong>指的是将每个主题划分成多个分区（Partition），每个分区是一组有序的消息日志。生产者生产的每条消息只会被发送到一个分区中，也就是说如果向一个双分区的主题发送一条消息，这条消息要么在分区 0 中，要么在分区 1 中。Kafka 的分区编号是从 0 开始的，如果 Topic 有 100 个分区，那么它们的分区号就是从 0 到 99。</p>
-<p>​	再然后就是<strong>分区和副本是如何联系在一起的</strong>？实际上，副本是在分区这个层级定义的。每个分区下面可以配置若干个副本，其中只能有 1 个领导者副本 和 N - 1 个追随者副本。生产者向分区写入消息，每条消息在分区中的位置信息由一个叫位移（Offset）的数据来表征。分区位移总是从 0 开始，假设一个生产者向一个空分区写入了 10 条消息，那么这 10 条消息的位移分别是0、1、2、…、9.</p>
-<p>​	完整的 Kafka 三层消息架构如下：</p>
+                <p>​	你可能听说过Apache Storm、Apache Spark Streaming抑或是Apache Flink，它们在大规模流处理领域可都是响当当的名字。令人高兴的是，Kafka经过这么长时间的不断迭代，现在已经能够稍稍比肩这些框架了。我在这里使用了“稍稍”这个字眼，一方面想表达Kafka社区对于这些框架心存敬意；另一方面也想表达目前国内鲜有大厂将Kafka用于流处理的尴尬境地，毕竟Kafka是从消息引擎“半路出家”转型成流处理平台的，它在流处理方面的表现还需要经过时间的检验。</p>
+<p>​	如果我们把视角从流处理平台扩展到流处理生态圈，Kafka更是还有很长的路要走。前面我提到过Kafka Streams组件，正是它提供了Kafka实时处理流数据的能力。但是其实还有一个重要的组件我没有提及，那就是Kafka Connect。</p>
+<p>​	我们在评估流处理平台的时候，框架本身的性能、所提供操作算子（Operator）的丰富程度固然是重要的评判指标，但框架与上下游交互的能力也是非常重要的。能够与之进行数据传输的外部系统越多，围绕它打造的生态圈就越牢固，因而也就有更多的人愿意去使用它，从而形成正向反馈，不断地促进该生态圈的发展。就Kafka而言，Kafka Connect通过一个个具体的连接器（Connector），串联起上下游的外部系统。</p>
+<p><img src="/images/kafka%E8%BF%9E%E6%8E%A5%E5%99%A8.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="你知道几种-Kafka？"><a href="#你知道几种-Kafka？" class="headerlink" title="你知道几种 Kafka？"></a>你知道几种 Kafka？</h1><p>​	有人会问，Kafka 不是开源框架吗，什么叫几种 Kafka？实际上，Kafka 确实有好几种，但这里说的不是版本不同，而是不同组织或者公司发布的不同的 Kafka。</p>
+<h4 id="1-Apache-Kafka"><a href="#1-Apache-Kafka" class="headerlink" title="1. Apache Kafka"></a>1. Apache Kafka</h4><p>​	Apache Kafka 是最 “正宗” 的 Kafka，也应该是你最熟悉的发行版了。自 Kafka 开源以来，它便在 Apache 基金会孵化并最终毕业成为顶级项目，它也被称为社区版 Kafka。它是后面其他所有发行版的基础，也就是说，后面提到的发行版要么是原封不动地继承了 Apache Kafka，要么是在此之上扩展了新功能，总之Apache Kafka是我们学习和使用Kafka的基础。</p>
+<h4 id="2-Confluent-Kafka"><a href="#2-Confluent-Kafka" class="headerlink" title="2. Confluent Kafka"></a>2. Confluent Kafka</h4><p>​	Confluent 公司主要从事商业化 Kafka 工具开发，并在此基础上发布了 Confluent Kafka。Confluent Kafka 提供了一些 Apache Kafka 没有的高级特性，比如跨数据中心备份、Schema 注册中心以及集群监控工具等。</p>
+<h4 id="3-CLoudera-x2F-Hortonworks-Kafka"><a href="#3-CLoudera-x2F-Hortonworks-Kafka" class="headerlink" title="3. CLoudera&#x2F;Hortonworks Kafka"></a>3. CLoudera&#x2F;Hortonworks Kafka</h4><p>​	Cloudera 提供的 CDH 和 Hortonworks 提供的 HDP 是非常著名的大数据平台，里面继承了目前主流的大数据框架，能够帮助用户实现从分布式存储、集群调度、流处理到机器学习、实时数据库等全方位的数据处理。</p>
+<h1 id="特点比较"><a href="#特点比较" class="headerlink" title="特点比较"></a>特点比较</h1><p>​	下面再来对比一下它们的优势与劣势。</p>
+<h4 id="1-Apache-Kafka-1"><a href="#1-Apache-Kafka-1" class="headerlink" title="1. Apache Kafka"></a>1. Apache Kafka</h4><p>​	对于 Apache Kafka 而言，它现在依然是开发人数最大、版本迭代速度最快的 Kafka。如果你使用Apache Kafka碰到任何问题并提交问题到社区，社区都会比较及时地响应你。这对于我们Kafka普通使用者来说无疑是非常友好的。</p>
+<p>​	但是Apache Kafka的劣势在于它仅仅提供最最基础的组件，特别是对于前面提到的Kafka Connect而言，社区版Kafka只提供一种连接器，即读写磁盘文件的连接器，而没有与其他外部系统交互的连接器，在实际使用过程中需要自行编写代码实现，这是它的一个劣势。另外Apache Kafka没有提供任何监控框架或工具。显然在线上环境不加监控肯定是不可行的，你必然需要借助第三方的监控框架实现对Kafka的监控。好消息是目前有一些开源的监控框架可以帮助用于监控Kafka（比如Kafka manager）。</p>
+<p>​	<strong>总而言之，如果你仅仅需要一个消息引擎系统亦或是简单的流处理应用场景，同时需要对系统有较大把控度，那么我推荐你使用Apache Kafka。</strong></p>
+<h4 id="2-Confluent-Kafka-1"><a href="#2-Confluent-Kafka-1" class="headerlink" title="2. Confluent Kafka"></a><strong>2. Confluent Kafka</strong></h4><p>​	Confluent Kafka目前分为免费版和企业版两种。前者和Apache Kafka非常相像，除了常规的组件之外，免费版还包含Schema注册中心和REST proxy两大功能。前者是帮助你集中管理 Kafka 消息格式以实现数据前向&#x2F;后向兼容；后者用开放HTTP接口的方式允许你通过网络访问 Kafka 的各种功能，这两个都是Apache Kafka所没有的。</p>
+<p>​	除此之外，免费版包含了更多的连接器，它们都是Confluent公司开发并认证过的，你可以免费使用它们。至于企业版，它提供的功能就更多了。在我看来，最有用的当属<strong>跨数据中心备份</strong>和<strong>集群监控</strong>两大功能了。多个数据中心之间数据的同步以及对集群的监控历来是Kafka的痛点，Confluent Kafka企业版提供了强大的解决方案帮助你“干掉”它们。</p>
+<p>​	不过Confluent Kafka的一大缺陷在于，Confluent公司暂时没有发展国内业务的计划，相关的资料以及技术支持都很欠缺，很多国内Confluent Kafka使用者甚至无法找到对应的中文文档，因此目前Confluent Kafka在国内的普及率是比较低的。</p>
+<p>​	<strong>一言以蔽之，如果你需要用到Kafka的一些高级特性，那么推荐你使用Confluent Kafka。</strong></p>
+<h4 id="3-CDH-x2F-HDP-Kafka"><a href="#3-CDH-x2F-HDP-Kafka" class="headerlink" title="3. CDH&#x2F;HDP Kafka"></a><strong>3. CDH&#x2F;HDP Kafka</strong></h4><p>​	最后说说大数据云公司发布的Kafka（CDH&#x2F;HDP Kafka）。这些大数据平台天然集成了Apache Kafka，通过便捷化的界面操作将Kafka的安装、运维、管理、监控全部统一在控制台中。如果你是这些平台的用户一定觉得非常方便，因为所有的操作都可以在前端UI界面上完成，而不必去执行复杂的Kafka命令。另外这些平台提供的监控界面也非常友好，你通常不需要进行任何配置就能有效地监控 Kafka。</p>
+<p>​	但是凡事有利就有弊，这样做的结果是直接降低了你对Kafka集群的掌控程度。毕竟你对下层的Kafka集群一无所知，你怎么能做到心中有数呢？这种Kafka的另一个弊端在于它的滞后性。由于它有自己的发布周期，因此是否能及时地包含最新版本的Kafka就成为了一个问题。比如CDH 6.1.0版本发布时Apache Kafka已经演进到了2.1.0版本，但CDH中的Kafka依然是2.0.0版本，显然那些在Kafka 2.1.0中修复的Bug只能等到CDH下次版本更新时才有可能被真正修复。</p>
+<p>​	<strong>简单来说，如果你需要快速地搭建消息引擎系统，或者你需要搭建的是多框架构成的数据平台且Kafka只是其中一个组件，那么我推荐你使用这些大数据云公司提供的Kafka。</strong></p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>​	这篇文章我们讨论了不同 Kafka 的 “发行版” 以及它们的优缺点，根据这些优缺点，我们可以有针对性地选择适合我们需求的 Kafka。</p>
+<p>最后我们来复习一下今天的内容：</p>
 <ul>
-<li>第一层是主题层：每个主题可以配置 Ｍ 个分区，而每个分区又可以配置 N 个副本。</li>
-<li>第二层是分区层：每个分区的 N 个副本中只能有一个充当领导者角色，对外提供服务；其他 N - 1 个副本是追随者副本，只是提供数据冗余之用。</li>
-<li>第三层是消息层：分区中包含若干条消息，每条消息的位移从 0 开始，依次递增。</li>
-<li>最后，客户端程序只能与分区的领导者副本进行交互。</li>
+<li>Apache Kafka，也称社区版 Kafka 。优势在于迭代速度快，社区响应度高，使用它可以让你有更高的把控度；缺陷在于仅提供基础核心组件，缺失一些高级的特性。</li>
+<li>Confluent Kafka，Confluent公司提供的 Kafka。优势在于集成了很多高级特性且由 Kafka 原班人马打造，质量上有保证；缺陷在于相关文档资料不全，普及率较低，没有太多可供参考的范例。</li>
+<li>CDH&#x2F;HDP Kafka，大数据云公司提供的 Kafka，内嵌 Apache Kafka 。优势在于操作简单，节省运维成本；缺陷在于把控度低，演进速度较慢。</li>
 </ul>
-<h1 id="Kafka-Broker-是如何进行持久化的"><a href="#Kafka-Broker-是如何进行持久化的" class="headerlink" title="Kafka Broker 是如何进行持久化的"></a>Kafka Broker 是如何进行持久化的</h1><p>​	讲完了消息层次，再来看看 Kafka Broker 是如何进行持久化的。总的来说，Kafka 使用<strong>消息日志（Log）来保存数据</strong>，一个日志就是磁盘上一个只能追加写（Append-only）消息的物理文件。因为是追加写，故避免了缓慢的随机 I&#x2F;O 操作，改为了性能较好的顺序 I&#x2F;O 写操作，这也是实现 Kafka 高吞吃量特性的一个关键手段。随着你不断向一个日志写入消息，最终也会导致耗尽所有的磁盘空间，因此 Kafka 必然要定期删除消息以回收磁盘。删除的方式简单来说，就是通过<strong>日志段（Log Segment）机制</strong>。在 Kafka 底层，一个日志又进一步细分成多个日志段，消息被追加到当前最新的日志段中，当写满了一个日志段后，Kafka 会自动切分出一个新的日志段，并将老的日志段封存起来。Kafka 在后台还有定时任务会定期地检查老的日志段是否能够被删除，从而实现回收磁盘空间的目的。</p>
-<p>​	这里再重点说说消费者。在专栏的第一期中，我提到过两种消息模型，即<strong>点对点模型（Peer to Peer，P2P）</strong>和<strong>发布订阅模型</strong>。这里的点对点指的是同一条消息只能被下游的一个消费者消费，其他消费者不能染指。在 kafka 中实现这种 P2P 模型的方法是通过引入消费者组（Consumer Group）来实现的。所谓的<strong>消费者组</strong>，指的是多个消费者实例共同组成一个组来消费一组主题。这组主题中的不同分区被不同消费者组订阅，每个分区都只会被组内的一个消费者实例消费，其他消费者实例不能消费它，但一个消费者组可以消费多个分区。<strong>引入消费者组主要是为了提高消费者端的吞吐量，多个消费者实例同时消费，加速整个消费端的吞吐量（TPS）。</strong>这里的消费者实例可以是运行消费者应用的进程，也可以是一个线程，它们都称为一个消费者实例（Consumer Instance）。</p>
-<p>​	消费者组里面的所有消费者实例不仅 “瓜分” 订阅主题的数据，它们还能彼此协助。假设组内某个实例挂掉了，Kafka 能够自动检测到，然后把这个挂掉的实例之前负责的分区转移给其他活着的消费者。这个过程就是Kafka中大名鼎鼎的<strong>“重平衡”（Rebalance）</strong>。嗯，其实<strong>既是大名鼎鼎，也是臭名昭著</strong>，因为由重平衡引发的消费者问题比比皆是。事实上，目前很多重平衡的Bug社区都无力解决。</p>
-<p>​	每个消费者在消费消息的过程中必然需要有个字段记录它当前消费到了分区的哪个位置上，这个字段就是消费者位移（Consumer Offset）。注意，这和上面所说的位移完全不是一个概念。上面的“位移”表征的是分区内的消息位置，它是不变的，即一旦消息被成功写入到一个分区上，它的位移值就是固定的了。而消费者位移则不同，它可能是随时变化的，毕竟它是消费者消费进度的指示器嘛。另外每个消费者有着自己的消费者位移，因此一定要区分这两类位移的区别。</p>
-<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>​	总结一下上述的所有名词术语：</p>
-<ul>
-<li>消息：Record。Kafka 是消息引擎，这里的消息就是指 Kafka 处理的主要对象。</li>
-<li>主题：Topic。主题是承载消息的逻辑容器，在实际使用中多用来区分具体的业务。</li>
-<li>分区：Partition。一个有序不变的消息队列。每个主题下可以有多个分区。</li>
-<li>消息位移：Offset。表示分区中每条消息的位置信息，是一个单调递增且不变的值。</li>
-<li>副本：Replica。Kafka  中同一条消息能够被拷贝到多个地方以提供数据冗余，这些地方就是所谓的副本。副本还分为领导者副本和追随者副本，各自有不同的角色划分。副本是在分区层级下的，即每个分区可配置多个副本实现高可用。</li>
-<li>生产者：Producer。向主题发布新消息的应用程序。</li>
-<li>消费者：Consumer。从主题订阅新消息的应用程序。</li>
-<li>消费者位移：Consumer Offset。表征消费者消费进度，每个消费者都有自己的消费者位移。</li>
-<li>消费者组：Consumer Group。多个消费者实例组成的一个组，同时消费多个分区以实现高吞吐。</li>
-<li>重平衡：Rebalance。消费者组内某个消费者实例挂掉后，其他消费者实例自动重新分配订阅主题分区的过程。Rebalance 是 Kafka 消费者端实现高可用的重要手段。</li>
-</ul>
-<p><img src="/images/Kafka%E4%B8%89%E5%B1%82%E6%AC%A1%E7%A4%BA%E6%84%8F%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="Kafka三层次示意图"></p>
 
                 
               </div>
@@ -417,8 +408,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>快速搞定Kafka术语</div>
-      <div>http://example.com/2023/11/07/MQ/Kafka/快速搞定Kafka术语/</div>
+      <div>我应该选择哪种Kafka？</div>
+      <div>http://example.com/2023/11/08/MQ/Kafka/我应该选择哪种Kafka？/</div>
     </div>
     <div class="license-meta">
       
@@ -430,13 +421,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月7日</div>
+          <div>2023年11月8日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年11月7日</div>
+          <div>2023年11月8日</div>
         </div>
       
       
@@ -467,18 +458,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/08/MQ/Kafka/Kafka%E5%8F%AA%E6%98%AF%E6%B6%88%E6%81%AF%E5%BC%95%E6%93%8E%E7%B3%BB%E7%BB%9F%E5%90%97/" title="Kafka只是消息引擎系统吗">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Kafka只是消息引擎系统吗</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/11/07/MQ/Kafka/%E6%B6%88%E6%81%AF%E5%BC%95%E6%93%8E%E7%B3%BB%E7%BB%9F/" title="消息引擎系统">
-                        <span class="hidden-mobile">消息引擎系统</span>
+                      <a href="/2023/11/08/MQ/Kafka/Kafka%E5%8F%AA%E6%98%AF%E6%B6%88%E6%81%AF%E5%BC%95%E6%93%8E%E7%B3%BB%E7%BB%9F%E5%90%97/" title="Kafka只是消息引擎系统吗">
+                        <span class="hidden-mobile">Kafka只是消息引擎系统吗</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
