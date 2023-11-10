@@ -1,0 +1,981 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="​	今天我们围绕一个面试题来实现一个内存缓存系统。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语言实现缓存系统">
+<meta property="og:url" content="http://example.com/2023/11/10/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/Go%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="​	今天我们围绕一个面试题来实现一个内存缓存系统。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/memory.png">
+<meta property="article:published_time" content="2023-11-10T03:17:12.000Z">
+<meta property="article:modified_time" content="2023-11-10T06:27:28.608Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="cache">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/memory.png">
+  
+  
+  
+  <title>Go语言实现缓存系统 - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/test/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Go语言实现缓存系统"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-10 11:17" pubdate>
+          2023年11月10日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          23k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          189 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Go语言实现缓存系统</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>​	今天我们围绕一个面试题来实现一个内存缓存系统。<span id="more"></span></p>
+<h1 id="面试题内容"><a href="#面试题内容" class="headerlink" title="面试题内容"></a>面试题内容</h1><ol>
+<li>支持设置过期时间，精度到秒</li>
+<li>支持设置最大内存，当内存超出时做出合理的处理</li>
+<li>支持并发安全</li>
+<li>按照以下接口要求实现</li>
+</ol>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Cache <span class="hljs-keyword">interface</span> &#123;<br>	<span class="hljs-comment">// SetMaxMemory size : 1KB 100KB 1MB 2MB 1GB</span><br>	SetMaxMemory(size <span class="hljs-type">string</span>) <span class="hljs-type">bool</span><br>	<span class="hljs-comment">// Set 将 value 写入缓存</span><br>	Set(key <span class="hljs-type">string</span>, val <span class="hljs-keyword">interface</span>&#123;&#125;, expire time.Duration) <span class="hljs-type">bool</span><br>	<span class="hljs-comment">// Get 根据 key 值获取 value</span><br>	Get(key <span class="hljs-type">string</span>) (<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-type">bool</span>)<br>	<span class="hljs-comment">// Del 删除 key 值</span><br>	Del(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span><br>	<span class="hljs-comment">// Exists 判断 key 是否存在</span><br>	Exists(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span><br>	<span class="hljs-comment">// Flush 清空所有 key</span><br>	Flush() <span class="hljs-type">bool</span><br>	<span class="hljs-comment">// Keys 获取缓存中所有 key 的数量</span><br>	Keys() <span class="hljs-type">int64</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>使用示例</li>
+</ol>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go">cache := NewMemCache()<br>cache.SetMaxMemory(<span class="hljs-string">&quot;100MB&quot;</span>)<br>cache.Set(<span class="hljs-string">&quot;int&quot;</span>, <span class="hljs-number">1</span>)<br>cache.Set(<span class="hljs-string">&quot;bool&quot;</span>, <span class="hljs-literal">false</span>)<br>cache.Set(<span class="hljs-string">&quot;data&quot;</span>, <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;&#123;<span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-number">1</span>&#125;)<br>cache.Get(<span class="hljs-string">&quot;int&quot;</span>)<br>cache.Del(<span class="hljs-string">&quot;int&quot;</span>)<br>cache.Flush()<br>cache.Keys()<br></code></pre></td></tr></table></figure>
+
+<h1 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h1><p>​	题目乍一看没有什么难点，就依据题目实现对应的接口以及对应的方法就行了。但其实有一个坑，那就是接口中的 <code>Set</code> 方法参数和使用示例中的对不上，使用示例中没有传入过期时间。难道是题目出错了？</p>
+<p>​	显然不是的，这里是需要我们去做一个代理层，去实现一个可选参数的 <code>Set</code> 方法。我们可以在实现了带过期时间参数的方法后，再去封装一层，然后设置成可选参数即可。</p>
+<p>​	这样子，题目的要求，就差不多没什么问题了。但这是面试题，我们想要面试官对我们的评价更好，就要做到更多的内容，寻找一些加分项，比如我们可以增加一个功能，定期删除过期缓存键，又或者我们可以写一些单元测试，让面试官知道我们有写单元测试的好习惯，这些都是一些加分项，能让我们更加地突出。</p>
+<h1 id="动手写代码"><a href="#动手写代码" class="headerlink" title="动手写代码"></a>动手写代码</h1><p>​	下面就带着大家一步一步来完成这个缓存系统，当然只是一个具有基础的功能缓存系统，大家在后续也可以自行在其中丰富更多的功能。</p>
+<h4 id="构建大体框架"><a href="#构建大体框架" class="headerlink" title="构建大体框架"></a>构建大体框架</h4><p>​	首先，我们可以先在项目根目录下创建一个 cache 包，然后在 cache 包里创建一个 cache.go 文件，然后将题目中要求实现的接口放在里面：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cache/cache.go</span><br><span class="hljs-keyword">type</span> Cache <span class="hljs-keyword">interface</span> &#123;<br>	<span class="hljs-comment">// SetMaxMemory size : 1KB 100KB 1MB 2MB 1GB</span><br>	SetMaxMemory(size <span class="hljs-type">string</span>) <span class="hljs-type">bool</span><br>	<span class="hljs-comment">// Set 将 value 写入缓存</span><br>	Set(key <span class="hljs-type">string</span>, val <span class="hljs-keyword">interface</span>&#123;&#125;, expire time.Duration) <span class="hljs-type">bool</span><br>	<span class="hljs-comment">// Get 根据 key 值获取 value</span><br>	Get(key <span class="hljs-type">string</span>) (<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-type">bool</span>)<br>	<span class="hljs-comment">// Del 删除 key 值</span><br>	Del(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span><br>	<span class="hljs-comment">// Exists 判断 key 是否存在</span><br>	Exists(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span><br>	<span class="hljs-comment">// Flush 清空所有 key</span><br>	Flush() <span class="hljs-type">bool</span><br>	<span class="hljs-comment">// Keys 获取缓存中所有 key 的数量</span><br>	Keys() <span class="hljs-type">int64</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	接着我们再在 cache 包下创建一个 memCache.go 文件，并在该文件中创建一个 memCache 结构体，去实现题目中要求的 Cache 接口：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> memCache <span class="hljs-keyword">struct</span> &#123;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> SetMaxMemory(size <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>&#125;<br><br><span class="hljs-comment">// Set 将 value 写入缓存</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Set(key <span class="hljs-type">string</span>, val <span class="hljs-keyword">interface</span>&#123;&#125;, expire time.Duration) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>&#125;<br><br><span class="hljs-comment">// Get 根据 key 值获取 value</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Get(key <span class="hljs-type">string</span>) (<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-type">bool</span>) &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, <span class="hljs-literal">false</span><br>&#125;<br><br><span class="hljs-comment">// Del 删除 key 值</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Del(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br><br><span class="hljs-comment">// Exists 判断 key 是否存在</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Exists(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br><br><span class="hljs-comment">// Flush 清空所有 key</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Flush() <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br><br><span class="hljs-comment">// Keys 获取缓存中所有 key 的数量</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Keys() <span class="hljs-type">int64</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	可以看到使用样例中有一个 NewMemCache 函数，于是我们还需要在 memCache.go 文件中添加一个 NewMemCache() 函数，返回一个实例，供 main 函数调用：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cache/memCache.go</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewMemCache</span><span class="hljs-params">()</span></span> Cache &#123;<br>	<span class="hljs-keyword">return</span> &amp;memCache&#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	接着，我们就可以先去主函数 main 中用使用示例跑一下，看看有没有什么问题。在项目根目录下创建一个 main 函数，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// main.go</span><br><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> cache2 <span class="hljs-string">&quot;main/cache&quot;</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	cache := cache2.NewMemCache()<br>	cache.SetMaxMemory(<span class="hljs-string">&quot;100MB&quot;</span>)<br>	cache.Set(<span class="hljs-string">&quot;int&quot;</span>, <span class="hljs-number">1</span>)<br>	cache.Set(<span class="hljs-string">&quot;bool&quot;</span>, <span class="hljs-literal">false</span>)<br>	cache.Set(<span class="hljs-string">&quot;data&quot;</span>, <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;&#123;<span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-number">1</span>&#125;)<br>	cache.Get(<span class="hljs-string">&quot;int&quot;</span>)<br>	cache.Del(<span class="hljs-string">&quot;int&quot;</span>)<br>	cache.Flush()<br>	cache.Keys()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/memCache_main_error.png" srcset="/img/loading.gif" lazyload alt="memCache_main_error"></p>
+<p>​	然后你就会发现报错了，这个问题就是我们上面说的那个坑，这里需要做一个代理层，但为了方便我们可以先修改使用样例，使他能够先跑通，最后再来做一个代理就可以了。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// main.go</span><br>cache.Set(<span class="hljs-string">&quot;int&quot;</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>)<br>cache.Set(<span class="hljs-string">&quot;bool&quot;</span>, <span class="hljs-literal">false</span>, <span class="hljs-number">1</span>)<br>cache.Set(<span class="hljs-string">&quot;data&quot;</span>, <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;&#123;<span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-number">1</span>&#125;, <span class="hljs-number">2</span>)<br></code></pre></td></tr></table></figure>
+
+<p>​	为了看出效果，我们可以在所有的方法中都打印一个信息，比如 Set 方法中打印 &#96;fmt.Println(“我是 Set 方法”)。</p>
+<p>​	最后如果所有的方法都打印出了对应的信息，就说明这个大体框架我们已经搭建好了，下面再去慢慢实现各个方法就可以了。</p>
+<h4 id="逐个实现方法"><a href="#逐个实现方法" class="headerlink" title="逐个实现方法"></a>逐个实现方法</h4><p>​	下面就带着大家逐个实现每个具体的方法：</p>
+<h5 id="SetMaxMemory"><a href="#SetMaxMemory" class="headerlink" title="SetMaxMemory"></a>SetMaxMemory</h5><p>​	这个方法是用于设置我们缓存系统的最大缓存大小的，因此我们的 memCache 结构体中，就至少应该需要两个字段：最大内存大小 和当前内存大小，因为我们肯定需要去判断当前内存是否超过了最大内存大小，为了方便，我们再增加一个 最大内存大小字段的字符串表示，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cache/memCache.go</span><br><span class="hljs-keyword">type</span> memCache <span class="hljs-keyword">struct</span> &#123;<br>	<span class="hljs-comment">// 最大内存大小</span><br>	maxMemorySize <span class="hljs-type">int64</span><br>	<span class="hljs-comment">// 最大内存字符串表示</span><br>	maxMemorySizeStr <span class="hljs-type">string</span><br>	<span class="hljs-comment">// 当前内存大小</span><br>	currMemorySize <span class="hljs-type">int64</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	然后再来看我们的题目要求，<code>SetMaxMemory size : 1KB 100KB 1MB 2MB 1GB</code> 要求支持多种单位的表示，所以这里我们肯定需要对输入的内存大小做一个转换，因此我们需要去实现一个 parseSize 函数去解析用户的输入。</p>
+<p>​	我们在 cache 包下，创建一个 util.go 文件，用于存放一些通用功能和工具函数。</p>
+<p>​	parseSize 函数的实现思路是：将用户输入的字符串中的数字部分和单位部分分别提取出来，再进行校验和单位转换等的处理。</p>
+<p>​	利用正则表达式先将用户的输入中的数字部分提取出来，然后再将用户输入的字符串中的数字部分用空格替换，这样剩下的部分就是单位了。</p>
+<p>​	同样的，将用户输入字符串中的单位部分用空格替换，得到的就是数字部分了。</p>
+<p>​	接下来，就是对用户的单位做一个转换，这里我们利用 Go 语言中的预定义标识符，采用小技巧来做一个单位的转换，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cache/util.go</span><br><span class="hljs-keyword">const</span> (<br>	B = <span class="hljs-number">1</span> &lt;&lt; (<span class="hljs-literal">iota</span> * <span class="hljs-number">10</span>) <span class="hljs-comment">// 1</span><br>	KB 					 <span class="hljs-comment">// 2024</span><br>	MB  				 <span class="hljs-comment">// 1048576</span><br>	GB  				 <span class="hljs-comment">// 1073741824</span><br>	TB 					 <span class="hljs-comment">// ...</span><br>	PB 					 <span class="hljs-comment">// ...</span><br>)<br></code></pre></td></tr></table></figure>
+
+<p>​	有了不同的单位，我们就可以对解析出来的单位进行处理了，我们这里统一将所有的单位转换成字节，也就是 B：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cache/util.go</span><br><span class="hljs-keyword">var</span> byteNum <span class="hljs-type">int64</span> = <span class="hljs-number">0</span><br><span class="hljs-comment">// 1KB 100KB 1MB 2MB 1GB，单位统一为 byte</span><br><span class="hljs-keyword">switch</span> unit &#123;<br><span class="hljs-keyword">case</span> <span class="hljs-string">&quot;B&quot;</span>:<br>    byteNum = num<br><span class="hljs-keyword">case</span> <span class="hljs-string">&quot;KB&quot;</span>:<br>    byteNum = num * KB<br><span class="hljs-keyword">case</span> <span class="hljs-string">&quot;MB&quot;</span>:<br>    byteNum = num * MB<br><span class="hljs-keyword">case</span> <span class="hljs-string">&quot;GB&quot;</span>:<br>    byteNum = num * GB<br><span class="hljs-keyword">case</span> <span class="hljs-string">&quot;TB&quot;</span>:<br>    byteNum = num * TB<br><span class="hljs-keyword">case</span> <span class="hljs-string">&quot;PB&quot;</span>:<br>    byteNum = num * PB<br><span class="hljs-keyword">default</span>: <span class="hljs-comment">// 设置不合法，设置为 0，后续设置为 默认值</span><br>    num = <span class="hljs-number">0</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	如果用户输入的单位不合法，就是通过后续处理设置为默认值 100MB：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cache/util.go</span><br><span class="hljs-comment">// 用户使用不合法，打印日志并设置默认值</span><br><span class="hljs-keyword">if</span> num == <span class="hljs-number">0</span> &#123;<br>    log.Println(<span class="hljs-string">&quot;ParseSize 仅支持 B、KB、MB、GB、TB、PB&quot;</span>)<br>    num = <span class="hljs-number">100</span><br>    byteNum = num * MB<br>    unit = <span class="hljs-string">&quot;MB&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	最后由于我们需要返回的有两种形式，即字符串形式和数字形式，所以这里还需要拼接一下字符串形式。这里没有直接使用用户传入的值，是因为可能用户的输入有问题，然后我们采用的是默认值，故这里直接统一全部重新拼接：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cache/util.go</span><br>sizeStr := strconv.FormatInt(num, <span class="hljs-number">10</span>) + unit<br></code></pre></td></tr></table></figure>
+
+<p>​	至此，ParseSize 函数，我们就实现完毕了，完整代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// ParseSize 单位统一，并且检查设置是否正确</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">ParseSize</span><span class="hljs-params">(size <span class="hljs-type">string</span>)</span></span> (<span class="hljs-type">int64</span>, <span class="hljs-type">string</span>) &#123;<br>	<span class="hljs-comment">// 默认大小为 100</span><br><br>	<span class="hljs-comment">// 利用正则表达式匹配一个或者多个数字</span><br>	re, _ := regexp.Compile(<span class="hljs-string">&quot;[0-9]+&quot;</span>)<br>	<span class="hljs-comment">// 获取单位：使用编译好的正则表达式 re，将 size 字符串中匹配的数字字符替换为空字符串</span><br>	unit := <span class="hljs-type">string</span>(re.ReplaceAll([]<span class="hljs-type">byte</span>(size), []<span class="hljs-type">byte</span>(<span class="hljs-string">&quot;&quot;</span>)))<br>	<span class="hljs-comment">// 单位转换为大写</span><br>	unit = strings.ToUpper(unit)<br><br>	<span class="hljs-comment">// 获取数字：将 size 字符串中的单位部分 unit 用空字符串替换，即可获取数字部分。最后再将数字转换为 int64 类型</span><br>	num, _ := strconv.ParseInt(strings.Replace(size, unit, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-number">1</span>), <span class="hljs-number">10</span>, <span class="hljs-number">64</span>)<br><br>	<span class="hljs-keyword">var</span> byteNum <span class="hljs-type">int64</span> = <span class="hljs-number">0</span><br>	<span class="hljs-comment">// 1KB 100KB 1MB 2MB 1GB，单位统一为 byte</span><br>	<span class="hljs-keyword">switch</span> unit &#123;<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;B&quot;</span>:<br>		byteNum = num<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;KB&quot;</span>:<br>		byteNum = num * KB<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;MB&quot;</span>:<br>		byteNum = num * MB<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;GB&quot;</span>:<br>		byteNum = num * GB<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;TB&quot;</span>:<br>		byteNum = num * TB<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;PB&quot;</span>:<br>		byteNum = num * PB<br>	<span class="hljs-keyword">default</span>: <span class="hljs-comment">// 设置不合法，设置为 0，后续设置为 默认值</span><br>		num = <span class="hljs-number">0</span><br>	&#125;<br><br>	<span class="hljs-comment">// 用户使用不合法，打印日志并设置默认值</span><br>	<span class="hljs-keyword">if</span> num == <span class="hljs-number">0</span> &#123;<br>		log.Println(<span class="hljs-string">&quot;ParseSize 仅支持 B、KB、MB、GB、TB、PB&quot;</span>)<br>		num = <span class="hljs-number">100</span><br>		byteNum = num * MB<br>		unit = <span class="hljs-string">&quot;MB&quot;</span><br>	&#125;<br><br>	sizeStr := strconv.FormatInt(num, <span class="hljs-number">10</span>) + unit<br>	<span class="hljs-keyword">return</span> byteNum, sizeStr<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	然后我们的 SetMaxMemory 函数就简单了，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cache/memCache.go</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> SetMaxMemory(size <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	mc.maxMemorySize, mc.maxMemorySizeStr = ParseSize(size)<br>	fmt.Println(mc.maxMemorySize, mc.maxMemorySizeStr)<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	然后我们可以运行 main.go 函数，打印一下检查是否有问题：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">$ <span class="hljs-keyword">go</span> run main.<span class="hljs-keyword">go</span><br><span class="hljs-number">104857600</span> <span class="hljs-number">100</span>MB<br></code></pre></td></tr></table></figure>
+
+<p>​	可以用计算器算一下，没有问题，我们的 SetMaxMemory 函数就完成了。</p>
+<h5 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h5><p>​	然后是我们的 Set 方法，这个方法是用来将键值对存入我们的缓存系统中的。</p>
+<p>​	首先，我们需要考虑用什么类型来存储键值对，很自然就可以想到用 Go 语言内置的字典，即 map 来实现。那新的问题又来了，那 map 的 key-value 分别用什么类型呢？key 的类型，毫无疑问肯定是 string 类型；value 的类型的话，这里如果也用一个单独的 interface{} 类型的话，可能也会存在一些问题，因为我们的 value 需要携带很多附加信息，比如 value 的值、过期时间、value 大小等，故这里的 value 需要用一个结构体去表示，故我们要先创建一个 memCacheValue 结构体：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cahce.memCache.go</span><br><span class="hljs-keyword">type</span> memCacheValue <span class="hljs-keyword">struct</span> &#123;<br>	<span class="hljs-comment">// value 值</span><br>	val <span class="hljs-keyword">interface</span>&#123;&#125;<br>	<span class="hljs-comment">// 过期时间</span><br>	expireTime time.Time<br>	<span class="hljs-comment">// 有效时长</span><br>	expire time.Duration<br>	<span class="hljs-comment">// value 大小。用于计算当前内存大小</span><br>	size <span class="hljs-type">int64</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	有了 memCacheValue，就可以在 memCache 中新增一个字段了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cahce.memCache.go</span><br><span class="hljs-keyword">type</span> memCache <span class="hljs-keyword">struct</span> &#123;<br>	<span class="hljs-comment">// 最大内存大小</span><br>	maxMemorySize <span class="hljs-type">int64</span><br>	<span class="hljs-comment">// 最大内存字符串表示</span><br>	maxMemorySizeStr <span class="hljs-type">string</span><br>	<span class="hljs-comment">// 当前内存大小</span><br>	currMemorySize <span class="hljs-type">int64</span><br>	<span class="hljs-comment">// 缓存键值对</span><br>	values <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]*memCacheValue<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	由于这里使用了 map，故在初始化 memCache 实例的时候，需要进行内存的分配，所以我们要修改 NewMemCache 函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cahce.memCache.go</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewMemCache</span><span class="hljs-params">()</span></span> Cache &#123;<br>	mc := &amp;memCache&#123;<br>		values: <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]*memCacheValue),<br>	&#125;<br>	<span class="hljs-keyword">return</span> mc<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	言归正传，继续分析我们的 Set 方法的实现，由于 Set 方法是写操作，Map 并非线程安全的，所以我们在进行写操作的时候需要进行加锁保护，故这里 memCache 结构中还需要加一个锁：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> memCache <span class="hljs-keyword">struct</span> &#123;<br>	...<br>	<span class="hljs-comment">// 读写锁</span><br>	locker sync.RWMutex<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这里我们采用读写锁，这样可以利用 map 的读写机制：读操作兼容、写操作互斥，最大化提升读写 map 的性能。</p>
+<p>​	因为我们的键可能存在过期时间，如果是重复 Set 一个已存在的值，就需要去重新计算更新对应的时间，会需要分情况讨论，比较复杂。所以，这里我们统一使用，先删除对应键值，再添加对应键值，写起来会比较方便，下面我们实现三个方法，以便我们调用：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 判断是否存在对应的 value</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> get(key <span class="hljs-type">string</span>) (*memCacheValue, <span class="hljs-type">bool</span>) &#123;<br>	val, ok := mc.values[key]<br>	<span class="hljs-keyword">return</span> val, ok<br>&#125;<br><br><span class="hljs-comment">// 删除：当前内存大小更新、删除当前 key 值</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> del(key <span class="hljs-type">string</span>) &#123;<br>	tmp, ok := mc.get(key)<br>	<span class="hljs-keyword">if</span> ok &amp;&amp; tmp != <span class="hljs-literal">nil</span> &#123;<br>		mc.currMemorySize -= tmp.size<br>		<span class="hljs-built_in">delete</span>(mc.values, key)<br>	&#125;<br>&#125;<br><br><span class="hljs-comment">// 添加：当前内存大小更新、删除当前 key 值</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> add(key <span class="hljs-type">string</span>, val *memCacheValue) &#123;<br>	mc.values[key] = val<br>	mc.currMemorySize += val.size<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	上述三个方法比较简单，就不做过多赘述了。有了这三个函数，我们后面其他的方法实现起来，都会很简单。</p>
+<p>​	然后我们的 Set 方法就可以写了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Set(key <span class="hljs-type">string</span>, val <span class="hljs-keyword">interface</span>&#123;&#125;, expire time.Duration) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-comment">// map 非线程安全需要加锁访问</span><br>	mc.locker.Lock()<br>	<span class="hljs-keyword">defer</span> mc.locker.Unlock()<br>	<span class="hljs-comment">// 确定一个 value 值</span><br>	v := &amp;memCacheValue&#123;<br>		val:        val,<br>		expireTime: time.Now().Add(expire),<br>		expire:     expire,<br>		size:       GetValSize(val),<br>	&#125;<br>	<span class="hljs-comment">// 为了简化代码复杂度，这里用 “删除再添加” 来代替 “更新” 操作</span><br>	<span class="hljs-keyword">if</span> _, ok := mc.get(key); ok &#123; <span class="hljs-comment">// 存在则删除</span><br>		mc.del(key)<br>	&#125;<br>	mc.add(key, v)<br><br>	<span class="hljs-comment">// 新增后缓存是否超过最大内存：超过则直接删除刚刚添加的这个 key，并报 panic</span><br>	<span class="hljs-keyword">if</span> mc.currMemorySize &gt; mc.maxMemorySize &#123;<br>		mc.del(key)<br>		<span class="hljs-comment">// 这里可以自己完善一下，通过一些内存淘汰策略来选择删除一些 key，来判断是否还会超过最大内存</span><br>		log.Println(fmt.Sprintf(<span class="hljs-string">&quot;max memory size %s&quot;</span>, mc.maxMemorySizeStr))<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>在开始操作之前，加写锁保护</li>
+<li>根据用户输入，构建对应的 value 值</li>
+<li>如果存在对应键值对，就先删除，然后再添加对应键值</li>
+<li>新增后判断是否超过内存，超过了的话，就直接删除刚刚添加的这个键</li>
+</ol>
+<p>​	上述 Set 方法中还用到一个函数 GetValSize ，我们可以先不去实现这个函数具体逻辑，后面再回过头来看：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cache/util.go</span><br><span class="hljs-comment">// GetValSize 计算 value 值大小</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetValSize</span><span class="hljs-params">(val <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> <span class="hljs-type">int64</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="Get"><a href="#Get" class="headerlink" title="Get"></a>Get</h5><p>​	Get 方法，是根据用户输入的键，来获取对应的 value 值的。实现很简单，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Get(key <span class="hljs-type">string</span>) (<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-type">bool</span>) &#123;<br>	mc.locker.RLock()<br>	<span class="hljs-keyword">defer</span> mc.locker.RUnlock()<br><br>	<span class="hljs-comment">// 拿到对应的值</span><br>	mcv, ok := mc.get(key)<br>	<span class="hljs-comment">// 判断是否过期</span><br>	<span class="hljs-keyword">if</span> ok &#123;<br>		<span class="hljs-keyword">if</span> mcv.expire != <span class="hljs-number">0</span> &amp;&amp; mcv.expireTime.Before(time.Now()) &#123; <span class="hljs-comment">// 过期时间早于当前时间，删除</span><br>			mc.del(key)<br>			<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, <span class="hljs-literal">false</span><br>		&#125;<br>		<span class="hljs-keyword">return</span> mcv.val, ok<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, <span class="hljs-literal">false</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>加读锁保护</li>
+<li>先通过 get 方法拿到对应的值</li>
+<li>如果存在该键，且该值没有过期或者没有过期时间，则返回该值</li>
+<li>否则返回 nil，并删除该过期键</li>
+</ol>
+<h5 id="Del"><a href="#Del" class="headerlink" title="Del"></a>Del</h5><p>​	Del 方法，是用于删除对应键值对的。直接加写锁操作，并调用先前实现的 del 函数即可：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Del(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	mc.locker.Lock()<br>	<span class="hljs-keyword">defer</span> mc.locker.Unlock()<br>	mc.del(key)<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>加写锁保护</li>
+<li>直接调用 del 函数进行删除对应键值对即可</li>
+</ol>
+<h5 id="Exists"><a href="#Exists" class="headerlink" title="Exists"></a>Exists</h5><p>​	Exists 方法，用于判断某个键是否存在于我们的缓存系统。实现也非常简单：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Exists(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	mc.locker.RLock()<br>	<span class="hljs-keyword">defer</span> mc.locker.RUnlock()<br>	_, ok := mc.values[key]<br>	<span class="hljs-keyword">return</span> ok<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>加读锁保护</li>
+<li>直接获取对应键值对，以此判断是否存在该键</li>
+</ol>
+<h5 id="Flush"><a href="#Flush" class="headerlink" title="Flush"></a>Flush</h5><p>​	Flush 方法，是在整个缓存系统的缓存数据不需要使用之后，用来清空所有的缓存时使用的。这里我们利用 Go 语言的垃圾回收机制，直接将整个 map 置空，Go 语言的垃圾回收机制会直接将没有使用的内存进行回收：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Flush() <span class="hljs-type">bool</span> &#123;<br>	mc.locker.Lock()<br>	<span class="hljs-keyword">defer</span> mc.locker.Unlock()<br>	<span class="hljs-comment">// 直接将整个 map 置空，go 的垃圾回收机制会自行将没有使用的内存进行回收</span><br>	mc.values = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]*memCacheValue, <span class="hljs-number">0</span>)<br>	mc.currMemorySize = <span class="hljs-number">0</span><br><br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>加写锁保护</li>
+<li>将整个 map 置空，并将当前使用内存大小清空</li>
+</ol>
+<h5 id="Keys"><a href="#Keys" class="headerlink" title="Keys"></a>Keys</h5><p>​	Keys 方法，用于获取缓存中 key 的数量。直接用 len() 函数获取即可：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Keys() <span class="hljs-type">int64</span> &#123;<br>	mc.locker.RLock()<br>	<span class="hljs-keyword">defer</span> mc.locker.RUnlock()<br>	<span class="hljs-keyword">return</span> <span class="hljs-type">int64</span>(<span class="hljs-built_in">len</span>(mc.values))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>加读锁保护</li>
+<li>利用 len() 函数直接获取</li>
+</ol>
+<p>​	</p>
+<p>​	现在我们再来看看这个 GetValSize 函数，这里有两种思路实现：</p>
+<ol>
+<li>利用反射包 <code>unsafe.Sizeof(val)</code> 来获取对应的值的大小</li>
+<li>野路子：利用 json 包，将 val 序列化为字节数组，然后求字节数组的长度，就知道该值占用了多少字节了</li>
+</ol>
+<p>​	通过测试，可以发现第一种方法是不可靠的，因为<code>unsafe.Sizeof()</code> 方法只是算出对应类型的字节大小，而不是你所存储的内容的具体大小。于是我们这里采用第二种方法来实现：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// cache/util.go</span><br><span class="hljs-comment">// GetValSize 计算 value 值大小</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetValSize</span><span class="hljs-params">(val <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> <span class="hljs-type">int64</span> &#123;<br>	<span class="hljs-comment">// 野路子：利用 json 包，将 val 序列化为字节数组，然后求字节数组的长度，就知道占用了多少字节了</span><br>	bytes, _ := json.Marshal(val)<br>	size := <span class="hljs-type">int64</span>(<span class="hljs-built_in">len</span>(bytes))<br>	<span class="hljs-keyword">return</span> size<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	至此，我们的基础功能，就差不多实现了。大家可以通过在 main 函数打印对应的信息来检查。在这里，我就不再带着大家检查了。</p>
+<h4 id="实现代理层"><a href="#实现代理层" class="headerlink" title="实现代理层"></a>实现代理层</h4><p>​	首先我们得明白，为什么要再加一层代理层？在这里，题目给的接口是包含过期时间的，但是我们的使用示例却没有使用过期时间，这就是说明需要加一层代理层来进行封装。</p>
+<p>​	添加代理层还有一些好处，比如：</p>
+<ul>
+<li>安全性：它可以过滤和阻止对系统的未经授权的访问，通过身份验证和授权机制确保只有合法的用户或服务可以访问底层的资源。这有助于防范潜在的安全威胁。</li>
+<li>性能优化：代理层可以缓存某些请求的结果，以避免重复计算或数据库查询。此外，代理层还可以对请求进行负载均衡，确保各个后端服务得到合理的分配，以提高整体性能。</li>
+<li>抽象底层实现： 代理层可以用于隐藏底层实现的复杂性，提供简化的接口给上层系统。这有助于实现系统的模块化和降低耦合度，使得系统更容易维护和扩展。</li>
+</ul>
+<p>​	下面我们来看看怎么实现代理层：</p>
+<p>​	首先，在项目根目录创建一个文件夹 cache-server ，并在该目录下创建一个 cache.go 文件，完整代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> cache_server<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;main/cache&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-comment">// 代理层/适配层</span><br><span class="hljs-keyword">type</span> cacheServer <span class="hljs-keyword">struct</span> &#123;<br>	memCache cache.Cache<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewMemCache</span><span class="hljs-params">()</span></span> *cacheServer &#123;<br>	<span class="hljs-keyword">return</span> &amp;cacheServer&#123;<br>		memCache: cache.NewMemCache(),<br>	&#125;<br>&#125;<br><br><span class="hljs-comment">// SetMaxMemory size : 1KB 100KB 1MB 2MB 1GB</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> SetMaxMemory(size <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> cs.memCache.SetMaxMemory(size)<br>&#125;<br><br><span class="hljs-comment">// Set 将 value 写入缓存</span><br><span class="hljs-comment">// 代理层：将 有效时长参数设置为可有可无</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> Set(key <span class="hljs-type">string</span>, val <span class="hljs-keyword">interface</span>&#123;&#125;, expire ...time.Duration) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-comment">// 默认值为 0 秒</span><br>	expireTs := time.Second * <span class="hljs-number">0</span><br>	<span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(expire) &gt; <span class="hljs-number">0</span> &#123;<br>		expireTs = expire[<span class="hljs-number">0</span>]<br>	&#125;<br>	<span class="hljs-keyword">return</span> cs.memCache.Set(key, val, expireTs)<br>&#125;<br><br><span class="hljs-comment">// Get 根据 key 值获取 value</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> Get(key <span class="hljs-type">string</span>) (<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-type">bool</span>) &#123;<br>	<span class="hljs-keyword">return</span> cs.memCache.Get(key)<br>&#125;<br><br><span class="hljs-comment">// Del 删除 key 值</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> Del(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> cs.memCache.Del(key)<br>&#125;<br><br><span class="hljs-comment">// Exists 判断 key 是否存在</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> Exists(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> cs.memCache.Exists(key)<br>&#125;<br><br><span class="hljs-comment">// Flush 清空所有 key</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> Flush() <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> cs.memCache.Flush()<br>&#125;<br><br><span class="hljs-comment">// Keys 获取缓存中所有 key 的数量</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> Keys() <span class="hljs-type">int64</span> &#123;<br>	<span class="hljs-keyword">return</span> cs.memCache.Keys()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>首先我们仍然需要先将 cache 接口封装起来，并写一个构造函数返回一个实例</li>
+<li>除了 Set 方法外，其他方法直接调用实现即可</li>
+<li>在 Set 方法中，将过期时间参数设置为可选参数，即 <code>expire ...time.Duration</code>，然后通过判断是否传入该参数来构建新的参数 <code>expireTs</code> 去调用实现好的方法</li>
+</ol>
+<p>​	实现完成后，我们就可以将 main 函数的代码修改一下，调用代理层提供的方法来进行使用：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	cache_server <span class="hljs-string">&quot;main/cache-server&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	cache := cache_server.NewMemCache()<br>	cache.SetMaxMemory(<span class="hljs-string">&quot;100MB&quot;</span>)<br>	cache.Set(<span class="hljs-string">&quot;int&quot;</span>, <span class="hljs-number">1</span>)<br>	cache.Set(<span class="hljs-string">&quot;bool&quot;</span>, <span class="hljs-literal">false</span>)<br>	cache.Set(<span class="hljs-string">&quot;data&quot;</span>, <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;&#123;<span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-number">1</span>&#125;)<br>	cache.Get(<span class="hljs-string">&quot;int&quot;</span>)<br>	cache.Del(<span class="hljs-string">&quot;int&quot;</span>)<br>	cache.Flush()<br>	cache.Keys()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这样，即使我们不使用带过期时间的 Set 方法，也不会报错了。</p>
+<h4 id="加分项"><a href="#加分项" class="headerlink" title="加分项"></a>加分项</h4><p>​	最后我们再来看看我们的加分项：</p>
+<h5 id="轮询检查删除过期键"><a href="#轮询检查删除过期键" class="headerlink" title="轮询检查删除过期键"></a>轮询检查删除过期键</h5><p>​	我们可以在创建缓存系统实例的时候，同时开启我们的 ” 轮询检查删除过期键 “ 功能。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewMemCache</span><span class="hljs-params">()</span></span> Cache &#123;<br>	mc := &amp;memCache&#123;<br>		values:                       <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]*memCacheValue),<br>		cleanExpiredItemTimeInterval: time.Second, <span class="hljs-comment">// 定期清理缓存</span><br>	&#125;<br>	<span class="hljs-comment">// 轮询检查删除过期键</span><br>	<span class="hljs-keyword">go</span> mc.cleanExpiredItem()<br>	<span class="hljs-keyword">return</span> mc<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这里需要新添加一个字段 <code>cleanExpiredItemTimeInterval</code> 表示清理周期，还需要写一个轮询的函数，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> memCache <span class="hljs-keyword">struct</span> &#123;<br>	...<br>	<span class="hljs-comment">// 清楚过期缓存时间间隔</span><br>	cleanExpiredItemTimeInterval time.Duration<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	下面是轮询的函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 轮询清空过期 key</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> cleanExpiredItem() &#123;<br>	<span class="hljs-comment">// 设置一个定时触发器：定时向 Ticker.C 中发送一个消息，即触发了一次</span><br>	timeTicker := time.NewTicker(mc.cleanExpiredItemTimeInterval)<br>	<span class="hljs-keyword">defer</span> timeTicker.Stop()<br>	<span class="hljs-keyword">for</span> &#123;<br>		<span class="hljs-keyword">select</span> &#123;<br>		<span class="hljs-keyword">case</span> &lt;-timeTicker.C: <span class="hljs-comment">// 每个周期做一个缓存清理</span><br>			<span class="hljs-comment">// 遍历所有缓存的键值对，将有过期时间且过期的键删除掉</span><br>			<span class="hljs-keyword">for</span> key, item := <span class="hljs-keyword">range</span> mc.values &#123;<br>				<span class="hljs-keyword">if</span> item.expire != <span class="hljs-number">0</span> &amp;&amp; time.Now().After(item.expireTime) &#123;<br>					mc.locker.Lock()<br>					mc.del(key)<br>					mc.locker.Unlock()<br>				&#125;<br>			&#125;<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>采用 <code>time.NewTicker</code>，定义一个制定周期的定时器</li>
+<li>由于需要不断轮询，故需要放在 for 循环中</li>
+<li>配合 select 实现一个阻塞式的轮询检查并删除过期键的操作操作</li>
+</ol>
+<h5 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h5><p>​	单元测试是一种用于验证程序各个独立单元是否能按照预期工作的测试方法。Go语言的测试工具内置于语言本身，通过 <code>testing</code> 包提供了一套简单而有效的测试框架。平时不论是学习、还是工作，都应该养成写单元测试的习惯。</p>
+<p>​	我们在 cache 包下，创建一个 memCache_test.go 文件，并在里面写我们测试内容：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> cache<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;testing&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">TestCacheOP</span><span class="hljs-params">(t *testing.T)</span></span> &#123;<br>	testData := []<span class="hljs-keyword">struct</span> &#123;<br>		key    <span class="hljs-type">string</span><br>		val    <span class="hljs-keyword">interface</span>&#123;&#125;<br>		expire time.Duration<br>	&#125;&#123;<br>		&#123;<span class="hljs-string">&quot;baer&quot;</span>, <span class="hljs-number">678</span>, time.Second * <span class="hljs-number">10</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;hrws&quot;</span>, <span class="hljs-literal">false</span>, time.Second * <span class="hljs-number">11</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;gddfas&quot;</span>, <span class="hljs-literal">true</span>, time.Second * <span class="hljs-number">12</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;rwe&quot;</span>, <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;&#123;<span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-string">&quot;b&quot;</span>: <span class="hljs-literal">false</span>&#125;, time.Second * <span class="hljs-number">13</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;rqew&quot;</span>, <span class="hljs-string">&quot;fsdfas&quot;</span>, time.Second * <span class="hljs-number">14</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;fsdew&quot;</span>, <span class="hljs-string">&quot;这里是字符串这里是字符串这里是字符串&quot;</span>, time.Second * <span class="hljs-number">15</span>&#125;,<br>	&#125;<br><br>	c := NewMemCache()<br>	c.SetMaxMemory(<span class="hljs-string">&quot;10MB&quot;</span>)<br>	<span class="hljs-comment">// 测试 set 和 get</span><br>	<span class="hljs-keyword">for</span> _, item := <span class="hljs-keyword">range</span> testData &#123;<br>		c.Set(item.key, item.val, item.expire)<br>		val, ok := c.Get(item.key)<br>		<span class="hljs-keyword">if</span> !ok &#123;<br>			t.Error(<span class="hljs-string">&quot;缓存取值失败&quot;</span>)<br>		&#125;<br>		<span class="hljs-keyword">if</span> item.key != <span class="hljs-string">&quot;rwe&quot;</span> &amp;&amp; val != item.val &#123;<br>			t.Error(<span class="hljs-string">&quot;缓存取值数据与预期不一致&quot;</span>)<br>		&#125;<br>		_, ok1 := val.(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;)<br>		<span class="hljs-keyword">if</span> item.key == <span class="hljs-string">&quot;rwe&quot;</span> &amp;&amp; !ok1 &#123;<br>			t.Error(<span class="hljs-string">&quot;缓存取值数据与预期不一致&quot;</span>)<br>		&#125;<br>	&#125;<br>	<span class="hljs-comment">// 测试 Keys()</span><br>	<span class="hljs-keyword">if</span> <span class="hljs-type">int64</span>(<span class="hljs-built_in">len</span>(testData)) != c.Keys() &#123;<br>		t.Error(<span class="hljs-string">&quot;缓存数量不一致&quot;</span>)<br>	&#125;<br>	<span class="hljs-comment">// 测试 Del()</span><br>	c.Del(testData[<span class="hljs-number">0</span>].key)<br>	c.Del(testData[<span class="hljs-number">1</span>].key)<br><br>	<span class="hljs-keyword">if</span> <span class="hljs-type">int64</span>(<span class="hljs-built_in">len</span>(testData)) != c.Keys()+<span class="hljs-number">2</span> &#123;<br>		t.Error(<span class="hljs-string">&quot;缓存数量不一致&quot;</span>)<br>	&#125;<br><br>	<span class="hljs-comment">// 测试过期时间</span><br>	time.Sleep(time.Second * <span class="hljs-number">16</span>)<br><br>	<span class="hljs-keyword">if</span> c.Keys() != <span class="hljs-number">0</span> &#123;<br>		t.Error(<span class="hljs-string">&quot;缓存清空失败&quot;</span>)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>先用匿名结构体，构建需要用到的各类测试数据</p>
+<p>然后对 Set、Get、Del 等方法进行调用，然后对比结果</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>​	这篇文章，通过一个面试题，从题目到各种坑点的分析，带大家了解并实现了一个简易版的 内存缓存系统  。相信大家在看完后肯定会收货满满。</p>
+<h1 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h1><p>这是项目的目录结构：</p>
+<p><img src="/images/memCache.png" srcset="/img/loading.gif" lazyload alt="memCache"></p>
+<p>下面会给出各个文件的内容：</p>
+<h5 id="main-go"><a href="#main-go" class="headerlink" title="main.go"></a>main.go</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	cacheserver <span class="hljs-string">&quot;main/cache-server&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	cache := cache_server.NewMemCache()<br>	cache.SetMaxMemory(<span class="hljs-string">&quot;100MB&quot;</span>)<br>	cache.Set(<span class="hljs-string">&quot;int&quot;</span>, <span class="hljs-number">1</span>)<br>	cache.Set(<span class="hljs-string">&quot;bool&quot;</span>, <span class="hljs-literal">false</span>)<br>	cache.Set(<span class="hljs-string">&quot;data&quot;</span>, <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;&#123;<span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-number">1</span>&#125;)<br>	cache.Get(<span class="hljs-string">&quot;int&quot;</span>)<br>	cache.Del(<span class="hljs-string">&quot;int&quot;</span>)<br>	cache.Flush()<br>	cache.Keys()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="cache-x2F-cache-go"><a href="#cache-x2F-cache-go" class="headerlink" title="cache&#x2F;cache.go"></a>cache&#x2F;cache.go</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> cache<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;time&quot;</span><br><br><span class="hljs-keyword">type</span> Cache <span class="hljs-keyword">interface</span> &#123;<br>	SetMaxMemory(size <span class="hljs-type">string</span>) <span class="hljs-type">bool</span><br>	Set(key <span class="hljs-type">string</span>, val <span class="hljs-keyword">interface</span>&#123;&#125;, expire time.Duration) <span class="hljs-type">bool</span><br>	Get(key <span class="hljs-type">string</span>) (<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-type">bool</span>)<br>	Del(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span><br>	Exists(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span><br>	Flush() <span class="hljs-type">bool</span><br>	Keys() <span class="hljs-type">int64</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="cache-x2F-memCache-go"><a href="#cache-x2F-memCache-go" class="headerlink" title="cache&#x2F;memCache.go"></a>cache&#x2F;memCache.go</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> cache<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;sync&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-keyword">type</span> memCache <span class="hljs-keyword">struct</span> &#123;<br>	maxMemorySize <span class="hljs-type">int64</span><br>	maxMemorySizeStr <span class="hljs-type">string</span><br>	currMemorySize <span class="hljs-type">int64</span><br>	values <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]*memCacheValue<br>	locker sync.RWMutex<br>	cleanExpiredItemTimeInterval time.Duration<br>&#125;<br><br><span class="hljs-keyword">type</span> memCacheValue <span class="hljs-keyword">struct</span> &#123;<br>	val <span class="hljs-keyword">interface</span>&#123;&#125;<br>	expireTime time.Time<br>	expire time.Duration<br>	size <span class="hljs-type">int64</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewMemCache</span><span class="hljs-params">()</span></span> Cache &#123;<br>	mc := &amp;memCache&#123;<br>		values:                       <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]*memCacheValue),<br>		cleanExpiredItemTimeInterval: time.Second, <br>	&#125;<br>	<span class="hljs-keyword">go</span> mc.cleanExpiredItem()<br>	<span class="hljs-keyword">return</span> mc<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> SetMaxMemory(size <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	mc.maxMemorySize, mc.maxMemorySizeStr = ParseSize(size)<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Set(key <span class="hljs-type">string</span>, val <span class="hljs-keyword">interface</span>&#123;&#125;, expire time.Duration) <span class="hljs-type">bool</span> &#123;<br>	mc.locker.Lock()<br>	<span class="hljs-keyword">defer</span> mc.locker.Unlock()<br>	v := &amp;memCacheValue&#123;<br>		val:        val,<br>		expireTime: time.Now().Add(expire),<br>		expire:     expire,<br>		size:       GetValSize(val),<br>	&#125;<br>	<span class="hljs-keyword">if</span> _, ok := mc.get(key); ok &#123;<br>		mc.del(key)<br>	&#125;<br>	mc.add(key, v)<br><br>	<span class="hljs-keyword">if</span> mc.currMemorySize &gt; mc.maxMemorySize &#123;<br>		mc.del(key)<br>		log.Println(fmt.Sprintf(<span class="hljs-string">&quot;max memory size %s&quot;</span>, mc.maxMemorySizeStr))<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> get(key <span class="hljs-type">string</span>) (*memCacheValue, <span class="hljs-type">bool</span>) &#123;<br>	val, ok := mc.values[key]<br>	<span class="hljs-keyword">return</span> val, ok<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> del(key <span class="hljs-type">string</span>) &#123;<br>	tmp, ok := mc.get(key)<br>	<span class="hljs-keyword">if</span> ok &amp;&amp; tmp != <span class="hljs-literal">nil</span> &#123;<br>		mc.currMemorySize -= tmp.size<br>		<span class="hljs-built_in">delete</span>(mc.values, key)<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> add(key <span class="hljs-type">string</span>, val *memCacheValue) &#123;<br>	mc.values[key] = val<br>	mc.currMemorySize += val.size<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Get(key <span class="hljs-type">string</span>) (<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-type">bool</span>) &#123;<br>	mc.locker.RLock()<br>	<span class="hljs-keyword">defer</span> mc.locker.RUnlock()<br><br>	mcv, ok := mc.get(key)<br>	<span class="hljs-keyword">if</span> ok &#123;<br>		<span class="hljs-keyword">if</span> mcv.expire != <span class="hljs-number">0</span> &amp;&amp; mcv.expireTime.Before(time.Now()) &#123;<br>			mc.del(key)<br>			<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, <span class="hljs-literal">false</span><br>		&#125;<br>		<span class="hljs-keyword">return</span> mcv.val, ok<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, <span class="hljs-literal">false</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Del(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	mc.locker.Lock()<br>	<span class="hljs-keyword">defer</span> mc.locker.Unlock()<br>	mc.del(key)<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Exists(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	mc.locker.RLock()<br>	<span class="hljs-keyword">defer</span> mc.locker.RUnlock()<br>	_, ok := mc.values[key]<br>	<span class="hljs-keyword">return</span> ok<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Flush() <span class="hljs-type">bool</span> &#123;<br>	mc.locker.Lock()<br>	<span class="hljs-keyword">defer</span> mc.locker.Unlock()<br>	mc.values = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]*memCacheValue, <span class="hljs-number">0</span>)<br>	mc.currMemorySize = <span class="hljs-number">0</span><br><br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> Keys() <span class="hljs-type">int64</span> &#123;<br>	mc.locker.RLock()<br>	<span class="hljs-keyword">defer</span> mc.locker.RUnlock()<br>	<span class="hljs-keyword">return</span> <span class="hljs-type">int64</span>(<span class="hljs-built_in">len</span>(mc.values))<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mc *memCache)</span></span> cleanExpiredItem() &#123;<br>	timeTicker := time.NewTicker(mc.cleanExpiredItemTimeInterval)<br>	<span class="hljs-keyword">defer</span> timeTicker.Stop()<br>	<span class="hljs-keyword">for</span> &#123;<br>		<span class="hljs-keyword">select</span> &#123;<br>		<span class="hljs-keyword">case</span> &lt;-timeTicker.C: <br>			<span class="hljs-keyword">for</span> key, item := <span class="hljs-keyword">range</span> mc.values &#123;<br>				<span class="hljs-keyword">if</span> item.expire != <span class="hljs-number">0</span> &amp;&amp; time.Now().After(item.expireTime) &#123;<br>					mc.locker.Lock()<br>					mc.del(key)<br>					mc.locker.Unlock()<br>				&#125;<br>			&#125;<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="cache-x2F-memCache-test-go"><a href="#cache-x2F-memCache-test-go" class="headerlink" title="cache&#x2F;memCache_test.go"></a>cache&#x2F;memCache_test.go</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> cache<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;testing&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">TestCacheOP</span><span class="hljs-params">(t *testing.T)</span></span> &#123;<br>	testData := []<span class="hljs-keyword">struct</span> &#123;<br>		key    <span class="hljs-type">string</span><br>		val    <span class="hljs-keyword">interface</span>&#123;&#125;<br>		expire time.Duration<br>	&#125;&#123;<br>		&#123;<span class="hljs-string">&quot;baer&quot;</span>, <span class="hljs-number">678</span>, time.Second * <span class="hljs-number">10</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;hrws&quot;</span>, <span class="hljs-literal">false</span>, time.Second * <span class="hljs-number">11</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;gddfas&quot;</span>, <span class="hljs-literal">true</span>, time.Second * <span class="hljs-number">12</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;rwe&quot;</span>, <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;&#123;<span class="hljs-string">&quot;a&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-string">&quot;b&quot;</span>: <span class="hljs-literal">false</span>&#125;, time.Second * <span class="hljs-number">13</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;rqew&quot;</span>, <span class="hljs-string">&quot;fsdfas&quot;</span>, time.Second * <span class="hljs-number">14</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;fsdew&quot;</span>, <span class="hljs-string">&quot;这里是字符串这里是字符串这里是字符串&quot;</span>, time.Second * <span class="hljs-number">15</span>&#125;,<br>	&#125;<br><br>	c := NewMemCache()<br>	c.SetMaxMemory(<span class="hljs-string">&quot;10MB&quot;</span>)<br>    <br>	<span class="hljs-keyword">for</span> _, item := <span class="hljs-keyword">range</span> testData &#123;<br>		c.Set(item.key, item.val, item.expire)<br>		val, ok := c.Get(item.key)<br>		<span class="hljs-keyword">if</span> !ok &#123;<br>			t.Error(<span class="hljs-string">&quot;缓存取值失败&quot;</span>)<br>		&#125;<br>		<span class="hljs-keyword">if</span> item.key != <span class="hljs-string">&quot;rwe&quot;</span> &amp;&amp; val != item.val &#123;<br>			t.Error(<span class="hljs-string">&quot;缓存取值数据与预期不一致&quot;</span>)<br>		&#125;<br>		_, ok1 := val.(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;)<br>		<span class="hljs-keyword">if</span> item.key == <span class="hljs-string">&quot;rwe&quot;</span> &amp;&amp; !ok1 &#123;<br>			t.Error(<span class="hljs-string">&quot;缓存取值数据与预期不一致&quot;</span>)<br>		&#125;<br>	&#125;<br>    <br>	<span class="hljs-keyword">if</span> <span class="hljs-type">int64</span>(<span class="hljs-built_in">len</span>(testData)) != c.Keys() &#123;<br>		t.Error(<span class="hljs-string">&quot;缓存数量不一致&quot;</span>)<br>	&#125;<br>    <br>	c.Del(testData[<span class="hljs-number">0</span>].key)<br>	c.Del(testData[<span class="hljs-number">1</span>].key)<br><br>	<span class="hljs-keyword">if</span> <span class="hljs-type">int64</span>(<span class="hljs-built_in">len</span>(testData)) != c.Keys()+<span class="hljs-number">2</span> &#123;<br>		t.Error(<span class="hljs-string">&quot;缓存数量不一致&quot;</span>)<br>	&#125;<br><br>	time.Sleep(time.Second * <span class="hljs-number">16</span>)<br><br>	<span class="hljs-keyword">if</span> c.Keys() != <span class="hljs-number">0</span> &#123;<br>		t.Error(<span class="hljs-string">&quot;缓存清空失败&quot;</span>)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="cache-x2F-util-go"><a href="#cache-x2F-util-go" class="headerlink" title="cache&#x2F;util.go"></a>cache&#x2F;util.go</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> cache<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;encoding/json&quot;</span><br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;regexp&quot;</span><br>	<span class="hljs-string">&quot;strconv&quot;</span><br>	<span class="hljs-string">&quot;strings&quot;</span><br>)<br><br><span class="hljs-keyword">const</span> (<br>	B = <span class="hljs-number">1</span> &lt;&lt; (<span class="hljs-literal">iota</span> * <span class="hljs-number">10</span>)<br>	KB<br>	MB<br>	GB<br>	TB<br>	PB<br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">ParseSize</span><span class="hljs-params">(size <span class="hljs-type">string</span>)</span></span> (<span class="hljs-type">int64</span>, <span class="hljs-type">string</span>) &#123;<br>	re, _ := regexp.Compile(<span class="hljs-string">&quot;[0-9]+&quot;</span>)<br>    <br>	unit := <span class="hljs-type">string</span>(re.ReplaceAll([]<span class="hljs-type">byte</span>(size), []<span class="hljs-type">byte</span>(<span class="hljs-string">&quot;&quot;</span>)))<br>    <br>	unit = strings.ToUpper(unit)<br><br>	num, _ := strconv.ParseInt(strings.Replace(size, unit, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-number">1</span>), <span class="hljs-number">10</span>, <span class="hljs-number">64</span>)<br><br>	<span class="hljs-keyword">var</span> byteNum <span class="hljs-type">int64</span> = <span class="hljs-number">0</span><br>	<span class="hljs-keyword">switch</span> unit &#123;<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;B&quot;</span>:<br>		byteNum = num<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;KB&quot;</span>:<br>		byteNum = num * KB<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;MB&quot;</span>:<br>		byteNum = num * MB<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;GB&quot;</span>:<br>		byteNum = num * GB<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;TB&quot;</span>:<br>		byteNum = num * TB<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;PB&quot;</span>:<br>		byteNum = num * PB<br>	<span class="hljs-keyword">default</span>: <br>		num = <span class="hljs-number">0</span><br>	&#125;<br><br>	<span class="hljs-keyword">if</span> num == <span class="hljs-number">0</span> &#123;<br>		log.Println(<span class="hljs-string">&quot;ParseSize 仅支持 B、KB、MB、GB、TB、PB&quot;</span>)<br>		num = <span class="hljs-number">100</span><br>		byteNum = num * MB<br>		unit = <span class="hljs-string">&quot;MB&quot;</span><br>	&#125;<br><br>	sizeStr := strconv.FormatInt(num, <span class="hljs-number">10</span>) + unit<br>	<span class="hljs-keyword">return</span> byteNum, sizeStr<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetValSize</span><span class="hljs-params">(val <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> <span class="hljs-type">int64</span> &#123;<br>	bytes, _ := json.Marshal(val)<br>	size := <span class="hljs-type">int64</span>(<span class="hljs-built_in">len</span>(bytes))<br>	<span class="hljs-keyword">return</span> size<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="cache-server-x2F-cache-go"><a href="#cache-server-x2F-cache-go" class="headerlink" title="cache-server&#x2F;cache.go"></a>cache-server&#x2F;cache.go</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> cache_server<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;main/cache&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-keyword">type</span> cacheServer <span class="hljs-keyword">struct</span> &#123;<br>	memCache cache.Cache<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewMemCache</span><span class="hljs-params">()</span></span> *cacheServer &#123;<br>	<span class="hljs-keyword">return</span> &amp;cacheServer&#123;<br>		memCache: cache.NewMemCache(),<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> SetMaxMemory(size <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> cs.memCache.SetMaxMemory(size)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> Set(key <span class="hljs-type">string</span>, val <span class="hljs-keyword">interface</span>&#123;&#125;, expire ...time.Duration) <span class="hljs-type">bool</span> &#123;<br>	expireTs := time.Second * <span class="hljs-number">0</span><br>	<span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(expire) &gt; <span class="hljs-number">0</span> &#123;<br>		expireTs = expire[<span class="hljs-number">0</span>]<br>	&#125;<br>	<span class="hljs-keyword">return</span> cs.memCache.Set(key, val, expireTs)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> Get(key <span class="hljs-type">string</span>) (<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-type">bool</span>) &#123;<br>	<span class="hljs-keyword">return</span> cs.memCache.Get(key)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> Del(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> cs.memCache.Del(key)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> Exists(key <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> cs.memCache.Exists(key)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> Flush() <span class="hljs-type">bool</span> &#123;<br>	<span class="hljs-keyword">return</span> cs.memCache.Flush()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(cs *cacheServer)</span></span> Keys() <span class="hljs-type">int64</span> &#123;<br>	<span class="hljs-keyword">return</span> cs.memCache.Keys()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/" class="category-chain-item">项目实战</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/cache/">#cache</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Go语言实现缓存系统</div>
+      <div>http://example.com/2023/11/10/Go/项目实战/Go语言实现缓存系统/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月10日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年11月10日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/09/MQ/Kafka/%E8%81%8A%E8%81%8AKafka%E7%9A%84%E7%89%88%E6%9C%AC%E5%8F%B7/" title="聊聊Kafka的版本号">
+                        <span class="hidden-mobile">聊聊Kafka的版本号</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>
