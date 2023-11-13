@@ -1,0 +1,955 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="​	本篇文章会带大家来认识什么是单元测试，并带大家动手写测试代码。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手把手教你写单元测试">
+<meta property="og:url" content="http://example.com/2023/11/13/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%86%99%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="​	本篇文章会带大家来认识什么是单元测试，并带大家动手写测试代码。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/Ping.png">
+<meta property="article:published_time" content="2023-11-13T06:22:24.000Z">
+<meta property="article:modified_time" content="2023-11-13T12:25:51.598Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="testing">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/Ping.png">
+  
+  
+  
+  <title>手把手教你写单元测试 - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/test/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="手把手教你写单元测试"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-13 14:22" pubdate>
+          2023年11月13日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          119 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">手把手教你写单元测试</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>​	本篇文章会带大家来认识什么是单元测试，并带大家动手写测试代码。<span id="more"></span></p>
+<h1 id="什么是单元测试"><a href="#什么是单元测试" class="headerlink" title="什么是单元测试"></a>什么是单元测试</h1><p>​	在 Go 语言中，单元测试是一种测试方法，用于验证代码的某个独立单元是否按预期功能，它的目的是确保代码的每个组成部分都在独立测试的情况下运行正常。</p>
+<p>​	在我们对项目新增一个新功能时，最好就要养成写单元测试的好习惯，这样可以有助于提高我们代码的质量、可维护性和可靠性。</p>
+<p>​	在 Go 中，单元测试的约定是使用标准库中的 <code>testing</code> 包。测试文件通常以 <code>_test.go</code> 为后缀，然后我们使用 <code>go test ...</code> 配合一些参数去进行测试，Go 测试工具会自动识别并运行这些文件中那点测试样例。</p>
+<h4 id="go-test-的两种模式"><a href="#go-test-的两种模式" class="headerlink" title="go test 的两种模式"></a>go test 的两种模式</h4><h5 id="1-本地模式：执行当前目录下的所有测试用例"><a href="#1-本地模式：执行当前目录下的所有测试用例" class="headerlink" title="1. 本地模式：执行当前目录下的所有测试用例"></a>1. 本地模式：执行当前目录下的所有测试用例</h5><p>​	go test </p>
+<h5 id="2-列表模式：输入一个或多个目录，执行这些目录下的测试用例"><a href="#2-列表模式：输入一个或多个目录，执行这些目录下的测试用例" class="headerlink" title="2. 列表模式：输入一个或多个目录，执行这些目录下的测试用例"></a>2. 列表模式：输入一个或多个目录，执行这些目录下的测试用例</h5><p>​	go test xx&#x2F;xx</p>
+<h4 id="常用的-flag-参数"><a href="#常用的-flag-参数" class="headerlink" title="常用的 flag 参数"></a>常用的 flag 参数</h4><p>​	可以使用 go help testflag 查看，由于具体的参数很多，这里就只介绍一些常用的参数。</p>
+<p>​	我们经常使用的单元测试有三种，分别是功能测试、模糊测试、性能测试。下面会对这三种测试进行介绍，并列举出对应测试经常配合使用的参数，以及一些通用参数：</p>
+<h5 id="功能测试："><a href="#功能测试：" class="headerlink" title="功能测试："></a>功能测试：</h5><p>​	 功能测试是一种验证代码是否按照规范和需求进行工作的测试，它关注于测试单个函数或方法的功能是否正确，以确保其符合预期的行为。</p>
+<p>​	常配合使用的参数有：</p>
+<ul>
+<li>-run regexp：运行功能测试测试用例，可以匹配多个，</li>
+<li>-run ^$：不执行功能测试</li>
+</ul>
+<h5 id="模糊测试："><a href="#模糊测试：" class="headerlink" title="模糊测试："></a>模糊测试：</h5><p>​	模糊测试是一种随机生成输入数据并将其提供给函数或程序的测试方法，它可以帮助发现潜在的边界情况和异常输入，以检测代码的鲁棒性。</p>
+<p>​	常配合使用的参数有：</p>
+<ul>
+<li>-fuzz regexp：运行匹配的模糊测试用例，只能匹配一个，因为模糊测试不中止，就不会停止</li>
+<li>-fuzztime t：指定模糊测试时长，默认一直运行</li>
+</ul>
+<h5 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h5><p>​	性能测试用于评估代码在不同负载和压力下的性能表现，这里的性能测试对于某个功能函数来说可能会不太准确，它更偏向于系统层面的测试，但在一些情况下，单元测试也可以包含性能方面的验证，这里在后面会提到。 </p>
+<p>​	常配合使用的参数有：</p>
+<ul>
+<li><p>-bench regexp ：运行正则表达式中匹配的的性能测试样例</p>
+</li>
+<li><p>-benchtime t：指定性能测试时间 1s 1m 或者次数 100x</p>
+</li>
+<li><p>-count n：指定我们的测试次数，相当于多次运行 go test</p>
+<ul>
+<li>例如<code>-benchtime 100x -count=5</code> 则会运行我们的测试用例 500 次</li>
+</ul>
+</li>
+<li><p>-cover：覆盖率分析，可以打印出一个覆盖率的分析。比如我们写了 3 个方法，但我们的 test 里面只有一个方法，所以覆盖率就会是 33%。</p>
+</li>
+<li><p>-cpu 1,2,4：会执行多次 go test，其中 runtime.GOMAXPROCS 分别是 1，2，4 来进行不同的测试</p>
+<ul>
+<li><code>-benchtime 100x -count=5 -cpu=1,2,4</code> 这里会执行 1500 次</li>
+</ul>
+</li>
+<li><p>-parallel n：性能测试时，指定并行 cpu 数量</p>
+</li>
+</ul>
+<h5 id="通用参数"><a href="#通用参数" class="headerlink" title="通用参数"></a>通用参数</h5><ul>
+<li>-short：标识是否缩短运行时间。用于在系统进行小改动后的测试，告知不需要将所有测试用例全部运行，缩短时间允运行即可</li>
+<li>-timeout：单次 go test 超时时间，默认是 10 min，设置为 0 表示禁用</li>
+<li>-v：打印所有输出</li>
+<li>-benchmem：打印内存分配统计信息</li>
+<li>-blockprofile block.out ：指定阻塞数据写入到指定的文件</li>
+<li>-coverprofile cover.out：指定覆盖率信息写入到指定文件</li>
+<li>-cpuprofile cpu.out：CPU 使用数据写入指定文件</li>
+<li>-memprofilerate n：配置内存分析的详细程度，将其设置为较小的值将提高内存分析的精度，但会增加分析的开销。</li>
+<li>-mutexprofile mutex.out：将互斥锁信息写入指定文件</li>
+<li>-outputdir directory：指定输出目录</li>
+<li>-trace trace.out：将执行跟踪信息写入到指定文件</li>
+</ul>
+<h5 id="pprof-分析"><a href="#pprof-分析" class="headerlink" title="pprof 分析"></a>pprof 分析</h5><p>​	上面所示输出的文件通常是二进制格式，为了查看对应的数据，我们要使用相应的工具进行分析。这里我们可以使用 pprof 工具进行分析，具体的我后续会出一篇文章讲解，这里就只讲一些用什么命令去查看：</p>
+<ol>
+<li><strong>block.out：</strong> 阻塞数据，使用 <code>go tool pprof -text block.out</code> 来查看：</li>
+<li><strong>cover.out：</strong> 覆盖率信息，使用 <code>go tool cover -func=cover.out</code> 来查看：</li>
+<li><strong>cpu.out：</strong> CPU 使用数据，使用 <code>go tool pprof -text cpu.out</code> 来查看：</li>
+<li><strong>mutex.out：</strong> 互斥锁信息，同样使用 <code>go tool pprof -text mutex.out</code>：</li>
+<li><strong>trace.out：</strong> 执行跟踪信息，使用 <code>go tool trace trace.out</code> 来查看：</li>
+</ol>
+<h1 id="怎么写单元测试"><a href="#怎么写单元测试" class="headerlink" title="怎么写单元测试"></a>怎么写单元测试</h1><p>​	首先，要写单元测试，那么肯定需要一个功能函数。这里我们借用一下之前文章内存缓存系统中使用到的一个功能函数 <code>ParseSize</code> ，它的功能是将用户的输入内存大小，转换为字节数和对应的字符串表示形式，其中还会涉及到一些输入不合法的处理，详情可以看 <a target="_blank" rel="noopener" href="https://oyto.github.io/2023/11/10/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/Go%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98%E7%B3%BB%E7%BB%9F/#SetMaxMemory">Go 语言实现缓存系统</a>。</p>
+<p>​	本文讲的是如何写单元测试，这里 ParseSize  的源码就直接给大家了，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> util<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;regexp&quot;</span><br>	<span class="hljs-string">&quot;strconv&quot;</span><br>	<span class="hljs-string">&quot;strings&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-keyword">const</span> (<br>	B = <span class="hljs-number">1</span> &lt;&lt; (<span class="hljs-literal">iota</span> * <span class="hljs-number">10</span>)<br>	KB<br>	MB<br>	GB<br>	TB<br>	PB<br>)<br><br><span class="hljs-keyword">const</span> defaultNum = <span class="hljs-number">100</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">ParseSize</span><span class="hljs-params">(size <span class="hljs-type">string</span>)</span></span> (<span class="hljs-type">int64</span>, <span class="hljs-type">string</span>) &#123;<br>	time.Sleep(time.Nanosecond * <span class="hljs-number">500</span>)<br><br>	re, _ := regexp.Compile(<span class="hljs-string">&quot;[0-9]+&quot;</span>)<br>	unit := <span class="hljs-type">string</span>(re.ReplaceAll([]<span class="hljs-type">byte</span>(size), []<span class="hljs-type">byte</span>(<span class="hljs-string">&quot;&quot;</span>)))<br>	num, _ := strconv.ParseInt(strings.Replace(size, unit, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-number">1</span>), <span class="hljs-number">10</span>, <span class="hljs-number">64</span>)<br>	unit = strings.ToUpper(unit)<br><br>	<span class="hljs-keyword">var</span> byteNum <span class="hljs-type">int64</span> = <span class="hljs-number">0</span><br>	<span class="hljs-keyword">switch</span> unit &#123;<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;B&quot;</span>:<br>		byteNum = num<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;KB&quot;</span>:<br>		byteNum = num * KB<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;MB&quot;</span>:<br>		byteNum = num * MB<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;GB&quot;</span>:<br>		byteNum = num * GB<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;TB&quot;</span>:<br>		byteNum = num * TB<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;PB&quot;</span>:<br>		byteNum = num * PB<br>	<span class="hljs-keyword">default</span>:<br>		num = <span class="hljs-number">0</span><br>	&#125;<br><br>	<span class="hljs-keyword">if</span> num == <span class="hljs-number">0</span> &#123;<br>		num = <span class="hljs-number">100</span><br>		byteNum = num * MB<br>		unit = <span class="hljs-string">&quot;MB&quot;</span><br>	&#125;<br><br>	sizeStr := strconv.FormatInt(num, <span class="hljs-number">10</span>) + unit<br>	<span class="hljs-keyword">return</span> byteNum, sizeStr<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	在项目根目录下创建 util 目录，然后创建 util.go 文件，将上面的代码粘贴进去就行了。</p>
+<p>​	强调一点，上面的 ParseSize 函数的开头，我加了一个睡眠函数，是因为我们的 ParseSize 函数的处理逻辑比较简单，怕执行太快，进行测试时显示时间为 0 ，所以加了个睡眠延迟一点时间，模拟一些比较耗时功能函数。</p>
+<h4 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h4><p>​	同样，我们先在 util 包下创建 util_test.go 文件。在写单元测试的时候，我们通常有两种方法，一种是在测试函数里面构建匿名结构体来组织数据，另一种就是在提前构建数据。前者就是将构建数据的逻辑写在测试函数里，这里不多做介绍，我们要着重讲的是第二种。</p>
+<p>​	为了方便，我们先定义一个结构体，并将其实例化，用于存放我们的数据：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 所有的测试用例放在这里头</span><br><span class="hljs-keyword">var</span> commTestData []commStruct<br><br><span class="hljs-keyword">type</span> commStruct <span class="hljs-keyword">struct</span> &#123;<br>	Group         <span class="hljs-type">string</span> <span class="hljs-comment">// 所属类别</span><br>	SizeStr       <span class="hljs-type">string</span> <span class="hljs-comment">// 输入大小</span><br>	ExpectSize    <span class="hljs-type">int64</span>  <span class="hljs-comment">// 预期输出大小</span><br>	ExpectSizeStr <span class="hljs-type">string</span> <span class="hljs-comment">// 预期输出大小字符串类型</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Group：这个是用于子测试时分类的依据，关于子测试后面会提到，这里先不理会。</li>
+<li>SizeStr：是对应于我们的 ParseSize 功能函数的输入</li>
+<li>ExpectSize、ExpectSizeStr：对应于我们的 ParseSize 功能函数的输出</li>
+</ul>
+<p>​	在单元测试中，也有一个 <code>func TestMain(m *testing.M)</code>入口函数，功能和用法于平时我们使用的 main 类似。我们可以在这里面为单元测试做一些准备工作，但需要注意的是：如果我们没有写 TestMain 函数，那么测试工具会直接调用我们的测试函数，但如果我们写了 TestMain 函数，就需要在 TestMain 中通过 m.Run() 显示地调用测试用例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 测试用例的入口函数：可以为测试做一些准备工作</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">TestMain</span><span class="hljs-params">(m *testing.M)</span></span> &#123;<br>	initCommonData()<br>	m.Run() <span class="hljs-comment">// 执行测试用例</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">initCommonData</span><span class="hljs-params">()</span></span> &#123;<br>	commTestData = []commStruct&#123;<br>		&#123;<span class="hljs-string">&quot;B&quot;</span>, <span class="hljs-string">&quot;1b&quot;</span>, B, <span class="hljs-string">&quot;1B&quot;</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;B&quot;</span>, <span class="hljs-string">&quot;100b&quot;</span>, <span class="hljs-number">100</span> * B, <span class="hljs-string">&quot;100B&quot;</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;KB&quot;</span>, <span class="hljs-string">&quot;1kb&quot;</span>, KB, <span class="hljs-string">&quot;1KB&quot;</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;KB&quot;</span>, <span class="hljs-string">&quot;100KB&quot;</span>, <span class="hljs-number">100</span> * KB, <span class="hljs-string">&quot;100KB&quot;</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;MB&quot;</span>, <span class="hljs-string">&quot;1Mb&quot;</span>, MB, <span class="hljs-string">&quot;1MB&quot;</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;GB&quot;</span>, <span class="hljs-string">&quot;10Gb&quot;</span>, <span class="hljs-number">10</span> * GB, <span class="hljs-string">&quot;10GB&quot;</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;TB&quot;</span>, <span class="hljs-string">&quot;1tb&quot;</span>, TB, <span class="hljs-string">&quot;1TB&quot;</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;PB&quot;</span>, <span class="hljs-string">&quot;10PB&quot;</span>, <span class="hljs-number">10</span> * PB, <span class="hljs-string">&quot;10PB&quot;</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;unknown&quot;</span>, <span class="hljs-string">&quot;1G&quot;</span>, <span class="hljs-number">100</span> * MB, <span class="hljs-string">&quot;100MB&quot;</span>&#125;,<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	上面我们通过 TestMain 函数，提前构建好了测试所需要的数据，避免在不同的测试函数中重复构建测试用例。</p>
+<h4 id="功能测试"><a href="#功能测试" class="headerlink" title="功能测试"></a>功能测试</h4><p>​	功能测试是一种验证代码是否按照规范和需求进行工作的测试，它关注于测试单个函数或方法的功能是否正确，以确保其符合预期的行为。</p>
+<p>​	根据它的定义，我们就大概知道该怎么写我们的功能测试了。首先功能测试的函数签名是这样的 <code>func TestFunctionName(t *testing.T)</code>。我们直接在函数里面写逻辑即可，因为有很多组测试样例，所以我们肯定要用 for 循环将所有的样例拿出来，然后一一进行验证，验证的过程就是将该样例的输入拿出来执行一遍功能函数，然后将结果与我们的样例预期结果进行比对即可，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 功能测试</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">TestParseSize</span><span class="hljs-params">(t *testing.T)</span></span> &#123;<br>	testData := commTestData<br>	<span class="hljs-keyword">for</span> _, data := <span class="hljs-keyword">range</span> testData &#123;<br>		size, sizeStr := ParseSize(data.SizeStr)<br>		<span class="hljs-keyword">if</span> size != data.ExpectSize || sizeStr != data.ExpectSizeStr &#123;<br>			t.Errorf(<span class="hljs-string">&quot;测试结果不符合预期：%+v&quot;</span>, data)<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这样我们就写好了一个具备基本功能的功能测试代码了。我们可以通过命令 <code>go test -v</code> 去执行，输出如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go">$  <span class="hljs-keyword">go</span> test -v<br>=== RUN   TestParseSize<br>--- PASS: TestParseSize (<span class="hljs-number">0.14</span>s)<br>PASS<br>ok      main/util       <span class="hljs-number">0.178</span>s<br></code></pre></td></tr></table></figure>
+
+<p>​	我们一起来看看这个输出：</p>
+<ol>
+<li><code>=== RUN TestParseSize</code>：表示正在运行名为 <code>TestParseSize</code> 的测试函数。</li>
+<li><code>--- PASS: TestParseSize (0.14s)</code>：表示测试函数 <code>TestParseSize</code> 成功通过，用时 0.14 秒。<code>PASS</code> 表示测试通过，<code>FAIL</code> 则表示测试失败。</li>
+<li><code>PASS</code>：表示整个测试过程中没有发现错误，所有的测试函数都成功通过。</li>
+<li><code>ok main/util 0.178s</code>：表示测试包 <code>main/util</code> 成功通过，总用时为 0.178 秒。</li>
+</ol>
+<p>​	下面我们再来看看功能测试的子测试。</p>
+<p>​	功能测试的子测试，又可以叫做并发测试，我们可以利用它来加快测试的效率。我们下面以测试样例中的单位，即 group 字段来将测试样例分个组：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go">testData := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>][]commStruct)<br><span class="hljs-keyword">for</span> _, item := <span class="hljs-keyword">range</span> commTestData &#123;<br>    group := item.Group<br>    _, ok := testData[group]<br>    <span class="hljs-keyword">if</span> !ok &#123;<br>        testData[group] = <span class="hljs-built_in">make</span>([]commStruct, <span class="hljs-number">0</span>)<br>    &#125;<br>    testData[group] = <span class="hljs-built_in">append</span>(testData[group], item)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	有了数据，其实我们的子测试，就相当于对不同组别分别去进行测试。</p>
+<p>​	所以首先要用一个 for 循环拿出不同组别的数据，去分别运行，然后在每个组别运行时，去拿出对应组别的数据去做验证即可，代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">TestParseSizeSub</span><span class="hljs-params">(t *testing.T)</span></span> &#123;<br>	<span class="hljs-keyword">if</span> testing.Short() &#123;<br>		t.Skip(<span class="hljs-string">&quot;跳过测试用例 TestParseSizeSub&quot;</span>)<br>	&#125;<br><br>	<span class="hljs-comment">// 按照 group 分个组</span><br>	testData := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>][]commStruct)<br>	<span class="hljs-keyword">for</span> _, item := <span class="hljs-keyword">range</span> commTestData &#123;<br>		group := item.Group<br>		_, ok := testData[group]<br>		<span class="hljs-keyword">if</span> !ok &#123;<br>			testData[group] = <span class="hljs-built_in">make</span>([]commStruct, <span class="hljs-number">0</span>)<br>		&#125;<br>		testData[group] = <span class="hljs-built_in">append</span>(testData[group], item)<br>	&#125;<br><br>	<span class="hljs-comment">// 分组去测试 测试数据</span><br>	<span class="hljs-keyword">for</span> k, _ := <span class="hljs-keyword">range</span> testData &#123;<br>		t.Run(k, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(t *testing.T)</span></span> &#123;<br>			<span class="hljs-comment">// 下面的子测试样例就会去并行执行：通过睡眠可以看出效果</span><br>			t.Parallel()<br>			<span class="hljs-keyword">for</span> _, data := <span class="hljs-keyword">range</span> testData[k] &#123;<br>				size, sizeStr := ParseSize(data.SizeStr)<br>				<span class="hljs-keyword">if</span> size != data.ExpectSize || sizeStr != data.ExpectSizeStr &#123;<br>					t.Errorf(<span class="hljs-string">&quot;测试结果不符合预期：%+v&quot;</span>, data)<br>				&#125;<br>			&#125;<br>		&#125;)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	细心的小伙伴一定看到了上面有两个点是我们没讲的：</p>
+<ol>
+<li><code>if testing.Short()</code> 这个是做什么的呢？还记得我们上面介绍参数的时候说过吗，这个参数是用来避免一些不必要的测试的，所以如果我们的测试不需要，就可以使用 short 参数跳过这个子测试。</li>
+<li><code>t.Parallel()</code> 这个就是我们子测试并行测试的关键了，只有加了这行代码，我们的子测试才能进行并行测试。</li>
+</ol>
+<p>​	下面带大家看看<code>t.Parallel()</code> 是不是真的有效果，我们在子测试代码中加入一个睡眠时间，先把 <code>t.Parallel()</code> 注释掉：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> k, _ := <span class="hljs-keyword">range</span> testData &#123;<br>    t.Run(k, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(t *testing.T)</span></span> &#123;<br>        <span class="hljs-comment">//t.Parallel()</span><br>        <span class="hljs-keyword">for</span> _, data := <span class="hljs-keyword">range</span> testData[k] &#123;<br>            time.Sleep(time.Second)<br>            size, sizeStr := ParseSize(data.SizeStr)<br>            <span class="hljs-keyword">if</span> size != data.ExpectSize || sizeStr != data.ExpectSizeStr &#123;<br>                t.Errorf(<span class="hljs-string">&quot;测试结果不符合预期：%+v&quot;</span>, data)<br>            &#125;<br>        &#125;<br>    &#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	然后执行命令 <code>go test -v</code>，可以观察到子测试的样例每隔一秒才执行一次，最终耗时 9.367 秒。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs go">$  <span class="hljs-keyword">go</span> test -v<br>=== RUN   TestParseSize<br>--- PASS: TestParseSize (<span class="hljs-number">0.10</span>s)<br>=== RUN   TestParseSizeSub<br>=== RUN   TestParseSizeSub/KB<br>=== RUN   TestParseSizeSub/MB<br>=== RUN   TestParseSizeSub/GB<br>=== RUN   TestParseSizeSub/TB<br>=== RUN   TestParseSizeSub/PB<br>=== RUN   TestParseSizeSub/unknown<br>=== RUN   TestParseSizeSub/B<br>--- PASS: TestParseSizeSub (<span class="hljs-number">9.22</span>s)            <br>    --- PASS: TestParseSizeSub/KB (<span class="hljs-number">2.05</span>s)     <br>    --- PASS: TestParseSizeSub/MB (<span class="hljs-number">1.02</span>s)     <br>    --- PASS: TestParseSizeSub/GB (<span class="hljs-number">1.02</span>s)     <br>    --- PASS: TestParseSizeSub/TB (<span class="hljs-number">1.03</span>s)     <br>    --- PASS: TestParseSizeSub/PB (<span class="hljs-number">1.03</span>s)     <br>    --- PASS: TestParseSizeSub/unknown (<span class="hljs-number">1.03</span>s)<br>    --- PASS: TestParseSizeSub/B (<span class="hljs-number">2.04</span>s)      <br>PASS<br>ok      main/util       <span class="hljs-number">9.367</span>s<br></code></pre></td></tr></table></figure>
+
+<p>​	我们再把 <code>t.Parallel()</code> 的注释去掉，再执行 <code>go test -v</code> 观察一下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs go">$  <span class="hljs-keyword">go</span> test -v<br>=== RUN   TestParseSize<br>--- PASS: TestParseSize (<span class="hljs-number">0.14</span>s)<br>=== RUN   TestParseSizeSub<br>=== RUN   TestParseSizeSub/unknown<br>=== PAUSE TestParseSizeSub/unknown<br>=== RUN   TestParseSizeSub/B<br>=== PAUSE TestParseSizeSub/B<br>=== RUN   TestParseSizeSub/KB<br>=== PAUSE TestParseSizeSub/KB<br>=== RUN   TestParseSizeSub/MB<br>=== PAUSE TestParseSizeSub/MB<br>=== RUN   TestParseSizeSub/GB<br>=== PAUSE TestParseSizeSub/GB<br>=== RUN   TestParseSizeSub/TB<br>=== PAUSE TestParseSizeSub/TB<br>=== RUN   TestParseSizeSub/PB<br>=== PAUSE TestParseSizeSub/PB<br>=== CONT  TestParseSizeSub/unknown<br>=== CONT  TestParseSizeSub/GB<br>=== CONT  TestParseSizeSub/PB<br>=== CONT  TestParseSizeSub/TB<br>=== CONT  TestParseSizeSub/KB<br>=== CONT  TestParseSizeSub/MB<br>=== CONT  TestParseSizeSub/B<br>--- PASS: TestParseSizeSub (<span class="hljs-number">0.00</span>s)<br>    --- PASS: TestParseSizeSub/TB (<span class="hljs-number">1.03</span>s)<br>    --- PASS: TestParseSizeSub/B (<span class="hljs-number">1.03</span>s)<br>    --- PASS: TestParseSizeSub/MB (<span class="hljs-number">1.03</span>s)<br>    --- PASS: TestParseSizeSub/PB (<span class="hljs-number">1.03</span>s)<br>    --- PASS: TestParseSizeSub/KB (<span class="hljs-number">1.03</span>s)<br>    --- PASS: TestParseSizeSub/unknown (<span class="hljs-number">1.03</span>s)<br>    --- PASS: TestParseSizeSub/GB (<span class="hljs-number">1.03</span>s)<br>PASS<br>ok      main/util       <span class="hljs-number">1.210</span>s<br></code></pre></td></tr></table></figure>
+
+<p>​	会发现子测试几乎是同时打印出来的信息，最终耗时 1.120s，这就验证了 <code>t.Parallel()</code> 的作用，也同时验证了功能测试的子测试的作用。</p>
+<h4 id="模糊测试"><a href="#模糊测试" class="headerlink" title="模糊测试"></a>模糊测试</h4><p>​	模糊测试是一种随机生成输入数据并将其提供给函数或程序的测试方法，它可以帮助发现潜在的边界情况和异常输入，以检测代码的鲁棒性。</p>
+<p>​	也就是说，模式测试本质上也是功能测试，只不过模糊测试的输入不再是我们提前构建好的数据，而是测试工具根据我们传入的参数类型去帮我们构建各种输入，以此来检测我们的功能函数在这种随机构造的输入情况下，是否还能照常工作。模糊测试的函数签名是<code>func FuzzFunctionName(f *testing.F) &#123;&#125;</code>，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">FuzzParseSize</span><span class="hljs-params">(f *testing.F)</span></span> &#123;<br>	<span class="hljs-comment">// 也就是说，模糊测试，本质上也是一个功能测试。</span><br>	<span class="hljs-comment">// 只是输入的内容不再是 data，而是所谓的 a</span><br>	f.Fuzz(<span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(t *testing.T, a <span class="hljs-type">string</span>)</span></span> &#123;<br>		size, sizeStr := ParseSize(a)<br>		<span class="hljs-keyword">if</span> size == <span class="hljs-number">0</span> || sizeStr == <span class="hljs-string">&quot;&quot;</span> &#123;<br>			t.Errorf(<span class="hljs-string">&quot;输入异常，导致 parsesize 没拿到正确结果&quot;</span>)<br>		&#125;<br>	&#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	然后我们可以通过 <code>go test -fuzz FuzzParseSize</code> 命令开启模糊测试，输出如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">go</span> <span class="hljs-string">test</span> <span class="hljs-string">-fuzz</span> <span class="hljs-string">FuzzParseSize</span><br><span class="hljs-attr">warning:</span> <span class="hljs-string">starting</span> <span class="hljs-string">with</span> <span class="hljs-string">empty</span> <span class="hljs-string">corpus</span><br><span class="hljs-attr">fuzz: elapsed:</span> <span class="hljs-string">0s,</span> <span class="hljs-attr">execs:</span> <span class="hljs-number">0</span> <span class="hljs-string">(0/sec),</span> <span class="hljs-attr">new interesting:</span> <span class="hljs-number">0</span> <span class="hljs-string">(total:</span> <span class="hljs-number">0</span><span class="hljs-string">)</span><br><span class="hljs-attr">fuzz: elapsed:</span> <span class="hljs-string">3s,</span> <span class="hljs-attr">execs:</span> <span class="hljs-number">614</span> <span class="hljs-string">(205/sec),</span> <span class="hljs-attr">new interesting:</span> <span class="hljs-number">7</span> <span class="hljs-string">(total:</span> <span class="hljs-number">7</span><span class="hljs-string">)</span><br><span class="hljs-attr">fuzz: elapsed:</span> <span class="hljs-string">6s,</span> <span class="hljs-attr">execs:</span> <span class="hljs-number">4210</span> <span class="hljs-string">(1194/sec),</span> <span class="hljs-attr">new interesting:</span> <span class="hljs-number">22</span> <span class="hljs-string">(total:</span> <span class="hljs-number">22</span><span class="hljs-string">)</span><br><span class="hljs-attr">fuzz: elapsed:</span> <span class="hljs-string">9s,</span> <span class="hljs-attr">execs:</span> <span class="hljs-number">5579</span> <span class="hljs-string">(456/sec),</span> <span class="hljs-attr">new interesting:</span> <span class="hljs-number">26</span> <span class="hljs-string">(total:</span> <span class="hljs-number">26</span><span class="hljs-string">)</span><br><span class="hljs-attr">fuzz: elapsed:</span> <span class="hljs-string">12s,</span> <span class="hljs-attr">execs:</span> <span class="hljs-number">9227</span> <span class="hljs-string">(1221/sec),</span> <span class="hljs-attr">new interesting:</span> <span class="hljs-number">35</span> <span class="hljs-string">(total:</span> <span class="hljs-number">35</span><span class="hljs-string">)</span><br><span class="hljs-attr">fuzz: elapsed:</span> <span class="hljs-string">15s,</span> <span class="hljs-attr">execs:</span> <span class="hljs-number">14480</span> <span class="hljs-string">(1744/sec),</span> <span class="hljs-attr">new interesting:</span> <span class="hljs-number">44</span> <span class="hljs-string">(total:</span> <span class="hljs-number">44</span><span class="hljs-string">)</span><br><span class="hljs-attr">fuzz: elapsed:</span> <span class="hljs-string">18s,</span> <span class="hljs-attr">execs:</span> <span class="hljs-number">16198</span> <span class="hljs-string">(572/sec),</span> <span class="hljs-attr">new interesting:</span> <span class="hljs-number">49</span> <span class="hljs-string">(total:</span> <span class="hljs-number">49</span><span class="hljs-string">)</span><br><span class="hljs-string">......</span><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li><code>warning: starting with empty corpus</code>：这是一个警告，表示开始时模糊测试的语料库（corpus）是空的。语料库是用来保存历史模式测试时，出现错误的样例。</li>
+<li><code>elapsed</code>：经过的时间</li>
+<li><code>execs</code>：执行的测试次数（平均每秒执行多少次）</li>
+<li><code>new interesting</code>：新增的随机测试输入个数</li>
+<li><code>total</code>：本次测试的的输入样例个数</li>
+</ol>
+<p>​	运行模糊测试，你会发现根本不会停，只能主动去停止，这也是为什么模糊测试只能同时测试的原因。</p>
+<p>​	还有就是上面提到的预料库，在运行模糊测试时，如果出现了预期之外的错误，那就会将这个样例保存到语料库中，并且在之后每次的模糊测试都会去运行这些出错的样例。语料库也是保存在本地的，会在根目录下生成一个对应的文件去存放。</p>
+<h4 id="性能测试-1"><a href="#性能测试-1" class="headerlink" title="性能测试"></a>性能测试</h4><p>​	最后我们再来看看性能测试，在进行性能测试之前，我们需要先将 ParseSize 函数中的睡眠函数关掉，避免影响我们的性能测试。因为<code>Sleep()</code> 不仅会让程序睡眠，还会做一些其他处理，会对我们的性能测试产生不小的影响。</p>
+<p>​	待会我们也可以做一个测试，然后进行一个对比。</p>
+<p>​	性能测试写起来条条框框会比较多，它的函数签名是这样的 <code>func BenchmarkFunctionName(b *testing.B) &#123;&#125;</code>我们啥也先不管，先来个 for 循环，然后直接调用我们的 ParseSize 函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">BenchmarkParseSize</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>		ParseSize(<span class="hljs-string">&quot;1MB&quot;</span>)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这样，一个简易的性能测试就写完了，我们可以用 <code> go test -bench BenchmarkParseSize</code>，这里先不注释 ParseSize 中的睡眠函数，我们看看效果：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">go</span> test -bench BenchmarkParseSize<br>goos: windows<br>goarch: amd64<br>pkg: main/util<br>cpu: AMD Ryzen <span class="hljs-number">7</span> <span class="hljs-number">4800</span>H with Radeon Graphics<br>BenchmarkParseSize<span class="hljs-number">-16</span>                <span class="hljs-number">100</span>          <span class="hljs-number">15301008</span> ns/op<br>BenchmarkParseSizeSub/B<span class="hljs-number">-16</span>           <span class="hljs-number">100</span>          <span class="hljs-number">14830110</span> ns/op<br>BenchmarkParseSizeSub/KB<span class="hljs-number">-16</span>          <span class="hljs-number">100</span>          <span class="hljs-number">15324944</span> ns/op<br>BenchmarkParseSizeSub/MB<span class="hljs-number">-16</span>          <span class="hljs-number">100</span>          <span class="hljs-number">15445510</span> ns/op<br>BenchmarkParseSizeSub/GB<span class="hljs-number">-16</span>          <span class="hljs-number">100</span>          <span class="hljs-number">14851633</span> ns/op<br>BenchmarkParseSizeSub/TB<span class="hljs-number">-16</span>          <span class="hljs-number">100</span>          <span class="hljs-number">15136910</span> ns/op<br>BenchmarkParseSizeSub/PB<span class="hljs-number">-16</span>          <span class="hljs-number">100</span>          <span class="hljs-number">15281375</span> ns/op<br>BenchmarkParseSizeSub/unknown<span class="hljs-number">-16</span>                     <span class="hljs-number">100</span>          <span class="hljs-number">15188822</span> ns/op<br>PASS<br>ok      main/util       <span class="hljs-number">22.495</span>s<br></code></pre></td></tr></table></figure>
+
+<p>​	再将睡眠函数注释掉，运行同样的命令，看看效果：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">go</span> test -bench BenchmarkParseSize                                    <br>goos: windows<br>goarch: amd64                                       <br>pkg: main/util                                      <br>cpu: AMD Ryzen <span class="hljs-number">7</span> <span class="hljs-number">4800</span>H with Radeon Graphics         <br>BenchmarkParseSize<span class="hljs-number">-16</span>             <span class="hljs-number">735984</span>              <span class="hljs-number">1603</span> ns/op<br>BenchmarkParseSizeSub/B<span class="hljs-number">-16</span>        <span class="hljs-number">704841</span>              <span class="hljs-number">1616</span> ns/op<br>BenchmarkParseSizeSub/KB<span class="hljs-number">-16</span>       <span class="hljs-number">750050</span>              <span class="hljs-number">1630</span> ns/op<br>BenchmarkParseSizeSub/MB<span class="hljs-number">-16</span>       <span class="hljs-number">748998</span>              <span class="hljs-number">1647</span> ns/op<br>BenchmarkParseSizeSub/GB<span class="hljs-number">-16</span>       <span class="hljs-number">635871</span>              <span class="hljs-number">1689</span> ns/op<br>BenchmarkParseSizeSub/TB<span class="hljs-number">-16</span>       <span class="hljs-number">769012</span>              <span class="hljs-number">1639</span> ns/op<br>BenchmarkParseSizeSub/PB<span class="hljs-number">-16</span>       <span class="hljs-number">748689</span>              <span class="hljs-number">1642</span> ns/op<br>BenchmarkParseSizeSub/unknown<span class="hljs-number">-16</span>                  <span class="hljs-number">770593</span>              <span class="hljs-number">1620</span> ns/op<br>PASS<br>ok      main/util       <span class="hljs-number">19.901</span>s<br></code></pre></td></tr></table></figure>
+
+<p>​	我们先来解释一下各个参数代表什么：</p>
+<ol>
+<li><code>goos: windows</code> 和 <code>goarch: amd64</code>：表示你的操作系统和体系结构。</li>
+<li><code>pkg: main/util</code>：表示正在测试的 Go 包的路径。</li>
+<li><code>cpu: AMD Ryzen 7 4800H with Radeon Graphics</code>：表示你的 CPU 信息。</li>
+<li><code>BenchmarkParseSize-16 735984 1603 ns/op</code>：表示运行了 735984 次，平均每次耗时 1603 纳秒</li>
+<li><code>PASS</code>：表示所有的性能测试都通过</li>
+<li><code>ok main/util 19.901s</code>：表示整个测试过程消耗了 19.901 秒。</li>
+</ol>
+<p>​	可以很明显的看到，这里两次测试的平均每次迭代耗时差了很多个数量级，但算上我们的睡眠时间 <code>time.Sleep(time.Nanosecond * 500)</code>，也就 500 ns 而已。之所以会这样是因为 <code>time.Sleep</code> 函数的调用对于测试的结果会产生较大的影响，特别是在精度较高的情况，比如我们这里的纳米级别。 <code>time.Sleep</code> 会导致当前 goroutine 挂起，等待指定的时间再继续执行。在测试中，这样的挂起会导致每次迭代的耗时相对较大，从而影响性能测试的结果。</p>
+<p>​	可能会有人好奇，为什么平均时长差了很多，但是总耗时却差不多。因为在 Go 语言的性能测试中，每个子测试的迭代次数数由测试框架自动决定的，它会根据自己执行时间的变化动态调整迭代次数，以保证测试结果的稳定性和可靠性。我们也可以自己使用 <code>-benchtime t</code> 参数来配置自己想要的运行次数和时间。</p>
+<p>​	下面我们再来看看说说性能测试的子测试。</p>
+<p>​	性能测试的子测试，其实没有啥明确的使用场景，我们下面所举的例子，也只是为了写性能测试子测试而写子测试，能够使用的场景也就是需要分组归类去测试的数据，比如 B、KB、MB 等相同单位的一组去测试。</p>
+<p>​	这样做的好处是啥？有人肯定会觉得，可以像功能测试那样做并行测试。</p>
+<p>​	答案是否定的，性能测试的子测试没有并行机制。我个人觉得这样的好处就是，可以指定只执行对应分组的测试用例，比如我们只需要对某一个单位的大小进行特殊处理，就可以只去执行对应分组的测试用例了。</p>
+<p>​	然后我们来看看怎么写，同样的，需要先对我们的测试样例进行分组，然后在用 for 对不同组别的测试样例分别去运行性能测试函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">BenchmarkParseSizeSub</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>	testData := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>][]commStruct)<br>	<span class="hljs-keyword">for</span> _, item := <span class="hljs-keyword">range</span> commTestData &#123;<br>		group := item.Group<br>		_, ok := testData[group]<br>		<span class="hljs-keyword">if</span> !ok &#123;<br>			testData[group] = <span class="hljs-built_in">make</span>([]commStruct, <span class="hljs-number">0</span>)<br>		&#125;<br>		testData[group] = <span class="hljs-built_in">append</span>(testData[group], item)<br>	&#125;<br><br>	<span class="hljs-keyword">for</span> k, _ := <span class="hljs-keyword">range</span> testData &#123;<br>		b.Run(k, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>			<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>				ParseSize(testData[k][<span class="hljs-number">0</span>].SizeStr)<br>			&#125;<br>		&#125;)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	上面代码需要知道的一点，就是在每次运行 <code>b.Run()</code> 的时候，for 循环里的测试次数是测试工具自动决定的，我们只需要调用就可以了。</p>
+<p>​	上面就差不多是性能测试的基本写法了，只不过在一些情况下，比如我们在每次测试时需要去进行一下其他的数据准备，如果不进行一些处理，这些准备数据的时间就可能会导致我们的性能测试偏差较大：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> k, _ := <span class="hljs-keyword">range</span> testData &#123;<br>    b.Run(k, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>        <span class="hljs-comment">// case1</span><br>        preBenchmark()<br>        <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>            <span class="hljs-comment">// case2</span><br>            preBenchmark1()<br>            ParseSize(testData[k][<span class="hljs-number">0</span>].SizeStr)<br>        &#125;<br>    &#125;)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">preBenchmark1</span><span class="hljs-params">()</span></span> &#123;<br>	time.Sleep(<span class="hljs-number">10</span> * time.Second)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">preBenchmark2</span><span class="hljs-params">()</span></span> &#123;<br>	time.Sleep(time.Nanosecond * <span class="hljs-number">500</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	在上述代码中，我们通过 <code>preBenchmark1</code> 和 <code>preBenchmark2</code> 函数模拟了准备数据等其他操作的耗时，这里就直接告诉大家解决的方法了：</p>
+<ul>
+<li>对于 <code>case1</code>：可以在数据准备完成后，使用<code>b.ResetTimer()</code> 重置计时器</li>
+<li>对于<code>case2</code>：可以在准备数据前使用 <code>b.StopTimer()</code> 将计时器暂停，然后在准备好数据后，重新启动计时器 <code>b.StartTimer()</code>，这样就可以减小误差。</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> k, _ := <span class="hljs-keyword">range</span> testData &#123;<br>    b.Run(k, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>        <span class="hljs-comment">// for 循环外，可以通过 b.ResetTimer() 来重置</span><br>        preBenchmark1()<br>        b.ResetTimer()<br>        <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>            <span class="hljs-comment">// for 循环内，可以通过 b.StopTimer() 和 b.StartTimer() 配合使用，来跳过我们不想统计的耗时操作。迫不得已不要使用，测试速度慢</span><br>            b.StopTimer()<br>            preBenchmark2()<br>            b.StartTimer()<br>            ParseSize(testData[k][<span class="hljs-number">0</span>].SizeStr)<br>        &#125;<br>    &#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这里强调一点，上面的解决办法也只能减缓误差，并不能真正避免误差。并且如果你要测试上述代码的话，记得加上<code>-benchtime</code> 限制一下执行次数，否则会等很久。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>​	这篇文章介绍了单元测试，并从一个功能函数出发，给大家演示了该怎么写功能测试、模糊测试、性能测试，以及对应的一些注意事项，也希望大家平时就能养成写单元测试的习惯。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/" class="category-chain-item">项目实战</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/testing/">#testing</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>手把手教你写单元测试</div>
+      <div>http://example.com/2023/11/13/Go/项目实战/手把手教你写单元测试/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月13日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年11月13日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/10/MQ/Kafka/Kafka%E7%BA%BF%E4%B8%8A%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88%E6%80%8E%E4%B9%88%E5%81%9A%EF%BC%9F/" title="Kafka线上集群部署方案怎么做？">
+                        <span class="hidden-mobile">Kafka线上集群部署方案怎么做？</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>
