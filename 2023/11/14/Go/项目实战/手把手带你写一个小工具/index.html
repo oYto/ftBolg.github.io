@@ -1,0 +1,865 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="​	这篇文章带大家动手实现一个小工具，能够将一个 Go 文件中的注释。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手把手带你写一个小工具">
+<meta property="og:url" content="http://example.com/2023/11/14/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/%E6%89%8B%E6%8A%8A%E6%89%8B%E5%B8%A6%E4%BD%A0%E5%86%99%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%B7%A5%E5%85%B7/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="​	这篇文章带大家动手实现一个小工具，能够将一个 Go 文件中的注释。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/DelNote.png">
+<meta property="article:published_time" content="2023-11-14T08:34:39.000Z">
+<meta property="article:modified_time" content="2023-11-14T10:56:01.996Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="tool">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/DelNote.png">
+  
+  
+  
+  <title>手把手带你写一个小工具 - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/test/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="手把手带你写一个小工具"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-14 16:34" pubdate>
+          2023年11月14日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          64 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">手把手带你写一个小工具</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>​	这篇文章带大家动手实现一个小工具，能够将一个 Go 文件中的注释。<span id="more"></span></p>
+<p>​	起因是这样的，我在写文章的时候，最后需要附上项目的源码，然后就发现我在写代码的时候加了很多注释，然后需要自己手动注释很麻烦，于是就想着写这样一个工具，去代替手动删除注释这一项工作。</p>
+<p>​	当然我知道可以用 AI 来做这件事，但我就是想写一个工具，别烦！</p>
+<h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><p>​	首先我们要清楚，Go 语言中的注释分为两种：单行注释和多行注释。</p>
+<p>​	单行注释，是采用 <code>// ....</code> 的形式，将注释写在 <code>//</code> 的后面；</p>
+<p>​	而多行注释，是采用 <code>/* ... */</code> 的方式，将注释写在 <code>/*</code> 和 <code>*/</code> 之间的。</p>
+<p>​	我们的目的是将一个 Go 文件的注释删除，并出到另一个文件中。为什么这里不直接修改源文件？因为避免程序出错，导致源文件的代码丢失。</p>
+<p>​	那这个过程中就会涉及到文件的打开关闭以及写入、如何正确识别单行注释和多行注释、如何处理一些特殊情况等问题，下面我们会一一展开说明。</p>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><p>​	由于这只是一个小工具，我们就把所有的代码全部写在一个 main.go 文件就足够了。</p>
+<p>​	我们的实现过程，大概是这样的：</p>
+<ol>
+<li><p>通过命令行指定需要处理的 Go 文件</p>
+</li>
+<li><p>根据文件名调用对应的功能函数去进行处理</p>
+<p>a. 打开文件</p>
+<p>b. 删除注释和空行</p>
+<p>c. 重新构建一个新的文件，并将处理后的结果写入文件中</p>
+<p>d. 控制台输出打印成功</p>
+</li>
+<li><p>如果出现错误，就在控制台中打印信息</p>
+</li>
+</ol>
+<p>​	下面我们就根据上面的步骤一步一步实现我们的小工具。</p>
+<h5 id="获取文件"><a href="#获取文件" class="headerlink" title="获取文件"></a>获取文件</h5><p>​	首先，我们在项目根目录下创建一个 main.go 文件和 todo.go 文件。可以提前在 todo.go 文件中放一段带有注释的代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;os&quot;</span><br>)<br><br><span class="hljs-comment">// saveToFile 保存数据到文件</span><br><span class="hljs-comment">// 参数：</span><br><span class="hljs-comment">//   filePath: 要保存的文件路径</span><br><span class="hljs-comment">//   data: 要保存的数据</span><br><span class="hljs-comment">// 返回值：</span><br><span class="hljs-comment">//   error: 如果保存成功，则为nil；否则为保存失败的错误信息</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">saveToFile</span><span class="hljs-params">(filePath <span class="hljs-type">string</span>, data <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">error</span> &#123;<br>	<span class="hljs-comment">// 使用 os.WriteFile 函数将数据写入文件</span><br>	err := os.WriteFile(filePath, []<span class="hljs-type">byte</span>(data), <span class="hljs-number">0644</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-comment">// 如果写入文件出错，返回错误信息</span><br>		<span class="hljs-keyword">return</span> fmt.Errorf(<span class="hljs-string">&quot;保存文件失败：%v&quot;</span>, err)<br>	&#125;<br><br>	<span class="hljs-comment">// 文件保存成功，返回nil表示没有错误</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-comment">// 要保存的数据</span><br>	dataToSave := <span class="hljs-string">&quot;Hello, this is some data to be saved to a file.&quot;</span><br><br>	<span class="hljs-comment">// 保存数据到文件</span><br>	err := saveToFile(<span class="hljs-string">&quot;output.txt&quot;</span>, dataToSave)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-comment">// 如果保存失败，打印错误信息</span><br>		fmt.Println(err)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br><br>	<span class="hljs-comment">// 文件保存成功</span><br>	fmt.Println(<span class="hljs-string">&quot;文件保存成功！&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	然后就可以写我们的主函数代码了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(os.Args) &lt; <span class="hljs-number">2</span> &#123;<br>		fmt.Println(<span class="hljs-string">&quot;请提供要处理的Go文件&quot;</span>)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br><br>	filePath := os.Args[<span class="hljs-number">1</span>]<br><br>	err := removeComments(filePath)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		fmt.Printf(<span class="hljs-string">&quot;错误: %v\n&quot;</span>, err)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>首先判断是否指定了待处理的文件：这里直接通过判断命令行参数的个数判断即可</li>
+<li>然后将文件的路径取出，传入 <code>removeComments</code> 函数即可</li>
+<li>如果出错了，就打印对应的信息</li>
+</ol>
+<p>​	然后我们来看看 <code>removeComments</code> 函数的实现逻辑：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">removeComments</span><span class="hljs-params">(filePath <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">error</span> &#123;<br>	<span class="hljs-comment">// 打开文件</span><br>	file, err := os.Open(filePath)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> err<br>	&#125;<br>	<span class="hljs-keyword">defer</span> file.Close()<br><br>	<span class="hljs-comment">// 删除注释 和 空行 并保存</span><br>	output, err := removeNote(file)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> err<br>	&#125;<br><br>	<span class="hljs-comment">// 将结果保存到新文件中</span><br>	outputFilePath := <span class="hljs-string">&quot;output.txt&quot;</span><br>	err = os.WriteFile(outputFilePath, []<span class="hljs-type">byte</span>(output), <span class="hljs-number">0644</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> err<br>	&#125;<br><br>	<span class="hljs-comment">// 打印操作成功的消息</span><br>	fmt.Printf(<span class="hljs-string">&quot;注释已删除，并已保存到 %s 文件中。\n&quot;</span>, outputFilePath)<br><br>	<span class="hljs-keyword">return</span> err<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这里相当于一个代理层，并没有将核心的删注释逻辑写在这里，这个函数只是做一个文件的打开关闭，以及将处理后的文件写入新文件的操作：</p>
+<ol>
+<li>打开文件，并在检查是否发生错误</li>
+<li>调用 <code>removeNote</code> 函数删除注释和空行，并返回一个字符串</li>
+<li>将字符串转换为字节数组，写入新文件</li>
+<li>最后打印操作成功的提示信息</li>
+</ol>
+<h5 id="核心逻辑"><a href="#核心逻辑" class="headerlink" title="核心逻辑"></a>核心逻辑</h5><p>​	我们的核心处理逻辑，就在 <code>removeNote</code> 函数中：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">removeNote</span><span class="hljs-params">(file *os.File)</span></span> (<span class="hljs-type">string</span>, <span class="hljs-type">error</span>) &#123;<br>	<span class="hljs-comment">// 创建一个新的扫描器，用于逐行读取文件内容</span><br>	scanner := bufio.NewScanner(file)<br>	<span class="hljs-comment">// 用于跟踪是否在多行注释中</span><br>	inMultilineComment := <span class="hljs-literal">false</span><br>	<span class="hljs-keyword">var</span> output <span class="hljs-type">string</span><br><br>	<span class="hljs-comment">// 逐行扫描文件内容</span><br>	<span class="hljs-keyword">for</span> scanner.Scan() &#123;<br>		line := scanner.Text()<br>		<span class="hljs-comment">// 处理多行注释</span><br>		<span class="hljs-keyword">if</span> inMultilineComment &#123;<br>			<span class="hljs-comment">// 查找多行注释结束标记 &quot;*/&quot;</span><br>			endIndex := regexp.MustCompile(<span class="hljs-string">&quot;\\*/&quot;</span>).FindStringIndex(line)<br>			<span class="hljs-keyword">if</span> endIndex != <span class="hljs-literal">nil</span> &#123;<br>				<span class="hljs-comment">// 多行注释结束，更新标志并截取剩余部分</span><br>				inMultilineComment = <span class="hljs-literal">false</span><br>				<span class="hljs-comment">//isDelete = true</span><br>				line = line[endIndex[<span class="hljs-number">1</span>]:]<br>			&#125; <span class="hljs-keyword">else</span> &#123;<br>				<span class="hljs-comment">// 如果当前行还在多行注释中，跳过处理并继续下一行</span><br>				<span class="hljs-keyword">continue</span><br>			&#125;<br>		&#125;<br><br>		<span class="hljs-comment">// 处理单行注释和多行注释的开始</span><br>		lineWithoutComments, _ := processLine(line, &amp;inMultilineComment)<br><br>		<span class="hljs-keyword">if</span> hasNonSpaceCharacters(lineWithoutComments) &#123;<br>			<span class="hljs-comment">// 将处理后的行添加到结果字符串</span><br>			output += lineWithoutComments + <span class="hljs-string">&quot;\n&quot;</span><br>		&#125;<br>	&#125;<br><br>	<span class="hljs-comment">// 检查扫描文件时是否发生错误</span><br>	<span class="hljs-keyword">if</span> err := scanner.Err(); err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span>, err<br>	&#125;<br>	<span class="hljs-keyword">return</span> output, <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li><p>首先我们创建一个扫描器，从传入的文件指针开始逐行读取文件</p>
+</li>
+<li><p>创建一个标志位，用于跟踪是否存在多行注释</p>
+</li>
+<li><p>开始逐行扫描内容</p>
+<p>a. 先对多行注释进行处理，因为可能在本行的前面几行就已经开启了多行注释，所以需要先判断多行注释的结尾。判断的逻辑就是利用正则表达式寻找本行是否存在 <code>*/</code>，存在的话，就通过下标截取<code>*/</code>之前的部分，并更新标志位</p>
+<p>b. 然后再对单行注释和多行注释的处理</p>
+<p>c. 处理完成之后，将非空行添加到输出<code>output</code> 中</p>
+<p>d. 最后再检查一下扫描文件时，是否发生错误即可</p>
+</li>
+</ol>
+<p>​	最后我们再来看看 <code>processLine</code> 函数，这里就是对单行注释和多行注释的判断，其实本质都是一样的，都是通过正则表达式找到对应的符合 <code>//</code> 和 <code>/*</code> ，然后再进行内容的截取，最后将截取的内容返回即可，代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">processLine</span><span class="hljs-params">(line <span class="hljs-type">string</span>, inMultilineComment *<span class="hljs-type">bool</span>)</span></span> (<span class="hljs-type">string</span>, <span class="hljs-type">bool</span>) &#123;<br>	<span class="hljs-comment">// 该行是否需要删除：单行注释 或者 多行注释的时候</span><br>	<span class="hljs-comment">// 处理单行注释</span><br>	index := regexp.MustCompile(<span class="hljs-string">&quot;//&quot;</span>).FindStringIndex(line)<br>	<span class="hljs-keyword">if</span> index != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-comment">// 截取注释之前的部分</span><br>		<span class="hljs-keyword">if</span> index[<span class="hljs-number">0</span>] != <span class="hljs-number">0</span> &amp;&amp; line[index[<span class="hljs-number">0</span>]<span class="hljs-number">-1</span>] == <span class="hljs-string">&#x27;&quot;&#x27;</span> &#123;<br><br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			line = line[:index[<span class="hljs-number">0</span>]]<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-comment">// 处理多行注释的开始</span><br>	startIndex := regexp.MustCompile(<span class="hljs-string">&quot;/\\*&quot;</span>).FindStringIndex(line)<br>	<span class="hljs-keyword">if</span> startIndex != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-comment">// 进入多行注释状态，并截取注释之前的部分</span><br>		*inMultilineComment = <span class="hljs-literal">true</span><br>		<span class="hljs-comment">// 查找本行是不是就结束了</span><br>		isEnd := <span class="hljs-literal">false</span><br>		endIndex := regexp.MustCompile(<span class="hljs-string">&quot;\\*/&quot;</span>).FindStringIndex(line)<br>		<span class="hljs-keyword">if</span> endIndex != <span class="hljs-literal">nil</span> &#123;<br>			<span class="hljs-comment">// 多行注释结束，更新标志并截取剩余部分</span><br>			*inMultilineComment = <span class="hljs-literal">false</span><br>			isEnd = <span class="hljs-literal">true</span><br>		&#125;<br>		<span class="hljs-keyword">if</span> isEnd &#123;<br>			line = line[:startIndex[<span class="hljs-number">0</span>]] + line[endIndex[<span class="hljs-number">1</span>]:]<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			line = line[:startIndex[<span class="hljs-number">0</span>]]<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-comment">// 返回处理后的行和更新后的多行注释状态</span><br>	<span class="hljs-keyword">return</span> line, *inMultilineComment<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;bufio&quot;</span><br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;os&quot;</span><br>	<span class="hljs-string">&quot;regexp&quot;</span><br>	<span class="hljs-string">&quot;strings&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(os.Args) &lt; <span class="hljs-number">2</span> &#123;<br>		fmt.Println(<span class="hljs-string">&quot;请提供要处理的Go文件&quot;</span>)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br><br>	filePath := os.Args[<span class="hljs-number">1</span>]<br><br>	err := removeComments(filePath)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		fmt.Printf(<span class="hljs-string">&quot;错误: %v\n&quot;</span>, err)<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">removeComments</span><span class="hljs-params">(filePath <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">error</span> &#123;<br>	file, err := os.Open(filePath)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> err<br>	&#125;<br>	<span class="hljs-keyword">defer</span> file.Close()<br><br>	output, err := removeNote(file)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> err<br>	&#125;<br><br>	outputFilePath := <span class="hljs-string">&quot;output.txt&quot;</span><br>	err = os.WriteFile(outputFilePath, []<span class="hljs-type">byte</span>(output), <span class="hljs-number">0644</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> err<br>	&#125;<br><br>	fmt.Printf(<span class="hljs-string">&quot;注释已删除，并已保存到 %s 文件中。\n&quot;</span>, outputFilePath)<br><br>	<span class="hljs-keyword">return</span> err<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">removeNote</span><span class="hljs-params">(file *os.File)</span></span> (<span class="hljs-type">string</span>, <span class="hljs-type">error</span>) &#123;<br>	scanner := bufio.NewScanner(file)<br>	inMultilineComment := <span class="hljs-literal">false</span><br>	<span class="hljs-keyword">var</span> output <span class="hljs-type">string</span><br><br>	<span class="hljs-keyword">for</span> scanner.Scan() &#123;<br>		line := scanner.Text()<br><br>		<span class="hljs-keyword">if</span> inMultilineComment &#123;<br>			endIndex := regexp.MustCompile(<span class="hljs-string">&quot;\\*/&quot;</span>).FindStringIndex(line)<br>			<span class="hljs-keyword">if</span> endIndex != <span class="hljs-literal">nil</span> &#123;<br>				inMultilineComment = <span class="hljs-literal">false</span><br>				line = line[endIndex[<span class="hljs-number">1</span>]:]<br>			&#125; <span class="hljs-keyword">else</span> &#123;<br>				<span class="hljs-keyword">continue</span><br>			&#125;<br>		&#125;<br><br>		lineWithoutComments, _ := processLine(line, &amp;inMultilineComment)<br><br>		<span class="hljs-keyword">if</span> hasNonSpaceCharacters(lineWithoutComments) &#123;<br>			output += lineWithoutComments + <span class="hljs-string">&quot;\n&quot;</span><br>		&#125;<br>	&#125;<br><br>	<span class="hljs-keyword">if</span> err := scanner.Err(); err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span>, err<br>	&#125;<br>	<span class="hljs-keyword">return</span> output, <span class="hljs-literal">nil</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">hasNonSpaceCharacters</span><span class="hljs-params">(line <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">bool</span> &#123;<br>	trimmed := strings.TrimSpace(line)<br>	<span class="hljs-keyword">return</span> trimmed != <span class="hljs-string">&quot;&quot;</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">processLine</span><span class="hljs-params">(line <span class="hljs-type">string</span>, inMultilineComment *<span class="hljs-type">bool</span>)</span></span> (<span class="hljs-type">string</span>, <span class="hljs-type">bool</span>) &#123;<br>	index := regexp.MustCompile(<span class="hljs-string">&quot;//&quot;</span>).FindStringIndex(line)<br>	<span class="hljs-keyword">if</span> index != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">if</span> index[<span class="hljs-number">0</span>] != <span class="hljs-number">0</span> &amp;&amp; line[index[<span class="hljs-number">0</span>]<span class="hljs-number">-1</span>] == <span class="hljs-string">&#x27;&quot;&#x27;</span> &#123;<br><br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			line = line[:index[<span class="hljs-number">0</span>]]<br>		&#125;<br>	&#125;<br><br>	startIndex := regexp.MustCompile(<span class="hljs-string">&quot;/\\*&quot;</span>).FindStringIndex(line)<br>	<span class="hljs-keyword">if</span> startIndex != <span class="hljs-literal">nil</span> &#123;<br>		*inMultilineComment = <span class="hljs-literal">true</span><br>		isEnd := <span class="hljs-literal">false</span><br>		endIndex := regexp.MustCompile(<span class="hljs-string">&quot;\\*/&quot;</span>).FindStringIndex(line)<br>		<span class="hljs-keyword">if</span> endIndex != <span class="hljs-literal">nil</span> &#123;<br>			*inMultilineComment = <span class="hljs-literal">false</span><br>			isEnd = <span class="hljs-literal">true</span><br>		&#125;<br>		<span class="hljs-keyword">if</span> isEnd &#123;<br>			line = line[:startIndex[<span class="hljs-number">0</span>]] + line[endIndex[<span class="hljs-number">1</span>]:]<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			line = line[:startIndex[<span class="hljs-number">0</span>]]<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> line, *inMultilineComment<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="代码执行"><a href="#代码执行" class="headerlink" title="代码执行"></a>代码执行</h4><p>​	我们利用提前创建好的 todo.go 文件，是不是使用 <code>go run main.go todo.go</code> 命令，就可以删除注释了？</p>
+<p>​	我们可以来试一下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">go</span> run main.<span class="hljs-keyword">go</span> todo.<span class="hljs-keyword">go</span><br>文件保存成功！<br>请提供要处理的Go文件<br></code></pre></td></tr></table></figure>
+
+<p>​	出现了意外情况，这里并没有获取到 todo.go 文件，而是将 todo.go 文件当做需要运行的程序去运行了。</p>
+<p>​	解决的办法有两种：</p>
+<ol>
+<li>一个是将需要删除注释的代码放在 .txt 文件中</li>
+<li>先编译 main.go 文件，然后再将需要处理的文件当做参数运行 main.exe 文件</li>
+</ol>
+<p>​	两个办法都很容易理解，第一个的话，你把后缀名改掉，<code>go run</code>命令自然就不会去执行该文件了。第二个办法的话， 我们这里可以再引入一个 Makefile 文件，将多部操作进行一个合并，我们只需要使用 <code>make</code> 命令就可以执行我们预习定义好的命令了：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-comment"># Makefile</span><br><br><span class="hljs-meta"><span class="hljs-keyword">.PHONY</span>: all</span><br><br><span class="hljs-section">all: build run</span><br><br><span class="hljs-section">build:</span><br>	go build main.go<br><br><span class="hljs-section">run:</span><br>	./main.exe todo.go<br></code></pre></td></tr></table></figure>
+
+<p>​	我们来解释一下这个文件：</p>
+<ol>
+<li><code>.PHONY: all</code>：声明 <code>all</code> 是一个伪目标。伪目标通常是一些不产生实际文件的任务，而只是执行其他任务的别名。这里的 <code>.PHONY</code> 告诉 make 工具 <code>all</code> 是一个伪目标，不要去检查是否有一个文件名为 <code>all</code>。</li>
+<li><code>all: build run</code>：定义了一个名为 <code>all</code> 的目标，它依赖于 <code>build</code> 和 <code>run</code> 两个目标。当执行 <code>make all</code> 时，它将首先执行 <code>build</code>，然后执行 <code>run</code>。</li>
+<li><code>build:</code>：定义了一个名为 <code>build</code> 的目标。当执行 <code>make build</code> 时，它将执行后面的命令，即 <code>go build main.go</code>。</li>
+<li><code>run:</code>：定义了一个名为 <code>run</code> 的目标。当执行 <code>make run</code> 时，它将执行后面的命令，即 <code>./main.exe todo.go</code>。</li>
+</ol>
+<p>​	然后我们直接使用  <code>make all</code> 和 <code>make run</code> 就能这个小工具了</p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>​	这篇文章，我从实际出发，带大家手把手写了一个小工具，还涉及到 Makefile 文件的简单使用，希望对大家能够提供帮助。</p>
+<p>​	在平时的学习生活中，大家也可以像我这样，把遇到的一些问题，试着抽象出来，看看能不能实现一个工具，去便捷地完成它们。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/" class="category-chain-item">项目实战</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/tool/">#tool</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>手把手带你写一个小工具</div>
+      <div>http://example.com/2023/11/14/Go/项目实战/手把手带你写一个小工具/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月14日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年11月14日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/13/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%86%99%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" title="手把手教你写单元测试">
+                        <span class="hidden-mobile">手把手教你写单元测试</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>
