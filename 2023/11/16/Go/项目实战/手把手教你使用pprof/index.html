@@ -1,0 +1,1045 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="​	大家好，今天我们来一起学习一下 pprof 这个工具。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手把手教你使用pprof">
+<meta property="og:url" content="http://example.com/2023/11/16/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E4%BD%BF%E7%94%A8pprof/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="​	大家好，今天我们来一起学习一下 pprof 这个工具。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/pprof.png">
+<meta property="article:published_time" content="2023-11-16T06:23:50.000Z">
+<meta property="article:modified_time" content="2023-11-16T10:52:23.484Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="pprof">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/pprof.png">
+  
+  
+  
+  <title>手把手教你使用pprof - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/test/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="手把手教你使用pprof"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-16 14:23" pubdate>
+          2023年11月16日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          98 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">手把手教你使用pprof</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>​	大家好，今天我们来一起学习一下 pprof 这个工具。<span id="more"></span></p>
+<h4 id="pprof-是什么"><a href="#pprof-是什么" class="headerlink" title="pprof 是什么"></a>pprof 是什么</h4><p>​	肯定会有人问，pprof 是做什么用的？</p>
+<p>​	pprof 是 Go 语言自带的性能分析工具，用于识别和解决应用程序中的性能瓶颈问题。大家应该或多或少有听说过 “三高代码”，这里的 “三高” 并不是指 “高血压、高血糖、高血脂”，而是指 <strong>”高性能、高并发、高可用“</strong>，而 pprof 就可以帮助我们写出这样的 “ 三高代码 ”。</p>
+<p>​	在正式介绍 pprof 之前，我们先来解释一下三高的含义，以及需要注意的点：</p>
+<ol>
+<li><strong>高性能</strong>：由于我们电脑组件的执行速度 CPU &gt; 内存 &gt; 磁盘，想要写出高性能的代码，就要优先让 CPU 去处理核心逻辑。像 io 操作这类耗时且不太核心的逻辑，比如 日志打印、日志保存，就不需要去关注它的执行速度 。我们可以将 io 操作，放在消息队列里面去缓慢执行，我们不关心它什么时候完成，只需要最后能够完成就行了。这样，我们就可以让 CPU 更多的时间去处理业务的核心逻辑。再者就是采用合适的算法和数据结构进行优化，这里需要具体情况具体分析，就不做多的解释了。总结一下就是，<strong>避免 io 操作，采用合适的算法和数据结构。</strong></li>
+<li><strong>高并发：</strong>Go 语言本身就更利于高并发的实现，可以充分利用 CPU 资源，但我们也需要注意避免阻塞，因为这会导致 CPU 的调度工作增加，程序上的体现就是程序执行缓慢。同样的，由于 io 并不支持并发，如果你的代码中涉及到了 io 操作，即使是并发执行的，也会退化成同步执行。总结一下就是，<strong>避免阻塞、避免 io 操作，io 不支持并发。</strong></li>
+<li><strong>高可用：</strong> 比如 session sookie 机制，就不支持多机部署，我们的代码最好是无状态的，这样从才能支持高可用。<strong>总结一下就是，避免状态，使应用程序变成无状态程序。</strong></li>
+</ol>
+<h4 id="如何使用-pprof"><a href="#如何使用-pprof" class="headerlink" title="如何使用 pprof"></a>如何使用 pprof</h4><p>​	pprof 本质上就是一个工具，我们在写完代码之后，可以借助 pprof 对我们的程序进行性能指标的采集，采集的方式也有好几种，下面我们会介绍三种，分别是 web 网页采集、基准测试采集、硬编码采集。采集到对应的信息后，再借助 pprof 提供的工具 <code>go tool pprof</code> 进行性能分析，进而确定造成性能瓶颈的地方，对代码进行优化。</p>
+<h5 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h5><p>​	下面我们先来介绍一下 pprof 一些常见的性能指标：</p>
+<ul>
+<li><strong>allocs：</strong><ul>
+<li>功能：查看过去所有的内存分配信息</li>
+<li>用途：用于分析程序的内存分配情况，找到可能导致内存泄漏或者不必要的大内存分配代码</li>
+</ul>
+</li>
+<li><strong>block：</strong><ul>
+<li>功能：查看导致同步原语阻塞的堆栈跟踪信息</li>
+<li>用途：用于识别程序中的同步阻塞点，找到潜在的并发瓶颈</li>
+</ul>
+</li>
+<li><strong>cmdline：</strong><ul>
+<li>功能：查看当前应用程序的命令行完整的调用路径</li>
+<li>用途：用于了解应用程序的启动参数和调用路径</li>
+</ul>
+</li>
+<li><strong>goroutine：</strong><ul>
+<li>功能：查看当前所有的协程堆栈跟踪信息</li>
+<li>用途：用于了解当前程序中所有运行的协程，以及它们的堆栈信息</li>
+</ul>
+</li>
+<li><strong>heap：</strong><ul>
+<li>功能：查看活动对象的内存分配情况</li>
+<li>用途：用于分析程序的堆内存分配情况，找到可能导致内存泄漏或者不必要的大内存分配的代码</li>
+</ul>
+</li>
+<li><strong>mutex：</strong><ul>
+<li>功能：查看互斥锁的竞争持有者的堆栈跟踪信息</li>
+<li>用途：用于识别程序中互斥锁的竞争情况，找到可能的并发瓶颈</li>
+</ul>
+</li>
+<li><strong>profile：</strong><ul>
+<li>功能：CPU 的使用报告</li>
+<li>用途：用于分析程序的 CPU 使用情况，找到可能导致性能瓶颈的代码</li>
+</ul>
+</li>
+<li><strong>threadcreate</strong><ul>
+<li>功能：查看新线程的堆栈跟踪信息</li>
+<li>用途：用于了解程序中新线程的创建情况，以及它们的堆栈信息</li>
+</ul>
+</li>
+<li><strong>trace：</strong><ul>
+<li>功能：整个应用程序的调用的堆栈信息</li>
+<li>用于了解整个应用程序的调用路径和函数调用关系</li>
+</ul>
+</li>
+</ul>
+<p>​	知道了各项性能指标的功能以及用途，接下来我们来看看如何采集对应这些性能指标吧~</p>
+<h4 id="三种性能指标采集方式"><a href="#三种性能指标采集方式" class="headerlink" title="三种性能指标采集方式"></a>三种性能指标采集方式</h4><p>​	这里介绍的三种不同的采集方式，是指生成对应的信息的方式不同，但最终都是需要通过 pprof 工具对采集到的信息文件进行分析的。</p>
+<h5 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h5><p>​	在采集信息之前，我们先写一些有问题的代码，以模拟我们平时的问题代码。</p>
+<p>在根目录中，创建 data 目录，然后在 data 目录下创建一个 data.go 文件，在里面定义一个接口，以供我们写一些其他代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> data<br><br><span class="hljs-keyword">type</span> Cmd <span class="hljs-keyword">interface</span> &#123;<br>	Name() <span class="hljs-type">string</span><br>	Run()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	然后再在 data 目录下，分别创建 block、cpu、goroutine、mem、mutex 目录，以及对应的 .go 文件。</p>
+<p>​	下面我们来分别看看对应的 .go 文件中的内容，以及它们的作用：</p>
+<h6 id="block-go"><a href="#block-go" class="headerlink" title="block.go"></a>block.go</h6><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> block<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-keyword">type</span> Block <span class="hljs-keyword">struct</span> &#123;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(b *Block)</span></span> Name() <span class="hljs-type">string</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;block&quot;</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(b *Block)</span></span> Run() &#123;<br>	log.Println(b.Name(), <span class="hljs-string">&quot;Run&quot;</span>)<br>	<span class="hljs-comment">// 模拟同步原语</span><br>	&lt;-time.After(time.Second)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这里通过将程序睡眠一秒钟，来模拟一些需要等待的操作。</p>
+<h6 id="cpu-go"><a href="#cpu-go" class="headerlink" title="cpu.go"></a>cpu.go</h6><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> cpu<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;log&quot;</span><br><br><span class="hljs-keyword">type</span> Cpu <span class="hljs-keyword">struct</span> &#123;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c *Cpu)</span></span> Name() <span class="hljs-type">string</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;cpu&quot;</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c *Cpu)</span></span> Run() &#123;<br>	log.Println(c.Name(), <span class="hljs-string">&quot;Run&quot;</span>)<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10000000000</span>; i++ &#123;<br>		<span class="hljs-comment">// 模拟不断消耗 CPU</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这段代码通过循环 100 亿次，来模拟不断消耗 CPU 的场景。</p>
+<h6 id="goroutine-go"><a href="#goroutine-go" class="headerlink" title="goroutine.go"></a>goroutine.go</h6><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> goroutine<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-keyword">type</span> Goroutine <span class="hljs-keyword">struct</span> &#123;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(g *Goroutine)</span></span> Name() <span class="hljs-type">string</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;goroutine&quot;</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(g *Goroutine)</span></span> Run() &#123;<br>	log.Println(g.Name(), <span class="hljs-string">&quot;Run&quot;</span>)<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++ &#123;<br>		<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>			time.Sleep(time.Second * <span class="hljs-number">30</span>) <span class="hljs-comment">// 确保在每个时刻都有协程活着</span><br>		&#125;()<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这里通过创建 10 个协程，并让每个协程睡眠 30 秒，以保证每个时刻都有协程处于活跃状态。</p>
+<h6 id="mem-go"><a href="#mem-go" class="headerlink" title="mem.go"></a>mem.go</h6><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> mem<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;main/constants&quot;</span><br>)<br><br><span class="hljs-keyword">type</span> Mem <span class="hljs-keyword">struct</span> &#123;<br>	buffer [][constants.Mi]<span class="hljs-type">byte</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m *Mem)</span></span> Name() <span class="hljs-type">string</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;mem&quot;</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m *Mem)</span></span> Run() &#123;<br>	log.Println(m.Name(), <span class="hljs-string">&quot;Run&quot;</span>)<br>	<span class="hljs-comment">// 分配内存：小于一个 G 就往里面加元素</span><br>	<span class="hljs-keyword">for</span> <span class="hljs-built_in">len</span>(m.buffer)*constants.Mi &lt; constants.Gi &#123;<br>		m.buffer = <span class="hljs-built_in">append</span>(m.buffer, [constants.Mi]<span class="hljs-type">byte</span>&#123;&#125;)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这段代码通过不断往 buffer 中分配内存，来模拟实际程序中分配内存的情况。只要内存小于 1 个 G，就每次新分配 1 M。</p>
+<p>​	这里的单位是定义在一个新的目录 constants 中的 constants.go 文件里的，代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> constants<br><br><span class="hljs-comment">// 定义字节</span><br><span class="hljs-keyword">const</span> (<br>	I = <span class="hljs-number">1</span> &lt;&lt; (<span class="hljs-literal">iota</span> * <span class="hljs-number">10</span>)<br>	Ki<br>	Mi<br>	Gi<br>	Ti<br>	Pi<br>)<br></code></pre></td></tr></table></figure>
+
+<h6 id="mutex-go"><a href="#mutex-go" class="headerlink" title="mutex.go"></a>mutex.go</h6><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> mutex<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;main/constants&quot;</span><br>	<span class="hljs-string">&quot;sync&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-keyword">type</span> Mutex <span class="hljs-keyword">struct</span> &#123;<br>	buffer [][constants.Mi]<span class="hljs-type">byte</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m *Mutex)</span></span> Name() <span class="hljs-type">string</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;mem&quot;</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m *Mutex)</span></span> Run() &#123;<br>	log.Println(m.Name(), <span class="hljs-string">&quot;Run&quot;</span>)<br>	mutex := &amp;sync.Mutex&#123;&#125;<br>	<span class="hljs-comment">// 这里模拟了死锁的情况</span><br>	mutex.Lock()<br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		time.Sleep(time.Second)<br>		mutex.Unlock()<br>	&#125;()<br>	mutex.Lock()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	这里通过加锁两次、解锁一次，来模拟程序死锁的情况。</p>
+<p>​	至此，我们的准备工作都完成了，下面就开始介绍如何采集信息了。</p>
+<h5 id="web-网页采集"><a href="#web-网页采集" class="headerlink" title="web 网页采集"></a>web 网页采集</h5><p>​	我们在项目根目录下创建 main.go 文件，由于是 web 网页采集，所以我们需要起一个 web 服务，然后再去采集该服务的信息。在监听服务前，我们需要开启对锁调用以及对阻塞操作的跟踪，不开启的话抓不到，代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;main/data&quot;</span><br>	<span class="hljs-string">&quot;main/data/block&quot;</span><br>	<span class="hljs-string">&quot;main/data/cpu&quot;</span><br>	<span class="hljs-string">&quot;main/data/goroutine&quot;</span><br>	<span class="hljs-string">&quot;main/data/mem&quot;</span><br>	<span class="hljs-string">&quot;main/data/mutex&quot;</span><br>	<span class="hljs-string">&quot;net/http&quot;</span><br>	_ <span class="hljs-string">&quot;net/http/pprof&quot;</span><br>	<span class="hljs-string">&quot;os&quot;</span><br>	<span class="hljs-string">&quot;runtime&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-keyword">var</span> cmds = []data.Cmd&#123;<br>	&amp;cpu.Cpu&#123;&#125;,<br>	&amp;mem.Mem&#123;&#125;,<br>	&amp;block.Block&#123;&#125;,<br>	&amp;goroutine.Goroutine&#123;&#125;,<br>	&amp;mutex.Mutex&#123;&#125;,<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-comment">// 设置日志的输出格式标志：输出包含完整的文件路径和行号</span><br>	log.SetFlags(log.Llongfile)<br>	log.SetOutput(os.Stdout)<br><br>	<span class="hljs-comment">// 开启对锁调用的跟踪，不开启的话抓取不到（下同）</span><br>	runtime.SetMutexProfileFraction(<span class="hljs-number">1</span>)<br>	<span class="hljs-comment">// 开启对阻塞操作的跟踪</span><br>	runtime.SetBlockProfileRate(<span class="hljs-number">1</span>)<br><br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		http.ListenAndServe(<span class="hljs-string">&quot;:6060&quot;</span>, <span class="hljs-literal">nil</span>) <span class="hljs-comment">// 这里会阻塞，所以需要开一个协程去监听</span><br>	&#125;()<br><br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">200</span>; i++ &#123;<br>		<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> cmds &#123;<br>			v.Run()<br>		&#125;<br>		time.Sleep(time.Second)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	通过将之前准备好的各种指标的模拟函数封装到 cmds 里，然后循环调用 200 次，来模拟我们真实的应用程序环境。	</p>
+<p>​	然后我们运行 <code>go run main.go</code> ，再浏览器中访问 <a target="_blank" rel="noopener" href="http://localhost:6060/debug/pprof/">http://localhost:6060/debug/pprof/</a> 就能看到我们上面介绍过的性能指标了。</p>
+<p><img src="/images/debugPprof.png" srcset="/img/loading.gif" lazyload alt="debugPprof"></p>
+<p>​	我们可以点击到对应的指标进行查看，会发现这种形式我们很难看懂。这个时候，我们可以先点进某个指标的对应页面，比如 allocs，可以看到浏览器中的网址是 <a target="_blank" rel="noopener" href="http://localhost:6060/debug/pprof/allocs?debug=1">localhost:6060&#x2F;debug&#x2F;pprof&#x2F;allocs?debug&#x3D;1</a> 我们把网址中的 <code>?debug=1</code> 删除，并点击回车，浏览器就会自动帮我们下载对应的文件到我们电脑上，这样我们就获得了该项性能指标的数据了。其他指标也是同样的操作方式，需要强调的是对于 <code>profile</code> ， 点击它，pprof 会默认采集 30 s 数据，并在采集完成后自动将信息下载电脑上。至于怎么分析，我们后面再来介绍。</p>
+<h5 id="基准测试采集"><a href="#基准测试采集" class="headerlink" title="基准测试采集"></a>基准测试采集</h5><p>​	现在我们再来看看第二种采集方式 —— 基准测试采集。其实本质上就是利用性能测试，然后将对应测试的结果以文件的形式输出到对应的目录下保存，然后再对这些采集到的数据用 pprof 工具进行分析即可。关于性能测试方面的知识，可以查看 <a target="_blank" rel="noopener" href="https://oyto.github.io/2023/11/13/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%86%99%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95-1">手把手教你写单元测试 - 胤凯 (oyto.github.io)</a> 这篇文章。下面我就直接带大家简单的过一下，利用性能测试采集的代码怎么写就行了。</p>
+<p>​	为了方便，我们的基准测试就直接调用之前写好的各类指标的 Run 方法。同样我们在项目根目录下创建一个 data_test 目录，然后创建一个 data_test.go 文件，在里面粘贴我们的基准测试代码即可：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> data_test<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;main/data/block&quot;</span><br>	<span class="hljs-string">&quot;main/data/cpu&quot;</span><br>	<span class="hljs-string">&quot;main/data/goroutine&quot;</span><br>	<span class="hljs-string">&quot;main/data/mem&quot;</span><br>	<span class="hljs-string">&quot;main/data/mutex&quot;</span><br>	<span class="hljs-string">&quot;testing&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">BenchmarkData</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>	b.Run(<span class="hljs-string">&quot;block&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>		o := block.Block&#123;&#125;<br>		<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>			o.Run()<br>		&#125;<br>	&#125;)<br>	b.Run(<span class="hljs-string">&quot;cpu&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>		o := cpu.Cpu&#123;&#125;<br>		<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>			o.Run()<br>		&#125;<br>	&#125;)<br>	b.Run(<span class="hljs-string">&quot;mem&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>		o := mem.Mem&#123;&#125;<br>		<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>			o.Run()<br>		&#125;<br>	&#125;)<br>	b.Run(<span class="hljs-string">&quot;goroutine&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>		o := goroutine.Goroutine&#123;&#125;<br>		<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>			o.Run()<br>		&#125;<br>	&#125;)<br>	b.Run(<span class="hljs-string">&quot;mutex&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>		o := mutex.Mutex&#123;&#125;<br>		<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>			o.Run()<br>		&#125;<br>	&#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	然后 在 根目录下创建 testout 目录，用于存放我们采集的信息，并在命令行运行 <code>go test -run ^$ -bench . ./data_test/ -blockprofile block.out -cpuprofile cpu.out -memprofile mem.out -mutexprofile mutex.out -trace trace.out -outputdir ./testout</code> 。</p>
+<p>​	等待一段时间后，基准测试完成之后，就可以看到采集到的信息已经全部在 testout 中存放了。我们可以试着打开这些文件看一下，会发现是乱码，无法直观的看到对应指标的信息到底是怎么样的。所以我们还是需要通过 pprof 提供的工具进行分析。</p>
+<h5 id="硬编码采集"><a href="#硬编码采集" class="headerlink" title="硬编码采集"></a>硬编码采集</h5><p>​	硬编码采集其实和基准测试是差不多的，只是需要我们自己去写对应的采集代码的逻辑，并将采集的信息保存到指定的位置。同样最后，也是需要使用 pprof 工具才能进行分析。</p>
+<p>​	我们在项目根目录创建 code_coolection 目录，在该目录下创建 out 目录和 main.go 文件，并将下面的代码粘贴到 main.go 文件中：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;main/data&quot;</span><br>	<span class="hljs-string">&quot;main/data/block&quot;</span><br>	<span class="hljs-string">&quot;main/data/cpu&quot;</span><br>	<span class="hljs-string">&quot;main/data/goroutine&quot;</span><br>	<span class="hljs-string">&quot;main/data/mem&quot;</span><br>	<span class="hljs-string">&quot;main/data/mutex&quot;</span><br>	_ <span class="hljs-string">&quot;net/http/pprof&quot;</span><br>	<span class="hljs-string">&quot;os&quot;</span><br>	<span class="hljs-string">&quot;runtime&quot;</span><br>	<span class="hljs-string">&quot;runtime/pprof&quot;</span><br>	<span class="hljs-string">&quot;runtime/trace&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-keyword">var</span> cmds = []data.Cmd&#123;<br>	&amp;cpu.Cpu&#123;&#125;,<br>	&amp;mem.Mem&#123;&#125;,<br>	&amp;block.Block&#123;&#125;,<br>	&amp;goroutine.Goroutine&#123;&#125;,<br>	&amp;mutex.Mutex&#123;&#125;,<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-comment">// 设置日志的输出格式标志：输出包含完整的文件路径和行号</span><br>	log.SetFlags(log.Llongfile)<br>	log.SetOutput(os.Stdout)<br><br>	<span class="hljs-comment">// 开启对锁调用的跟踪，不开启的话抓取不到（下同）</span><br>	runtime.SetMutexProfileFraction(<span class="hljs-number">1</span>)<br>	<span class="hljs-comment">// 开启对阻塞操作的跟踪</span><br>	runtime.SetBlockProfileRate(<span class="hljs-number">1</span>)<br><br>	<span class="hljs-comment">// 硬编码采集 cpu</span><br>	cpufile, err := os.OpenFile(<span class="hljs-string">&quot;code_collection/out/cpu.out&quot;</span>, os.O_CREATE|os.O_WRONLY, <span class="hljs-number">0644</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalln(err)<br>	&#125;<br>	<span class="hljs-comment">// 开始采集</span><br>	err = pprof.WriteHeapProfile(cpufile)<br>	<span class="hljs-comment">// 停止采集</span><br>	<span class="hljs-keyword">defer</span> pprof.StopCPUProfile()<br>	<span class="hljs-keyword">defer</span> cpufile.Close()<br><br>	<span class="hljs-comment">// 硬编码采集 mem</span><br>	memfile, err := os.OpenFile(<span class="hljs-string">&quot;code_collection/out/mem.out&quot;</span>, os.O_CREATE|os.O_WRONLY, <span class="hljs-number">0644</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalln(err)<br>	&#125;<br>	<span class="hljs-comment">// 开始采集</span><br>	err = pprof.WriteHeapProfile(memfile)<br>	<span class="hljs-keyword">defer</span> memfile.Close()<br><br>	<span class="hljs-comment">// 硬编码采集 trace</span><br>	tracefile, err := os.OpenFile(<span class="hljs-string">&quot;code_collection/out/trace.out&quot;</span>, os.O_CREATE|os.O_WRONLY, <span class="hljs-number">0644</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalln(err)<br>	&#125;<br>	<span class="hljs-comment">// 开始采集</span><br>	err = trace.Start(tracefile)<br>	<span class="hljs-keyword">defer</span> trace.Stop()<br>	<span class="hljs-keyword">defer</span> tracefile.Close()<br>	<span class="hljs-comment">// 业务代码</span><br><br>	<span class="hljs-keyword">for</span> &#123;<br>		<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> cmds &#123;<br>			v.Run()<br>		&#125;<br>		time.Sleep(time.Second)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​	上面的代码可以分为三部分：</p>
+<ol>
+<li>开启一些必要日志输出和锁调用以及阻塞操作调用的跟踪</li>
+<li>编码采集 cpu、mem、trace 信息，并将采集的信息保存下来</li>
+<li>利用之前实现好的接口，模拟业务代码</li>
+</ol>
+<h5 id="三种采集方式的对比"><a href="#三种采集方式的对比" class="headerlink" title="三种采集方式的对比"></a>三种采集方式的对比</h5><h6 id="web-网页采集-1"><a href="#web-网页采集-1" class="headerlink" title="web 网页采集"></a>web 网页采集</h6><ul>
+<li><strong>优点:</strong><ul>
+<li><strong>实时可视化:</strong> 提供实时的可视化界面，便于直观观察应用程序的性能。</li>
+<li><strong>交互式分析:</strong> 可以通过图形化界面进行交互式的性能分析，查看不同性能指标的详细信息。</li>
+<li><strong>方便易用:</strong> 无需修改代码，通过 HTTP 请求即可触发性能数据采集。</li>
+</ul>
+</li>
+<li><strong>缺点:</strong><ul>
+<li><strong>实时性:</strong> 不适合长时间运行或对实时性要求较高的生产环境，因为需要手动访问页面。</li>
+<li><strong>可控性较差:</strong> 无法在代码中控制何时开始和结束性能采集。</li>
+</ul>
+</li>
+<li><strong>适用场景:</strong><ul>
+<li><strong>开发和测试阶段:</strong> 用于开发人员和测试人员在开发、测试过程中对性能进行快速分析和调试。</li>
+</ul>
+</li>
+</ul>
+<h6 id="基准测试采集-1"><a href="#基准测试采集-1" class="headerlink" title="基准测试采集"></a>基准测试采集</h6><ul>
+<li><strong>优点:</strong><ul>
+<li><strong>可编程:</strong> 可以通过编写基准测试函数，并使用 <code>testing</code> 包进行性能采集。</li>
+<li><strong>自动化:</strong> 可以在测试套件中自动运行性能测试，方便集成到持续集成流程中。</li>
+</ul>
+</li>
+<li><strong>缺点:</strong><ul>
+<li><strong>需要额外编写测试代码:</strong> 需要编写专门的基准测试代码，不能直接在生产环境中使用。</li>
+</ul>
+</li>
+<li><strong>适用场景:</strong><ul>
+<li><strong>持续集成:</strong> 适用于集成到持续集成流程中，每次构建运行性能测试。</li>
+</ul>
+</li>
+</ul>
+<h6 id="硬编码采集-1"><a href="#硬编码采集-1" class="headerlink" title="硬编码采集"></a>硬编码采集</h6><ul>
+<li><strong>优点:</strong><ul>
+<li><strong>灵活性:</strong> 可以在代码中灵活选择何时何地采集性能信息，对采集内容有更大的控制权。</li>
+<li><strong>定制性高:</strong> 可以选择性采集特定的性能信息，更符合定制化需求。</li>
+</ul>
+</li>
+<li><strong>缺点:</strong><ul>
+<li><strong>需要手动编码:</strong> 需要在代码中手动添加采集性能信息的逻辑。</li>
+<li><strong>生产环境谨慎使用:</strong> 在生产环境中需要慎重使用，避免因为性能采集导致系统负载过大。</li>
+</ul>
+</li>
+<li><strong>适用场景:</strong><ul>
+<li><strong>定制化需求:</strong> 需要根据具体场景定制性能采集逻辑的情况。</li>
+</ul>
+</li>
+</ul>
+<p><strong>总结:</strong></p>
+<ul>
+<li><strong>Web 网页采集:</strong> 适合开发和测试阶段，用于快速观察和调试。</li>
+<li><strong>基准测试采集:</strong> 适用于集成到持续集成流程，自动运行性能测试。</li>
+<li><strong>硬编码采集:</strong> 适用于需要灵活控制采集逻辑，以及特定场景下的性能调试。</li>
+</ul>
+<h4 id="如何分析采集到的信息"><a href="#如何分析采集到的信息" class="headerlink" title="如何分析采集到的信息"></a>如何分析采集到的信息</h4><p>​	收集到的信息一般都会保存在一个文件中，我们找到该文件，使用 pprof 提供的工具就可以进行分析了。</p>
+<p>​	我们以 cpu.out 文件为例，在命令行中切换到该文件对应的目录，然后使用 <code>go tool pprof cpu.out</code> ，然后就可以进入到交互模式。</p>
+<h5 id="top-命令"><a href="#top-命令" class="headerlink" title="top  命令"></a>top  命令</h5><p>​	我们可以使用 top 命令， 执行 <code>top</code> 命令后，会在命令行中输出当前的 CPU 消耗排行榜，显示消耗 CPU 最多的函数，帮助快速定位  CPU 使用率最高的部分，默认显示 10 条。可以通过添加参数 <code>top n</code> 来控制输出的条数。</p>
+<p><img src="/images/top.png" srcset="/img/loading.gif" lazyload alt="top"></p>
+<ul>
+<li>flat：函数自身运行的资源消耗</li>
+<li>cum：当前函数加上所用调用栈</li>
+</ul>
+<h5 id="list-命令"><a href="#list-命令" class="headerlink" title="list 命令"></a>list 命令</h5><p>​	也可以使用 list Run 命令，执行后会在命令行中输出与函数 <code>Run</code> 相关的源代码，方便我们快速查找到有问题的源代码所在地，这对于进一步分析和优化性能问题很有帮助。</p>
+<p><img src="/images/listRun.png" srcset="/img/loading.gif" lazyload alt="listRun"></p>
+<h5 id="web-命令"><a href="#web-命令" class="headerlink" title="web 命令"></a>web 命令</h5><p>​	想使用 web 命令，需要我们先去下载一个插件 <a target="_blank" rel="noopener" href="https://graphviz.gitlab.io/download/">Download | Graphviz</a> ，找到对应的系统进行安装，并在配置好环境变量。</p>
+<p>​	同样使用 <code>go tool pprof cpu.out</code> 进入交互模式，在交互模式下输入 web ，然后会生成一张 svg 格式的图片，并会默认在浏览器中打开。这张图以图形化的方式展示程序中各个函数的调用关系和执行时间。通过这个该图，你可以迅速定位程序的性能瓶颈。深色、宽度较大的块通常表示执行时间较长的函数，可能是需要优化的部分。</p>
+<p><img src="/images/svg.png" srcset="/img/loading.gif" lazyload alt="svg"></p>
+<h5 id="ui-方式查看"><a href="#ui-方式查看" class="headerlink" title="ui 方式查看"></a>ui 方式查看</h5><p>​	我们还可以使用 <code>go tool pprof -http :8080 cpu.out</code> 这种方式指定一个端口进行查看。</p>
+<p>​	这种方式会在本地启动一个 HTTP 服务器，并在浏览器中显示性能分析的交互式界面。我们可以通过浏览器直观地浏览性能分析数据，而不必依赖终端界面，而且我们可以将性能分析页面的 URL 分享给其他人，方便团队成员共同分析和解决问题。更为重要的是，<code>-http</code> 方式提供了实时更新的功能。当程序在运行时采集数据，浏览器中的页面会及时反映这些数据的变化。</p>
+<p><img src="/images/pprofhttp.png" srcset="/img/loading.gif" lazyload alt="pprofhttp"></p>
+<p>​	其实 ui 方式，就是将命令行下一些参数所显示的信息，通过图形界面向我们展示。比如：</p>
+<h6 id="VIEW"><a href="#VIEW" class="headerlink" title="VIEW"></a>VIEW</h6><p>​	VIEW 下的选项：</p>
+<ol>
+<li><strong>top：</strong><ul>
+<li><strong>作用：</strong> 显示性能分析的顶级函数列表，按照 CPU 使用时间排序。</li>
+<li><strong>用途：</strong> 用于查看程序中占用 CPU 时间最多的函数，帮助确定性能瓶颈。</li>
+</ul>
+</li>
+<li><strong>graph：</strong><ul>
+<li><strong>作用：</strong> 生成并显示调用图（call graph）。</li>
+<li><strong>用途：</strong> 提供了函数之间调用关系的可视化，有助于理解代码的调用流程。</li>
+</ul>
+</li>
+<li><strong>flame Graph：</strong><ul>
+<li><strong>作用：</strong> 生成并显示火焰图。</li>
+<li><strong>用途：</strong> 火焰图是一种可视化工具，直观显示函数调用关系和执行时间，更容易发现性能瓶颈。</li>
+</ul>
+</li>
+<li><strong>peek：</strong><ul>
+<li><strong>作用：</strong> 显示函数的源码和汇编码。</li>
+<li><strong>用途：</strong> 提供了在源码和汇编级别查看函数的功能，用于深入分析函数执行过程。</li>
+</ul>
+</li>
+<li><strong>source：</strong><ul>
+<li><strong>作用：</strong> 显示函数的源码。</li>
+<li><strong>用途：</strong> 提供了在源码级别查看函数的功能，便于理解代码的具体实现。</li>
+</ul>
+</li>
+<li><strong>disassemble：</strong><ul>
+<li><strong>作用：</strong> 显示函数的汇编码。</li>
+<li><strong>用途：</strong> 提供了在汇编级别查看函数的功能，有助于深入了解函数的底层执行过程。</li>
+</ul>
+</li>
+</ol>
+<h6 id="SAMPLE"><a href="#SAMPLE" class="headerlink" title="SAMPLE"></a>SAMPLE</h6><p>​	SAMPLE 下的选项：<code>samples</code> 和 <code>cpu</code> 是两个常用的命令，用于查看不同类型的性能样本信息。</p>
+<ol>
+<li><strong>samples：</strong><ul>
+<li><strong>作用：</strong> 表示程序在采样时的状态信息，记录了堆栈跟踪信息和对应的采样计数。</li>
+<li><strong>用途：</strong> 用于采样分析，通过收集一系列采样数据，可以了解程序在不同时刻的执行情况，帮助找出热点代码和性能瓶颈。</li>
+</ul>
+</li>
+<li><strong>cpu：</strong><ul>
+<li><strong>作用：</strong> 表示 CPU 使用时间的信息，记录了每个函数的 CPU 使用时间和调用次数。</li>
+<li><strong>用途：</strong> 用于 CPU 时间分析，提供了函数级别的 CPU 使用情况，帮助确定哪些函数占用了大量的 CPU 时间，从而找到潜在的性能问题。</li>
+</ul>
+</li>
+</ol>
+<h6 id="REFINE"><a href="#REFINE" class="headerlink" title="REFINE"></a>REFINE</h6><p>​	REFINE 下的选项：<code>focus</code>、<code>ignore</code>、<code>hide</code>、<code>show</code>、<code>show from</code>、<code>reset</code> 是用于调整视图的命令。它们的作用如下：</p>
+<ol>
+<li><strong>focus：</strong><ul>
+<li><strong>作用：</strong> 将视图聚焦于指定的函数，只显示与该函数相关的信息。</li>
+<li><strong>用途：</strong> 用于关注某个特定函数，查看与该函数相关的性能信息，便于深入分析该函数的性能状况。</li>
+</ul>
+</li>
+<li><strong>ignore：</strong><ul>
+<li><strong>作用：</strong> 忽略指定函数，不显示与该函数相关的信息。</li>
+<li><strong>用途：</strong> 用于排除某些函数，以便在性能分析中聚焦于其他关键函数，减少视图的干扰。</li>
+</ul>
+</li>
+<li><strong>hide：</strong><ul>
+<li><strong>作用：</strong> 隐藏指定函数及其调用图，不显示在视图中。</li>
+<li><strong>用途：</strong> 用于在视图中隐藏一些不感兴趣或者不重要的函数，简化视图。</li>
+</ul>
+</li>
+<li><strong>show：</strong><ul>
+<li><strong>作用：</strong> 显示之前被隐藏的函数。</li>
+<li><strong>用途：</strong> 用于取消之前使用 <code>hide</code> 命令隐藏的函数，重新在视图中显示。</li>
+</ul>
+</li>
+<li><strong>show from：</strong><ul>
+<li><strong>作用：</strong> 从指定函数开始显示调用图。</li>
+<li><strong>用途：</strong> 设置一个起始点，从该点开始显示函数的调用图，有助于查看特定路径的调用关系。</li>
+</ul>
+</li>
+<li><strong>reset：</strong><ul>
+<li><strong>作用：</strong> 重置视图，取消之前的 <code>focus</code>、<code>ignore</code>、<code>hide</code> 等操作。</li>
+<li><strong>用途：</strong> 用于还原视图到最初的状态，清除之前的调整，重新全面查看性能信息。</li>
+</ul>
+</li>
+</ol>
+<p>​	这些命令提供了在交互模式下调整视图的灵活性，使用户能够更好地根据具体需求选择和排除函数，以获取更有针对性的性能分析信息。</p>
+<h6 id="CONFIG"><a href="#CONFIG" class="headerlink" title="CONFIG"></a>CONFIG</h6><p>​	CONFIG 下的选项：Save as … 和 Default 是在 Web UI中的一些配置选项。作用如下：</p>
+<ol>
+<li><strong>Save as …</strong>: 这个选项允许您保存当前的配置为一个命名的配置文件。配置文件包含了视图布局、颜色方案等信息。通过保存配置，您可以在将来重新加载相同的配置，方便重复使用。</li>
+<li><strong>Default</strong>: 这个选项是将当前的配置设置为默认配置。默认配置会在下次打开 <code>go tool pprof</code> 时自动加载。这对于您希望在多次运行中使用相同的配置时很有用。</li>
+</ol>
+<p>​	这两个选项的目的在于提供一种灵活的方式，使用户能够保存和恢复他们喜欢的配置，或者设置一个默认配置以简化工作流。这对于在不同的分析任务之间切换，或者在不同的会话中保持一致的可视化设置都很有帮助。</p>
+<h6 id="DOWNLOAD"><a href="#DOWNLOAD" class="headerlink" title="DOWNLOAD"></a>DOWNLOAD</h6><p>​	<code>Download</code> 选项允许您下载当前的图形化展示或报告。下载之后，会生成一个 .pb 文件，同样需要配合 go tool pprof 使用。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>​	这篇文章，带大家了解了 pprof 工具，并带大家熟悉了 pprof 工具的使用方法，相信大家在未来一定会使用到这款工具的，毕竟一位优秀的程序员，写出来的代码一定是 “三高” 代码。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/" class="category-chain-item">项目实战</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/pprof/">#pprof</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>手把手教你使用pprof</div>
+      <div>http://example.com/2023/11/16/Go/项目实战/手把手教你使用pprof/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月16日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年11月16日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/14/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/%E6%89%8B%E6%8A%8A%E6%89%8B%E5%B8%A6%E4%BD%A0%E5%86%99%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%B7%A5%E5%85%B7/" title="手把手带你写一个小工具">
+                        <span class="hidden-mobile">手把手带你写一个小工具</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>
