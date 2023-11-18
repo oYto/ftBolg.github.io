@@ -1,0 +1,1076 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Feng Tao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="​	大家好，今天我带大家来认识一下 etcd。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识分布式键值对存储etcd">
+<meta property="og:url" content="http://example.com/2023/11/18/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/%E5%88%9D%E8%AF%86%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%AE%E5%80%BC%E5%AF%B9%E5%AD%98%E5%82%A8etcd/index.html">
+<meta property="og:site_name" content="胤凯">
+<meta property="og:description" content="​	大家好，今天我带大家来认识一下 etcd。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/etcd.png">
+<meta property="article:published_time" content="2023-11-18T06:16:49.000Z">
+<meta property="article:modified_time" content="2023-11-18T10:15:39.103Z">
+<meta property="article:author" content="Feng Tao">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/images/etcd.png">
+  
+  
+  
+  <title>初识分布式键值对存储etcd - 胤凯</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fluid-extension.css">
+<link rel="stylesheet" href="/css/test.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"🎉","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","app_key":"rwjeQIHfYJqQvjh2iWuPkYev","server_url":"https://n0h6zjcw.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>胤凯</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/test/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/example/">
+                <i class="iconfont icon-brush"></i>
+                <span>校园生活</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/none.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="初识分布式键值对存储etcd"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-18 14:16" pubdate>
+          2023年11月18日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          119 分钟
+        
+      </span>
+    
+
+    
+    
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">初识分布式键值对存储etcd</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>​	大家好，今天我带大家来认识一下 etcd。<span id="more"></span></p>
+<h1 id="一、什么是-etcd"><a href="#一、什么是-etcd" class="headerlink" title="一、什么是 etcd"></a>一、什么是 etcd</h1><p>​	etcd 是一个开源的分布式键值存储系统，主要用于构建分布式系统中那点服务发现、配置管理、分布式锁等场景。它采用 Raft 一致性算法来确保所有节点上的数据一致性。</p>
+<p><img src="/images/etcd%E6%9E%B6%E6%9E%84.png" srcset="/img/loading.gif" lazyload alt="etcd架构"></p>
+<p>​	下面我们来讲讲 etcd 的基本架构组成要点，以及一些对应的概念：</p>
+<h4 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h4><p>​	etcd 集群由多个节点组成。每个节点都运行着 etcd 的服务，并负责存储数据、处理客户端请求以及与其他节点通信。</p>
+<p>​	etcd 架构的节点有三种角色，分别是：Leader、Follower、候选人。</p>
+<p>​	Leader 具有唯一性，Leader 挂掉之后，会从 Follower 选择一个成为候选人，参与新一次的领导人的选举。</p>
+<p>​	在 etcd 节点基础服务中，关键组件包括：</p>
+<ul>
+<li><strong>boltdb：</strong>作为底层存储引擎，boltdb 提供了支持事务的键值存储，用于存储节点的状态和数据。这确保了数据在节点重启后依然可用。</li>
+<li><strong>Wal（Write-Ahead-Log）：</strong>Wal 是 etcd 中的预写式日志，记录所有的写入操作。在实际的键值存储操作之前，etcd 将操作写入 Wal，然后再将数据谢日 boltdb。这一机制保证了数据的一致性和持久性。</li>
+<li><strong>gRPC Server：</strong>etcd 节点之间和客户端节点之间的通信采用 gRPC 协议。</li>
+</ul>
+<h4 id="Raft-一致性算法"><a href="#Raft-一致性算法" class="headerlink" title="Raft 一致性算法"></a>Raft 一致性算法</h4><p>​	etcd 使用 Raft 算法来保证分布式中节点之间的一致性。Raft 算法将集群中的节点分为 Leader、Follower 和 Candidate 三种角色，通过选举机制选出 Leader，并由 Leader 负载处理客户端请求和更新集群中的数据。Leader 将更新操作复制到其他节点，确保所有节点数据一致性。</p>
+<h4 id="数据存储"><a href="#数据存储" class="headerlink" title="数据存储"></a>数据存储</h4><p>​	etcd 使用键值对（Key-Value）的方式存储数据。每个节点都保存着整个集群的数据副本。数据可以通过 HTTP 或 gRPC 接口进行读写操作。etcd 的数据存储是强一致性的，即当数据提交后，所有节点上的数据都会保持一致性。</p>
+<h4 id="选主过程"><a href="#选主过程" class="headerlink" title="选主过程"></a>选主过程</h4><p>​	当一个 etcd 集群启动时，所有节点都是 Follower 角色。通过 Raft 选主过程，集群中的节点将选举出一个 Leader。Leader 负责处理客户端的读写请求，并将更新操作同步给其他节点。Follower 负责接收 Leader 的同步请求并保持数据一致。</p>
+<h4 id="分布式通信"><a href="#分布式通信" class="headerlink" title="分布式通信"></a>分布式通信</h4><p>​	etcd 集群中的节点通过相互通信来维护一致性。节点之间通过心跳机制保持连接。Leader 定期发送心跳消息给 Follower，以确保节点之间通信正常。同时，Leader 将客户端的写请求同步给其他节点，确保数据的一致性。</p>
+<h4 id="快照"><a href="#快照" class="headerlink" title="快照"></a>快照</h4><p>​	为了减少数据传输的开销，etcd 使用快照机制。当节点的数据过大时，etcd 将节点的状态进行快照，只保留最新的快照和后续的变更日志，以便在需要时进行恢复，之前的预写式日志就可以删除了，以此来节省磁盘空间，保持系统的性能。</p>
+<p>​	</p>
+<p>​	总体而言，etcd 的基本结构就是通过这样一些机制来实现了分布式系统中的数据一致性，并通过多节点的协同工作来提供可靠、稳定、高性能的分布式键值存储服务。</p>
+<h1 id="二、分布式部署-etcd"><a href="#二、分布式部署-etcd" class="headerlink" title="二、分布式部署 etcd"></a>二、分布式部署 etcd</h1><p>​	下面我们将使用虚拟机来部署一个 etcd 集群，为了避免对我们的虚拟机造成影响，我们这里使用 docker 的方式来进行部署。</p>
+<h4 id="官方示例"><a href="#官方示例" class="headerlink" title="官方示例"></a>官方示例</h4><p>​	打开链接 <a target="_blank" rel="noopener" href="https://github.com/etcd-io/etcd/releases">Releases · etcd-io&#x2F;etcd (github.com)</a> ，我们可以看到有教我们如何使用 docker 进行部署，下面我们来看看这些命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs shell">rm -rf /tmp/etcd-data.tmp &amp;&amp; mkdir -p /tmp/etcd-data.tmp &amp;&amp; \<br>  docker rmi gcr.io/etcd-development/etcd:v3.5.10 || true &amp;&amp; \<br>  docker run \<br>  -p 2379:2379 \<br>  -p 2380:2380 \<br>  --mount type=bind,source=/tmp/etcd-data.tmp,destination=/etcd-data \<br>  --name etcd-gcr-v3.5.10 \<br>  gcr.io/etcd-development/etcd:v3.5.10 \<br>  /usr/local/bin/etcd \<br>  --name s1 \<br>  --data-dir /etcd-data \<br>  --listen-client-urls http://0.0.0.0:2379 \<br>  --advertise-client-urls http://0.0.0.0:2379 \<br>  --listen-peer-urls http://0.0.0.0:2380 \<br>  --initial-advertise-peer-urls http://0.0.0.0:2380 \<br>  --initial-cluster s1=http://0.0.0.0:2380 \<br>  --initial-cluster-token tkn \<br>  --initial-cluster-state new \<br>  --log-level info \<br>  --logger zap \<br>  --log-outputs stderr<br><br>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcd --version<br>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcdctl version<br>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcdutl version<br>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcdctl endpoint health<br>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcdctl put foo bar<br>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcdctl get foo<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>rm -rf /tmp/etcd-data.tmp &amp;&amp; mkdir -p /tmp/etcd-data.tmp</code>：删除并创建 <code>/tmp/etcd-data.tmp</code> 目录，这是为了防止我们的目录下已经存在该目录，用于存储 etcd 的数据。</li>
+<li><code>docker rmi gcr.io/etcd-development/etcd:v3.5.10 || true</code>: 删除 etcd 镜像，如果不存在则不报错。</li>
+<li><code>docker run ...</code>：启动 etcd 容器，参数如下：<ul>
+<li><code>-p 2379:2379</code>：映射容器的 2379 端口到主机的 2379 端口。</li>
+<li><code>-p 2380:2380</code>: 映射容器的 2380 端口到主机的 2380 端口。</li>
+<li><code>--mount type=bind,source=/tmp/etcd-data.tmp,destination=/etcd-data</code>: 将主机的 <code>/tmp/etcd-data.tmp</code> 目录绑定到容器的 <code>/etcd-data</code> 目录，用于持久化 etcd 的数据。</li>
+<li><code>--name etcd-gcr-v3.5.10</code>: 指定容器的名称为 <code>etcd-gcr-v3.5.10</code>。</li>
+<li><code>gcr.io/etcd-development/etcd:v3.5.10</code>: 使用 etcd 官方提供的 Docker 镜像。</li>
+<li><code>/usr/local/bin/etcd ...</code>: 启动 etcd 的命令及相关参数。这里后面会做讲解。</li>
+</ul>
+</li>
+<li><code>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcd --version</code>: 在容器内执行 <code>etcd --version</code> 命令，输出 etcd 的版本信息。</li>
+<li><code>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcdctl version</code>: 在容器内执行 <code>etcdctl version</code> 命令，输出 etcdctl 的版本信息。</li>
+<li><code>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcdutl version</code>: 这一行命令有误，应为 <code>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcdutl version</code>。这个命令在容器内执行 <code>etcdutl version</code>，输出 etcdutl 的版本信息。</li>
+<li><code>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcdctl endpoint health</code>: 在容器内执行 <code>etcdctl endpoint health</code>，检查 etcd 集群的健康状态。</li>
+<li><code>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcdctl put foo bar</code>: 在容器内执行 <code>etcdctl put foo bar</code>，将键值对 <code>foo: bar</code> 存储到 etcd 集群中。</li>
+<li><code>docker exec etcd-gcr-v3.5.10 /usr/local/bin/etcdctl get foo</code>: 在容器内执行 <code>etcdctl get foo</code>，获取键 <code>foo</code> 对应的值。</li>
+</ul>
+<p>​	上面只是官方给我们的使用示例，我们做一个参考就行，我们可以按照自己的方式进行部署。</p>
+<h4 id="开始部署"><a href="#开始部署" class="headerlink" title="开始部署"></a>开始部署</h4><h5 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h5><p>​	由于我们采用 docker 的方式进行部署，故第一步肯定是下载镜像。</p>
+<p>​	我们这里通过 <a target="_blank" rel="noopener" href="https://quay.io/repository/coreos/etcd?tab=tags&tag=latest">coreos&#x2F;etcd · Quay</a> 找到我们想要的 docker 镜像，我这里下载 v3.5.5 ，选择 Docker Pull（by tag），获取到对应的下载链接。</p>
+<p>​	然后来到我们的虚拟机，执行 <code>docker pull quay.io/coreos/etcd:v3.5.5</code> 拉取镜像，当前前提是需要在虚拟机上安装并启动 docker 服务，安装这里就不再讲解了，大家可以去查看对应的资料进行安装和启动。</p>
+<p>​	拉取完成后，我们可以通过 docker images 命令检查一下是否成功拉取到镜像：<br><img src="/images/images.png" srcset="/img/loading.gif" lazyload alt="images"></p>
+<p>​	根据我们拉取到的镜像，启动容器 <code>docker run -dit quay.io/coreos/etcd:v3.5.5 sh</code>，通过 docker ps -a 查看容器 ID，根据进入 etcd 容器的交互模式 <code>docker exec -it eeb9a5e45d9e sh</code>。</p>
+<h5 id="验证并认识参数"><a href="#验证并认识参数" class="headerlink" title="验证并认识参数"></a>验证并认识参数</h5><p>​	我们可以使用 etcd -h 命令检查是否能够访问 etcd 服务</p>
+<p><img src="/images/etcd-h.png" srcset="/img/loading.gif" lazyload alt="etcd-h"></p>
+<p>​	出现上面这个界面，就说明我们的 etcd 容器已经成功创建了，刚好借着 etcd -h 这个命令我们来看一些启动 etcd 集群需要了解的参数：</p>
+<ul>
+<li><strong>–name：</strong>指定 etcd 服务器的名称，以此来区分集群中不同的 etcd 节点</li>
+<li><strong>–data-dir：</strong>指定 etcd 保存数据的目录，用于存储 etcd 数据库文件，包括 kv 数据和元数据</li>
+<li><strong>–wal-dir：</strong>指定 etcd 预写式日志的目录，它记录了 etcd 数据库所有的变更，以确保数据的一致性和持久性</li>
+<li><strong>snapshot-count：</strong>设置 etcd 触发快照的触发次数，当写入预写式日志的次数达到该值，就会生成一次快照。</li>
+<li><strong>listen-peer-urls：</strong>指定 etcd 服务器监听的对等节点通信地址， 用于集群中节点之间的通信，传递心跳、日志复制等信息。端口通常为 2380，即暴露给其他节点的通信地址。</li>
+<li><strong>–listen-client-urls：</strong>指定 <code>etcd</code> 服务器监听的客户端通信地址。 用于客户端与 <code>etcd</code> 服务器进行通信，包括查询和修改 key-value 数据等操作。通常端口为 2379，即对外提供的 etcd 服务节点。</li>
+<li><strong>–initial-advertise-peer-urls：</strong> 指定 <code>etcd</code> 服务器用于集群中通信的地址。用于告知其他节点该节点的通信地址，集群中其他节点将通过这个地址与该节点进行通信。</li>
+<li><strong>–initial-cluster：</strong> 指定初始集群的成员信息。用于告知 <code>etcd</code> 服务器集群中的其他节点。格式为<code>&lt;name&gt;=&lt;url&gt;</code>。</li>
+<li><strong>–initial-cluster-state：</strong>指定 <code>etcd</code> 服务器在集群启动时的状态。 ‘new’ 表示新的集群，’existing’ 表示已经存在的集群。</li>
+<li><strong>–initial-cluster-token：</strong>指定新创建的集群的 token。用于标识一个集群，确保不同的集群拥有不同的 token。</li>
+<li><strong>advertise-client-urls：</strong>指定 <code>etcd</code> 服务器广播给客户端的地址。用于告知客户端与 <code>etcd</code> 服务器进行通信的地址。</li>
+</ul>
+<h5 id="配置集群信息"><a href="#配置集群信息" class="headerlink" title="配置集群信息"></a>配置集群信息</h5><p>​	认识并了解了启动集群所必备的参数和信息，我们开始配置集群信息。</p>
+<p>​	我们的集群，以同一台虚拟机使用 docker 启动 3 个不同的 etcd 服务，来模拟集群中的三个节点，并且为了展示集群的功能，所以我们再准备第四个配置文件。所以我们需要去写 4 个 etcd 节点配置文件。</p>
+<p>​	我们可以在虚拟机 root 目录下创建 etcd 文件夹，并在 etcd 文件夹里创建 etcdconf 文件夹，使用 vim etcd0.yaml 创建配置文件，配置内容如下：</p>
+<h6 id="etcd0-yaml"><a href="#etcd0-yaml" class="headerlink" title="etcd0.yaml"></a>etcd0.yaml</h6><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 节点名称</span><br><span class="hljs-attr">name:</span> <span class="hljs-string">&quot;etcdnode0&quot;</span><br><span class="hljs-comment"># 数据存储目录</span><br><span class="hljs-attr">data-dir:</span> <span class="hljs-string">&quot;/etcd-data/data&quot;</span><br><span class="hljs-comment"># 预写式日志存储目录</span><br><span class="hljs-attr">wal-dir:</span> <span class="hljs-string">&quot;/etcd-data/wal&quot;</span><br><span class="hljs-comment"># 集群成员之间通讯使用URL</span><br><span class="hljs-attr">listen-peer-urls:</span> <span class="hljs-string">&quot;http://0.0.0.0:2380&quot;</span><br><span class="hljs-comment"># 集群提供给外部客户端访问的URL，即外部客户端必须通过制定的IP加端口访问etcd</span><br><span class="hljs-attr">listen-client-urls:</span> <span class="hljs-string">&quot;http://0.0.0.0:2379&quot;</span><br><br><span class="hljs-comment"># 集群配置</span><br><span class="hljs-attr">initial-advertise-peer-urls:</span> <span class="hljs-string">&quot;http://192.168.235.128:2380&quot;</span><br><span class="hljs-comment"># 集群初始成员配置，是etcd静态部署的核心初始化配置，它说明了当前集群由哪些URLs组成，此处default为节点名称</span><br><span class="hljs-attr">initial-cluster:</span> <span class="hljs-string">&quot;etcdnode0=http://192.168.235.128:2380,etcdnode1=http://192.168.235.128:12380,etcdnode2=http://192.168.235.128:22380&quot;</span><br><span class="hljs-comment"># 初始化集群状态（new 或 existing）</span><br><span class="hljs-attr">initial-cluster-state:</span> <span class="hljs-string">&quot;new&quot;</span><br><span class="hljs-comment"># 引导期间etcd集群的初始集群令牌，防止不同集群之间产生交互</span><br><span class="hljs-attr">initial-cluster-token:</span> <span class="hljs-string">&quot;etcd-cluster&quot;</span><br><span class="hljs-comment"># 向客户端发布的服务端节点</span><br><span class="hljs-attr">advertise-client-urls:</span> <span class="hljs-string">&quot;http://192.168.235.128:2379&quot;</span><br><span class="hljs-attr">logger:</span> <span class="hljs-string">&quot;zap&quot;</span><br><span class="hljs-comment"># 配置日志级别，仅支持 debuf、info、warn、error、panic、or fatal</span><br><span class="hljs-attr">log-level:</span> <span class="hljs-string">&quot;warn&quot;</span><br><span class="hljs-attr">log-outputs:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;stderr&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>​	参数的意义，我们已经在上面讲解过了，下面就讲所有的配置文件一并给大家：</p>
+<h6 id="etcd1-yaml"><a href="#etcd1-yaml" class="headerlink" title="etcd1.yaml"></a>etcd1.yaml</h6><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 节点名称</span><br><span class="hljs-attr">name:</span> <span class="hljs-string">&quot;etcdnode1&quot;</span><br><span class="hljs-comment"># 数据存储目录</span><br><span class="hljs-attr">data-dir:</span> <span class="hljs-string">&quot;/etcd-data/data&quot;</span><br><span class="hljs-comment"># 预写式日志存储目录</span><br><span class="hljs-attr">wal-dir:</span> <span class="hljs-string">&quot;/etcd-data/wal&quot;</span><br><span class="hljs-comment"># 集群成员之间通讯使用URL</span><br><span class="hljs-attr">listen-peer-urls:</span> <span class="hljs-string">&quot;http://0.0.0.0:12380&quot;</span><br><span class="hljs-comment"># 集群提供给外部客户端访问的URL，即外部客户端必须通过制定的IP加端口访问etcd</span><br><span class="hljs-attr">listen-client-urls:</span> <span class="hljs-string">&quot;http://0.0.0.0:12379&quot;</span><br><br><span class="hljs-comment"># 集群配置</span><br><span class="hljs-attr">initial-advertise-peer-urls:</span> <span class="hljs-string">&quot;http://192.168.235.128:12380&quot;</span><br><span class="hljs-comment"># 集群初始成员配置，是etcd静态部署的核心初始化配置，它说明了当前集群由哪些URLs组成，此处default为节点名称</span><br><span class="hljs-attr">initial-cluster:</span> <span class="hljs-string">&quot;etcdnode0=http://192.168.235.128:2380,etcdnode1=http://192.168.235.128:12380,etcdnode2=http://192.168.235.128:22380&quot;</span><br><span class="hljs-comment"># 初始化集群状态（new 或 existing）</span><br><span class="hljs-attr">initial-cluster-state:</span> <span class="hljs-string">&quot;new&quot;</span><br><span class="hljs-comment"># 引导期间etcd集群的初始集群令牌，防止不同集群之间产生交互</span><br><span class="hljs-attr">initial-cluster-token:</span> <span class="hljs-string">&quot;etcd-cluster&quot;</span><br><span class="hljs-comment"># 向客户端发布的服务端节点</span><br><span class="hljs-attr">advertise-client-urls:</span> <span class="hljs-string">&quot;http://192.168.235.128:12379&quot;</span><br><span class="hljs-attr">logger:</span> <span class="hljs-string">&quot;zap&quot;</span><br><span class="hljs-comment"># 配置日志级别，仅支持 debuf、info、warn、error、panic、or fatal</span><br><span class="hljs-attr">log-level:</span> <span class="hljs-string">&quot;warn&quot;</span><br><span class="hljs-attr">log-outputs:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;stderr&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h6 id="etcd2-yaml"><a href="#etcd2-yaml" class="headerlink" title="etcd2.yaml"></a>etcd2.yaml</h6><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs go"># 节点名称<br>name: <span class="hljs-string">&quot;etcdnode2&quot;</span><br># 数据存储目录<br>data-dir: <span class="hljs-string">&quot;/etcd-data/data&quot;</span><br># 预写式日志存储目录<br>wal-dir: <span class="hljs-string">&quot;/etcd-data/wal&quot;</span><br># 集群成员之间通讯使用URL<br>listen-peer-urls: <span class="hljs-string">&quot;http://0.0.0.0:22380&quot;</span><br># 集群提供给外部客户端访问的URL，即外部客户端必须通过制定的IP加端口访问etcd<br>listen-client-urls: <span class="hljs-string">&quot;http://0.0.0.0:22379&quot;</span><br><br># 集群配置<br>initial-advertise-peer-urls: <span class="hljs-string">&quot;http://192.168.235.128:22380&quot;</span><br># 集群初始成员配置，是etcd静态部署的核心初始化配置，它说明了当前集群由哪些URLs组成，此处<span class="hljs-keyword">default</span>为节点名称<br>initial-cluster: <span class="hljs-string">&quot;etcdnode0=http://192.168.235.128:2380,etcdnode1=http://192.168.235.128:12380,etcdnode2=http://192.168.235.128:22380&quot;</span><br># 初始化集群状态（<span class="hljs-built_in">new</span> 或 existing）<br>initial-cluster-state: <span class="hljs-string">&quot;new&quot;</span><br># 引导期间etcd集群的初始集群令牌，防止不同集群之间产生交互<br>initial-cluster-token: <span class="hljs-string">&quot;etcd-cluster&quot;</span><br># 向客户端发布的服务端节点<br>advertise-client-urls: <span class="hljs-string">&quot;http://192.168.235.128:22379&quot;</span><br>logger: <span class="hljs-string">&quot;zap&quot;</span><br># 配置日志级别，仅支持 debuf、info、warn、<span class="hljs-type">error</span>、<span class="hljs-built_in">panic</span>、or fatal<br>log-level: <span class="hljs-string">&quot;warn&quot;</span><br>log-outputs:<br>  - <span class="hljs-string">&quot;stderr&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h6 id="etcd3-yaml"><a href="#etcd3-yaml" class="headerlink" title="etcd3.yaml"></a>etcd3.yaml</h6><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 节点名称</span><br><span class="hljs-attr">name:</span> <span class="hljs-string">&quot;etcdnode3&quot;</span><br><span class="hljs-comment"># 数据存储目录</span><br><span class="hljs-attr">data-dir:</span> <span class="hljs-string">&quot;/etcd-data/data&quot;</span><br><span class="hljs-comment"># 预写式日志存储目录</span><br><span class="hljs-attr">wal-dir:</span> <span class="hljs-string">&quot;/etcd-data/wal&quot;</span><br><span class="hljs-comment"># 集群成员之间通讯使用URL</span><br><span class="hljs-attr">listen-peer-urls:</span> <span class="hljs-string">&quot;http://0.0.0.0:32380&quot;</span><br><span class="hljs-comment"># 集群提供给外部客户端访问的URL，即外部客户端必须通过制定的IP加端口访问etcd</span><br><span class="hljs-attr">listen-client-urls:</span> <span class="hljs-string">&quot;http://0.0.0.0:32379&quot;</span><br><br><span class="hljs-comment"># 集群配置</span><br><span class="hljs-attr">initial-advertise-peer-urls:</span> <span class="hljs-string">&quot;http://192.168.235.128:32380&quot;</span><br><span class="hljs-comment"># 集群初始成员配置，是etcd静态部署的核心初始化配置，它说明了当前集群由哪些URLs组成，此处default为节点名称</span><br><span class="hljs-attr">initial-cluster:</span> <span class="hljs-string">&quot;etcdnode0=http://192.168.235.128:2380,etcdnode1=http://192.168.235.128:12380,etcdnode2=http://192.168.235.128:22380,etcdnode3=http://192.168.235.128:32380&quot;</span><br><span class="hljs-comment"># 初始化集群状态（new 或 existing）</span><br><span class="hljs-attr">initial-cluster-state:</span> <span class="hljs-string">&quot;existing&quot;</span><br><span class="hljs-comment"># 引导期间etcd集群的初始集群令牌，防止不同集群之间产生交互</span><br><span class="hljs-attr">initial-cluster-token:</span> <span class="hljs-string">&quot;etcd-cluster&quot;</span><br><span class="hljs-comment"># 向客户端发布的服务端节点</span><br><span class="hljs-attr">advertise-client-urls:</span> <span class="hljs-string">&quot;http://192.168.235.128:32379&quot;</span><br><span class="hljs-attr">logger:</span> <span class="hljs-string">&quot;zap&quot;</span><br><span class="hljs-comment"># 配置日志级别，仅支持 debuf、info、warn、error、panic、or fatal</span><br><span class="hljs-attr">log-level:</span> <span class="hljs-string">&quot;warn&quot;</span><br><span class="hljs-attr">log-outputs:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;stderr&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>​	由于第四个配置文件中，集群配置里有四个节点并且初始化集群状态会已存在，故我们在后面的以第四个配置文件启动 etcd 服务的时候，需要先在集群中创建该节点，告诉其他节点有新节点来了，才能在使用该配置文件启动服务时与其他节点成功建立通信。</p>
+<h5 id="启动-etcd-服务"><a href="#启动-etcd-服务" class="headerlink" title="启动 etcd 服务"></a>启动 etcd 服务</h5><p>​	写好配置文件之后，我们仿照官网示例来启动 etcd 服务了，我们这里是采用读取配置文件的方式进行启动服务的，与官方示例不同。</p>
+<p>​	使用下面的命令创建并允许一个容器，这个命令主要是将 docker 设置在后台允许容器，以及一些端口映射、命名、配置文件路径的配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker run -d -p 2379:2379 -p 2380:2380 -v /tmp/etcd0-data:/etcd-data -v /root/etcd/etcdconf:/etcd-conf --name etcd0 quay.io/coreos/etcd:v3.5.5 /usr/local/bin/etcd --config-file=/etcd-conf/etcd0.yaml<br></code></pre></td></tr></table></figure>
+
+<p>​	可以通过 docker ps 观察容器是否启动起来了，如果启动了，就说明没有说明问题；如果没有成功启动，可以使用 docker log etcd0 查看 etcd0 的日志输出，找到错误信息进行排查。</p>
+<p>​	接着可以再检查一下我们的目录映射有没有问题，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ls /tmp/etcd0-data/<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/etcd0-data.png" srcset="/img/loading.gif" lazyload alt="etcd0-data"></p>
+<p>​	再看看我们的日志，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker logs -f etcd0<br></code></pre></td></tr></table></figure>
+
+<p>​	会发现一直在报 warn 错，因为我们配置在其他几个节点，但是其他集群几个节点还没有启动，所以就会一直报错。</p>
+<p>​	然后我们依次去把其他两个节点启动，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker run -d -p 12379:12379 -p 12380:12380 -v /tmp/etcd1-data:/etcd-data -v /root/etcd/etcdconf:/etcd-conf --name etcd1 quay.io/coreos/etcd:v3.5.5 /usr/local/bin/etcd --config-file=/etcd-conf/etcd1.yaml<br><br>docker run -d -p 22379:22379 -p 22380:22380 -v /tmp/etcd2-data:/etcd-data -v /root/etcd/etcdconf:/etcd-conf --name etcd2 quay.io/coreos/etcd:v3.5.5 /usr/local/bin/etcd --config-file=/etcd-conf/etcd2.yaml<br></code></pre></td></tr></table></figure>
+
+<p>​	启动完成后，使用 docker ps 查看容器：</p>
+<p><img src="/images/%E9%9B%86%E7%BE%A43%E8%8A%82%E7%82%B9.png" srcset="/img/loading.gif" lazyload alt="集群3节点"></p>
+<p>​	然后再次查看我们的日志，就发现我们的日志报错停止了，就说明我们的 etcd 集群启动成功了。</p>
+<h1 id="三、etcd-集群运维基本操作"><a href="#三、etcd-集群运维基本操作" class="headerlink" title="三、etcd 集群运维基本操作"></a>三、etcd 集群运维基本操作</h1><p>​	由于虚拟机本地没有下载 etcd，我们只能去访问容器内的 etcd 服务了，使用下面的命令进入 etcd 容器交互模式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker <span class="hljs-built_in">exec</span> -it etcd0 bash<br></code></pre></td></tr></table></figure>
+
+<p>​	然后我们开始我们的功能讲解，以及一些参数讲解。</p>
+<h4 id="健康检查"><a href="#健康检查" class="headerlink" title="健康检查"></a>健康检查</h4><p>​	健康检查功能是值系统能够自动检测节点的健康状态，以确保集群的正常运行。</p>
+<h5 id="集群节点心跳间隔"><a href="#集群节点心跳间隔" class="headerlink" title="集群节点心跳间隔"></a>集群节点心跳间隔</h5><p>**<code>--heartbeat-interval</code>**：这个参数用于设置 etcd 集群中节点之间发送心跳的时间间隔。默认值为 100 毫秒。你可以通过以下方式修改为 500 毫秒：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">etcd --heartbeat-interval=500<br></code></pre></td></tr></table></figure>
+
+<h5 id="心跳间隔最长时间"><a href="#心跳间隔最长时间" class="headerlink" title="心跳间隔最长时间"></a>心跳间隔最长时间</h5><p><strong><code>--election-timeout</code>：</strong> 这个参数用于设置选举超时时间，即节点在多长时间内没有收到心跳信号后就可能发起一次选举。默认值为 1000 毫秒。你可以通过以下方式修改为 3000 毫秒：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">etcd --election-timeout=3000<br></code></pre></td></tr></table></figure>
+
+<h5 id="获取集群各节点状态信息"><a href="#获取集群各节点状态信息" class="headerlink" title="获取集群各节点状态信息"></a>获取集群各节点状态信息</h5><p><code>etcdctl endpoint status</code>：这个命令用于获取 etcd 集群中各节点的详细状态信息，包括节点的 ID、地址、健康状况等。</p>
+<p>常用的参数有：</p>
+<ol>
+<li><code>--cluster</code>：打印所有节点</li>
+<li><code>-w table</code>：表格格式展示</li>
+<li><code>--endpoints</code>：指定访问的节点</li>
+</ol>
+<p><img src="/images/etcdtable.png" srcset="/img/loading.gif" lazyload alt="etcdtable"></p>
+<p>详细解释：</p>
+<ul>
+<li><code>ID</code>：节点的唯一标识符。</li>
+<li><code>Version</code>：etcd 版本。</li>
+<li><code>Endpoint</code>：节点的监听地址。</li>
+<li><code>Status</code>：节点的健康状况，通常包括 <code>healthy</code>、<code>unhealthy</code> 或 <code>unknown</code>。</li>
+<li><code>Duration</code>：节点的运行时间。</li>
+<li><code>Peer URLs</code>：节点的对等节点通信地址。</li>
+<li><code>Client URLs</code>：节点的客户端通信地址。</li>
+</ul>
+<h5 id="检查-etcd-集群的健康状况"><a href="#检查-etcd-集群的健康状况" class="headerlink" title="检查 etcd 集群的健康状况"></a>检查 etcd 集群的健康状况</h5><p><code>etcdctl endpoint health</code>：该命令用于检查 etcd 集群的健康状况，判断是否所有节点都处于正常运行状态。</p>
+<p>常用参数：</p>
+<ol>
+<li><code>--cluster</code>：打印所有节点</li>
+<li><code>-w table</code>：表格格式展示</li>
+<li><code>--endpoints</code>：指定访问的节点</li>
+</ol>
+<p><img src="/images/etcdhealthtable.png" srcset="/img/loading.gif" lazyload alt="etcdhealthtable"></p>
+<p>​	详细解释：</p>
+<ul>
+<li><code>cluster is healthy</code>：表示集群中的所有节点都处于健康状态。</li>
+<li><code>unhealthy</code>：表示集群中存在不健康的节点。</li>
+</ul>
+<h4 id="告警管理："><a href="#告警管理：" class="headerlink" title="告警管理："></a><strong>告警管理：</strong></h4><p>​	在 etcd 中，告警管理是一种机制，用于帮助管理员和操作人员监测和响应 etcd 集群中可能发生的问题。通过设置告警规则和配置，管理员可以在集群遇到异常或潜在问题时得到通知，以便及时采取必要的措施。</p>
+<p>​	常见的命令有：</p>
+<ol>
+<li><code>alarm disarm</code><ul>
+<li>作用：解除etcd集群中的告警状态，允许集群继续正常运行。</li>
+</ul>
+</li>
+<li><code>alarm list</code><ul>
+<li>作用：列出etcd集群中的告警信息，提供了对当前集群告警状态的查看。</li>
+</ul>
+</li>
+</ol>
+<h4 id="数据规模检查"><a href="#数据规模检查" class="headerlink" title="数据规模检查"></a>数据规模检查</h4><p>​	在 etcd 中，数据规模检查通常是指对 etcd 存储的数据规模（数据量的大小）进行监测和检查的机制。这涉及到集群中存储的键值对数量、数据大小等方面的指标。</p>
+<p>​	常见的命令有：</p>
+<ol>
+<li><strong><code>etcdctl check datascale</code>：</strong>检查 etcd 集群数据规模的工具，常用参数如下：<ul>
+<li><strong><code>--auto-compact</code>：</strong>启用自动压缩功能。etcd 存储中的历史版本可能会占用磁盘空间，自动压缩可以清理不再需要的历史版本，释放磁盘空间。</li>
+<li><strong><code>--auto-defrag</code>：</strong> 启用磁盘自动碎片整理功能。etcd 存储在删除键值对时可能会导致碎片，自动碎片整理有助于提高磁盘空间的利用率。</li>
+<li><strong><code>--load</code>：</strong>指定不同规模的集群来进行性能测试。可以用于模拟不同负载下 etcd 集群的性能表现。</li>
+<li>**<code>--endpoints</code>**： 对指定节点进行数据规模检查。可以通过 <code>--endpoints</code> 参数指定 etcd 集群的节点地址。</li>
+</ul>
+</li>
+<li><strong><code>etcdctl check perf</code>：</strong>执行 etcd 集群的性能检查，用于评估集群的性能表现。</li>
+<li><strong><code>etcdctl del /etcdctl-check-datascale/ --prefix</code>：</strong>删除以指定前缀的所有键，通常用于清理测试数据。在进行数据规模检查之前，可以使用该命令清理之前的测试数据。</li>
+</ol>
+<h4 id="快照操作"><a href="#快照操作" class="headerlink" title="快照操作"></a>快照操作</h4><p>​	在 etcd 中，快照操作是指对 etcd 存储中的当前状态进行备份的操作。快照是一个在某个时间点捕获的 etcd 存储的状态副本，它包含了该时间点的所有键值对数据以及相应的元数据信息。</p>
+<p>​	常见命令有：</p>
+<ol>
+<li><code>etcdctl snapshot save</code><ul>
+<li>保存etcd集群的快照，用于备份和恢复。</li>
+</ul>
+</li>
+<li><code>etcdutl snapshot restore</code><ul>
+<li>恢复etcd集群的快照，用于在需要时还原数据。</li>
+</ul>
+</li>
+<li><code>etcdutl snapshot status</code><ul>
+<li>查看etcd集群快照的状态信息，包括快照文件的大小、创建时间等。</li>
+</ul>
+</li>
+</ol>
+<h4 id="集群管理"><a href="#集群管理" class="headerlink" title="集群管理"></a>集群管理</h4><p>​	在 etcd 中，集群管理涉及到对 etcd 集群进行配置、监控、维护和优化等一系列操作。</p>
+<p>​	常见的命令有：</p>
+<ol>
+<li><code>etcdctl move-leader</code>：手动移动etcd集群的领导者节点，用于修改集群中的领导者。</li>
+</ol>
+<h4 id="节点管理"><a href="#节点管理" class="headerlink" title="节点管理"></a>节点管理</h4><p>​	在 etcd 中，节点管理是指对 etcd 集群中的节点进行监控、维护和操作的一系列管理任务。</p>
+<p>​	常见的命令有：</p>
+<ol>
+<li><code>etcdctl member add</code><ul>
+<li>作用：向etcd集群中添加新的节点。</li>
+</ul>
+</li>
+<li><code>etcdctl member list</code><ul>
+<li>作用：列出etcd集群中的所有节点。</li>
+</ul>
+</li>
+<li><code>etcdctl member promote</code><ul>
+<li>作用：提升etcd集群中普通节点的权限，使其具备领导者选举资格。</li>
+</ul>
+</li>
+<li><code>etcdctl member remove</code><ul>
+<li>作用：从etcd集群中移除指定节点。</li>
+</ul>
+</li>
+<li><code>etcdctl member update</code><ul>
+<li>作用：更新etcd集群中节点的信息，如名称、地址等。</li>
+</ul>
+</li>
+</ol>
+<h1 id="四、etcd-数据操作之租约与事务"><a href="#四、etcd-数据操作之租约与事务" class="headerlink" title="四、etcd 数据操作之租约与事务"></a>四、etcd 数据操作之租约与事务</h1><h4 id="数据操作"><a href="#数据操作" class="headerlink" title="数据操作"></a>数据操作</h4><p>​	在 etcd 中，数据操作的确主要涉及 <code>put</code>、<code>get</code>、<code>del</code> 这三个基本操作，分别用于存储、检索和删除键值对。</p>
+<p>​	下面带大家一一熟悉：</p>
+<h5 id="put"><a href="#put" class="headerlink" title="put"></a>put</h5><p>​	<code>etcdtcl put</code> 是用于将键值对存储到 etcd 中的命令。</p>
+<p>​	常见的参数及其功能如下：</p>
+<ul>
+<li><strong>–ignore-lease：</strong> 忽略租约。使用此参数可以在存储键值对时忽略租约的存在。</li>
+<li><strong>–ignore-value：</strong> 忽略值。即使键已经存在，也强制写入新值。</li>
+<li><strong>–lease&#x3D;”0”：</strong> 设置租约的持续时间，0 表示无租约。</li>
+<li><strong>–prev-kv：</strong> 在更新操作时，检查前一个键值对的存在性，只有存在时才执行更新。</li>
+</ul>
+<h5 id="get"><a href="#get" class="headerlink" title="get"></a>get</h5><p>​	<code>etcdctl get</code> 用于从 etcd 中检索键值对。</p>
+<p>​	常见的参数及其功能如下：</p>
+<ul>
+<li><strong>-w json：</strong> 指定输出格式为 JSON，并提供详细的键值对信息。</li>
+<li><strong>–prefix：</strong> 指定前缀，以获取匹配指定前缀的所有键值对。相当于 SQL 中的 <code>LIKE &#39;key%&#39;</code>。</li>
+<li><strong>–consistency&#x3D;”l or s”：</strong> 设置一致性级别，<code>l</code> 表示与 leader 节点比较数据的一致性较高，<code>s</code> 表示仅在当前节点上检查键值对的存在性。</li>
+<li><strong>–count-only：</strong> 仅返回匹配条件的键值对数量而不返回具体的键值对。</li>
+<li><strong>–from-key：</strong> 获取键大于或等于指定键的所有键值对。相当于 SQL 中的 <code>WHERE key &gt;= &#39;specified_key&#39;</code>。</li>
+</ul>
+<h5 id="del"><a href="#del" class="headerlink" title="del"></a>del</h5><p>​	<code>etcdctl del</code> 用于从 etcd 中删除键值对。	</p>
+<h4 id="租约"><a href="#租约" class="headerlink" title="租约"></a>租约</h4><p>​	在etcd中，租约（Lease）是一种用于为键值对分配时间的机制，用于管理临时性的关联性数据。租约的主要目的是为了在一段时间内提供对键值对的持久性，而在租约到期后，键值对会自动从存储中删除。</p>
+<p>​	租约的主要特性：</p>
+<ol>
+<li><strong>时间控制：</strong> 每个租约都有一个预定的时间期限，称为TTL（Time-to-Live）。该TTL指定了租约的生命周期，通常以秒为单位。</li>
+<li><strong>续约：</strong> 租约可以续约，即在TTL期限内，持有者可以通过向etcd发送心跳继续使用租约。如果续约失败或终止，租约将在TTL到期后失效。</li>
+<li><strong>关联键值对：</strong> 租约通常与键值对相关联。在创建键值对时，可以将租约ID与其关联，从而确定键值对的生命周期。</li>
+<li><strong>自动删除：</strong> 当租约到期时，关联的键值对将自动从etcd中删除，释放资源。</li>
+</ol>
+<p>​	租约中常用参数：</p>
+<ol>
+<li><p><strong>lease grant</strong>:</p>
+<ul>
+<li><p>用于创建一个新的租约，并返回租约的 ID。</p>
+</li>
+<li><p>用法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">etcdctl lease grant &lt;TTL&gt;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>lease keep-alive</strong>:</p>
+<ul>
+<li><p>保持租约的活动状态，防止租约过期。该命令会持续发送心跳以保持租约的有效性。</p>
+</li>
+<li><p>用法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">etcdctl lease keep-alive &lt;lease-id&gt;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>lease list</strong>:</p>
+<ul>
+<li><p>列出当前存在的所有租约。</p>
+</li>
+<li><p>用法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">etcdctl lease list<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>lease revoke</strong>:</p>
+<ul>
+<li><p>用于撤销（取消）指定的租约。</p>
+</li>
+<li><p>用法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">etcdctl lease revoke &lt;lease-id&gt;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>lease timetolive</strong>:</p>
+<ul>
+<li><p>获取指定租约的剩余生存时间。</p>
+</li>
+<li><p>用法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">etcdctl lease timetolive &lt;lease-id&gt;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<p>​	下面带大家一起使用一下：</p>
+<ol>
+<li>​	我们先使用 <code>etcdctl lease grant 60 </code> 创建一个 60s 的租约，它会返回一个租约 ID，</li>
+<li>​	然后我们拿着这个租约 ID 去给我们的设置租约，<code>etcdctl put k v --lease=&lt;lease-id&gt;</code>，</li>
+<li>​	然后使用 <code>etcdctl lease timetolive &lt;lease-id&gt;</code> 查看还有多久过期，</li>
+<li>​	在未过期时，可以使用 <code>etcdctl get k</code> 查看到键值对，在租约过期后，就无法查看到了。</li>
+</ol>
+<p><img src="/iamges/%E7%A7%9F%E7%BA%A6%E7%A4%BA%E4%BE%8B.png" srcset="/img/loading.gif" lazyload alt="租约示例"></p>
+<p>​	大家可以自己实践一下，而且只要租约还未过期，我们就可以为租期设置为永不过期 <code>etcdctl lease keep-alive &lt;lease-id&gt;</code>。</p>
+<h4 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h4><p>​	在etcd中，事务是一组对键值存储的原子操作，可以确保这些操作要么全部成功，要么全部失败。etcd的事务支持在单个事务中包含多个操作，这些操作可以是读取、写入、修改等，事务将这些操作组合在一起执行。</p>
+<p>​	etcd 中的事务本质上是<strong>由 if 语句 + then语句 + else 语句 组成</strong>。if 语句检查通过，则执行 then 语句里面的内容，否则执行 else 语句里面的内容</p>
+<p>​	if 语句里面可以判断的条件包括但不限于：</p>
+<ol>
+<li><strong>mod_revision</strong>：检查键的修改版本号是否满足条件。</li>
+<li><strong>create_revision</strong>：检查键的创建版本号是否满足条件。</li>
+<li><strong>version</strong>：检查键的版本号是否满足条件。</li>
+<li><strong>value：</strong>检查键的值是否满足条件。</li>
+<li><strong>evalue：</strong>检查键的值是否匹配指定的正则表达式。</li>
+</ol>
+<h5 id="开启事务"><a href="#开启事务" class="headerlink" title="开启事务"></a>开启事务</h5><p>​	下面我们带大家写一个简单的 etcd 事务。</p>
+<p>​	使用 <code>etcdctl txn -i</code> 开启事务，具体的流程图如下：</p>
+<p><img src="/images/%E4%BA%8B%E5%8A%A1%E7%A4%BA%E4%BE%8B.png" srcset="/img/loading.gif" lazyload alt="事务示例"></p>
+<p>​	</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>​	今天我们对 etcd 的介绍就只讲这么多了，后面还会带大家手把手用 Go 语言去操作 etcd 的客户端。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Go/" class="category-chain-item">Go</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/" class="category-chain-item">项目实战</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">#分布式</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>初识分布式键值对存储etcd</div>
+      <div>http://example.com/2023/11/18/Go/项目实战/初识分布式键值对存储etcd/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Feng Tao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月18日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年11月18日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/16/Go/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E4%BD%BF%E7%94%A8pprof/" title="手把手教你使用pprof">
+                        <span class="hidden-mobile">手把手教你使用pprof</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"n0H6ZjcwsAdPc2zfOJM4bxV4-gzGzoHsz","appKey":"rwjeQIHfYJqQvjh2iWuPkYev","path":"window.location.pathname","placeholder":"匿名评论，畅所欲言","avatar":"robohash","meta":["nick","mail"],"requiredFields":[],"pageSize":20,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!--动态线条背景-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
+<!-- 雪花特效 -->
+<script type="text/javascript" src="\js\snow.js"></script>
